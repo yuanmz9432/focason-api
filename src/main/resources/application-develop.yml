@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/horizon?useSSL=false&autoReconnect=true
+    url: jdbc:mysql://localhost:3306/lemonico?useSSL=false&autoReconnect=true
     username: root
     password: kawasemi
     driver-class-name: com.mysql.jdbc.Driver

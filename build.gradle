@@ -9,7 +9,7 @@ buildscript {
         domaVersion = '2.19.2'
 
         /************* 開発環境 *************/
-        dbUrl = 'jdbc:mysql://localhost:3306/horizon?useSSL=false'
+        dbUrl = 'jdbc:mysql://localhost:3306/lemonico?useSSL=false'
         dbUser = 'root'
         dbPassword = 'kawasemi'
 
@@ -123,14 +123,12 @@ task gen  {
             entityConfig(
                     overwrite: true,
                     useListener: false,
-                    //useAccessor: false,
-                    packageName: "co.jp.geekfun.horizon.entity",
-                    //superclassName: 'co.jp.geekfun.horizon.entity.BaseEntity',
+                    packageName: "api.lemonico.entity",
                     destDir: 'src/generated/main/java'
             )
             daoConfig(
                     overwrite: true,
-                    packageName: "co.jp.geekfun.horizon.dao",
+                    packageName: "api.lemonico.dao",
                     destDir: 'src/generated/main/java',
             )
             sqlConfig(
@@ -158,24 +156,6 @@ flyway{
     //TODO "filesystem:$projectDir/db/migration/DDL"まで設定するのが正しい
     locations = ["filesystem:$projectDir/db/migration"]
 }
-//
-////デプロイ用ZIPファイル作成
-//task zip(type: Zip, dependsOn: bootJar) {
-//    from('build/libs') {
-//        include '*.jar'
-//    }
-//    from('release') {
-//        include 'Dockerfile'
-//        include 'Dockerrun.aws.json'
-//    }
-//}
-//
-////デプロイ用ZIPファイル作成してから、releaseフォルダにコピーする
-//task zipAndCopy(type: Copy, dependsOn: zip) {
-//    from 'build/distributions'
-//    into 'release'
-//    include '*.zip'
-//}
 
 //デプロイ用JARファイル作成してから、releaseフォルダにコピーする
 task copyJarToRelease(type: Copy, dependsOn: bootJar) {
