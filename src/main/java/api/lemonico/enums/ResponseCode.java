@@ -3,7 +3,7 @@ package api.lemonico.enums;
 public enum ResponseCode implements CodeEnum<Integer>{
 
 	// 成功「2XX」
-	SUCCESS(200, "成功"),
+	SUCCESS(200, "成功に実行しました。"),
 	;
 
 	ResponseCode(Integer code, String message) {

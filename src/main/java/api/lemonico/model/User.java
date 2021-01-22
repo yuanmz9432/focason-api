@@ -1,4 +1,4 @@
-package api.lemonico.info;
+package api.lemonico.model;
 
 import api.lemonico.entity.BaseEntity;
 import lombok.Data;

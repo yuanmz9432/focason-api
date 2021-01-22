@@ -1,18 +1,11 @@
-package api.lemonico.info;
-
-import java.io.Serializable;
+package api.lemonico.model;
 
 import api.lemonico.enums.ResponseCode;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class BaseResponseInfo implements Serializable {
+public class BaseAPIResponse {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -1832122505105038646L;
 
 	private Integer code;
@@ -21,31 +14,35 @@ public class BaseResponseInfo implements Serializable {
 
 	private Object data;
 
-	public BaseResponseInfo() {
+	public BaseAPIResponse() {
 	}
 
-	public static BaseResponseInfo success() {
-		BaseResponseInfo baseResponse = new BaseResponseInfo();
+	/**
+	 * 正常処理
+	 * @return
+	 */
+	public static BaseAPIResponse success() {
+		BaseAPIResponse baseResponse = new BaseAPIResponse();
 		baseResponse.setResultCode(ResponseCode.SUCCESS);
 		return baseResponse;
 	}
 
-	public static BaseResponseInfo success(Object data) {
-		BaseResponseInfo BaseResponse = new BaseResponseInfo();
+	public static BaseAPIResponse success(Object data) {
+		BaseAPIResponse BaseResponse = new BaseAPIResponse();
 		BaseResponse.setResultCode(ResponseCode.SUCCESS);
 		BaseResponse.setData(data);
 		return BaseResponse;
 	}
 
-	public static BaseResponseInfo success(ResponseCode responseCode, Object data) {
-		BaseResponseInfo BaseResponse = new BaseResponseInfo();
+	public static BaseAPIResponse success(ResponseCode responseCode, Object data) {
+		BaseAPIResponse BaseResponse = new BaseAPIResponse();
 		BaseResponse.setResultCode(responseCode);
 		BaseResponse.setData(data);
 		return BaseResponse;
 	}
 
-	public static BaseResponseInfo failure(ResponseCode resultCode) {
-		BaseResponseInfo BaseResponse = new BaseResponseInfo();
+	public static BaseAPIResponse failure(ResponseCode resultCode) {
+		BaseAPIResponse BaseResponse = new BaseAPIResponse();
 		BaseResponse.setResultCode(resultCode);
 		return BaseResponse;
 	}
@@ -54,5 +51,4 @@ public class BaseResponseInfo implements Serializable {
 		this.code = resultCode.getValue();
 		this.message = resultCode.getLabel();
 	}
-
 }

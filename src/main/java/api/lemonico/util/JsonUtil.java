@@ -18,7 +18,6 @@ public class JsonUtil {
 
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         Map<String, Object> params = new HashMap<>();
         params.put("code", responseCode.getValue());

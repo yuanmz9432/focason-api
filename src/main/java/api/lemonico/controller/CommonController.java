@@ -1,6 +1,7 @@
 package api.lemonico.controller;
 
 import api.lemonico.enums.ResponseCode;
+import api.lemonico.model.BaseAPIResponse;
 import api.lemonico.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,9 @@ public class CommonController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 
     @RequestMapping(method = RequestMethod.GET, path = "/heartbeat")
-    public void healthCheck(HttpServletResponse response) throws IOException {
+    public BaseAPIResponse healthCheck(HttpServletResponse response) throws IOException {
 
-        JsonUtil.writeJson(response, ResponseCode.SUCCESS, null);
+//        JsonUtil.writeJson(response, ResponseCode.SUCCESS, null);
+        return BaseAPIResponse.success();
     }
 }

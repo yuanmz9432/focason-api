@@ -8,11 +8,6 @@ spring:
 
 doma:
   dialect: mysql
-  
-logging: 
-  level:
-    root: INFO
-    co.jp.geekfun.horizon: TRACE
 
 server:
   servlet:

@@ -1,7 +1,7 @@
 package api.lemonico.controller;
 
 
-import api.lemonico.info.BaseResponseInfo;
+import api.lemonico.model.BaseAPIResponse;
 import api.lemonico.request.UserRegisterReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class AccountController extends AbstractController {
      */
     @CrossOrigin
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public BaseResponseInfo register(@RequestBody UserRegisterReq userRegisterReq) {
+    public BaseAPIResponse register(@RequestBody UserRegisterReq userRegisterReq) {
         return null;
     }
 
