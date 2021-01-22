@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: develop #develop #honban #staging
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+
+doma:
+  dialect: mysql
+  
+logging: 
+  level:
+    root: INFO
+    co.jp.geekfun.horizon: TRACE
+
+server:
+  servlet:
+    context-path: /api

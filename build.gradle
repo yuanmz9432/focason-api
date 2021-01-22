@@ -1,0 +1,185 @@
+
+buildscript {
+    ext {
+        springBootVersion = '2.2.1.RELEASE'
+        groupName = 'lemoico.com'
+        mysqlVersion = '5.1.49'
+        flywayVersion = '5.0.7'
+        domaSpringBootVersion = '1.1.1'
+        domaVersion = '2.19.2'
+
+        /************* 開発環境 *************/
+        dbUrl = 'jdbc:mysql://localhost:3306/horizon?useSSL=false'
+        dbUser = 'root'
+        dbPassword = 'kawasemi'
+
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:$flywayVersion"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'war'
+}
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'idea'
+idea.module.inheritOutputDirs = true
+
+group 'lemoico.com'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    domaGenRuntime
+}
+
+dependencies {
+    // Spring Boot Starter
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-logging'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    compile 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.3.RELEASE'
+
+    // json web token
+    compile 'io.jsonwebtoken:jjwt:0.9.0'
+
+    // aop関連
+    compile 'org.aspectj:aspectjweaver:1.9.1'
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    // DBアクセス関連
+    compile "mysql:mysql-connector-java:$mysqlVersion"
+    compile "org.seasar.doma.boot:doma-spring-boot-starter:$domaSpringBootVersion"
+    compile 'com.zaxxer:HikariCP'
+    compile "org.seasar.doma:doma:${domaVersion}"
+    annotationProcessor "org.seasar.doma:doma:${domaVersion}"
+    domaGenRuntime "org.seasar.doma:doma-gen:$domaVersion"
+    domaGenRuntime "mysql:mysql-connector-java:$mysqlVersion"
+
+    // java mail
+    compile 'javax.mail:mail:1.5.0-b01'
+
+    // aws
+    implementation 'software.amazon.awssdk:bom:2.15.26'
+    implementation 'software.amazon.awssdk:s3:2.15.26'
+    implementation 'software.amazon.awssdk:dynamodb:2.15.36'
+
+    // IO tool
+    compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/generated/main/java'
+            srcDirs 'src/main/java'
+        }
+        resources {
+            srcDirs 'src/generated/main/resources'
+            srcDirs 'src/main/resources'
+        }
+    }
+}
+
+// 【DOMA4019】のため
+task copyDomaResources(type: Sync)  {
+    from sourceSets.main.resources.srcDirs
+    into compileJava.destinationDir
+    include 'doma.compile.config'
+    include 'META-INF/**/*.sql'
+    include 'META-INF/**/*.script'
+}
+
+compileJava {
+    // Depend on the above task
+    dependsOn copyDomaResources
+    options.encoding = 'UTF-8'
+}
+
+task gen  {
+    doLast {
+        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
+        ant.gen(url: "${dbUrl}", user: "${dbUser}", password: "${dbPassword}", templatePrimaryDir: 'doma/template') {
+            entityConfig(
+                    overwrite: true,
+                    useListener: false,
+                    //useAccessor: false,
+                    packageName: "co.jp.geekfun.horizon.entity",
+                    //superclassName: 'co.jp.geekfun.horizon.entity.BaseEntity',
+                    destDir: 'src/generated/main/java'
+            )
+            daoConfig(
+                    overwrite: true,
+                    packageName: "co.jp.geekfun.horizon.dao",
+                    destDir: 'src/generated/main/java',
+            )
+            sqlConfig(
+                    overwrite: true,
+                    destDir: 'src/generated/main/resources',
+            )
+        }
+    }
+}
+
+task cleanGen(type: Delete){
+    delete 'src/generated'
+}
+
+gen.dependsOn cleanGen
+gen.group = 'doma'
+cleanGen.group = 'doma'
+flywayMigrate.mustRunAfter flywayClean
+gen.mustRunAfter flywayMigrate
+
+flyway{
+    url = "${dbUrl}"
+    user = "${dbUser}"
+    password = "${dbPassword}"
+    //TODO "filesystem:$projectDir/db/migration/DDL"まで設定するのが正しい
+    locations = ["filesystem:$projectDir/db/migration"]
+}
+//
+////デプロイ用ZIPファイル作成
+//task zip(type: Zip, dependsOn: bootJar) {
+//    from('build/libs') {
+//        include '*.jar'
+//    }
+//    from('release') {
+//        include 'Dockerfile'
+//        include 'Dockerrun.aws.json'
+//    }
+//}
+//
+////デプロイ用ZIPファイル作成してから、releaseフォルダにコピーする
+//task zipAndCopy(type: Copy, dependsOn: zip) {
+//    from 'build/distributions'
+//    into 'release'
+//    include '*.zip'
+//}
+
+//デプロイ用JARファイル作成してから、releaseフォルダにコピーする
+task copyJarToRelease(type: Copy, dependsOn: bootJar) {
+    from 'build/libs'
+    into 'release'
+    include '*.jar'
+}
