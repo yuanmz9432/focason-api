@@ -1,24 +1,20 @@
 package api.lemonico.exception;
 
+import api.lemonico.enums.ResponseCode;
+
 public class LemonicoAPIException extends RuntimeException {
 
 	private static final long serialVersionUID = -2216088032747995508L;
 
-	String params = null;
+	private ResponseCode responseCode = null;
 
-	public LemonicoAPIException(String message) {
-
-		super(message);
+	public LemonicoAPIException(ResponseCode responseCode) {
+		super(responseCode.getLabel());
+		this.responseCode = responseCode;
 	}
 
-	public LemonicoAPIException(String message, String params) {
-
-		super(message);
-		this.params = params;
-	}
-
-	public String getParams() {
-		return params;
+	public ResponseCode getResponseCode() {
+		return responseCode;
 	}
 
 }

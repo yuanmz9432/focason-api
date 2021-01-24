@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import api.lemonico.model.BaseAPIResponse;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -58,11 +59,11 @@ public class LemonicoAPIAspect {
             this.start = LocalDateTime.now();
             log.info("=====================リクエスト START=====================");
             log.info("開始時間 : {}", this.start);
-            log.info("★URL : {}", request.getRequestURL().toString());
-            log.info("★HTTPメソッド : {}", request.getMethod());
-            log.info("IPアドレス : {}", request.getRemoteAddr());
-            log.info("★クラスメソッド : {}", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-            log.info("★リクエストボディー : {}", Arrays.toString(joinPoint.getArgs()));
+            log.info("★ URL : {}", request.getRequestURL().toString());
+            log.info("★ HTTPメソッド : {}", request.getMethod());
+            log.info("* IPアドレス : {}", request.getRemoteAddr());
+            log.info("★ クラスメソッド : {}", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+            log.info("★ リクエストボディー : {}", Arrays.toString(joinPoint.getArgs()));
             log.info("=====================リクエスト END=====================");
         }
     }
@@ -72,18 +73,19 @@ public class LemonicoAPIAspect {
         System.out.println(joinPoint);
         System.out.println(returnObject);
         if (!Objects.isNull(returnObject)) {
-            String code = "code";
-            String message = "message";
-            Object data = "data";
+            BaseAPIResponse res = (BaseAPIResponse)returnObject;
+            Integer code = res.getCode();
+            String message = res.getMessage();
+            Object data = res.getData();
             // 处理完请求，返回内容
             this.end = LocalDateTime.now();
             log.info("=====================レスポンス START=====================");
-            log.info("終了時間 : {}", this.end);
-            log.info("ret : {}", returnObject.getClass());
-            log.info("★コード : {}", code);
-            log.info("★メッセージ : {}", message);
-            log.info("★データ : {}", data);
-            log.info("処理所用時間 : {}秒", getDuration());
+            log.info("★ 終了時間 : {}", this.end);
+            log.info("★ returnObject : {}", returnObject.getClass());
+            log.info("★ コード : {}", code);
+            log.info("★ メッセージ : {}", message);
+            log.info("★ データ : {}", data);
+            log.info("* 処理所用時間 : {}秒", getDuration());
             log.info("=====================レスポンス END=====================");
         }
     }
@@ -101,7 +103,12 @@ public class LemonicoAPIAspect {
             res = pjp.proceed();
         } catch (Throwable e) {
             sw.stop();
-            log.trace("メソッド異常終了:{}\t処理時間:{}ミリ秒\t例外:{}", pjp.getSignature(), sw.getTotalTimeMillis(), e);
+            this.end = LocalDateTime.now();
+            log.info("=====================異常発生 START=====================");
+            log.info("* 終了時間 : {}", this.end);
+            log.info("* 異常メッセージ : {}", e.getMessage());
+            log.info("* 処理所用時間 : {}秒", getDuration());
+            log.info("=====================異常発生 END=====================");
             throw e;
         }
         sw.stop();

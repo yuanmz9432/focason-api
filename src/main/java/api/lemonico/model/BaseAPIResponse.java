@@ -41,9 +41,9 @@ public class BaseAPIResponse {
 		return BaseResponse;
 	}
 
-	public static BaseAPIResponse failure(ResponseCode resultCode) {
+	public static BaseAPIResponse failure(ResponseCode responseCode) {
 		BaseAPIResponse BaseResponse = new BaseAPIResponse();
-		BaseResponse.setResultCode(resultCode);
+		BaseResponse.setResultCode(responseCode);
 		return BaseResponse;
 	}
 
