@@ -1,5 +1,6 @@
 package api.lemonico.model;
 
+import api.lemonico.entity.User;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -8,10 +9,8 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
 
     private User user;
-//    private List<Address> addresses;
-//
-//    public UserInfo(User user, List<Address> addresses){
-//        this.user = user;
-//        this.addresses = addresses;
-//    }
+
+    public UserInfo(User user) {
+        this.user = user;
+    }
 }

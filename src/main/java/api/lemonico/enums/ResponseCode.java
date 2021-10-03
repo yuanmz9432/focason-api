@@ -6,6 +6,7 @@ public enum ResponseCode implements CodeEnum<Integer>{
 	SUCCESS(200, "成功に実行しました。"),
 	// アカウント「6XX」
 	ACCOUNT_IS_EXISTED(600, "アカウントも登録されましたので、ログインしてください。"),
+	ACCOUNT_IS_NOT_EXIST(601, "アカウントが存在しない。"),
 	;
 
 	ResponseCode(Integer code, String message) {

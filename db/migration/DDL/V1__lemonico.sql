@@ -14,19 +14,24 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='';
 -- -----------------------------------------------------
 -- Table `lemonico`.`User`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `lemonico`.`account` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'アカウントID',
+CREATE TABLE IF NOT EXISTS `lemonico`.`user` (
+  `uid` VARCHAR(28) NOT NULL COMMENT 'ユニークID',
   `first_name` VARCHAR(45) NOT NULL COMMENT '姓',
   `last_name` VARCHAR(45) NOT NULL COMMENT '名',
+  `sex` INT NOT NULL COMMENT '性別',
+  `year` INT NOT NULL COMMENT '年',
+  `month` INT NOT NULL COMMENT '月',
+  `day` INT NOT NULL COMMENT '日',
   `email` VARCHAR(100) NOT NULL COMMENT 'メールアドレス',
-  `password` VARCHAR(100) NOT NULL COMMENT 'パスワード',
+  `email_verified` INT(1) NOT NULL COMMENT '有効メールフラグ',
+--   `classification` INT(1) NOT NULL COMMENT '区分1:lemonico 2:google',
   `version_no` INT NOT NULL,
   `create_by` VARCHAR(30) NOT NULL,
   `create_time` DATETIME NOT NULL,
   `update_by` VARCHAR(30) NOT NULL,
   `update_time` DATETIME NOT NULL,
   `is_actived` INT NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   UNIQUE INDEX `create_time_UNIQUE` (`create_time` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

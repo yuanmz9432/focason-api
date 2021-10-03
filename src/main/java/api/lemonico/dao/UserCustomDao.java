@@ -1,7 +1,7 @@
 package api.lemonico.dao;
 
 import api.lemonico.annotation.InjectConfig;
-import api.lemonico.entity.Account;
+import api.lemonico.entity.User;
 import org.seasar.doma.Dao;
 import org.seasar.doma.Select;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 @InjectConfig
 @Component(value = "fileInfoCustomDao")
-public interface AccountCustomDao {
+public interface UserCustomDao {
 
 //    @Select
 //    User selectUserByUserName(String userName);
@@ -20,7 +20,7 @@ public interface AccountCustomDao {
 //    User selectUserByUserId(Integer userId);
 //
     @Select
-    Account selectAccountByEmail(String email);
+    User selectAccountByEmail(String email);
 //
 //    @Select
 //    List<Address> selectAddressesByUserId(Integer userId);

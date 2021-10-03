@@ -1,17 +1,31 @@
 package api.lemonico.service;
 
 
-import api.lemonico.enums.ResponseCode;
-import api.lemonico.request.AccountRegisterReq;
+import api.lemonico.model.UserInfo;
+import api.lemonico.request.AccountReq;
 
-public interface AccountService {
+public interface UserService {
 
     /**
      * アカウント登録処理
-     * @param accountRegisterReq
+     * @param accountReq
      * @return
      */
-    void createAccount(AccountRegisterReq accountRegisterReq);
+    void createAccount(AccountReq accountReq);
+
+    /**
+     * アカウント更新処理
+     * @param accountReq
+     * @return
+     */
+    void updateAccount(AccountReq accountReq);
+
+    /**
+     * アカウント更新処理
+     * @param uid
+     * @return
+     */
+    UserInfo getAccountInfo(String uid);
 
 //    /**
 //     * 通过用户ID取得用户信息
