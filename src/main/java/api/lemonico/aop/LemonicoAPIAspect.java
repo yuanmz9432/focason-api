@@ -1,101 +1,54 @@
 package api.lemonico.aop;
 
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Objects;
-
-import javax.servlet.http.HttpServletRequest;
-
-import api.lemonico.model.BaseAPIResponse;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
- * サービス層の開始・終了のトレース
+ * AOP
  */
 @Aspect
 @Component
-@Slf4j
 public class LemonicoAPIAspect {
 
-    private LocalDateTime start = null;
+    private static final Logger logger = LoggerFactory.getLogger(LemonicoAPIAspect.class);
 
-    private LocalDateTime end = null;
-
-    private Double getDuration() {
-        if (start != null && end != null) {
-            Duration duration = Duration.between(this.start, this.end);
-            BigDecimal unit = new BigDecimal(1000);
-            BigDecimal millis = new BigDecimal(duration.toMillis());
-            return millis.divide(unit).doubleValue();
-        }
-        return 0.00;
-    }
-
-    // 配置切点
     @Pointcut("execution(* api.lemonico.controller..*(..))")
-    public void pointcut() {
+    public void pointCut() {
     }
 
-    @Before("pointcut()")
-    public void beforeExcution(JoinPoint joinPoint) {
+    @Before("pointCut()")
+    public void beforeExecution(JoinPoint joinPoint) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
-            this.start = LocalDateTime.now();
-            log.info("=====================リクエスト START=====================");
-            log.info("開始時間 : {}", this.start);
-            log.info("★ URL : {}", request.getRequestURL().toString());
-            log.info("★ HTTPメソッド : {}", request.getMethod());
-            log.info("* IPアドレス : {}", request.getRemoteAddr());
-            log.info("★ クラスメソッド : {}", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-            log.info("★ リクエストボディー : {}", Arrays.toString(joinPoint.getArgs()));
-            log.info("=====================リクエスト END=====================");
+            logger.info("★ URI : {}", request.getRequestURL().toString());
+            logger.info("★ HTTP Method : {}", request.getMethod());
+            logger.info("* IP Address : {}", request.getRemoteAddr());
+            logger.info("★ Request Body : {}", Arrays.toString(joinPoint.getArgs()));
         }
     }
 
-    @AfterReturning(returning = "returnObject", pointcut = "pointcut()")
-    public void doAfterReturning(JoinPoint joinPoint, Object returnObject) {
-        System.out.println(joinPoint);
-        System.out.println(returnObject);
+    @AfterReturning(returning = "returnObject", pointcut = "pointCut()")
+    public void doAfterReturning(Object returnObject) {
         if (!Objects.isNull(returnObject)) {
-            BaseAPIResponse res = (BaseAPIResponse)returnObject;
-            Integer code = res.getCode();
-            String message = res.getMessage();
-            Object data = res.getData();
             // 处理完请求，返回内容
-            this.end = LocalDateTime.now();
-            log.info("=====================レスポンス START=====================");
-            log.info("★ 終了時間 : {}", this.end);
-            log.info("★ returnObject : {}", returnObject.getClass());
-            log.info("★ コード : {}", code);
-            log.info("★ メッセージ : {}", message);
-            log.info("★ データ : {}", data);
-            log.info("* 処理所用時間 : {}秒", getDuration());
-            log.info("=====================レスポンス END=====================");
+            logger.info("★ Response: {}", returnObject);
         }
     }
 
     @Around("within(api.lemonico.controller.*)")
     public Object around(final ProceedingJoinPoint pjp) throws Throwable {
-
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        log.trace("メソッド開始:{}\t引数:{}", pjp.getSignature(), Arrays.asList(pjp.getArgs()));
         final StopWatch sw = new StopWatch();
         sw.start();
         Object res;
@@ -103,16 +56,11 @@ public class LemonicoAPIAspect {
             res = pjp.proceed();
         } catch (Throwable e) {
             sw.stop();
-            this.end = LocalDateTime.now();
-            log.info("=====================異常発生 START=====================");
-            log.info("* 終了時間 : {}", this.end);
-            log.info("* 異常メッセージ : {}", e.getMessage());
-            log.info("* 処理所用時間 : {}秒", getDuration());
-            log.info("=====================異常発生 END=====================");
+            logger.info("* Error Message : {}", e.getMessage());
             throw e;
         }
         sw.stop();
-        log.trace("メソッド終了:{}\t処理時間:{}ミリ秒\t戻り値:{}", pjp.getSignature(), sw.getLastTaskTimeMillis(), res);
+        logger.info("* Processing Time: {}s", sw.getTotalTimeSeconds());
         return res;
     }
 
