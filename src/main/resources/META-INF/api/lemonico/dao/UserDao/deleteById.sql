@@ -1,0 +1,15 @@
+select
+    id,
+    uuid,
+    first_name,
+    last_name,
+    sex,
+    birthday,
+    email,
+    created_by,
+    created_at,
+    updated_by,
+    updated_at,
+    delete_flag
+from
+    user

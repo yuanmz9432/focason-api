@@ -1,0 +1,15 @@
+select
+    id,
+    uuid,
+    first_name,
+    last_name,
+    sex,
+    birthday,
+    email,
+    created_by,
+    created_at,
+    modified_by,
+    modified_at,
+    is_deleted
+from
+    customer

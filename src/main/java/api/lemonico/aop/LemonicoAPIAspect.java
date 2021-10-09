@@ -1,5 +1,6 @@
 package api.lemonico.aop;
 
+import api.lemonico.IPUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -34,7 +35,7 @@ public class LemonicoAPIAspect {
             HttpServletRequest request = requestAttributes.getRequest();
             logger.info("★ URI : {}", request.getRequestURL().toString());
             logger.info("★ HTTP Method : {}", request.getMethod());
-            logger.info("* IP Address : {}", request.getRemoteAddr());
+            logger.info("* IP Address : {}", IPUtils.getIpAddress(request));
             logger.info("★ Request Body : {}", Arrays.toString(joinPoint.getArgs()));
         }
     }
