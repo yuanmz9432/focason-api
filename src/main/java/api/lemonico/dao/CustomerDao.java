@@ -1,17 +1,19 @@
-/**
+/*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
 package api.lemonico.dao;
 
 import api.lemonico.attribute.ID;
-import org.seasar.doma.boot.ConfigAutowireable;
-import org.seasar.doma.*;
 import api.lemonico.entity.Customer;
 import api.lemonico.repository.CustomerRepository;
+import org.seasar.doma.*;
+import org.seasar.doma.boot.ConfigAutowireable;
+import org.seasar.doma.jdbc.BatchResult;
 import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
-import java.util.Optional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 
 /**
@@ -135,20 +137,20 @@ public interface CustomerDao {
     * @param entities the Customer
     * @return affected rows
     */
-    @org.seasar.doma.BatchInsert
-    int[] insert(Iterable<Customer> entities);
+    @BatchInsert
+    BatchResult<Customer> insert(List<Customer> entities);
 
     /**
     * @param entities the Customer
     * @return affected rows
     */
-    @org.seasar.doma.BatchUpdate
-    int[] update(Iterable<Customer> entities);
+    @BatchUpdate
+    BatchResult<Customer> update(List<Customer> entities);
 
     /**
     * @param entities the Customer
     * @return affected rows
     */
-    @org.seasar.doma.BatchDelete
-    int[] delete(Iterable<Customer> entities);
+    @BatchDelete
+    int[] delete(List<Customer> entities);
 }

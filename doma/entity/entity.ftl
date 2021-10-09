@@ -10,7 +10,7 @@ package ${packageName};
 </#if>
 
 import api.lemonico.attribute.ID;
-import api.lemonico.attribute.LemonicoEntity;
+import api.lemonico.attribute.LcEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LemonicoEntity {
+public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LcEntity {
 <#list ownEntityPropertyDescs as property>
 
   <#if showDbComment && property.comment??>

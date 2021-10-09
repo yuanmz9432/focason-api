@@ -6,31 +6,31 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class LemonicoSort {
+public final class LcSort {
 
     private final String property;
-    private final LemonicoSort.Direction direction;
+    private final LcSort.Direction direction;
 
     public String toSql() {
         return this.property + " " + this.direction.getValue();
     }
 
-    LemonicoSort(final String property, final LemonicoSort.Direction direction) {
+    LcSort(final String property, final LcSort.Direction direction) {
         this.property = property;
         this.direction = direction;
     }
 
-    public static LemonicoSort.LemonicoSortBuilder builder() {
-        return new LemonicoSort.LemonicoSortBuilder();
+    public static LcSort.LemonicoSortBuilder builder() {
+        return new LcSort.LemonicoSortBuilder();
     }
 
     public boolean equals(final Object o) {
         if (o == this) {
             return true;
-        } else if (!(o instanceof LemonicoSort)) {
+        } else if (!(o instanceof LcSort)) {
             return false;
         } else {
-            LemonicoSort other = (LemonicoSort)o;
+            LcSort other = (LcSort)o;
             Object this$property = this.getProperty();
             Object other$property = other.getProperty();
             if (this$property == null) {
@@ -62,41 +62,41 @@ public final class LemonicoSort {
         return "LemonicoSort(property=" + var10000 + ", direction=" + this.getDirection() + ")";
     }
 
-    public LemonicoSort withProperty(final String property) {
-        return Objects.equals(this.property, property) ? this : new LemonicoSort(property, this.direction);
+    public LcSort withProperty(final String property) {
+        return Objects.equals(this.property, property) ? this : new LcSort(property, this.direction);
     }
 
-    public LemonicoSort withDirection(final LemonicoSort.Direction direction) {
-        return this.direction == direction ? this : new LemonicoSort(this.property, direction);
+    public LcSort withDirection(final LcSort.Direction direction) {
+        return this.direction == direction ? this : new LcSort(this.property, direction);
     }
 
     public String getProperty() {
         return this.property;
     }
 
-    public LemonicoSort.Direction getDirection() {
+    public LcSort.Direction getDirection() {
         return this.direction;
     }
 
     public static class LemonicoSortBuilder {
         private String property;
-        private LemonicoSort.Direction direction;
+        private LcSort.Direction direction;
 
         LemonicoSortBuilder() {
         }
 
-        public LemonicoSort.LemonicoSortBuilder property(final String property) {
+        public LcSort.LemonicoSortBuilder property(final String property) {
             this.property = property;
             return this;
         }
 
-        public LemonicoSort.LemonicoSortBuilder direction(final LemonicoSort.Direction direction) {
+        public LcSort.LemonicoSortBuilder direction(final LcSort.Direction direction) {
             this.direction = direction;
             return this;
         }
 
-        public LemonicoSort build() {
-            return new LemonicoSort(this.property, this.direction);
+        public LcSort build() {
+            return new LcSort(this.property, this.direction);
         }
 
         public String toString() {
@@ -111,7 +111,7 @@ public final class LemonicoSort {
         private final String value;
 
         @JsonCreator
-        public static LemonicoSort.Direction of(String value) {
+        public static LcSort.Direction of(String value) {
             return Arrays.stream(values())
                     .filter((v) -> v.value.equalsIgnoreCase(value))
                     .findFirst()

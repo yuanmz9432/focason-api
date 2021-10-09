@@ -128,21 +128,6 @@ task genDao {
                             overwrite: true,
                             packageName: "api.lemonico.dao",
                             destDir: 'src/main/java')
-                }
-    }
-}
-
-task genSql {
-    group = 'doma-gen'
-    doLast {
-        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
-        ant.gen(
-                url: "${dbUrl}",
-                user: "${dbUser}",
-                password: "${dbPassword}",
-                ignoredTableNamePattern: "flyway_schema_history",
-                templatePrimaryDir: "doma/sql")
-                {
                     sqlConfig(
                             overwrite: true,
                             destDir: 'src/main/resources',
@@ -150,6 +135,25 @@ task genSql {
                 }
     }
 }
+
+//task genSql {
+//    group = 'doma-gen'
+//    doLast {
+//        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
+//        ant.gen(
+//                url: "${dbUrl}",
+//                user: "${dbUser}",
+//                password: "${dbPassword}",
+//                ignoredTableNamePattern: "flyway_schema_history",
+//                templatePrimaryDir: "doma/sql")
+//                {
+//                    sqlConfig(
+//                            overwrite: true,
+//                            destDir: 'src/main/resources',
+//                    )
+//                }
+//    }
+//}
 
 task genTestCases {
     group = 'doma-gen'
@@ -188,24 +192,22 @@ task cleanGenRepository(type: Delete) {
     delete 'src/main/java/api/lemonico/repository'
 }
 
-task cleanGenSql(type: Delete) {
-    group = 'doma-gen-clean'
-    delete 'src/main/java/api/lemonico/sql'
-}
+//task cleanGenSql(type: Delete) {
+//    group = 'doma-gen-clean'
+//    delete 'src/main/java/api/lemonico/sql'
+//}
 
 /**
  * genAllの実行順序は下記となります。
- * cleanGenAll → genRepository → genEntity → genSql → genDao → genAll
+ * cleanGenAll → genRepository → genEntity → genDao → genAll
  */
 genAll.dependsOn genDao
-genDao.dependsOn genSql
-genSql.dependsOn genEntity
+genDao.dependsOn genEntity
 genEntity.dependsOn genRepository
 genRepository.dependsOn cleanGenAll
 
 genDao.dependsOn cleanGenDao
 genRepository.dependsOn cleanGenRepository
-genSql.dependsOn cleanGenSql
 
 flywayMigrate.mustRunAfter flywayClean
 

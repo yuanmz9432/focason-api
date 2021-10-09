@@ -11,14 +11,14 @@ import org.seasar.doma.jdbc.entity.PreUpdateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LemonicoEntityListenerHandler<E extends LemonicoEntity> implements EntityListener<E> {
-    private static final Logger log = LoggerFactory.getLogger(LemonicoEntityListenerHandler.class);
+public class LcEntityListenerHandler<E extends LcEntity> implements EntityListener<E> {
+    private static final Logger log = LoggerFactory.getLogger(LcEntityListenerHandler.class);
 
-    public LemonicoEntityListenerHandler() {
+    public LcEntityListenerHandler() {
     }
 
     public void preInsert(E entity, PreInsertContext<E> context) {
-        LemonicoEntityListenerManager.forEachListener((listener) -> {
+        LcEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.preInsert(entity, context);
             } catch (ClassCastException ignored) {
@@ -28,7 +28,7 @@ public class LemonicoEntityListenerHandler<E extends LemonicoEntity> implements 
     }
 
     public void preUpdate(E entity, PreUpdateContext<E> context) {
-        LemonicoEntityListenerManager.forEachListener((listener) -> {
+        LcEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.preUpdate(entity, context);
             } catch (ClassCastException ignored) {
@@ -38,7 +38,7 @@ public class LemonicoEntityListenerHandler<E extends LemonicoEntity> implements 
     }
 
     public void preDelete(E entity, PreDeleteContext<E> context) {
-        LemonicoEntityListenerManager.forEachListener((listener) -> {
+        LcEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.preDelete(entity, context);
             } catch (ClassCastException ignored) {
@@ -48,7 +48,7 @@ public class LemonicoEntityListenerHandler<E extends LemonicoEntity> implements 
     }
 
     public void postInsert(E entity, PostInsertContext<E> context) {
-        LemonicoEntityListenerManager.forEachListener((listener) -> {
+        LcEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.postInsert(entity, context);
             } catch (ClassCastException ignored) {
@@ -58,7 +58,7 @@ public class LemonicoEntityListenerHandler<E extends LemonicoEntity> implements 
     }
 
     public void postUpdate(E entity, PostUpdateContext<E> context) {
-        LemonicoEntityListenerManager.forEachListener((listener) -> {
+        LcEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.postUpdate(entity, context);
             } catch (ClassCastException ignored) {
@@ -68,7 +68,7 @@ public class LemonicoEntityListenerHandler<E extends LemonicoEntity> implements 
     }
 
     public void postDelete(E entity, PostDeleteContext<E> context) {
-        LemonicoEntityListenerManager.forEachListener((listener) -> {
+        LcEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.postDelete(entity, context);
             } catch (ClassCastException ignored) {

@@ -4,7 +4,7 @@
 package api.lemonico.entity;
 
 import api.lemonico.attribute.ID;
-import api.lemonico.attribute.LemonicoEntity;
+import api.lemonico.attribute.LcEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-public class Customer extends LemonicoEntity {
+public class Customer extends LcEntity {
 
     /** ID */
     @Id

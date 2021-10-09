@@ -3,7 +3,7 @@
  */
 package api.lemonico.repository;
 
-import api.lemonico.attribute.LemonicoSort;
+import api.lemonico.attribute.LcSort;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -45,7 +45,7 @@ public class CustomerRepository {
         /**
         * デフォルトの検索条件
         */
-        public static final Sort DEFAULT = new Sort(SortColumn.ID, LemonicoSort.Direction.ASC);
+        public static final Sort DEFAULT = new Sort(SortColumn.ID, LcSort.Direction.ASC);
 
         /**
         * ソート列
@@ -55,7 +55,7 @@ public class CustomerRepository {
         /**
         * ソート順序
         */
-        LemonicoSort.Direction direction;
+        LcSort.Direction direction;
 
         /**
         * このソートパラメータをSQLステートメント形式に変換して返します。
@@ -63,6 +63,16 @@ public class CustomerRepository {
         * @return SQLステートメント
         */
         public String toSql() { return column.getColumnName() + " " + direction.name(); }
+
+        /**
+        * {@link LcSort} から新規ソートパラメータを生成します。
+        *
+        * @param sort {@link LcSort}
+        * @return ソートパラメータ
+        */
+        public static Sort fromLcSort(LcSort sort) {
+            return new Sort(SortColumn.fromPropertyName(sort.getProperty()), sort.getDirection());
+        }
     }
 
     /**

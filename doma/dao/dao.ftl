@@ -1,6 +1,6 @@
 <#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.DaoDesc です -->
 <#import "lib.ftl" as lib>
-/**
+/*
 <#if lib.copyright??>
  * ${lib.copyright}
 </#if>
@@ -10,14 +10,16 @@ package ${packageName};
 </#if>
 
 import api.lemonico.attribute.ID;
-import org.seasar.doma.boot.ConfigAutowireable;
+import api.lemonico.entity.Customer;
+import api.lemonico.repository.CustomerRepository;
 import org.seasar.doma.*;
-import api.lemonico.entity.${entityDesc.simpleName};
-import api.lemonico.repository.${entityDesc.simpleName}Repository;
+import org.seasar.doma.boot.ConfigAutowireable;
+import org.seasar.doma.jdbc.BatchResult;
 import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
-import java.util.Optional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 
 /**
@@ -145,20 +147,20 @@ public interface ${simpleName} {
     * @param entities the <#if entityDesc.simpleName??>${entityDesc.simpleName}</#if>
     * @return affected rows
     */
-    @org.seasar.doma.BatchInsert
-    int[] insert(Iterable<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    @BatchInsert
+    BatchResult<${entityDesc.simpleName}> insert(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
 
     /**
     * @param entities the <#if entityDesc.simpleName??>${entityDesc.simpleName}</#if>
     * @return affected rows
     */
-    @org.seasar.doma.BatchUpdate
-    int[] update(Iterable<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    @BatchUpdate
+    BatchResult<${entityDesc.simpleName}> update(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
 
     /**
     * @param entities the <#if entityDesc.simpleName??>${entityDesc.simpleName}</#if>
     * @return affected rows
     */
-    @org.seasar.doma.BatchDelete
-    int[] delete(Iterable<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    @BatchDelete
+    int[] delete(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
 }
