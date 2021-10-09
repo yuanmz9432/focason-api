@@ -144,6 +144,15 @@ public interface ${simpleName} {
     int deleteById(ID<${entityDesc.simpleName}> id);
 
     /**
+    * エンティティIDを指定して、データベースからエンティティを削除します。
+    *
+    * @param id エンティティID
+    * @return エンティティ削除件数が返されます。
+    */
+    @Update(sqlFile = true)
+    int deleteLogicById(ID<${entityDesc.simpleName}> id);
+
+    /**
     * @param entities the <#if entityDesc.simpleName??>${entityDesc.simpleName}</#if>
     * @return affected rows
     */

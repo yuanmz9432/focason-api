@@ -134,6 +134,15 @@ public interface CustomerDao {
     int deleteById(ID<Customer> id);
 
     /**
+    * エンティティIDを指定して、データベースからエンティティを削除します。
+    *
+    * @param id エンティティID
+    * @return エンティティ削除件数が返されます。
+    */
+    @Update(sqlFile = true)
+    int deleteLogicById(ID<Customer> id);
+
+    /**
     * @param entities the Customer
     * @return affected rows
     */
