@@ -43,13 +43,13 @@ public class ${simpleName}${entitySuffix} {
     private final CustomerDao dao;
 
     /**
-    * 検索オプションを指定してエンティティの一覧を取得します。
-    *
-    * @param condition 検索条件
-    * @param pagination ページングパラメータ
-    * @param sort ソートパラメータ
-    * @return エンティティの結果セットが返されます。
-    */
+     * 検索オプションを指定してエンティティの一覧を取得します。
+     *
+     * @param condition 検索条件
+     * @param pagination ページングパラメータ
+     * @param sort ソートパラメータ
+     * @return エンティティの結果セットが返されます。
+     */
     public LcResultSet<${simpleName}> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
@@ -57,22 +57,22 @@ public class ${simpleName}${entitySuffix} {
     }
 
     /**
-    * エンティティIDを指定してエンティティを一件取得します。
-    *
-    * @param id エンティティID
-    * @return エンティティが {@link Optional} で返されます。<br>
-    *         エンティティが存在しない場合は空の {@link Optional} が返されます。
-    */
+     * エンティティIDを指定してエンティティを一件取得します。
+     *
+     * @param id エンティティID
+     * @return エンティティが {@link Optional} で返されます。<br>
+     *         エンティティが存在しない場合は空の {@link Optional} が返されます。
+     */
     public Optional<${simpleName}> findById(ID<${simpleName}> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
     /**
-    * エンティティを作成します。
-    *
-    * @param entity エンティティ
-    * @return 作成したエンティティのIDが返されます。
-    */
+     * エンティティを作成します。
+     *
+     * @param entity エンティティ
+     * @return 作成したエンティティのIDが返されます。
+     */
     public ID<${simpleName}> create(${simpleName} entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
@@ -84,10 +84,10 @@ public class ${simpleName}${entitySuffix} {
     }
 
     /**
-    * エンティティを更新します。
-    *
-    * @param entity エンティティ
-    */
+     * エンティティを更新します。
+     *
+     * @param entity エンティティ
+     */
     public void update(ID<${simpleName}> id, ${simpleName} entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
@@ -97,10 +97,10 @@ public class ${simpleName}${entitySuffix} {
     }
 
     /**
-    * エンティティを削除します。
-    *
-    * @param id エンティティID
-    */
+     * エンティティを削除します。
+     *
+     * @param id エンティティID
+     */
     public void deleteById(ID<${simpleName}> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
@@ -109,10 +109,10 @@ public class ${simpleName}${entitySuffix} {
     }
 
     /**
-    * エンティティを削除します。
-    *
-    * @param id エンティティID
-    */
+     * エンティティを削除します。
+     *
+     * @param id エンティティID
+     */
     public void deleteLogicById(ID<${simpleName}> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
@@ -121,8 +121,8 @@ public class ${simpleName}${entitySuffix} {
     }
 
     /**
-    * 検索条件
-    */
+     * 検索条件
+     */
     @Data
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor
@@ -142,48 +142,48 @@ public class ${simpleName}${entitySuffix} {
     }
 
     /**
-    * ソートパラメータ
-    */
+     * ソートパラメータ
+     */
     @AllArgsConstructor
     @Value
     public static class Sort {
 
         /**
-        * デフォルトの検索条件
-        */
+         * デフォルトの検索条件
+         */
         public static final Sort DEFAULT = new Sort(SortColumn.ID, LcSort.Direction.ASC);
 
         /**
-        * ソート列
-        */
+         * ソート列
+         */
         SortColumn column;
 
         /**
-        * ソート順序
-        */
+         * ソート順序
+         */
         LcSort.Direction direction;
 
         /**
-        * このソートパラメータをSQLステートメント形式に変換して返します。
-        *
-        * @return SQLステートメント
-        */
+         * このソートパラメータをSQLステートメント形式に変換して返します。
+         *
+         * @return SQLステートメント
+         */
         public String toSql() { return column.getColumnName() + " " + direction.name(); }
 
         /**
-        * {@link LcSort} から新規ソートパラメータを生成します。
-        *
-        * @param sort {@link LcSort}
-        * @return ソートパラメータ
-        */
+         * {@link LcSort} から新規ソートパラメータを生成します。
+         *
+         * @param sort {@link LcSort}
+         * @return ソートパラメータ
+         */
         public static Sort fromLcSort(LcSort sort) {
             return new Sort(SortColumn.fromPropertyName(sort.getProperty()), sort.getDirection());
         }
     }
 
     /**
-    * ソート列
-    */
+     * ソート列
+     */
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public enum SortColumn {
 

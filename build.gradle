@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.5.5"
         classpath "gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:6.0.6"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:5.16.0"
     }
 }
 
@@ -22,6 +23,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'org.flywaydb.flyway'
+apply plugin: "com.diffplug.spotless"
 idea.module.inheritOutputDirs = true
 
 group 'lemoico.com'
@@ -263,4 +265,12 @@ flyway {
     locations = ["filesystem:$projectDir/db/migration"]
     table = 'flyway_schema_history'
     baselineOnMigrate = false
+}
+
+spotless {
+    java {
+        // Use the default importOrder configuration
+        importOrder()
+        removeUnusedImports()
+    }
 }

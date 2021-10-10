@@ -1,19 +1,18 @@
 package api.lemonico.service;
 
+import static java.util.stream.Collectors.toList;
+
 import api.lemonico.attribute.LcPagination;
 import api.lemonico.attribute.LcResultSet;
 import api.lemonico.entity.Customer;
 import api.lemonico.repository.CustomerRepository;
 import api.lemonico.resource.CustomerResource;
+import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * BOユーザサービス
