@@ -9,23 +9,22 @@
 package ${packageName};
 </#if>
 
+import static java.util.stream.Collectors.toList;
+
 import api.lemonico.attribute.ID;
-import api.lemonico.dao.${simpleName}Dao;
-import api.lemonico.entity.${simpleName};
 import api.lemonico.attribute.LcPagination;
 import api.lemonico.attribute.LcResultSet;
 import api.lemonico.attribute.LcSort;
+import api.lemonico.dao.CustomerDao;
+import api.lemonico.entity.Customer;
 import api.lemonico.exception.LcEntityNotFoundException;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-
-import static java.util.stream.Collectors.toList;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
 <#if tableName??>
