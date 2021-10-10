@@ -92,6 +92,25 @@ task genRepository {
     }
 }
 
+task genResource {
+    group = 'doma-gen'
+    doLast {
+        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
+        ant.gen(url: "${dbUrl}",
+                user: "${dbUser}",
+                password: "${dbPassword}",
+                ignoredTableNamePattern: "flyway_schema_history",
+                templatePrimaryDir: "doma/resource")
+                {
+                    entityConfig(
+                            overwrite: true, useListener: false,
+                            packageName: "api.lemonico.resource",
+                            entitySuffix: "Resource",
+                            destDir: 'src/main/java')
+                }
+    }
+}
+
 task genEntity {
     group = 'doma-gen'
     doLast {
@@ -187,6 +206,11 @@ task cleanGenEntity(type: Delete) {
     delete 'src/main/java/api/lemonico/entity'
 }
 
+task cleanGenResource(type: Delete) {
+    group = 'doma-gen-clean'
+    delete 'src/main/java/api/lemonico/resource'
+}
+
 task cleanGenRepository(type: Delete) {
     group = 'doma-gen-clean'
     delete 'src/main/java/api/lemonico/repository'
@@ -208,6 +232,7 @@ genRepository.dependsOn cleanGenAll
 
 genDao.dependsOn cleanGenDao
 genRepository.dependsOn cleanGenRepository
+genResource.dependsOn cleanGenResource
 
 flywayMigrate.mustRunAfter flywayClean
 

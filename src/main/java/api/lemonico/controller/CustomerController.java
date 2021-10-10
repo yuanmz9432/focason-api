@@ -4,15 +4,25 @@ import api.lemonico.annotation.LcConditionParam;
 import api.lemonico.annotation.LcPaginationParam;
 import api.lemonico.annotation.LcSortParam;
 import api.lemonico.attribute.LcPagination;
+import api.lemonico.attribute.LcResultSet;
 import api.lemonico.attribute.LcSort;
 import api.lemonico.repository.CustomerRepository;
 import api.lemonico.resource.CustomerResource;
+import api.lemonico.service.CustomerService;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Null;
+
 @RestController
+@Validated
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerController extends AbstractController{
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
@@ -20,6 +30,8 @@ public class CustomerController extends AbstractController{
     private final static String COLLECTION_RESOURCE_URI = "/customers";
 
     private final static String CUSTOMER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
+
+    private final CustomerService service;
 
     @RequestMapping(method = RequestMethod.GET, path = COLLECTION_RESOURCE_URI)
     public ResponseEntity<CustomerResource> getCustomers(
@@ -30,7 +42,7 @@ public class CustomerController extends AbstractController{
             condition = CustomerRepository.Condition.DEFAULT;
         }
         var sort = CustomerRepository.Sort.fromLcSort(lcSort);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(null);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = CUSTOMER_RESOURCE_URI)

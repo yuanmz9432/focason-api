@@ -1,3 +1,6 @@
-UPDATE customer
-SET is_deleted = 1
-where id = /* id */1
+UPDATE
+    customer
+SET
+    is_deleted = 1
+WHERE
+    id = /* id */1
