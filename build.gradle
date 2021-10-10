@@ -269,9 +269,8 @@ flyway {
 
 spotless {
     java {
-        // Use the default importOrder configuration
         importOrder()
-        eclipse().configFile project.file("eclipse-java-code-formatter.xml")
+        eclipse().configFile file("${rootDir}/eclipse-java-code-formatter.xml")
         removeUnusedImports()
     }
 }
