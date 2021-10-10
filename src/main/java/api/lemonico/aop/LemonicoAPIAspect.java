@@ -1,6 +1,11 @@
 package api.lemonico.aop;
 
+
+
 import api.lemonico.IPUtils;
+import java.util.Arrays;
+import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -11,26 +16,23 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  * AOP
  */
 @Aspect
 @Component
-public class LemonicoAPIAspect {
+public class LemonicoAPIAspect
+{
 
     private static final Logger logger = LoggerFactory.getLogger(LemonicoAPIAspect.class);
 
     @Pointcut("execution(* api.lemonico.controller..*(..))")
-    public void pointCut() {
-    }
+    public void pointCut() {}
 
     @Before("pointCut()")
     public void beforeExecution(JoinPoint joinPoint) {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes requestAttributes =
+            (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
             logger.info("★ URI : {}", request.getRequestURL().toString());

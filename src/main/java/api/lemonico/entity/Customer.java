@@ -3,27 +3,29 @@
  */
 package api.lemonico.entity;
 
+
+
 import api.lemonico.attribute.ID;
 import api.lemonico.attribute.LcEntity;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
 import org.seasar.doma.*;
 
-import java.time.LocalDateTime;
-
 /**
  * customerのエンティティ
  *
  * @since 1.0.0
-*/
+ */
 @Entity(immutable = true)
 @Value
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-public class Customer extends LcEntity {
+public class Customer extends LcEntity
+{
 
     /** ID */
     @Id

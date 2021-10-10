@@ -1,5 +1,7 @@
 package api.lemonico.controller;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class CommonController extends AbstractController {
-    
+public class CommonController extends AbstractController
+{
+
     private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 
     @ResponseBody

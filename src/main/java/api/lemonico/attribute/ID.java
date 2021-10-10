@@ -1,8 +1,10 @@
 package api.lemonico.attribute;
 
+
+
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.Serializable;
 import java.util.Objects;
 import org.seasar.doma.Domain;
@@ -10,10 +12,10 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Domain(
-        valueType = Long.class,
-        factoryMethod = "of"
-)
-public final class ID<E> implements Serializable {
+    valueType = Long.class,
+    factoryMethod = "of")
+public final class ID<E> implements Serializable
+{
     private static final long serialVersionUID = 1L;
     private final Long value;
 
@@ -44,8 +46,7 @@ public final class ID<E> implements Serializable {
     }
 
     @JsonCreator(
-            mode = Mode.DELEGATING
-    )
+        mode = Mode.DELEGATING)
     public static <R> ID<R> of(final String value) {
         try {
             return of(Long.parseLong(value));
@@ -58,7 +59,7 @@ public final class ID<E> implements Serializable {
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
-            ID<?> id = (ID)o;
+            ID<?> id = (ID) o;
             return this.value.equals(id.value);
         } else {
             return false;
@@ -70,9 +71,9 @@ public final class ID<E> implements Serializable {
     }
 
     @Component
-    public static class IDConverter implements Converter<String, ID<?>> {
-        public IDConverter() {
-        }
+    public static class IDConverter implements Converter<String, ID<?>>
+    {
+        public IDConverter() {}
 
         public ID<?> convert(String value) {
             return ID.of(value);

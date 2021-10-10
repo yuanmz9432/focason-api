@@ -1,6 +1,7 @@
 package api.lemonico.attribute;
 
 
+
 import org.seasar.doma.jdbc.entity.EntityListener;
 import org.seasar.doma.jdbc.entity.PostDeleteContext;
 import org.seasar.doma.jdbc.entity.PostInsertContext;
@@ -11,11 +12,11 @@ import org.seasar.doma.jdbc.entity.PreUpdateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LcEntityListenerHandler<E extends LcEntity> implements EntityListener<E> {
+public class LcEntityListenerHandler<E extends LcEntity> implements EntityListener<E>
+{
     private static final Logger log = LoggerFactory.getLogger(LcEntityListenerHandler.class);
 
-    public LcEntityListenerHandler() {
-    }
+    public LcEntityListenerHandler() {}
 
     public void preInsert(E entity, PreInsertContext<E> context) {
         LcEntityListenerManager.forEachListener((listener) -> {

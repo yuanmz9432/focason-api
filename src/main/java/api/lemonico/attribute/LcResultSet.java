@@ -1,14 +1,16 @@
 package api.lemonico.attribute;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.domain.Page;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+import org.springframework.data.domain.Page;
 
-public final class LcResultSet<T> implements Serializable {
+public final class LcResultSet<T> implements Serializable
+{
     private final List<T> data;
     private final long count;
 
@@ -90,12 +92,12 @@ public final class LcResultSet<T> implements Serializable {
         return this.count == count ? this : new LcResultSet(this.data, count);
     }
 
-    public static class LcResultSetBuilder<T> {
+    public static class LcResultSetBuilder<T>
+    {
         private List<T> data;
         private long count;
 
-        LcResultSetBuilder() {
-        }
+        LcResultSetBuilder() {}
 
         public LcResultSet.LcResultSetBuilder<T> data(final List<T> data) {
             this.data = data;

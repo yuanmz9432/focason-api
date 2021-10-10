@@ -3,12 +3,13 @@
  */
 package api.lemonico.resource;
 
+
+
 import api.lemonico.attribute.ID;
 import api.lemonico.entity.Customer;
+import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDateTime;
 
 /**
  * customerのエンティティ
@@ -20,7 +21,8 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class CustomerResource {
+public class CustomerResource
+{
 
     /** ID */
     private final ID<Customer> id;

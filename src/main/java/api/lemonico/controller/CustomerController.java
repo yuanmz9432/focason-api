@@ -1,5 +1,7 @@
 package api.lemonico.controller;
 
+
+
 import api.lemonico.annotation.LcConditionParam;
 import api.lemonico.annotation.LcPaginationParam;
 import api.lemonico.annotation.LcSortParam;
@@ -20,7 +22,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CustomerController {
+public class CustomerController
+{
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
@@ -32,9 +35,9 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.GET, path = COLLECTION_RESOURCE_URI)
     public ResponseEntity<LcResultSet<CustomerResource>> getCustomers(
-            @LcConditionParam CustomerRepository.Condition condition,
-            @LcPaginationParam LcPagination pagination,
-            @LcSortParam(allowedValues = {}) LcSort lcSort) {
+        @LcConditionParam CustomerRepository.Condition condition,
+        @LcPaginationParam LcPagination pagination,
+        @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
             condition = CustomerRepository.Condition.DEFAULT;
         }

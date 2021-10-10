@@ -1,9 +1,12 @@
 package api.lemonico.attribute;
 
+
+
 import java.util.List;
 import java.util.function.Consumer;
 
-public class LcEntityListenerManager {
+public class LcEntityListenerManager
+{
     private static List<LcEntityListener> listeners;
 
     public LcEntityListenerManager(List<LcEntityListener> listeners) {

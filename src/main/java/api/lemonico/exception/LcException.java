@@ -1,6 +1,7 @@
 package api.lemonico.exception;
 
-public class LcException extends RuntimeException {
+public class LcException extends RuntimeException
+{
     private final LcErrorCode code;
 
     public LcException(LcErrorCode code, String format, Object... args) {
@@ -13,5 +14,7 @@ public class LcException extends RuntimeException {
         this.code = code;
     }
 
-    public LcErrorCode getCode() { return this.code; }
+    public LcErrorCode getCode() {
+        return this.code;
+    }
 }

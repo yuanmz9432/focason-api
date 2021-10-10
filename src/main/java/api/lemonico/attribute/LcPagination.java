@@ -1,11 +1,12 @@
 package api.lemonico.attribute;
 
 
-import org.seasar.doma.jdbc.SelectOptions;
 
 import java.io.Serializable;
+import org.seasar.doma.jdbc.SelectOptions;
 
-public final class LcPagination implements Serializable {
+public final class LcPagination implements Serializable
+{
     public static final LcPagination DEFAULT = of(20, 1);
     private final int limit;
     private final int page;
@@ -95,12 +96,12 @@ public final class LcPagination implements Serializable {
         return this.page == page ? this : new LcPagination(this.limit, page);
     }
 
-    public static class LcPaginationBuilder {
+    public static class LcPaginationBuilder
+    {
         private int limit;
         private int page;
 
-        LcPaginationBuilder() {
-        }
+        LcPaginationBuilder() {}
 
         public LcPagination.LcPaginationBuilder limit(final int limit) {
             this.limit = limit;

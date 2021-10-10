@@ -1,4 +1,5 @@
 package api.lemonico.controller;
 
-abstract class AbstractController {
+abstract class AbstractController
+{
 }

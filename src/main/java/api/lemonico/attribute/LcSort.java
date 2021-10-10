@@ -1,12 +1,14 @@
 package api.lemonico.attribute;
 
+
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class LcSort {
+public final class LcSort
+{
 
     private final String property;
     private final Direction direction;
@@ -30,7 +32,7 @@ public final class LcSort {
         } else if (!(o instanceof LcSort)) {
             return false;
         } else {
-            LcSort other = (LcSort)o;
+            LcSort other = (LcSort) o;
             Object this$property = this.getProperty();
             Object other$property = other.getProperty();
             if (this$property == null) {
@@ -45,7 +47,8 @@ public final class LcSort {
             Object other$direction = other.getDirection();
             if (this$direction == null) {
                 return other$direction == null;
-            } else return this$direction.equals(other$direction);
+            } else
+                return this$direction.equals(other$direction);
         }
     }
 
@@ -78,12 +81,12 @@ public final class LcSort {
         return this.direction;
     }
 
-    public static class LemonicoSortBuilder {
+    public static class LemonicoSortBuilder
+    {
         private String property;
         private LcSort.Direction direction;
 
-        LemonicoSortBuilder() {
-        }
+        LemonicoSortBuilder() {}
 
         public LcSort.LemonicoSortBuilder property(final String property) {
             this.property = property;
@@ -104,18 +107,18 @@ public final class LcSort {
         }
     }
 
-    public static enum Direction {
-        ASC("ASC"),
-        DESC("DESC");
+    public static enum Direction
+    {
+        ASC("ASC"), DESC("DESC");
 
         private final String value;
 
         @JsonCreator
         public static LcSort.Direction of(String value) {
             return Arrays.stream(values())
-                    .filter((v) -> v.value.equalsIgnoreCase(value))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Direction = '" + value + "' is not supported."));
+                .filter((v) -> v.value.equalsIgnoreCase(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Direction = '" + value + "' is not supported."));
         }
 
         Direction(final String value) {
