@@ -28,7 +28,6 @@ public class Customer extends LcEntity {
     /** ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     ID<Customer> id;
 
     /** UUID */

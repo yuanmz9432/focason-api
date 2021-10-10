@@ -161,5 +161,5 @@ public interface CustomerDao {
     * @return affected rows
     */
     @BatchDelete
-    int[] delete(List<Customer> entities);
+    BatchResult<Customer> delete(List<Customer> entities);
 }

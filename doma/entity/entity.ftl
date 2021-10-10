@@ -47,9 +47,6 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     </#if>
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    <#if property.showColumnName && property.columnName??>
-    @Column(name = "${property.columnName}")
-    </#if>
     <#if !useAccessor>public </#if>ID<${simpleName}> ${property.name};
   <#else>
     <#if property.version>

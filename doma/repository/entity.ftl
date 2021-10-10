@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 
@@ -130,9 +131,14 @@ public class ${simpleName}${entitySuffix} {
     public static class Condition {
 
         /**
-        * デフォルトの検索条件
-        */
+         * デフォルトの検索条件
+         */
         public static final Condition DEFAULT = new Condition();
+
+        /**
+         * ${simpleName}IDのセット（完全一致、複数指定可）
+         */
+        private Set<ID<${simpleName}>> ids;
     }
 
     /**
@@ -184,14 +190,14 @@ public class ${simpleName}${entitySuffix} {
         ID("id", "id");
 
         /**
-        * プロパティ名
-        */
+         * プロパティ名
+         */
         @Getter
         private final String propertyName;
 
         /**
-        * データベース列名
-        */
+         * データベース列名
+         */
         @Getter
         private final String columnName;
 

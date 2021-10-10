@@ -9,13 +9,13 @@ import java.util.Objects;
 public final class LcSort {
 
     private final String property;
-    private final LcSort.Direction direction;
+    private final Direction direction;
 
     public String toSql() {
         return this.property + " " + this.direction.getValue();
     }
 
-    LcSort(final String property, final LcSort.Direction direction) {
+    public LcSort(final String property, final Direction direction) {
         this.property = property;
         this.direction = direction;
     }
@@ -90,7 +90,7 @@ public final class LcSort {
             return this;
         }
 
-        public LcSort.LemonicoSortBuilder direction(final LcSort.Direction direction) {
+        public LcSort.LemonicoSortBuilder direction(final Direction direction) {
             this.direction = direction;
             return this;
         }

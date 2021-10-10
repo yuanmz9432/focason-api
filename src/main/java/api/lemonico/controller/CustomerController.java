@@ -9,7 +9,6 @@ import api.lemonico.attribute.LcSort;
 import api.lemonico.repository.CustomerRepository;
 import api.lemonico.resource.CustomerResource;
 import api.lemonico.service.CustomerService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Null;
-
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CustomerController extends AbstractController{
+public class CustomerController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
@@ -34,15 +31,15 @@ public class CustomerController extends AbstractController{
     private final CustomerService service;
 
     @RequestMapping(method = RequestMethod.GET, path = COLLECTION_RESOURCE_URI)
-    public ResponseEntity<CustomerResource> getCustomers(
+    public ResponseEntity<LcResultSet<CustomerResource>> getCustomers(
             @LcConditionParam CustomerRepository.Condition condition,
             @LcPaginationParam LcPagination pagination,
-            @LcSortParam LcSort lcSort) {
+            @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
             condition = CustomerRepository.Condition.DEFAULT;
         }
         var sort = CustomerRepository.Sort.fromLcSort(lcSort);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = CUSTOMER_RESOURCE_URI)

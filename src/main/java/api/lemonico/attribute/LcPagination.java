@@ -1,13 +1,37 @@
 package api.lemonico.attribute;
 
 
-        import java.io.Serializable;
-        import org.seasar.doma.jdbc.SelectOptions;
+import org.seasar.doma.jdbc.SelectOptions;
+
+import java.io.Serializable;
 
 public final class LcPagination implements Serializable {
     public static final LcPagination DEFAULT = of(20, 1);
     private final int limit;
     private final int page;
+
+    public LcPagination(final int limit, final int page) {
+        this.limit = limit;
+        this.page = page;
+    }
+
+    public static LcPagination of(int limit, int page) {
+        return of(limit, page, (LcSort) null);
+    }
+
+    public static LcPagination of(int limit, int page, LcSort sort) {
+        if (limit < 1) {
+            throw new IllegalArgumentException("Page size (limit) must not be less than one!");
+        } else if (page < 1) {
+            throw new IllegalArgumentException("Page index (page) must not be less than one!");
+        } else {
+            return builder().limit(limit).page(page).build();
+        }
+    }
+
+    public static LcPagination.LcPaginationBuilder builder() {
+        return new LcPagination.LcPaginationBuilder();
+    }
 
     public SelectOptions toSelectOptions() {
         return SelectOptions.get().limit(this.limit).offset(this.limit * (this.page - 1));
@@ -29,24 +53,6 @@ public final class LcPagination implements Serializable {
         return this.page > 1;
     }
 
-    public static LcPagination of(int limit, int page) {
-        return of(limit, page, (LcSort)null);
-    }
-
-    public static LcPagination of(int limit, int page, LcSort sort) {
-        if (limit < 1) {
-            throw new IllegalArgumentException("Page size (limit) must not be less than one!");
-        } else if (page < 1) {
-            throw new IllegalArgumentException("Page index (page) must not be less than one!");
-        } else {
-            return builder().limit(limit).page(page).build();
-        }
-    }
-
-    public static LcPagination.LcPaginationBuilder builder() {
-        return new LcPagination.LcPaginationBuilder();
-    }
-
     public int getLimit() {
         return this.limit;
     }
@@ -61,7 +67,7 @@ public final class LcPagination implements Serializable {
         } else if (!(o instanceof LcPagination)) {
             return false;
         } else {
-            LcPagination other = (LcPagination)o;
+            LcPagination other = (LcPagination) o;
             if (this.getLimit() != other.getLimit()) {
                 return false;
             } else {
@@ -79,11 +85,6 @@ public final class LcPagination implements Serializable {
     public String toString() {
         int var10000 = this.getLimit();
         return "LcPagination(limit=" + var10000 + ", page=" + this.getPage() + ")";
-    }
-
-    public LcPagination(final int limit, final int page) {
-        this.limit = limit;
-        this.page = page;
     }
 
     public LcPagination withLimit(final int limit) {
