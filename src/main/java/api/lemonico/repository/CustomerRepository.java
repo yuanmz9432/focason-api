@@ -130,8 +130,6 @@ public class CustomerRepository
          * CustomerIDのセット（完全一致、複数指定可）
          */
         private Set<ID<Customer>> ids;
-
-        private String test;
     }
 
     /**

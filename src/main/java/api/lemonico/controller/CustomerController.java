@@ -3,7 +3,6 @@ package api.lemonico.controller;
 
 
 import api.lemonico.annotation.LcConditionParam;
-import api.lemonico.annotation.LcConditionalMappingOnProperty;
 import api.lemonico.annotation.LcPaginationParam;
 import api.lemonico.annotation.LcSortParam;
 import api.lemonico.attribute.LcPagination;
@@ -35,7 +34,6 @@ public class CustomerController
     private final CustomerService service;
 
     @RequestMapping(method = RequestMethod.GET, path = COLLECTION_RESOURCE_URI)
-    @LcConditionalMappingOnProperty(name = "getCustomers", havingValue = "test")
     public ResponseEntity<LcResultSet<CustomerResource>> getCustomers(
         @LcConditionParam CustomerRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
