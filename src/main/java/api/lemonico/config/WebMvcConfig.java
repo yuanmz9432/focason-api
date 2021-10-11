@@ -2,17 +2,14 @@ package api.lemonico.config;
 
 
 
-import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer
 {
-
     @Resource
     private CorsInterceptor corsInterceptor;
 
@@ -20,10 +17,5 @@ public class WebMvcConfig implements WebMvcConfigurer
     public void addInterceptors(InterceptorRegistry registry) {
         // 跨域拦截器需放在最上面
         registry.addInterceptor(corsInterceptor).addPathPatterns("/**");
-    }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LcPaginationParamHandlerMethodArgumentResolver());
     }
 }

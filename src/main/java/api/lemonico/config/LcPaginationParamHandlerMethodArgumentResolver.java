@@ -4,7 +4,7 @@ package api.lemonico.config;
 
 import api.lemonico.annotation.LcPaginationParam;
 import api.lemonico.attribute.LcPagination;
-import java.util.Objects;
+import api.lemonico.exception.LcValidationErrorException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -23,10 +23,37 @@ public class LcPaginationParamHandlerMethodArgumentResolver implements HandlerMe
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        int limit = webRequest.getParameter("limit") == null ? LcPagination.DEFAULT.getLimit()
-            : Integer.parseInt(Objects.requireNonNull(webRequest.getParameter("limit")));
-        int page = webRequest.getParameter("page") == null ? LcPagination.DEFAULT.getPage()
-            : Integer.parseInt(Objects.requireNonNull(webRequest.getParameter("page")));
-        return LcPagination.builder().limit(limit).page(page).build();
+        LcPaginationParam annotation = parameter.getParameterAnnotation(LcPaginationParam.class);
+        if (annotation == null) {
+            return null;
+        } else {
+            int limit;
+            try {
+                limit = extractIntegerParameter(webRequest, "limit", annotation.defaultLimitValue());
+                if (limit > annotation.defaultLimitValue()) {
+                    throw new LcValidationErrorException("Parameter '{}' must be less than or equal to {}.", "limit",
+                        annotation.maxLimitValue());
+                }
+            } catch (NumberFormatException e) {
+                throw new LcValidationErrorException("Parameter '{}' must be in the correct number format", "limit");
+            }
+
+            int page;
+            try {
+                page = extractIntegerParameter(webRequest, "page", 1);
+                if (page <= 0) {
+                    throw new LcValidationErrorException("Parameter '{}' must be greater than or equal to 1.", "page");
+                }
+            } catch (NumberFormatException e) {
+                throw new LcValidationErrorException("Parameter '{}' must be in the correct number format", "page");
+            }
+            return LcPagination.of(limit, page);
+        }
+    }
+
+    private int extractIntegerParameter(NativeWebRequest webRequest, String name, int defaultValue)
+        throws NumberFormatException {
+        String value = webRequest.getParameter(name);
+        return value != null ? Integer.parseInt(value) : defaultValue;
     }
 }
