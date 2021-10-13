@@ -9,6 +9,8 @@
 package ${packageName};
 </#if>
 
+
+
 import api.lemonico.attribute.ID;
 import api.lemonico.entity.Customer;
 import api.lemonico.repository.CustomerRepository;
@@ -114,7 +116,9 @@ public interface ${simpleName}
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<${entityDesc.simpleName}> selectById(ID<${entityDesc.simpleName}> id) { return selectById(id, SelectOptions.get()); }
+    default Optional<${entityDesc.simpleName}> selectById(ID<${entityDesc.simpleName}> id) {
+        return selectById(id, SelectOptions.get());
+    }
 
     /**
      * データベースにエンティティを挿入（新規作成）します。

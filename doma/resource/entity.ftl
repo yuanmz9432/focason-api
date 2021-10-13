@@ -9,12 +9,13 @@
 package ${packageName};
 </#if>
 
+
+
 import api.lemonico.attribute.ID;
-import api.lemonico.entity.${simpleName};
+import api.lemonico.entity.Customer;
+import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDateTime;
 
 /**
 <#if tableName??>
@@ -30,7 +31,8 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> {
+public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if>
+{
 <#list ownEntityPropertyDescs as property>
 
     <#if showDbComment && property.comment??>
@@ -68,23 +70,4 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
             </#list>
             .build();
     }
-
-
-<#--    /**-->
-<#--    * Returns the ${property.name}.-->
-<#--    *-->
-<#--    * @return the ${property.name}-->
-<#--    */-->
-<#--    public ${property.propertyClassSimpleName} get${property.name?cap_first}() {-->
-<#--    return ${property.name};-->
-<#--    }-->
-
-<#--    /**-->
-<#--    * Sets the ${property.name}.-->
-<#--    *-->
-<#--    * @param ${property.name} the ${property.name}-->
-<#--    */-->
-<#--    public void set${property.name?cap_first}(${property.propertyClassSimpleName} ${property.name}) {-->
-<#--    this.${property.name} = ${property.name};-->
-<#--    }-->
 }

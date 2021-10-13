@@ -101,6 +101,4 @@ public class CustomerResource
             .isDeleted(isDeleted)
             .build();
     }
-
-
 }
