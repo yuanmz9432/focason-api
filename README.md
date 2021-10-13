@@ -27,8 +27,6 @@ Coming soon...
 
 ## Usage
 
-## Install
-
 ## Contribution
 
 ## Licence
