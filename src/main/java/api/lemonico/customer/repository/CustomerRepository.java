@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.repository;
+package api.lemonico.customer.repository;
 
 import static java.util.stream.Collectors.toList;
 
@@ -9,9 +9,9 @@ import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
-import api.lemonico.dao.CustomerDao;
-import api.lemonico.entity.Customer;
-import api.lemonico.exception.LcEntityNotFoundException;
+import api.lemonico.core.exception.LcEntityNotFoundException;
+import api.lemonico.customer.dao.CustomerDao;
+import api.lemonico.customer.entity.Customer;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;

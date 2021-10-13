@@ -1,4 +1,4 @@
-package api.lemonico.exception;
+package api.lemonico.core.exception;
 
 public class LcValidationErrorException extends LcException
 {

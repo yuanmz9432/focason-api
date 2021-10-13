@@ -2,7 +2,7 @@ package api.lemonico.core.aop;
 
 
 
-import api.lemonico.IPUtils;
+import api.lemonico.common.IPUtils;
 import java.util.Arrays;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;

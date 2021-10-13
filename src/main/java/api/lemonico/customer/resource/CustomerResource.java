@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.resource;
+package api.lemonico.customer.resource;
 
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.Customer;
+import api.lemonico.customer.entity.Customer;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;

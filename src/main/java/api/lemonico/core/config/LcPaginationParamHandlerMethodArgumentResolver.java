@@ -4,7 +4,7 @@ package api.lemonico.core.config;
 
 import api.lemonico.core.annotation.LcPaginationParam;
 import api.lemonico.core.attribute.LcPagination;
-import api.lemonico.exception.LcValidationErrorException;
+import api.lemonico.core.exception.LcValidationErrorException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

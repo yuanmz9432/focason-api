@@ -4,7 +4,7 @@ package api.lemonico.core.config;
 
 import api.lemonico.core.annotation.LcSortParam;
 import api.lemonico.core.attribute.LcSort;
-import api.lemonico.exception.LcValidationErrorException;
+import api.lemonico.core.exception.LcValidationErrorException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;

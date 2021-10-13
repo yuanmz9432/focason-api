@@ -4,9 +4,9 @@ import static java.util.stream.Collectors.toList;
 
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.entity.Customer;
-import api.lemonico.repository.CustomerRepository;
-import api.lemonico.resource.CustomerResource;
+import api.lemonico.customer.entity.Customer;
+import api.lemonico.customer.repository.CustomerRepository;
+import api.lemonico.customer.resource.CustomerResource;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

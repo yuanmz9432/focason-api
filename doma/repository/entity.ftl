@@ -15,9 +15,9 @@ import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
-import api.lemonico.dao.CustomerDao;
-import api.lemonico.entity.Customer;
-import api.lemonico.exception.LcEntityNotFoundException;
+import api.lemonico.${tableName}.dao.${simpleName}Dao;
+import api.lemonico.${tableName}.entity.Customer;
+import api.lemonico.core.exception.LcEntityNotFoundException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,7 +40,7 @@ import org.springframework.stereotype.Repository;
 public class ${simpleName}${entitySuffix}
 {
 
-    private final CustomerDao dao;
+    private final ${simpleName}Dao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。

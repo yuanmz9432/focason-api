@@ -118,7 +118,7 @@ task genRepository {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico.repository",
+                            packageName: "api.lemonico." + FOLDER_NAME + ".repository",
                             entitySuffix: "Repository",
                             destDir: 'src/main/java')
                 }
@@ -137,7 +137,7 @@ task genResource {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico.resource",
+                            packageName: "api.lemonico." + FOLDER_NAME + ".resource",
                             entitySuffix: "Resource",
                             destDir: 'src/main/java')
                 }
@@ -158,7 +158,7 @@ task genEntity {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-                            packageName: "api.lemonico.entity",
+                            packageName: "api.lemonico." + FOLDER_NAME + ".entity",
                             destDir: 'src/main/java'
                     )
                 }
@@ -178,7 +178,8 @@ task genDao {
                 {
                     daoConfig(
                             overwrite: true,
-                            packageName: "api.lemonico.dao",
+                            packageName: "api.lemonico." + FOLDER_NAME + ".dao",
+                            suffix: "Dao",
                             destDir: 'src/main/java')
                     sqlConfig(
                             overwrite: true,
@@ -203,29 +204,30 @@ task genTestCases {
     }
 }
 
-task cleanGenAll(type: Delete) {
-    group = 'doma-gen-clean'
-}
-
-task cleanGenDao(type: Delete) {
-    group = 'doma-gen-clean'
-    delete 'src/main/java/api/lemonico/dao'
-}
-
-task cleanGenEntity(type: Delete) {
-    group = 'doma-gen-clean'
-    delete 'src/main/java/api/lemonico/entity'
-}
-
-task cleanGenResource(type: Delete) {
-    group = 'doma-gen-clean'
-    delete 'src/main/java/api/lemonico/resource'
-}
-
-task cleanGenRepository(type: Delete) {
-    group = 'doma-gen-clean'
-    delete 'src/main/java/api/lemonico/repository'
-}
+//task cleanGenAll(type: Delete) {
+//    group = 'doma-gen-clean'
+//}
+//
+//task cleanGenDao(type: Delete) {
+//    group = 'doma-gen-clean'
+//    if (FOLDER_NAME == "") return
+//    delete 'src/main/java/api/lemonico/' + FOLDER_NAME + '/dao'
+//}
+//
+//task cleanGenEntity(type: Delete) {
+//    group = 'doma-gen-clean'
+//    delete 'src/main/java/api/lemonico/' + FOLDER_NAME + '/entity'
+//}
+//
+//task cleanGenResource(type: Delete) {
+//    group = 'doma-gen-clean'
+//    delete 'src/main/java/api/lemonico/' + FOLDER_NAME + '/resource'
+//}
+//
+//task cleanGenRepository(type: Delete) {
+//    group = 'doma-gen-clean'
+//    delete 'src/main/java/api/lemonico/' + FOLDER_NAME + '/repository'
+//}
 
 /**
  * genAllの実行順序は下記となります。
@@ -242,14 +244,14 @@ genResource.dependsOn genDao
 genDao.dependsOn genEntity
 genEntity.dependsOn genRepository
 
-cleanGenAll.dependsOn cleanGenDao
-cleanGenDao.dependsOn cleanGenRepository
-cleanGenRepository.dependsOn cleanGenResource
-cleanGenResource.dependsOn cleanGenEntity
-
-genDao.dependsOn cleanGenDao
-genRepository.dependsOn cleanGenRepository
-genResource.dependsOn cleanGenResource
+//cleanGenAll.dependsOn cleanGenDao
+//cleanGenDao.dependsOn cleanGenRepository
+//cleanGenRepository.dependsOn cleanGenResource
+//cleanGenResource.dependsOn cleanGenEntity
+//
+//genDao.dependsOn cleanGenDao
+//genRepository.dependsOn cleanGenRepository
+//genResource.dependsOn cleanGenResource
 
 // JavaクラスとSQLファイルの出力先ディレクトリを同じにする
 processResources.destinationDir = compileJava.destinationDir

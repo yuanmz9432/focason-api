@@ -1,13 +1,13 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.dao;
+package api.lemonico.customer.dao;
 
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.Customer;
-import api.lemonico.repository.CustomerRepository;
+import api.lemonico.customer.entity.Customer;
+import api.lemonico.customer.repository.CustomerRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;

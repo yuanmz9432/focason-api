@@ -1,4 +1,4 @@
-package api.lemonico;
+package api.lemonico.common;
 
 
 

@@ -3,7 +3,7 @@ package api.lemonico.core.config;
 
 
 import api.lemonico.core.annotation.LcConditionParam;
-import api.lemonico.exception.LcValidationErrorException;
+import api.lemonico.core.exception.LcValidationErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
