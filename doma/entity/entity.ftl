@@ -9,15 +9,16 @@
 package ${packageName};
 </#if>
 
+
+
 import api.lemonico.attribute.ID;
 import api.lemonico.attribute.LcEntity;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
 import org.seasar.doma.*;
-
-import java.time.LocalDateTime;
 
 /**
 <#if tableName??>
@@ -27,13 +28,14 @@ import java.time.LocalDateTime;
 <#if lib.since??>
  * @since ${lib.since}
 </#if>
-*/
+ */
 @Entity(immutable = true)
 @Value
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LcEntity {
+public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LcEntity
+{
 <#list ownEntityPropertyDescs as property>
 
   <#if showDbComment && property.comment??>
