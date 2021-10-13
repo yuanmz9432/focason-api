@@ -1,4 +1,4 @@
-package api.lemonico.attribute;
+package api.lemonico.core.attribute;
 
 
 

@@ -1,4 +1,4 @@
-package api.lemonico.annotation;
+package api.lemonico.core.annotation;
 
 
 

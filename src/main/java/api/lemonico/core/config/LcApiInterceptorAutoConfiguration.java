@@ -1,4 +1,4 @@
-package api.lemonico.config;
+package api.lemonico.core.config;
 
 
 

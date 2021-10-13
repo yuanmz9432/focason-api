@@ -2,7 +2,7 @@ package api.lemonico.exception;
 
 
 
-import api.lemonico.attribute.ID;
+import api.lemonico.core.attribute.ID;
 
 public class LcEntityNotFoundException extends LcException
 {

@@ -5,7 +5,7 @@ package api.lemonico.resource;
 
 
 
-import api.lemonico.attribute.ID;
+import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.Customer;
 import java.time.LocalDateTime;
 import lombok.*;

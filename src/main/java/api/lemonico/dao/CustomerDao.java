@@ -5,7 +5,7 @@ package api.lemonico.dao;
 
 
 
-import api.lemonico.attribute.ID;
+import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.Customer;
 import api.lemonico.repository.CustomerRepository;
 import java.util.List;

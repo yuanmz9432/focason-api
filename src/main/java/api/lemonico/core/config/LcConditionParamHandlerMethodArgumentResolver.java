@@ -1,8 +1,8 @@
-package api.lemonico.config;
+package api.lemonico.core.config;
 
 
 
-import api.lemonico.annotation.LcConditionParam;
+import api.lemonico.core.annotation.LcConditionParam;
 import api.lemonico.exception.LcValidationErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

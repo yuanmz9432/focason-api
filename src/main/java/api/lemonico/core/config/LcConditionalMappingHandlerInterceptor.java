@@ -1,8 +1,8 @@
-package api.lemonico.config;
+package api.lemonico.core.config;
 
 
 
-import api.lemonico.annotation.LcConditionalMappingOnProperty;
+import api.lemonico.core.annotation.LcConditionalMappingOnProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +66,6 @@ public class LcConditionalMappingHandlerInterceptor implements HandlerIntercepto
         Map<String, List<String>> headerMap = Collections.list(request.getHeaderNames()).stream()
             .collect(Collectors.toMap(Function.identity(), (name) -> Collections.list(request.getHeaders(name))));
         return new NoHandlerFoundException(request.getMethod(), request.getRequestURI(),
-            new HttpHeaders(new LinkedMultiValueMap(headerMap)));
+            new HttpHeaders(new LinkedMultiValueMap<>(headerMap)));
     }
 }

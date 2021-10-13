@@ -2,8 +2,8 @@ package api.lemonico.service;
 
 import static java.util.stream.Collectors.toList;
 
-import api.lemonico.attribute.LcPagination;
-import api.lemonico.attribute.LcResultSet;
+import api.lemonico.core.attribute.LcPagination;
+import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.entity.Customer;
 import api.lemonico.repository.CustomerRepository;
 import api.lemonico.resource.CustomerResource;

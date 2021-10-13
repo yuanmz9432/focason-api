@@ -5,10 +5,10 @@ package api.lemonico.repository;
 
 import static java.util.stream.Collectors.toList;
 
-import api.lemonico.attribute.ID;
-import api.lemonico.attribute.LcPagination;
-import api.lemonico.attribute.LcResultSet;
-import api.lemonico.attribute.LcSort;
+import api.lemonico.core.attribute.ID;
+import api.lemonico.core.attribute.LcPagination;
+import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.attribute.LcSort;
 import api.lemonico.dao.CustomerDao;
 import api.lemonico.entity.Customer;
 import api.lemonico.exception.LcEntityNotFoundException;
