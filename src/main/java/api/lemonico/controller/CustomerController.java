@@ -29,7 +29,7 @@ public class CustomerController
 
     private final static String COLLECTION_RESOURCE_URI = "/customers";
 
-    private final static String CUSTOMER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
+    private final static String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     private final CustomerService service;
 
@@ -45,7 +45,7 @@ public class CustomerController
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = CUSTOMER_RESOURCE_URI)
+    @RequestMapping(method = RequestMethod.GET, path = MEMBER_RESOURCE_URI)
     public String getCustomer(@PathVariable Long id) {
         logger.info("id: {}", id);
         return "getCustomer";
@@ -63,7 +63,7 @@ public class CustomerController
         return "createCustomer";
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path = CUSTOMER_RESOURCE_URI)
+    @RequestMapping(method = RequestMethod.DELETE, path = MEMBER_RESOURCE_URI)
     public String deleteCustomer(@PathVariable Long id) {
         logger.info("id: {}", id);
         return "deleteCustomer";

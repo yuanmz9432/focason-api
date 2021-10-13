@@ -21,10 +21,8 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
-<#if tableName??>
- * ${tableName}のエンティティ
+ * ${comment}エンティティ
  *
-</#if>
 <#if lib.since??>
  * @since ${lib.since}
 </#if>

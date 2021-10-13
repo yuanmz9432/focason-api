@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * customerのリポジトリ
+ * 会員リポジトリ
  *
  * @since 1.0.0
  */
@@ -127,7 +127,7 @@ public class CustomerRepository
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * CustomerIDのセット（完全一致、複数指定可）
+         * 会員IDのセット（完全一致、複数指定可）
          */
         private Set<ID<Customer>> ids;
     }

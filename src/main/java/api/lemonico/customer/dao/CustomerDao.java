@@ -18,7 +18,7 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * customerのDao
+ * 会員のDao
  *
  * @since 1.0.0
  */
@@ -147,22 +147,22 @@ public interface CustomerDao
     int deleteLogicById(ID<Customer> id);
 
     /**
-     * @param entities the Customer
-     * @return affected rows
+     * @param entities エンティティリスト
+     * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
     BatchResult<Customer> insert(List<Customer> entities);
 
     /**
-     * @param entities the Customer
-     * @return affected rows
+     * @param entities エンティティリスト
+     * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
     BatchResult<Customer> update(List<Customer> entities);
 
     /**
-     * @param entities the Customer
-     * @return affected rows
+     * @param entities エンティティリスト
+     * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
     BatchResult<Customer> delete(List<Customer> entities);

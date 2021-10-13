@@ -12,7 +12,7 @@ import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * customerのエンティティ
+ * 会員リソース
  *
  * @since 1.0.0
  */
@@ -63,7 +63,7 @@ public class CustomerResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity Customerエンティティ
+     * @param entity 会員エンティティ
      */
     public CustomerResource(Customer entity) {
         this.id = entity.getId();
@@ -83,7 +83,7 @@ public class CustomerResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return Customerエンティティ
+     * @return 会員エンティティ
      */
     public Customer toEntity() {
         return Customer.builder()

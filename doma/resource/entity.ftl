@@ -18,10 +18,8 @@ import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
-<#if tableName??>
- * ${tableName}のエンティティ
+ * ${comment}リソース
  *
-</#if>
 <#if lib.since??>
  * @since ${lib.since}
 </#if>
@@ -50,7 +48,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity ${simpleName}エンティティ
+     * @param entity ${comment}エンティティ
      */
     public ${simpleName}${entitySuffix}(${simpleName} entity) {
         <#list ownEntityPropertyDescs as property>
@@ -61,7 +59,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     /**
      * リソースをエンティティに変換します。
      *
-     * @return ${simpleName}エンティティ
+     * @return ${comment}エンティティ
      */
     public ${simpleName} toEntity() {
         return ${simpleName}.builder()

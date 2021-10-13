@@ -24,9 +24,7 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
-<#if entityDesc.tableName??>
- * ${entityDesc.tableName}のDao
-</#if>
+ * ${entityDesc.comment}のDao
  *
 <#if lib.since??>
  * @since ${lib.since}
@@ -157,22 +155,22 @@ public interface ${simpleName}
     int deleteLogicById(ID<${entityDesc.simpleName}> id);
 
     /**
-     * @param entities the <#if entityDesc.simpleName??>${entityDesc.simpleName}</#if>
-     * @return affected rows
+     * @param entities エンティティリスト
+     * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
     BatchResult<${entityDesc.simpleName}> insert(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
 
     /**
-     * @param entities the <#if entityDesc.simpleName??>${entityDesc.simpleName}</#if>
-     * @return affected rows
+     * @param entities エンティティリスト
+     * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
     BatchResult<${entityDesc.simpleName}> update(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
 
     /**
-     * @param entities the <#if entityDesc.simpleName??>${entityDesc.simpleName}</#if>
-     * @return affected rows
+     * @param entities エンティティリスト
+     * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
     BatchResult<${entityDesc.simpleName}> delete(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);

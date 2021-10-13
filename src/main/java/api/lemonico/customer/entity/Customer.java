@@ -15,7 +15,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * customerのエンティティ
+ * 会員エンティティ
  *
  * @since 1.0.0
  */

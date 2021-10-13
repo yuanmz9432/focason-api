@@ -27,10 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
-<#if tableName??>
- * ${tableName}のリポジトリ
+ * ${comment}リポジトリ
  *
-</#if>
 <#if lib.since??>
  * @since ${lib.since}
 </#if>
@@ -137,7 +135,7 @@ public class ${simpleName}${entitySuffix}
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * ${simpleName}IDのセット（完全一致、複数指定可）
+         * ${comment}IDのセット（完全一致、複数指定可）
          */
         private Set<ID<${simpleName}>> ids;
     }

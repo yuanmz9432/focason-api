@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `lemonico`.`customer` (
   `is_deleted` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `create_time_UNIQUE` (`created_at` ASC)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) COMMENT='会員' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
