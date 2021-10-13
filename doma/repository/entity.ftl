@@ -37,7 +37,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ${simpleName}${entitySuffix} {
+public class ${simpleName}${entitySuffix}
+{
 
     private final CustomerDao dao;
 
@@ -75,11 +76,11 @@ public class ${simpleName}${entitySuffix} {
     public ID<${simpleName}> create(${simpleName} entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
-                        .withId(null)
-                        .withCreatedBy("")
-                        .withModifiedBy(""))
-                    .getEntity()
-                    .getId();
+            .withId(null)
+            .withCreatedBy("")
+            .withModifiedBy(""))
+            .getEntity()
+            .getId();
     }
 
     /**
@@ -127,7 +128,8 @@ public class ${simpleName}${entitySuffix} {
     @NoArgsConstructor
     @Builder(toBuilder = true)
     @With
-    public static class Condition {
+    public static class Condition
+    {
 
         /**
          * デフォルトの検索条件
@@ -145,7 +147,8 @@ public class ${simpleName}${entitySuffix} {
      */
     @AllArgsConstructor
     @Value
-    public static class Sort {
+    public static class Sort
+    {
 
         /**
          * デフォルトの検索条件
@@ -167,7 +170,9 @@ public class ${simpleName}${entitySuffix} {
          *
          * @return SQLステートメント
          */
-        public String toSql() { return column.getColumnName() + " " + direction.name(); }
+        public String toSql() {
+            return column.getColumnName() + " " + direction.name();
+        }
 
         /**
          * {@link LcSort} から新規ソートパラメータを生成します。
@@ -184,7 +189,8 @@ public class ${simpleName}${entitySuffix} {
      * ソート列
      */
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public enum SortColumn {
+    public enum SortColumn
+    {
 
         ID("id", "id");
 

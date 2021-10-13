@@ -64,9 +64,7 @@ public class LcConditionalMappingHandlerInterceptor implements HandlerIntercepto
 
     private NoHandlerFoundException getNoHandlerFoundException(HttpServletRequest request) {
         Map<String, List<String>> headerMap = Collections.list(request.getHeaderNames()).stream()
-            .collect(Collectors.toMap(Function.identity(), (name) -> {
-                return Collections.list(request.getHeaders(name));
-            }));
+            .collect(Collectors.toMap(Function.identity(), (name) -> Collections.list(request.getHeaders(name))));
         return new NoHandlerFoundException(request.getMethod(), request.getRequestURI(),
             new HttpHeaders(new LinkedMultiValueMap(headerMap)));
     }
