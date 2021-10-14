@@ -63,7 +63,6 @@ dependencies {
     implementation 'org.aspectj:aspectjweaver:1.9.7'
 
     // DBアクセス関連
-//    implementation 'org.seasar.doma:doma:2.28.0'
     implementation 'org.seasar.doma:doma-core:2.45.0'
     implementation 'org.seasar.doma.boot:doma-spring-boot-starter:1.5.0'
     implementation 'mysql:mysql-connector-java:5.1.49'
@@ -73,7 +72,7 @@ dependencies {
     domaGenRuntime 'org.seasar.doma:doma-gen:2.28.0'
 
     // https://mvnrepository.com/artifact/junit/junit
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 sourceSets {
@@ -106,6 +105,28 @@ task genAll {
     group = 'doma-gen'
 }
 
+task genController {
+    group = 'doma-gen'
+    doLast {
+        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
+        ant.gen(
+                url: "${dbUrl}",
+                user: "${dbUser}",
+                password: "${dbPassword}",
+                ignoredTableNamePattern: "flyway_schema_history",
+                templatePrimaryDir: "doma/controller")
+                {
+                    entityConfig(
+                            overwrite: true,
+                            useListener: false,
+                            packageName: "api.lemonico." + TABLE_NAME + ".controller",
+                            entitySuffix: "Controller",
+                            destDir: 'src/main/java'
+                    )
+                }
+    }
+}
+
 task genRepository {
     group = 'doma-gen'
     doLast {
@@ -124,8 +145,9 @@ task genRepository {
                 }
     }
 }
-task testGen {
-    group = 'doma-gen-test'
+
+task genService {
+    group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
         ant.gen(url: "${dbUrl}",
@@ -133,12 +155,12 @@ task testGen {
                 password: "${dbPassword}",
                 tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
-                templatePrimaryDir: "doma/entity")
+                templatePrimaryDir: "doma/service")
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico.test",
-                            entitySuffix: "Resource",
+                            packageName: "api.lemonico." + TABLE_NAME + ".service",
+                            entitySuffix: "Service",
                             destDir: 'src/main/java')
                 }
     }
@@ -223,54 +245,16 @@ task genTestCases {
     }
 }
 
-//task cleanGenAll(type: Delete) {
-//    group = 'doma-gen-clean'
-//}
-//
-//task cleanGenDao(type: Delete) {
-//    group = 'doma-gen-clean'
-//    if (TABLE_NAME == "") return
-//    delete 'src/main/java/api/lemonico/' + TABLE_NAME + '/dao'
-//}
-//
-//task cleanGenEntity(type: Delete) {
-//    group = 'doma-gen-clean'
-//    delete 'src/main/java/api/lemonico/' + TABLE_NAME + '/entity'
-//}
-//
-//task cleanGenResource(type: Delete) {
-//    group = 'doma-gen-clean'
-//    delete 'src/main/java/api/lemonico/' + TABLE_NAME + '/resource'
-//}
-//
-//task cleanGenRepository(type: Delete) {
-//    group = 'doma-gen-clean'
-//    delete 'src/main/java/api/lemonico/' + TABLE_NAME + '/repository'
-//}
-
 /**
  * genAllの実行順序は下記となります。
- * cleanGenAll → genRepository → genEntity → genDao → genResource → genAll
+ * cleanGenAll → genService → genRepository → genEntity → genDao → genResource → genAll
  */
-genAll.dependsOn genResource
+genAll.dependsOn genController
+genController.dependsOn genService
+genService.dependsOn genResource
 genResource.dependsOn genDao
 genDao.dependsOn genEntity
 genEntity.dependsOn genRepository
-genRepository.dependsOn cleanGenAll
-
-genAll.dependsOn genResource
-genResource.dependsOn genDao
-genDao.dependsOn genEntity
-genEntity.dependsOn genRepository
-
-//cleanGenAll.dependsOn cleanGenDao
-//cleanGenDao.dependsOn cleanGenRepository
-//cleanGenRepository.dependsOn cleanGenResource
-//cleanGenResource.dependsOn cleanGenEntity
-//
-//genDao.dependsOn cleanGenDao
-//genRepository.dependsOn cleanGenRepository
-//genResource.dependsOn cleanGenResource
 
 // JavaクラスとSQLファイルの出力先ディレクトリを同じにする
 processResources.destinationDir = compileJava.destinationDir

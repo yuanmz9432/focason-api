@@ -1,4 +1,4 @@
-package api.lemonico.controller;
+package api.lemonico.common;
 
 
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class CommonController extends AbstractController
+public class CommonController
 {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonController.class);

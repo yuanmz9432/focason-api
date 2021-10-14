@@ -119,6 +119,14 @@ public class ${simpleName}${entitySuffix}
     }
 
     /**
+     * エンティティIDを指定して、エンティティが存在するかを確認します。
+     *
+     * @param id エンティティID
+     * @return エンティティが存在する場合は true が返されます。
+     */
+    public boolean exists(ID<${simpleName}> id) { return findById(id).isPresent(); }
+
+    /**
      * 検索条件
      */
     @Data

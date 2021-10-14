@@ -9,6 +9,25 @@
 package ${packageName};
 </#if>
 
+import static java.util.stream.Collectors.toList;
+
+import api.lemonico.core.attribute.ID;
+import api.lemonico.core.attribute.LcPagination;
+import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.exception.LcResourceNotFoundException;
+import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.customer.entity.Customer;
+import api.lemonico.customer.repository.CustomerRepository;
+import api.lemonico.customer.resource.CustomerResource;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
 /**
  * ${comment}サービス
  *
@@ -36,9 +55,9 @@ public class ${simpleName}${entitySuffix}
     　*/
     @Transactional(readOnly = true)
     public LcResultSet<${simpleName}Resource> getResourceList(
-        Condition condition,
+        ${simpleName}Repository.Condition condition,
         LcPagination pagination,
-        Sort sort) {
+        ${simpleName}Repository.Sort sort) {
         // ${comment}の一覧と全体件数を取得します。
         var resultSet = repository.findAll(condition, pagination, sort);
 
@@ -55,8 +74,86 @@ public class ${simpleName}${entitySuffix}
     */
     @Transactional(readOnly = true)
     public Optional<${simpleName}Resource> getResource(ID<${simpleName}> id) {
-            // BOユーザを取得します。
-            return repository.findById(id).map(this::convertEntityToResource);
-            }
+        // ${comment}を取得します。
+        return repository.findById(id).map(this::convertEntityToResource);
+    }
+
+    /**
+     * ${comment}を作成します。
+     *
+     * @param resource ${comment}リソース
+     * @return 作成された${comment}リソース
+     */
+    @Transactional
+    public ${simpleName}Resource createResource(${simpleName}Resource resource) {
+        // ${comment}を作成します。
+        var id = repository.create(resource.toEntity());
+
+        // ${comment}を取得します。
+        return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+    }
+
+    /**
+     * ${comment}IDを指定して、${comment}を更新します。
+     *
+     * @param id ${comment}ID
+     * @param resource ${comment}リソース
+     * @return 更新後の${comment}リソース
+     */
+    @Transactional
+    public ${simpleName}Resource updateResource(ID<${simpleName}> id, ${simpleName}Resource resource) {
+        // TODO Waiting for finalization of basic design according to Q&A
+        // ${comment}IDにおいて重複したデータが存在していることを示す。
+        if (!repository.exists(id)) {
+            throw new LcResourceNotFoundException(${simpleName}.class, id);
+        }
+
+        // ${comment}を更新します。
+        repository.update(id, resource.toEntity());
+
+        // ${comment}を取得します。
+        return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+    }
+
+    /**
+     * ${comment}IDを指定して、${comment}を削除します。
+     *
+     * @param id ${comment}ID
+     */
+    @Transactional
+    public void deleteResource(ID<${simpleName}> id) {
+        // TODO Waiting for finalization of basic design according to Q&A
+        // ${comment}IDにおいて重複したデータが存在していることを示す。
+        if (!repository.exists(id)) {
+            throw new LcResourceNotFoundException(${simpleName}.class, id);
+        }
+
+        // ${comment}を削除します。
+        repository.deleteLogicById(id);
+    }
+
+    /**
+     * ${comment}エンティティを${comment}リソースに変換します。
+     *
+     * @param entity エンティティ
+     * @return リソース
+     */
+    @Transactional(readOnly = true)
+    public ${simpleName}Resource convertEntityToResource(${simpleName} entity) {
+        return convertEntitiesToResources(Collections.singletonList(entity)).get(0);
+    }
+
+    /**
+     * ${comment}エンティティのリストを${comment}リソースのリストに変換します。
+     *
+     * @param entities エンティティのリスト
+     * @return リソースのリスト
+     */
+    @Transactional(readOnly = true)
+    public List<${simpleName}Resource> convertEntitiesToResources(List<${simpleName}> entities) {
+        return entities.stream()
+            .map(${simpleName}Resource::new)
+            .collect(toList());
+    }
 
 }

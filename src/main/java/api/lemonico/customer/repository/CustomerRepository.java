@@ -9,9 +9,9 @@ import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
-import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.customer.dao.CustomerDao;
 import api.lemonico.customer.entity.Customer;
+import api.lemonico.core.exception.LcEntityNotFoundException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -109,6 +109,14 @@ public class CustomerRepository
             throw new LcEntityNotFoundException(Customer.class, id);
         }
     }
+
+    /**
+     * エンティティIDを指定して、エンティティが存在するかを確認します。
+     *
+     * @param id エンティティID
+     * @return エンティティが存在する場合は true が返されます。
+     */
+    public boolean exists(ID<Customer> id) { return findById(id).isPresent(); }
 
     /**
      * 検索条件
