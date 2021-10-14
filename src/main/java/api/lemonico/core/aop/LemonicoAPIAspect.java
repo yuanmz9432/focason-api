@@ -26,7 +26,7 @@ public class LemonicoAPIAspect
 
     private static final Logger logger = LoggerFactory.getLogger(LemonicoAPIAspect.class);
 
-    @Pointcut("execution(* api.lemonico.controller..*(..))")
+    @Pointcut("execution(* api.lemonico..controller..*(..))")
     public void pointCut() {}
 
     @Before("pointCut()")
@@ -50,7 +50,7 @@ public class LemonicoAPIAspect
         }
     }
 
-    @Around("within(api.lemonico.controller.*)")
+    @Around("within(api.lemonico..controller.*)")
     public Object around(final ProceedingJoinPoint pjp) throws Throwable {
         final StopWatch sw = new StopWatch();
         sw.start();

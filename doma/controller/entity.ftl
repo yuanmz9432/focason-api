@@ -49,7 +49,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "/${tableName}";
+    private static final String COLLECTION_RESOURCE_URI = "";
 
     /**
      * メンバーリソースURI

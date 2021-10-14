@@ -41,7 +41,7 @@ public class CustomerController
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "/customer";
+    private static final String COLLECTION_RESOURCE_URI = "/customers";
 
     /**
      * メンバーリソースURI

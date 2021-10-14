@@ -1,0 +1,27 @@
+package api.lemonico.common;
+
+
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * ヘルスチェックコントローラ
+ *
+ * @since 1.1.0
+ */
+@RestController
+@Validated
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class HealthCheckController
+{
+    @RequestMapping(method = RequestMethod.GET, path = "/healthcheck")
+    public ResponseEntity<Void> healthCheck() {
+        return ResponseEntity.noContent().build();
+    }
+}
