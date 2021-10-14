@@ -46,13 +46,13 @@ public class ${simpleName}${entitySuffix}
     private final ${simpleName}Repository repository;
 
     /**
-    　* 検索条件・ページングパラメータ・ソート条件を指定して、${comment}リソースの一覧を取得します。
-    　*
-    　* @param condition 検索条件
-    　* @param pagination ページングパラメータ
-    　* @param sort ソートパラメータ
-    　* @return ${comment}リソースの結果セットが返されます。
-    　*/
+     * 検索条件・ページングパラメータ・ソート条件を指定して、${comment}リソースの一覧を取得します。
+     *
+     * @param condition 検索条件
+     * @param pagination ページングパラメータ
+     * @param sort ソートパラメータ
+     * @return ${comment}リソースの結果セットが返されます。
+     */
     @Transactional(readOnly = true)
     public LcResultSet<${simpleName}Resource> getResourceList(
         ${simpleName}Repository.Condition condition,
@@ -67,11 +67,11 @@ public class ${simpleName}${entitySuffix}
     }
 
     /**
-    * ${comment}IDを指定して、${comment}を取得します。
-    *
-    * @param id ${comment}ID
-    * @return ${comment}リソース
-    */
+     * ${comment}IDを指定して、${comment}を取得します。
+     *
+     * @param id ${comment}ID
+     * @return ${comment}リソース
+     */
     @Transactional(readOnly = true)
     public Optional<${simpleName}Resource> getResource(ID<${simpleName}> id) {
         // ${comment}を取得します。

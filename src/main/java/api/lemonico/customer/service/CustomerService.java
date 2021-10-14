@@ -38,13 +38,13 @@ public class CustomerService
     private final CustomerRepository repository;
 
     /**
-    　* 検索条件・ページングパラメータ・ソート条件を指定して、会員リソースの一覧を取得します。
-    　*
-    　* @param condition 検索条件
-    　* @param pagination ページングパラメータ
-    　* @param sort ソートパラメータ
-    　* @return 会員リソースの結果セットが返されます。
-    　*/
+     * 検索条件・ページングパラメータ・ソート条件を指定して、会員リソースの一覧を取得します。
+     *
+     * @param condition 検索条件
+     * @param pagination ページングパラメータ
+     * @param sort ソートパラメータ
+     * @return 会員リソースの結果セットが返されます。
+     */
     @Transactional(readOnly = true)
     public LcResultSet<CustomerResource> getResourceList(
         CustomerRepository.Condition condition,
@@ -59,11 +59,11 @@ public class CustomerService
     }
 
     /**
-    * 会員IDを指定して、会員を取得します。
-    *
-    * @param id 会員ID
-    * @return 会員リソース
-    */
+     * 会員IDを指定して、会員を取得します。
+     *
+     * @param id 会員ID
+     * @return 会員リソース
+     */
     @Transactional(readOnly = true)
     public Optional<CustomerResource> getResource(ID<Customer> id) {
         // 会員を取得します。
