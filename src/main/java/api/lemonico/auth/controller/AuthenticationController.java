@@ -19,8 +19,6 @@ import api.lemonico.user.resource.UserResource;
 import api.lemonico.user.service.UserService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,8 +36,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController
 {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
-
     /**
      * ログインURI
      */
@@ -56,8 +52,6 @@ public class AuthenticationController
      */
     @PostMapping(LOGIN_URI)
     public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
-        logger.info("username: {}, password: {}", loginUser.getUsername(), loginUser.getPassword());
-
         final var user = service.getResourceByEmail(loginUser.getUsername());
         if (user.isEmpty()) {
             throw new LcEntityNotFoundException(User.class, loginUser.getUsername());

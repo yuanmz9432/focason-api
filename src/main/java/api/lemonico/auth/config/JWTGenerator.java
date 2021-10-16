@@ -64,9 +64,9 @@ public class JWTGenerator
      */
     public String generateAccessToken(String sub, Date exp) {
         Map<String, Object> payload = new HashMap<>();
-        payload.put("sub", sub);
-        payload.put("exp", exp);
-        payload.put("iat", new Date(System.currentTimeMillis()));
+        payload.put(Claims.SUBJECT, sub);
+        payload.put(Claims.EXPIRATION, exp);
+        payload.put(Claims.ISSUED_AT, new Date(System.currentTimeMillis()));
         return Jwts.builder()
             .setClaims(payload)
             .setExpiration(exp)

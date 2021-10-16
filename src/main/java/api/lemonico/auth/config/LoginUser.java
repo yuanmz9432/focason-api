@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Builder
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class LoginUser implements TokenDetail, UserDetails
+public class LoginUser implements UserDetails
 {
 
     private static final long serialVersionUID = 3993597711944310497L;
@@ -27,23 +27,11 @@ public class LoginUser implements TokenDetail, UserDetails
     private boolean enabled;
     private final static LoginUser loginUser = new LoginUser();
 
-    // 开始定义 UserDetails 必要的属性，因为不打算启用这些限制条件，所以不对这些条件做限制，全部设置为 true （通过）
     private Boolean accountNonExpired;
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
 
-    private LoginUser() {
-
-    }
-
-    public static LoginUser getLoginUserInstance() {
-        return loginUser;
-    }
-
-    @Override
-    public String getEmail() {
-        return this.email;
-    }
+    private LoginUser() {}
 
     @Override
     public String getUsername() {

@@ -81,7 +81,7 @@ public class UserService
     @Transactional
     public UserResource createResource(UserResource resource) {
         // メールアドレスにおいて重複したデータが存在していることを示す。
-        Optional<UserResource> user = getResourceByEmail(resource.getEmail());
+        var user = getResourceByEmail(resource.getEmail());
         if (user.isPresent()) {
             throw new LcResourceAlreadyExistsException(User.class, user.get().getEmail());
         }

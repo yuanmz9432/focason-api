@@ -6,27 +6,25 @@ package api.lemonico.auth.config;
 
 
 import api.lemonico.auth.domain.UserStatus;
-import api.lemonico.common.JsonUtil;
 import api.lemonico.core.exception.LcErrorCode;
-import api.lemonico.user.resource.UserResource;
+import api.lemonico.core.exception.LcErrorResource;
 import api.lemonico.user.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
@@ -40,10 +38,9 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     private JWTGenerator jwtGenerator;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private UserService service;
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
@@ -51,40 +48,42 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         // リクエストヘッダーからトークンを取得するために、ServletResponseをHttpServletResponseに変更する。
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-
-        // TODO
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "*");
-        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setContentType("text/json;charset=UTF-8");
 
         // リクエストヘッダーからアクセストークンを取得する。
         var accessToken = request.getHeader(properties.getAccessTokenHeader());
         String email = null;
-        if (Objects.nonNull(accessToken) && !"".equals(accessToken)) {
-            // 解析access_token
+        if (Strings.isNotBlank(accessToken)) {
             Claims accessTokenClaims;
             try {
                 accessTokenClaims = this.jwtGenerator.getClaims(accessToken);
             } catch (ExpiredJwtException e) {
-                JsonUtil.writeJson(response, LcErrorCode.AUTH_TOKEN_EXPIRED, null);
+                response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
+                    LcErrorResource.builder()
+                        .code(LcErrorCode.AUTH_TOKEN_EXPIRED.getValue())
+                        .message(LcErrorCode.AUTH_TOKEN_EXPIRED.name())
+                        .build()));
                 return;
             } catch (SignatureException | MalformedJwtException e) {
-                JsonUtil.writeJson(response, LcErrorCode.AUTH_TOKEN_INVALID, null);
+                response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
+                    LcErrorResource.builder()
+                        .code(LcErrorCode.AUTH_TOKEN_INVALID.getValue())
+                        .message(LcErrorCode.AUTH_TOKEN_INVALID.name())
+                        .build()));
                 return;
             }
-            email = (String) accessTokenClaims.get("sub");
+            email = (String) accessTokenClaims.get(Claims.SUBJECT);
         }
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            Optional<UserResource> userResource = service.getResourceByEmail(email);
-            // LoginUser loginUser = (LoginUser) this.userDetailsService.loadUserByUsername(email);
-            // if (loginUser != null && !loginUser.isEnabled()) {
-            // JsonUtil.writeJson(response, LcErrorCode.FORBIDDEN, null);
-            // return;
-            // }
+        if (Strings.isNotBlank(email) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            var userResource = service.getResourceByEmail(email);
             if (userResource.isPresent()) {
                 if (!UserStatus.NORMAL.equals(UserStatus.of(userResource.get().getStatus()))) {
-                    JsonUtil.writeJson(response, LcErrorCode.FORBIDDEN, null);
+                    response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
+                        LcErrorResource.builder()
+                            .code(LcErrorCode.FORBIDDEN.getValue())
+                            .message(LcErrorCode.FORBIDDEN.name())
+                            .build()));
                     return;
                 }
                 if (email.equals(userResource.get().getEmail())) {
