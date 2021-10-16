@@ -2,7 +2,7 @@ package api.lemonico.core.config;
 
 
 
-import api.lemonico.core.auth.AuthenticationTokenFilter;
+import api.lemonico.auth.config.AuthenticationTokenFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

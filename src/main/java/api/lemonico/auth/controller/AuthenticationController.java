@@ -2,10 +2,10 @@ package api.lemonico.auth.controller;
 
 
 
+import api.lemonico.auth.config.JWTGenerator;
+import api.lemonico.auth.config.LoginUser;
 import api.lemonico.auth.resource.JWTResource;
-import api.lemonico.core.auth.JWTGenerator;
-import api.lemonico.core.auth.LoginUser;
-import api.lemonico.customer.service.CustomerService;
+import api.lemonico.user.service.UserService;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class AuthenticationController
      */
     private static final String LOGIN_URI = "/login";
 
-    private final CustomerService service;
+    private final UserService service;
 
     private final JWTGenerator generator;
 

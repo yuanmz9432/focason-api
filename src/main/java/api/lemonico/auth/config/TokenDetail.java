@@ -1,4 +1,4 @@
-package api.lemonico.core.auth;
+package api.lemonico.auth.config;
 
 public interface TokenDetail
 {

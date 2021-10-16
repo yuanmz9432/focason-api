@@ -5,6 +5,7 @@ package api.lemonico.user.service;
 
 import static java.util.stream.Collectors.toList;
 
+import api.lemonico.auth.config.LoginUser;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
@@ -122,6 +123,21 @@ public class UserService
 
         // ユーザーを削除します。
         repository.deleteLogicById(id);
+    }
+
+    /**
+     * メールアドレスを指定して、LoginUserを取得する。
+     *
+     * @param email メールアドレス
+     * @return LoginUser
+     */
+    @Transactional(readOnly = true)
+    public LoginUser getLoginUserByEmail(String email) {
+        return LoginUser.builder()
+            .email(email)
+            .userId(1)
+            .username("")
+            .build();
     }
 
     /**

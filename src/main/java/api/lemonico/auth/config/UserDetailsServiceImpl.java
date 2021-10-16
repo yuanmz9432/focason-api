@@ -1,8 +1,8 @@
-package api.lemonico.core.auth;
+package api.lemonico.auth.config;
 
 
 
-import api.lemonico.customer.service.CustomerService;
+import api.lemonico.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService
 {
 
-    private final CustomerService service;
+    private final UserService service;
 
     @Override
     public UserDetails loadUserByUsername(String email) {
