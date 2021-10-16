@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.common.controller;
+package api.lemonico.healthcheck;
 
 
 
