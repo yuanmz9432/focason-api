@@ -3,6 +3,10 @@
  */
 package api.lemonico.core.exception;
 
+
+
+import api.lemonico.core.attribute.LcErrorCode;
+
 public class LcException extends RuntimeException
 {
     private final LcErrorCode code;

@@ -1,17 +1,18 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.core.config;
+package api.lemonico.core.configurer;
 
 
 
+import api.lemonico.core.interceptor.CorsInterceptor;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer
+public class DefaultWebMvcConfigurer implements WebMvcConfigurer
 {
     @Resource
     private CorsInterceptor corsInterceptor;

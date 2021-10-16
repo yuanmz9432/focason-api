@@ -5,6 +5,7 @@ package api.lemonico.core.attribute;
 
 
 
+import api.lemonico.core.handler.LcEntityListenerHandler;
 import org.seasar.doma.Entity;
 
 @Entity(listener = LcEntityListenerHandler.class)

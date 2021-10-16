@@ -3,6 +3,10 @@
  */
 package api.lemonico.core.exception;
 
+
+
+import api.lemonico.core.attribute.LcErrorCode;
+
 public class LcValidationErrorException extends LcException
 {
     private static final long serialVersionUID = 1L;

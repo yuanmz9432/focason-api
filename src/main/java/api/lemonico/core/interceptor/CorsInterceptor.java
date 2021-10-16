@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.core.config;
+package api.lemonico.core.interceptor;
 
 
 

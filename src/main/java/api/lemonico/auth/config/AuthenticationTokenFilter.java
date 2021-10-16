@@ -6,8 +6,8 @@ package api.lemonico.auth.config;
 
 
 import api.lemonico.auth.domain.UserStatus;
-import api.lemonico.core.exception.LcErrorCode;
-import api.lemonico.core.exception.LcErrorResource;
+import api.lemonico.core.attribute.LcErrorCode;
+import api.lemonico.core.attribute.LcErrorResource;
 import api.lemonico.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -48,7 +49,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         // リクエストヘッダーからトークンを取得するために、ServletResponseをHttpServletResponseに変更する。
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        response.setContentType("text/json;charset=UTF-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         // リクエストヘッダーからアクセストークンを取得する。
         var accessToken = request.getHeader(properties.getAccessTokenHeader());

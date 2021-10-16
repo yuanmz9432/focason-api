@@ -5,12 +5,12 @@ package api.lemonico.user.repository;
 
 import static java.util.stream.Collectors.toList;
 
-import api.lemonico.common.BCryptEncoder;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
+import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.user.dao.UserDao;
 import api.lemonico.user.entity.User;
 import java.time.LocalDateTime;

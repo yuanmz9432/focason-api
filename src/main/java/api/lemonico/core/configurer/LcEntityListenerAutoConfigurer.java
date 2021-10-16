@@ -1,27 +1,21 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.core.config;
+package api.lemonico.core.configurer;
 
 
 
 import api.lemonico.core.attribute.LcEntityListener;
 import api.lemonico.core.attribute.LcEntityListenerManager;
-import api.lemonico.core.attribute.LcEntityTimestampListener;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LcEntityListenerAutoConfiguration
+public class LcEntityListenerAutoConfigurer
 {
-    public LcEntityListenerAutoConfiguration() {}
-
-    @Bean
-    public LcEntityTimestampListener lcEntityTimestampListener() {
-        return new LcEntityTimestampListener();
-    }
+    public LcEntityListenerAutoConfigurer() {}
 
     @Bean
     public LcEntityListenerManager lcEntityListenerManager(@Autowired List<LcEntityListener> listeners) {

@@ -1,10 +1,14 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.core.annotation.config;
+package api.lemonico.core.configurer;
 
 
 
+import api.lemonico.core.interceptor.LcConditionalMappingHandlerInterceptor;
+import api.lemonico.core.resolver.LcConditionParamHandlerMethodArgumentResolver;
+import api.lemonico.core.resolver.LcPaginationParamHandlerMethodArgumentResolver;
+import api.lemonico.core.resolver.LcSortParamHandlerMethodArgumentResolver;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -18,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ConditionalOnWebApplication(
     type = ConditionalOnWebApplication.Type.SERVLET)
 @Configuration
-public class LcApiInterceptorAutoConfiguration implements WebMvcConfigurer
+public class LcApiInterceptorAutoConfigurer implements WebMvcConfigurer
 {
 
     private final Environment environment;
@@ -35,7 +39,7 @@ public class LcApiInterceptorAutoConfiguration implements WebMvcConfigurer
     }
 
     @Autowired
-    public LcApiInterceptorAutoConfiguration(final Environment environment,
+    public LcApiInterceptorAutoConfigurer(final Environment environment,
         final Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         this.environment = environment;
         this.jackson2ObjectMapperBuilder = jackson2ObjectMapperBuilder;

@@ -5,7 +5,6 @@ package api.lemonico.core.aop;
 
 
 
-import api.lemonico.common.IPUtils;
 import java.util.Arrays;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,6 @@ public class LemonicoAPIAspect
             HttpServletRequest request = requestAttributes.getRequest();
             logger.info("★ URI : {}", request.getRequestURL().toString());
             logger.info("★ HTTP Method : {}", request.getMethod());
-            logger.info("* IP Address : {}", IPUtils.getIpAddress(request));
             logger.info("★ Request Body : {}", Arrays.toString(joinPoint.getArgs()));
         }
     }

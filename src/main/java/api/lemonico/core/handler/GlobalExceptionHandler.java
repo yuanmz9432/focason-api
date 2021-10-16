@@ -5,8 +5,8 @@ package api.lemonico.core.handler;
 
 
 
-import api.lemonico.core.exception.LcErrorCode;
-import api.lemonico.core.exception.LcErrorResource;
+import api.lemonico.core.attribute.LcErrorCode;
+import api.lemonico.core.attribute.LcErrorResource;
 import api.lemonico.core.exception.LcException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
