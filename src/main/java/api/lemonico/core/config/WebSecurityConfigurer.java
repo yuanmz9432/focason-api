@@ -3,6 +3,8 @@ package api.lemonico.core.config;
 
 
 import api.lemonico.auth.config.AuthenticationTokenFilter;
+import api.lemonico.core.handler.DefaultAccessDeniedHandler;
+import api.lemonico.core.handler.EntryPointUnauthorizedHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -56,7 +58,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
             // OPTIONS请求全部放行
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 登录接口放行
-            .antMatchers("/healthcheck", "/auth/**").permitAll()
+            .antMatchers("/healthcheck", "/**").permitAll()
             // 其他接口全部接受验证
             .anyRequest().authenticated()
             .and()

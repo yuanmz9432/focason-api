@@ -41,7 +41,7 @@ public class UserController
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "";
+    private static final String COLLECTION_RESOURCE_URI = "/users";
 
     /**
      * メンバーリソースURI

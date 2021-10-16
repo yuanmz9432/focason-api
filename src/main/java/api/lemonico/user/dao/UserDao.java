@@ -166,4 +166,13 @@ public interface UserDao
      */
     @BatchDelete
     BatchResult<User> delete(List<User> entities);
+
+    /**
+     * メールアドレスを指定して、データベースからエンティティを一件を取得します。
+     *
+     * @param email メールアドレス
+     * @return エンティティが {@link Optional} で返されます。
+     */
+    @Select
+    Optional<User> selectByEmail(String email);
 }

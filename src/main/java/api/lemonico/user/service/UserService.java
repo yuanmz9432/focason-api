@@ -9,6 +9,7 @@ import api.lemonico.auth.config.LoginUser;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.user.entity.User;
@@ -79,6 +80,12 @@ public class UserService
      */
     @Transactional
     public UserResource createResource(UserResource resource) {
+        // メールアドレスにおいて重複したデータが存在していることを示す。
+        Optional<UserResource> user = getResourceByEmail(resource.getEmail());
+        if (user.isPresent()) {
+            throw new LcResourceAlreadyExistsException(User.class, user.get().getEmail());
+        }
+
         // ユーザーを作成します。
         var id = repository.create(resource.toEntity());
 
@@ -95,7 +102,6 @@ public class UserService
      */
     @Transactional
     public UserResource updateResource(ID<User> id, UserResource resource) {
-        // TODO Waiting for finalization of basic design according to Q&A
         // ユーザーIDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
             throw new LcResourceNotFoundException(User.class, id);
@@ -123,6 +129,17 @@ public class UserService
 
         // ユーザーを削除します。
         repository.deleteLogicById(id);
+    }
+
+    /**
+     * メールアドレスを指定して、ユーザーエンティティを取得する。
+     *
+     * @param email メールアドレス
+     * @return ユーザーエンティティ
+     */
+    @Transactional(readOnly = true)
+    public Optional<UserResource> getResourceByEmail(String email) {
+        return repository.findByEmail(email).map(this::convertEntityToResource);
     }
 
     /**

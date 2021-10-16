@@ -5,6 +5,7 @@ package api.lemonico.user.repository;
 
 import static java.util.stream.Collectors.toList;
 
+import api.lemonico.common.BCryptEncoder;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
@@ -12,6 +13,7 @@ import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.user.dao.UserDao;
 import api.lemonico.user.entity.User;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,10 +67,12 @@ public class UserRepository
      */
     public ID<User> create(User entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
-        return dao.insert(entity
-            .withId(null)
-            .withCreatedBy("")
-            .withModifiedBy(""))
+        return dao.insert(entity.withId(null)
+            .withPassword(BCryptEncoder.getInstance().encode(entity.getPassword()))
+            .withCreatedBy("LEMONICO")
+            .withModifiedBy("LEMONICO")
+            .withCreatedAt(LocalDateTime.now())
+            .withModifiedAt(LocalDateTime.now()))
             .getEntity()
             .getId();
     }
@@ -118,6 +122,15 @@ public class UserRepository
      */
     public boolean exists(ID<User> id) {
         return findById(id).isPresent();
+    }
+
+    /**
+     * メールアドレスを指定してエンティティを一件取得します。
+     *
+     * @return ユーザーエンティティ
+     */
+    public Optional<User> findByEmail(String email) {
+        return dao.selectByEmail(email);
     }
 
     /**
