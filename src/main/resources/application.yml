@@ -12,3 +12,7 @@ doma:
 server:
   servlet:
     context-path: /api
+
+
+jwt:
+  secret: iWpJnu21sTumTsfy

@@ -8,6 +8,7 @@ import static java.util.stream.Collectors.toList;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.auth.LoginUser;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.customer.entity.Customer;
@@ -148,4 +149,18 @@ public class CustomerService
             .collect(toList());
     }
 
+    /**
+     * メールアドレスを指定して、LoginUserを取得する。
+     *
+     * @param email メールアドレス
+     * @return LoginUser
+     */
+    @Transactional(readOnly = true)
+    public LoginUser getLoginUserByEmail(String email) {
+        return LoginUser.builder()
+                .email(email)
+                .userId(1)
+                .username("")
+                .build();
+    }
 }
