@@ -33,22 +33,22 @@ public class LcPaginationParamHandlerMethodArgumentResolver implements HandlerMe
             int limit;
             try {
                 limit = extractIntegerParameter(webRequest, "limit", annotation.defaultLimitValue());
-                if (limit > annotation.defaultLimitValue()) {
-                    throw new LcValidationErrorException("Parameter '{}' must be less than or equal to {}.", "limit",
+                if (limit > annotation.maxLimitValue()) {
+                    throw new LcValidationErrorException("Parameter '%s' must be less than or equal to '%s'.", "limit",
                         annotation.maxLimitValue());
                 }
             } catch (NumberFormatException e) {
-                throw new LcValidationErrorException("Parameter '{}' must be in the correct number format", "limit");
+                throw new LcValidationErrorException("Parameter '%s' must be in the correct number format", "limit");
             }
 
             int page;
             try {
                 page = extractIntegerParameter(webRequest, "page", 1);
                 if (page <= 0) {
-                    throw new LcValidationErrorException("Parameter '{}' must be greater than or equal to 1.", "page");
+                    throw new LcValidationErrorException("Parameter '%s' must be greater than or equal to 1.", "page");
                 }
             } catch (NumberFormatException e) {
-                throw new LcValidationErrorException("Parameter '{}' must be in the correct number format", "page");
+                throw new LcValidationErrorException("Parameter '%s' must be in the correct number format", "page");
             }
             return LcPagination.of(limit, page);
         }

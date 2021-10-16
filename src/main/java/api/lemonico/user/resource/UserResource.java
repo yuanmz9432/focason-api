@@ -5,8 +5,11 @@ package api.lemonico.user.resource;
 
 
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import api.lemonico.core.attribute.ID;
 import api.lemonico.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
+@JsonInclude(NON_NULL)
 public class UserResource
 {
 

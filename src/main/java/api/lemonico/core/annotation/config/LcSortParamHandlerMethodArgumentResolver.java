@@ -54,7 +54,7 @@ public class LcSortParamHandlerMethodArgumentResolver implements HandlerMethodAr
 
             Matcher m = SORT_PATTERN.matcher(sortValue);
             if (!m.find()) {
-                throw new LcValidationErrorException("Parameter '{}' must match the regexp {}", "sort", REGEX);
+                throw new LcValidationErrorException("Parameter '%s' must match the regexp '%s'", "sort", REGEX);
             } else {
                 return LcSort.builder().direction(LcSort.Direction.of(m.group("direction")))
                     .property(m.group("property")).build();
