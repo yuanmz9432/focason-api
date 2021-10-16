@@ -158,9 +158,9 @@ public class CustomerService
     @Transactional(readOnly = true)
     public LoginUser getLoginUserByEmail(String email) {
         return LoginUser.builder()
-                .email(email)
-                .userId(1)
-                .username("")
-                .build();
+            .email(email)
+            .userId(1)
+            .username("")
+            .build();
     }
 }

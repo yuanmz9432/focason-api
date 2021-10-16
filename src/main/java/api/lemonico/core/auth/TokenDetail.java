@@ -1,6 +1,7 @@
 package api.lemonico.core.auth;
 
-public interface TokenDetail {
+public interface TokenDetail
+{
 
-	String getEmail();
+    String getEmail();
 }

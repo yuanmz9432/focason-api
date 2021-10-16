@@ -1,21 +1,22 @@
 package api.lemonico.core.auth;
 
-import api.lemonico.auth.resource.JWTResource;
+
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Base64Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class JWTGenerator {
+public class JWTGenerator
+{
 
     private final JWTProperties properties;
 
@@ -37,9 +38,9 @@ public class JWTGenerator {
      */
     public Claims getClaims(String accessToken) {
         return Jwts.parser()
-                .setSigningKey(Base64Util.encode(properties.getSecret()))
-                .parseClaimsJws(accessToken)
-                .getBody();
+            .setSigningKey(Base64Util.encode(properties.getSecret()))
+            .parseClaimsJws(accessToken)
+            .getBody();
     }
 
     /**
@@ -63,13 +64,13 @@ public class JWTGenerator {
         payload.put("sub", sub);
         payload.put("exp", exp);
         return Jwts.builder()
-                .setClaims(payload)
-                .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, Base64Util.encode(properties.getSecret())).compact();
+            .setClaims(payload)
+            .setExpiration(exp)
+            .signWith(SignatureAlgorithm.HS256, Base64Util.encode(properties.getSecret())).compact();
     }
 
     /**
-     * 有効期間（application.ymlファイルに設定　単位：ミリ秒）を生成する。
+     * 有効期間（application.ymlファイルに設定 単位：ミリ秒）を生成する。
      *
      * @return Date
      */

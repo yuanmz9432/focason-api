@@ -1,21 +1,24 @@
 package api.lemonico.common;
 
+
+
 import api.lemonico.core.exception.LcErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
-public class JsonUtil {
+public class JsonUtil
+{
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public static void writeJson(HttpServletResponse response, LcErrorCode lcErrorCode, Object data) throws IOException {
+    public static void writeJson(HttpServletResponse response, LcErrorCode lcErrorCode, Object data)
+        throws IOException {
 
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

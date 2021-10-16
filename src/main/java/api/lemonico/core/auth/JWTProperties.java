@@ -1,14 +1,15 @@
 package api.lemonico.core.auth;
 
-import lombok.AllArgsConstructor;
+
+
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 @Data
-public class JWTProperties {
+public class JWTProperties
+{
 
     // トークンシークレット
     @Value("${jwt.secret}")
