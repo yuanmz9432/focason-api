@@ -1,3 +1,6 @@
+/*
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
+ */
 package api.lemonico.auth.config;
 
 
@@ -38,16 +41,16 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
         throws IOException, ServletException {
-        // 将 ServletRequest 转换为 HttpServletRequest 才能拿到请求头中的 token
+        // リクエストヘッダーからトークンを取得するために、ServletResponseをHttpServletResponseに変更する。
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        // 解决跨域问题 TODO
+        // TODO
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Allow-Headers", "*");
 
-        // 从请求头获取access_token
+        // リクエストヘッダーからアクセストークンを取得する。
         String accessToken = request.getHeader(properties.getAccessTokenHeader());
         String email = null;
         if (Objects.nonNull(accessToken) && !"".equals(accessToken)) {
@@ -62,31 +65,19 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
                 JsonUtil.writeJson(response, LcErrorCode.AUTH_TOKEN_INVALID, null);
                 return;
             }
-
-            // 解析
-            // 尝试拿 token 中的 username
-            // 若是没有 token 或者拿 username 时出现异常，那么 username 为 null
             email = (String) accessTokenClaims.get("sub");
         }
 
-        // 如果上面解析 token 成功并且拿到了 username 并且本次会话的权限还未被写入
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // 用 UserDetailsService 从数据库中拿到用户的 UserDetails 类
-            // UserDetails 类是 Spring Security 用于保存用户权限的实体类
             LoginUser loginUser = (LoginUser) this.userDetailsService.loadUserByUsername(email);
-            // 检查用户带来的 token 是否有效
-            // 包括 token 和 userDetails 中用户名是否一样， token 是否过期， token 生成时间是否在最后一次密码修改时间之前
-            // 若是检查通过
             if (loginUser != null && !loginUser.isEnabled()) {
                 JsonUtil.writeJson(response, LcErrorCode.FORBIDDEN, null);
                 return;
             }
             if (email.equals(loginUser.getUsername())) {
-                // 生成通过认证
                 UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // 将权限写入本次会话
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
