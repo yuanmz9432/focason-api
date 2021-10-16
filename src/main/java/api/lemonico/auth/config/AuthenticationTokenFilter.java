@@ -5,14 +5,18 @@ package api.lemonico.auth.config;
 
 
 
+import api.lemonico.auth.domain.UserStatus;
 import api.lemonico.common.JsonUtil;
 import api.lemonico.core.exception.LcErrorCode;
+import api.lemonico.user.resource.UserResource;
+import api.lemonico.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -37,6 +41,9 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserService service;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
@@ -69,16 +76,22 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            LoginUser loginUser = (LoginUser) this.userDetailsService.loadUserByUsername(email);
-            if (loginUser != null && !loginUser.isEnabled()) {
-                JsonUtil.writeJson(response, LcErrorCode.FORBIDDEN, null);
-                return;
-            }
-            if (email.equals(loginUser.getUsername())) {
-                UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            Optional<UserResource> userResource = service.getResourceByEmail(email);
+            // LoginUser loginUser = (LoginUser) this.userDetailsService.loadUserByUsername(email);
+            // if (loginUser != null && !loginUser.isEnabled()) {
+            // JsonUtil.writeJson(response, LcErrorCode.FORBIDDEN, null);
+            // return;
+            // }
+            if (userResource.isPresent()) {
+                if (!UserStatus.NORMAL.equals(UserStatus.of(userResource.get().getStatus()))) {
+                    JsonUtil.writeJson(response, LcErrorCode.FORBIDDEN, null);
+                    return;
+                }
+                if (email.equals(userResource.get().getEmail())) {
+                    var authentication = new UsernamePasswordAuthenticationToken(userResource, null, null);
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
 

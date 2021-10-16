@@ -153,7 +153,7 @@ public class UserService
         return LoginUser.builder()
             .email(email)
             .userId(1)
-            .username("")
+            .username("").enabled(true)
             .build();
     }
 
