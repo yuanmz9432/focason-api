@@ -1,13 +1,7 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.EntityDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.user.controller;
 
 
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
@@ -21,10 +15,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.${tableName}.entity.${simpleName};
-import api.lemonico.${tableName}.repository.${simpleName}Repository;
-import api.lemonico.${tableName}.resource.${simpleName}Resource;
-import api.lemonico.${tableName}.service.${simpleName}Service;
+import api.lemonico.user.entity.User;
+import api.lemonico.user.repository.UserRepository;
+import api.lemonico.user.resource.UserResource;
+import api.lemonico.user.service.UserService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -35,16 +29,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ${comment}コントローラー
+ * ユーザーコントローラー
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if>
+public class UserController
 {
     /**
      * コレクションリソースURI
@@ -57,60 +49,60 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ${comment}サービス
+     * ユーザーサービス
      */
-    private final ${simpleName}Service service;
+    private final UserService service;
 
     /**
-     * ${comment}リソースの一覧取得API
+     * ユーザーリソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ${comment}リソース一覧取得APIレスポンス
+     * @return ユーザーリソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
-        @LcConditionParam ${simpleName}Repository.Condition condition,
+    public ResponseEntity<LcResultSet<UserResource>> getUserList(
+        @LcConditionParam UserRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = ${simpleName}Repository.Condition.DEFAULT;
+            condition = UserRepository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(lcSort);
+        var sort = UserRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース取得API
+     * ユーザーIDを指定して、ユーザーリソース取得API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース取得APIレスポンス
+     * @param id ユーザーID
+     * @return ユーザーリソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> get${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id) {
+    public ResponseEntity<UserResource> getUser(
+        @PathVariable("id") ID<User> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(${simpleName}Resource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
     }
 
     /**
-     * ${comment}リソース作成API
+     * ユーザーリソース作成API
      *
-     * @param resource ${comment}リソース
-     * @return ${comment}リソース作成APIレスポンス
+     * @param resource ユーザーリソース
+     * @return ユーザーリソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> create${simpleName}(
-        @Valid @RequestBody ${simpleName}Resource resource,
+    public ResponseEntity<Void> createUser(
+        @Valid @RequestBody UserResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).get${simpleName}(id))
+            .withMethodCall(on(getClass()).getUser(id))
             .build()
             .encode()
             .toUri();
@@ -118,32 +110,32 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース更新API
+     * ユーザーIDを指定して、ユーザーリソース更新API
      *
-     * @param id ${comment}ID
-     * @param resource ${comment}リソース更新APIレスポンス
-     * @return ${comment}リソース更新APIレスポンス
+     * @param id ユーザーID
+     * @param resource ユーザーリソース更新APIレスポンス
+     * @return ユーザーリソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> update${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id,
-        @Valid @RequestBody ${simpleName}Resource resource) {
+    public ResponseEntity<UserResource> updateUser(
+        @PathVariable("id") ID<User> id,
+        @Valid @RequestBody UserResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース削除API
+     * ユーザーIDを指定して、ユーザーリソース削除API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース削除APIレスポンス
+     * @param id ユーザーID
+     * @return ユーザーリソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> delete${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id) {
+    public ResponseEntity<Void> deleteUser(
+        @PathVariable("id") ID<User> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }
