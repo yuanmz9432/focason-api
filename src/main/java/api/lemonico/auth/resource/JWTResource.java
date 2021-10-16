@@ -20,5 +20,8 @@ public class JWTResource
      */
     private final String accessToken;
 
+    /**
+     * 有効期間
+     */
     private final Date expirationTime;
 }
