@@ -7,7 +7,6 @@ package api.lemonico.core.handler;
 
 import api.lemonico.core.exception.LcErrorResource;
 import api.lemonico.core.exception.LcException;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +33,11 @@ public class GlobalExceptionHandler
                 .message(e.getMessage()).build());
     }
 
-    @ExceptionHandler(value = Exception.class)
-    @ResponseBody
-    public Object defaultErrorHandler(HttpServletRequest req, Exception e) {
-        logger.error("---DefaultException Handler---Host {} invokes url {} ERROR: {}", req.getRemoteHost(),
-            req.getRequestURL(), e.getMessage());
-        return e.getMessage();
-    }
+    // @ExceptionHandler(value = Exception.class)
+    // @ResponseBody
+    // public Object defaultErrorHandler(HttpServletRequest req, Exception e) {
+    // logger.error("---DefaultException Handler---Host {} invokes url {} ERROR: {}", req.getRemoteHost(),
+    // req.getRequestURL(), e.getMessage());
+    // return e.getMessage();
+    // }
 }

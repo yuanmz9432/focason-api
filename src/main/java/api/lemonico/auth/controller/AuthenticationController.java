@@ -7,9 +7,17 @@ package api.lemonico.auth.controller;
 
 import api.lemonico.auth.config.JWTGenerator;
 import api.lemonico.auth.config.LoginUser;
+import api.lemonico.auth.domain.UserStatus;
 import api.lemonico.auth.resource.JWTResource;
+import api.lemonico.common.BCryptEncoder;
+import api.lemonico.core.exception.LcEntityNotFoundException;
+import api.lemonico.core.exception.LcIllegalUserException;
+import api.lemonico.core.exception.LcResourceNotFoundException;
+import api.lemonico.core.exception.LcValidationErrorException;
+import api.lemonico.user.entity.User;
+import api.lemonico.user.resource.UserResource;
 import api.lemonico.user.service.UserService;
-import java.util.Date;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,13 +58,42 @@ public class AuthenticationController
     public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
         logger.info("username: {}, password: {}", loginUser.getUsername(), loginUser.getPassword());
 
-        final LoginUser user = service.getLoginUserByEmail(loginUser.getEmail());
-        final Date expirationTime = generator.generateExpirationTime();
-        final String accessToken = generator.generateAccessToken(user.getUsername(), expirationTime);
+        final var user = service.getResourceByEmail(loginUser.getUsername());
+        if (user.isEmpty()) {
+            throw new LcEntityNotFoundException(User.class, loginUser.getUsername());
+        }
+        this.checkLoginUser(loginUser, user);
+        final var expirationTime = generator.generateExpirationTime();
+        final var accessToken = generator.generateAccessToken(user.get().getEmail(), expirationTime);
         return ResponseEntity.ok().body(
             JWTResource.builder()
                 .accessToken(accessToken)
                 .expirationTime(expirationTime)
                 .build());
+    }
+
+    /**
+     * ログインユーザー有効性チェック
+     *
+     * @param loginUser ログインユーザー
+     * @param user ユーザー
+     */
+    private void checkLoginUser(LoginUser loginUser, Optional<UserResource> user) {
+        if (loginUser == null || user.isEmpty()) {
+            throw new LcResourceNotFoundException(UserResource.class, null);
+        }
+        switch (UserStatus.of(user.get().getStatus())) {
+            case NORMAL:
+                // パスワード一致性チェック
+                var isMatched = BCryptEncoder.getInstance().matches(loginUser.getPassword(), user.get().getPassword());
+                if (!isMatched) {
+                    throw new LcValidationErrorException("Password was not matched, please check again.");
+                }
+                break;
+            case BLOCKED:
+                throw new LcIllegalUserException(user.get().getEmail(), UserStatus.BLOCKED.name());
+            case LOGOUT:
+                throw new LcIllegalUserException(user.get().getEmail(), UserStatus.LOGOUT.name());
+        }
     }
 }

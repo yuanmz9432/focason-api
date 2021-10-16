@@ -66,6 +66,7 @@ public class JWTGenerator
         Map<String, Object> payload = new HashMap<>();
         payload.put("sub", sub);
         payload.put("exp", exp);
+        payload.put("iat", new Date(System.currentTimeMillis()));
         return Jwts.builder()
             .setClaims(payload)
             .setExpiration(exp)
@@ -73,7 +74,7 @@ public class JWTGenerator
     }
 
     /**
-     * 有効期間（application.ymlファイルに設定 単位：ミリ秒）を生成する。
+     * 有効期間（application.ymlファイルに設定 単位：秒）を生成する。
      *
      * @return Date
      */

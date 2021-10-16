@@ -51,7 +51,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         response.setHeader("Access-Control-Allow-Headers", "*");
 
         // リクエストヘッダーからアクセストークンを取得する。
-        String accessToken = request.getHeader(properties.getAccessTokenHeader());
+        var accessToken = request.getHeader(properties.getAccessTokenHeader());
         String email = null;
         if (Objects.nonNull(accessToken) && !"".equals(accessToken)) {
             // 解析access_token

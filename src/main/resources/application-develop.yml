@@ -4,6 +4,8 @@ spring:
     username: root
     password: kawasemi
     driver-class-name: com.mysql.jdbc.Driver
+  jackson:
+    time-zone: Asia/Tokyo
 
 server:
   port: 8080

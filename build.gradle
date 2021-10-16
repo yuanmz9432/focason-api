@@ -60,6 +60,7 @@ dependencies {
 
     // json web token
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
 
     // aop関連
     implementation 'org.aspectj:aspectjweaver:1.9.7'
