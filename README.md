@@ -31,7 +31,7 @@ Coming soon...
 
 ## Licence
 
-Copyright © 2021 YuanMingZe inc. All Rights Reserved.
+Copyright © 2021 Lemonico inc. All Rights Reserved.
 
 ## Author
 
