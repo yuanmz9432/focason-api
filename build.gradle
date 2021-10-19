@@ -9,7 +9,6 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.5.5"
         classpath "gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:6.0.6"
         classpath "com.diffplug.spotless:spotless-plugin-gradle:5.16.0"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.11.1"
     }
 }
 
@@ -25,7 +24,6 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: "com.diffplug.spotless"
-apply plugin: "com.github.ben-manes.versions"
 
 //idea.module.inheritOutputDirs = true
 
@@ -38,7 +36,6 @@ java {
 }
 
 repositories {
-    gradlePluginPortal()
     mavenCentral()
 }
 
