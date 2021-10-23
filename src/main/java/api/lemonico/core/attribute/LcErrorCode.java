@@ -29,7 +29,7 @@ public enum LcErrorCode
     @JsonCreator
     public static LcErrorCode of(String value) {
         return Arrays.stream(values()).filter((v) -> v.value.equals(value)).findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("RzErrorCode = '" + value + "' is not supported."));
+            .orElseThrow(() -> new IllegalArgumentException("LcErrorCode = '" + value + "' is not supported."));
     }
 
     @JsonValue

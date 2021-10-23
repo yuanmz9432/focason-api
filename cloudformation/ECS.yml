@@ -1,0 +1,402 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Creates ECS and related resources
+
+Parameters:
+
+  EnvName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+    AllowedValues:
+      - dev
+      - stg
+      - prod
+    Default: dev
+
+  ProjectPrefix:
+    Type: String
+    Default: Lemonico
+
+  SslCertificate:
+    Description: The SSL Certificate created at tokyo region
+    Type: String
+    Default: 1ee108b6-2885-4daf-b56e-d11e71d634ec
+
+  LayerName:
+    Description: An layer name that will be prefixed to resource names
+    Type: String
+    AllowedValues:
+      - front
+
+  ContainerPort:
+    Description: The portnumber of the application
+    Type: Number
+    Default: 80
+
+  CloudfrontSecretString:
+    Type: String
+    NoEcho: true
+    Default: secret
+
+Mappings:
+  dev:
+    front:
+      ecs1a: 10.100.48.0/21
+      ecs1c: 10.100.56.0/21
+    ecs:
+      memory: 2048
+      cpu: 1024
+  stg:
+    front:
+      ecs1a: 10.104.48.0/21
+      ecs1c: 10.104.56.0/21
+    ecs:
+      memory: 2048
+      cpu: 1024
+  prod:
+    front:
+      ecs1a: 10.200.48.0/21
+      ecs1c: 10.200.56.0/21
+    ecs:
+      memory: 2048
+      cpu: 1024
+Resources:
+  # ------------------------------------------------------------#
+  # ECS Subnet 1a private
+  # ------------------------------------------------------------#
+  SubnetEcs1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Fn::ImportValue: !Sub ${PJPrefix}-vpc
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !FindInMap [!Ref EnvName, !Ref LayerName, ecs1a]
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-ecs-subnet-1a
+        - Key: StackName
+          Value: !Ref 'AWS::StackName'
+  # ------------------------------------------------------------#
+  # ECS Subnet 1c private
+  # ------------------------------------------------------------#
+  SubnetEcs1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Fn::ImportValue: !Sub ${PJPrefix}-vpc
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: !FindInMap [!Ref EnvName, !Ref LayerName, ecs1c]
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-ecs-subnet-1c
+        - Key: StackName
+          Value: !Ref 'AWS::StackName'
+  # ------------------------------------------------------------#
+  # ECS Subnet 1a & RouteTable Association
+  # ------------------------------------------------------------#
+  RouteTableAssociationEcs1a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Fn::ImportValue: !Sub ${PJPrefix}-nat-1a-rtb
+      SubnetId: !Ref SubnetEcs1a
+  # ------------------------------------------------------------#
+  # ECS Subnet 1c & RouteTable Association
+  # ------------------------------------------------------------#
+  RouteTableAssociationEcs1c:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Fn::ImportValue: !Sub ${PJPrefix}-nat-1c-rtb
+      SubnetId: !Ref SubnetEcs1c
+  # ------------------------------------------------------------#
+  # ECS Subnet 1a & NetworkAcl Association
+  # ------------------------------------------------------------#
+  AclAssociationAlb1a:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      NetworkAclId:
+        Fn::ImportValue: !Sub ${PJPrefix}-full-open-nacl
+      SubnetId: !Ref SubnetEcs1a
+  # ------------------------------------------------------------#
+  # ECS Subnet 1c & NetworkAcl Association
+  # ------------------------------------------------------------#
+  AclAssociationAlb1c:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      NetworkAclId:
+        Fn::ImportValue: !Sub ${PJPrefix}-full-open-nacl
+      SubnetId: !Ref SubnetEcs1c
+  # ------------------------------------------------------------#
+  # ECS SecurityGroup
+  # ------------------------------------------------------------#
+  EcsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub ${PJPrefix}-ecs-sg
+      GroupName: !Sub ecs-sg
+      VpcId:
+        Fn::ImportValue: !Sub ${PJPrefix}-vpc
+      SecurityGroupIngress:
+        - SourceSecurityGroupId:
+            Fn::ImportValue: !Sub ${PJPrefix}-alb-sg
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-ecs-sg
+        - Key: StackName
+          Value: !Ref 'AWS::StackName'
+  # ------------------------------------------------------------#
+  # LaunchTemplate SecurityGroup
+  # ------------------------------------------------------------#
+  LtSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub ${PJPrefix}-lt-sg
+      GroupName: !Sub lt-sg
+      VpcId:
+        Fn::ImportValue: !Sub ${PJPrefix}-vpc
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: -1
+          FromPort: 80
+          ToPort: 80
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-lt-sg
+        - Key: StackName
+          Value: !Ref 'AWS::StackName'
+  # ------------------------------------------------------------#
+  # LaunchTemplate
+  # ------------------------------------------------------------#
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        InstanceType: t2.micro
+        ImageId: ami-01748a72bed07727c
+        # SecurityGroups:
+        #   - !Ref LtSecurityGroup
+      LaunchTemplateName: horizon-launch-template
+  # ------------------------------------------------------------#
+  # AutoScalingGroup
+  # ------------------------------------------------------------#
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub ${PJPrefix}-asg
+      VPCZoneIdentifier:
+        - !Ref SubnetEcs1a
+        - !Ref SubnetEcs1c
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      # MixedInstancesPolicy:
+      #   LaunchTemplate:
+      #     LaunchTemplateSpecification:
+      #       LaunchTemplateId: !Ref LaunchTemplate
+      #       Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      #   InstancesDistribution:
+      #     OnDemandBaseCapacity: 2
+      #     OnDemandPercentageAboveBaseCapacity: 50
+      MinSize: 0
+      MaxSize: 2
+      DesiredCapacity: 1
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-ec2
+          PropagateAtLaunch: true
+    # CreationPolicy:
+    #   ResourceSignal:
+    #     Timeout: PT15M
+    # UpdatePolicy:
+    #   AutoScalingRollingUpdate:
+    #     MinInstancesInService: 1
+    #     MaxBatchSize: 1
+    #     PauseTime: PT15M
+    #     WaitOnResourceSignals: true
+
+  #  IncreaseInstancePolicy:
+  #    Type: AWS::AutoScaling::ScalingPolicy
+  #    Properties:
+  #      AutoScalingGroupName: !Ref AutoScalingGroup
+  #      PolicyType: SimpleScaling
+  #      AdjustmentType: ChangeInCapacity
+  #      Cooldown: 300
+  #      ScalingAdjustment: 1
+
+  #  DecreaseInstancePolicy:
+  #    Type: AWS::AutoScaling::ScalingPolicy
+  #    Properties:
+  #      AutoScalingGroupName: !Ref AutoScalingGroup
+  #      PolicyType: SimpleScaling
+  #      AdjustmentType: ChangeInCapacity
+  #      Cooldown: 300
+  #      ScalingAdjustment: -1
+
+  # ------------------------------------------------------------#
+  # Cloudwatch Alarm
+  # ------------------------------------------------------------#
+  # EC2 instance cpu high alarm
+  #  Ec2InstanceHighAlarm:
+  #    DependsOn: IncreaseInstancePolicy
+  #    Type: AWS::CloudWatch::Alarm
+  #    Properties:
+  #      AlarmName: !Sub ec2-high-alarm
+  #      AlarmDescription: !Sub ${EnvName} environment ${LayerName} ec2 higher than threshold alarm
+  #      MetricName: CPUUtilization
+  #      Namespace: AWS/EC2
+  #      Statistic: Average
+  #      Period: 300
+  #      EvaluationPeriods: 1
+  #      ComparisonOperator: GreaterThanOrEqualToThreshold
+  #      Threshold: 80
+  #      AlarmActions:
+  #        - !Ref IncreaseInstancePolicy
+  #      Dimensions:
+  #        - Name: AutoScalingGroupName
+  #          Value: !Ref AutoScalingGroup
+  #
+  ## EC2 instance cpu low alarm
+  #  Ec2InstanceLowAlarm:
+  #    DependsOn: DecreaseInstancePolicy
+  #    Type: AWS::CloudWatch::Alarm
+  #    Properties:
+  #      AlarmName: !Sub ec2-low-alarm
+  #      AlarmDescription: !Sub ${EnvName} environment ${LayerName} ec2 lower than threshold alarm
+  #      MetricName: CPUUtilization
+  #      Namespace: AWS/EC2
+  #      Statistic: Average
+  #      Period: 300
+  #      EvaluationPeriods: 3
+  #      ComparisonOperator: LessThanThreshold
+  #      Threshold: 80
+  #      AlarmActions:
+  #        - !Ref DecreaseInstancePolicy
+  #      Dimensions:
+  #        - Name: AutoScalingGroupName
+  #          Value: !Ref AutoScalingGroup
+
+  # ------------------------------------------------------------#
+  # ECS Cluster
+  # ------------------------------------------------------------#
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub ${PJPrefix}-cluster
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-cluster
+        - Key: StackName
+          Value: !Ref 'AWS::StackName'
+  # ------------------------------------------------------------#
+  # ECS LogGroup
+  # ------------------------------------------------------------#
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${PJPrefix}-ecs-logs
+      RetentionInDays: 30
+  # ------------------------------------------------------------#
+  # ECS TaskDefinition
+  # ------------------------------------------------------------#
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${PJPrefix}-task
+      RequiresCompatibilities:
+        - FARGATE
+      Memory: !FindInMap [!Ref EnvName, ecs, memory]
+      Cpu: !FindInMap [!Ref EnvName, ecs, cpu]
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/ECS-Task-Execution-Role
+      TaskRoleArn:
+        Fn::ImportValue: !Sub ECS-Task-Execution-Role-Arn
+      ContainerDefinitions:
+        - Name: app
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.ap-northeast-1.amazonaws.com/horizon:latest
+          Essential: true
+          Memory: 512
+          PortMappings:
+            - ContainerPort: 80
+              HostPort: 80
+              Protocol: tcp
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: app
+        # - Name: nginx
+        #   Essential: true
+        #   Image: nginx:latest
+        #   PortMappings:
+        #     - ContainerPort: 80
+        #       Protocol: tcp
+        #   LogConfiguration:
+        #     LogDriver: awslogs
+        #     Options:
+        #       awslogs-region: !Ref AWS::Region
+        #       awslogs-group: !Ref LogGroup
+        #       awslogs-stream-prefix: nginx
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-task
+        - Key: StackName
+          Value: !Ref 'AWS::StackName'
+  # ------------------------------------------------------------#
+  # ECS Service
+  # ------------------------------------------------------------#
+  Service:
+    DependsOn:
+      - Cluster
+      - LogGroup
+      - TaskDefinition
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub ${PJPrefix}-service
+      Cluster: !Ref Cluster
+      DesiredCount: 2
+      PlatformVersion: 1.4.0
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 50
+      TaskDefinition: !Ref TaskDefinition
+      LaunchType: FARGATE
+      LoadBalancers:
+        - ContainerName: app
+          ContainerPort: !Ref ContainerPort
+          TargetGroupArn:
+            Fn::ImportValue: !Sub ${PJPrefix}-tg
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsSecurityGroup
+          Subnets:
+            - !Ref SubnetEcs1a
+            - !Ref SubnetEcs1c
+      Tags:
+        - Key: Name
+          Value: !Sub ${PJPrefix}-ecs-service
+        - Key: StackName
+          Value: !Ref 'AWS::StackName'
+
+Outputs:
+  EcsSecurityGroup:
+    Description: A reference to the security group of ECS
+    Value: !Ref EcsSecurityGroup
+    Export:
+      Name: !Sub ${PJPrefix}-ecs-sg
+  EcsService:
+    Description: A reference to the Service of ECS
+    Value: !Ref Service
+    Export:
+      Name: !Sub ${PJPrefix}-ecs-service
+  EcsCluster:
+    Description: A reference to the Cluster of ECS
+    Value: !Ref Cluster
+    Export:
+      Name: !Sub ${PJPrefix}-ecs-cluster

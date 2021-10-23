@@ -77,6 +77,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/junit/junit
     testImplementation 'junit:junit:4.13.2'
+
+    // AWS JAVA SDK For Amazon S3
+    implementation 'software.amazon.awssdk:s3:2.17.66'
 }
 
 sourceSets {
