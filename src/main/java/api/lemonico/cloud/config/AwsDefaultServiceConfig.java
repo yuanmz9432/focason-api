@@ -29,7 +29,7 @@ public class AwsDefaultServiceConfig
 
     @Bean
     public S3Service s3Service(S3Presigner s3Presigner, S3Client s3Client) {
-        var props = awsProps.getS3().get("default");
+        var props = awsProps.getS3().get("item-upload");
         return S3Service.builder()
             .s3Presigner(s3Presigner)
             .s3Client(s3Client)

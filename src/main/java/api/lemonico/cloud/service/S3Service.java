@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -79,14 +80,30 @@ public class S3Service
      * @return S3内のファイル存在有無
      */
     public boolean doesObjectExist(String objectKey) {
+
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+            .bucket(bucketName)
+            .key(getPrefix() + objectKey)
+            .build();
+        ResponseInputStream<GetObjectResponse> responseInputStream = null;
         try {
-            s3Client.headObject(HeadObjectRequest.builder().bucket(bucketName).key(getPrefix() + objectKey).build());
+            responseInputStream = s3Client.getObject(getObjectRequest);
         } catch (NoSuchKeyException ex) {
             // S3バケットにキーと一致するファイルが存在しない場合
             return false;
         } catch (S3Exception e) {
             throw new LcException(LcErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+        // HeadObjectRequest request = HeadObjectRequest.builder().bucket(bucketName).key(getPrefix() +
+        // objectKey).build();
+        // try {
+        // s3Client.headObject(request);
+        // } catch (NoSuchKeyException ex) {
+        // // S3バケットにキーと一致するファイルが存在しない場合
+        // return false;
+        // } catch (S3Exception e) {
+        // throw new LcException(LcErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        // }
         return true;
     }
 

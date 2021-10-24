@@ -21,3 +21,12 @@ jwt:
   refresh_token_expires_in: 604800
   access_token_header: X-ACCESS-TOKEN
   refresh_token_header: X-REFRESH-TOKEN
+
+cloud:
+  aws:
+    region: 'ap-northeast-1'
+    s3:
+      item-upload:
+        bucket-name: s3-lemonico-upload-sandbox
+        prefix: items
+        pre-signed-url-valid-minutes: 15
