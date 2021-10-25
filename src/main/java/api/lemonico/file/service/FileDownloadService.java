@@ -14,6 +14,9 @@ public class FileDownloadService
 {
 
 
+    /**
+     * S3サービス
+     */
     private final S3Service service;
 
     public FileDownloadResource getDownloadUrl() {
