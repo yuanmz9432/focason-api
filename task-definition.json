@@ -1,34 +1,17 @@
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "family": "webserver",
+  "containerDefinitions": [
     {
-      "Sid":"RegisterTaskDefinition",
-      "Effect":"Allow",
-      "Action":[
-        "ecs:RegisterTaskDefinition"
-      ],
-      "Resource":"*"
-    },
-    {
-      "Sid":"PassRolesInTaskDefinition",
-      "Effect":"Allow",
-      "Action":[
-        "iam:PassRole"
-      ],
-      "Resource":[
-        "arn:aws:iam::557969691251:role/ecsTaskExecutionRole"
-      ]
-    },
-    {
-      "Sid":"DeployService",
-      "Effect":"Allow",
-      "Action":[
-        "ecs:UpdateService",
-        "ecs:DescribeServices"
-      ],
-      "Resource":[
-        "arn:aws:ecs:ap-northeast-1:557969691251:service/default/sample-app"
-      ]
+      "name": "web",
+      "image": "lemonico-api:latest",
+      "memory": "100",
+      "cpu": "99"
     }
-  ]
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "memory": "512",
+  "cpu": "256"
 }
