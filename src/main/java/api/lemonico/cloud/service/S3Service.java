@@ -96,25 +96,6 @@ public class S3Service
     }
 
     /**
-     * S3内にオブジェクトキーのファイル存在確認
-     *
-     * @param bucketName S3バケット名
-     * @param objectKey S3オブジェクトキー
-     * @return S3内のファイル存在有無
-     */
-    public boolean doesObjectExist(String bucketName, String objectKey) {
-        try {
-            s3Client.headObject(HeadObjectRequest.builder().bucket(bucketName).key(objectKey).build());
-        } catch (NoSuchKeyException ex) {
-            // S3バケットにキーと一致するファイルが存在しない場合
-            return false;
-        } catch (S3Exception e) {
-            throw new LcException(LcErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
-        return true;
-    }
-
-    /**
      * ファイルダウンロード用の証明付きURL作成
      *
      * @param objectKey S3オブジェクトキー
@@ -198,5 +179,20 @@ public class S3Service
             return getPresignedGetObjectRequest(objectKey, fileName).url();
         }
         return null;
+    }
+
+    /**
+     * ファイルをS3から削除
+     *
+     * @param objectKey S3オブジェクトキー
+     */
+    public void deleteObject(String objectKey) {
+        if (doesObjectExist(objectKey)) {
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(getPrefix() + objectKey)
+                .build();
+            s3Client.deleteObject(deleteObjectRequest);
+        }
     }
 }

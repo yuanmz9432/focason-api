@@ -5,6 +5,7 @@ package api.lemonico.fileTransfer.service;
 
 import static java.util.stream.Collectors.toList;
 
+import api.lemonico.cloud.service.S3Service;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
@@ -31,11 +32,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FileTransferService
 {
-
     /**
      * フィアル転送リポジトリ
      */
     private final FileTransferRepository repository;
+
+    /**
+     * S3サービス
+     */
+    private final S3Service s3Service;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、フィアル転送リソースの一覧を取得します。
@@ -114,14 +119,14 @@ public class FileTransferService
      */
     @Transactional
     public void deleteResource(ID<FileTransfer> id) {
-        // TODO Waiting for finalization of basic design according to Q&A
-        // フィアル転送IDにおいて重複したデータが存在していることを示す。
-        if (!repository.exists(id)) {
+        var fileTransferResource = getResource(id);
+        if (fileTransferResource.isPresent()) {
+            // フィアルを削除します。
+            repository.deleteLogicById(id);
+            s3Service.deleteObject(fileTransferResource.get().getFileName());
+        } else {
             throw new LcResourceNotFoundException(FileTransfer.class, id);
         }
-
-        // フィアル転送を削除します。
-        repository.deleteLogicById(id);
     }
 
     /**
