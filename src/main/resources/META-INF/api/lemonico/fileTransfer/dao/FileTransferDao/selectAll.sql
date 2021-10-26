@@ -1,7 +1,7 @@
 SELECT
     /*%expand*/*
 FROM
-    user
+    file_transfer
 WHERE
     is_deleted = 0
     /*%if condition.getIds() != null */

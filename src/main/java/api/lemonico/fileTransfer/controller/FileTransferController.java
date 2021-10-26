@@ -1,13 +1,7 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.EntityDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.fileTransfer.controller;
 
 
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
@@ -21,10 +15,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.${simpleName?uncap_first}.entity.${simpleName};
-import api.lemonico.${simpleName?uncap_first}.repository.${simpleName}Repository;
-import api.lemonico.${simpleName?uncap_first}.resource.${simpleName}Resource;
-import api.lemonico.${simpleName?uncap_first}.service.${simpleName}Service;
+import api.lemonico.fileTransfer.entity.FileTransfer;
+import api.lemonico.fileTransfer.repository.FileTransferRepository;
+import api.lemonico.fileTransfer.resource.FileTransferResource;
+import api.lemonico.fileTransfer.service.FileTransferService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -35,16 +29,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ${comment}コントローラー
+ * フィアル転送コントローラー
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if>
+public class FileTransferController
 {
     /**
      * コレクションリソースURI
@@ -57,60 +49,60 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ${comment}サービス
+     * フィアル転送サービス
      */
-    private final ${simpleName}Service service;
+    private final FileTransferService service;
 
     /**
-     * ${comment}リソースの一覧取得API
+     * フィアル転送リソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ${comment}リソース一覧取得APIレスポンス
+     * @return フィアル転送リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
-        @LcConditionParam ${simpleName}Repository.Condition condition,
+    public ResponseEntity<LcResultSet<FileTransferResource>> getFileTransferList(
+        @LcConditionParam FileTransferRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = ${simpleName}Repository.Condition.DEFAULT;
+            condition = FileTransferRepository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(lcSort);
+        var sort = FileTransferRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース取得API
+     * フィアル転送IDを指定して、フィアル転送リソース取得API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース取得APIレスポンス
+     * @param id フィアル転送ID
+     * @return フィアル転送リソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> get${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id) {
+    public ResponseEntity<FileTransferResource> getFileTransfer(
+        @PathVariable("id") ID<FileTransfer> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(${simpleName}Resource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(FileTransferResource.class, id));
     }
 
     /**
-     * ${comment}リソース作成API
+     * フィアル転送リソース作成API
      *
-     * @param resource ${comment}リソース
-     * @return ${comment}リソース作成APIレスポンス
+     * @param resource フィアル転送リソース
+     * @return フィアル転送リソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> create${simpleName}(
-        @Valid @RequestBody ${simpleName}Resource resource,
+    public ResponseEntity<Void> createFileTransfer(
+        @Valid @RequestBody FileTransferResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).get${simpleName}(id))
+            .withMethodCall(on(getClass()).getFileTransfer(id))
             .build()
             .encode()
             .toUri();
@@ -118,32 +110,32 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース更新API
+     * フィアル転送IDを指定して、フィアル転送リソース更新API
      *
-     * @param id ${comment}ID
-     * @param resource ${comment}リソース更新APIレスポンス
-     * @return ${comment}リソース更新APIレスポンス
+     * @param id フィアル転送ID
+     * @param resource フィアル転送リソース更新APIレスポンス
+     * @return フィアル転送リソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> update${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id,
-        @Valid @RequestBody ${simpleName}Resource resource) {
+    public ResponseEntity<FileTransferResource> updateFileTransfer(
+        @PathVariable("id") ID<FileTransfer> id,
+        @Valid @RequestBody FileTransferResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース削除API
+     * フィアル転送IDを指定して、フィアル転送リソース削除API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース削除APIレスポンス
+     * @param id フィアル転送ID
+     * @return フィアル転送リソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> delete${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id) {
+    public ResponseEntity<Void> deleteFileTransfer(
+        @PathVariable("id") ID<FileTransfer> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,6 @@
 select
   /*%expand*/*
 from
-  user
+  file_transfer
 where
   id = /* id */1

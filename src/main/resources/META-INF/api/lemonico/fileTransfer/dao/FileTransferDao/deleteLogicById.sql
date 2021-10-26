@@ -1,5 +1,5 @@
 UPDATE
-    user
+    file_transfer
 SET
     is_deleted = 1
 WHERE

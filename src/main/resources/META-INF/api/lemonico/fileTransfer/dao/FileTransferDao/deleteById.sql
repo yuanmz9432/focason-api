@@ -1,4 +1,4 @@
 DELETE FROM
-    user
+    file_transfer
 WHERE
     id = /* id */1

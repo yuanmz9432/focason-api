@@ -127,7 +127,7 @@ task genController {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-                            packageName: "api.lemonico." + TABLE_NAME + ".controller",
+                            packageName: "api.lemonico." + FOLDER + ".controller",
                             entitySuffix: "Controller",
                             destDir: 'src/main/java'
                     )
@@ -148,7 +148,7 @@ task genRepository {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico." + TABLE_NAME + ".repository",
+                            packageName: "api.lemonico." + FOLDER + ".repository",
                             entitySuffix: "Repository",
                             destDir: 'src/main/java')
                 }
@@ -168,7 +168,7 @@ task genService {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico." + TABLE_NAME + ".service",
+                            packageName: "api.lemonico." + FOLDER + ".service",
                             entitySuffix: "Service",
                             destDir: 'src/main/java')
                 }
@@ -188,7 +188,7 @@ task genResource {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico." + TABLE_NAME + ".resource",
+                            packageName: "api.lemonico." + FOLDER + ".resource",
                             entitySuffix: "Resource",
                             destDir: 'src/main/java')
                 }
@@ -210,7 +210,7 @@ task genEntity {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-                            packageName: "api.lemonico." + TABLE_NAME + ".entity",
+                            packageName: "api.lemonico." + FOLDER + ".entity",
                             destDir: 'src/main/java'
                     )
                 }
@@ -231,10 +231,11 @@ task genDao {
                 {
                     daoConfig(
                             overwrite: true,
-                            packageName: "api.lemonico." + TABLE_NAME + ".dao",
+                            packageName: "api.lemonico." + FOLDER + ".dao",
                             suffix: "Dao",
                             destDir: 'src/main/java')
                     sqlConfig(
+                            generate: true,
                             overwrite: true,
                             destDir: 'src/main/resources',
                     )
