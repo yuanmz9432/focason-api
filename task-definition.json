@@ -2,7 +2,7 @@
   "family": "webserver",
   "containerDefinitions": [
     {
-      "name": "web",
+      "name": "sample-app",
       "image": "lemonico-api:latest",
       "memory": "100",
       "cpu": "99"
