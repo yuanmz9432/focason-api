@@ -4,9 +4,8 @@
 package api.lemonico.fileTransfer.controller;
 
 
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
+import api.lemonico.cloud.service.S3Service;
 import api.lemonico.core.annotation.LcConditionParam;
 import api.lemonico.core.annotation.LcPaginationParam;
 import api.lemonico.core.annotation.LcSortParam;
@@ -14,10 +13,12 @@ import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
-import api.lemonico.core.exception.LcResourceNotFoundException;
+import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.fileTransfer.entity.FileTransfer;
 import api.lemonico.fileTransfer.repository.FileTransferRepository;
+import api.lemonico.fileTransfer.resource.FileDownloadResource;
 import api.lemonico.fileTransfer.resource.FileTransferResource;
+import api.lemonico.fileTransfer.resource.FileUploadResource;
 import api.lemonico.fileTransfer.service.FileTransferService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
@@ -26,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * フィアル転送コントローラー
@@ -41,7 +41,7 @@ public class FileTransferController
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "";
+    private static final String COLLECTION_RESOURCE_URI = "/file-transfer";
 
     /**
      * メンバーリソースURI
@@ -52,6 +52,11 @@ public class FileTransferController
      * フィアル転送サービス
      */
     private final FileTransferService service;
+
+    /**
+     * S3サービス
+     */
+    private final S3Service s3Service;
 
     /**
      * フィアル転送リソースの一覧取得API
@@ -80,11 +85,15 @@ public class FileTransferController
      * @return フィアル転送リソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<FileTransferResource> getFileTransfer(
+    public ResponseEntity<FileDownloadResource> getFileTransfer(
         @PathVariable("id") ID<FileTransfer> id) {
-        return service.getResource(id)
-            .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(FileTransferResource.class, id));
+        var fileTransferResource = service.getResource(id);
+        if (fileTransferResource.isEmpty()) {
+            throw new LcEntityNotFoundException(FileTransferResource.class, id);
+        }
+        return ResponseEntity.ok(FileDownloadResource.builder()
+            .downloadUrl(s3Service.generateGetUrl(fileTransferResource.get().getFileName()).toString())
+            .fileName(fileTransferResource.get().getFileName()).build());
     }
 
     /**
@@ -97,16 +106,12 @@ public class FileTransferController
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> createFileTransfer(
-        @Valid @RequestBody FileTransferResource resource,
-        UriComponentsBuilder uriBuilder) {
-        var id = service.createResource(resource).getId();
-        var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).getFileTransfer(id))
-            .build()
-            .encode()
-            .toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<FileUploadResource> createFileTransfer(
+        @Valid @RequestBody FileTransferResource resource) {
+        service.createResource(resource);
+        return ResponseEntity.ok(
+            FileUploadResource.builder().uploadUrl(
+                s3Service.generatePutUrl(resource.getFileName()).toString()).build());
     }
 
     /**

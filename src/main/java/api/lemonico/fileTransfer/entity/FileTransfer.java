@@ -24,6 +24,7 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
+@Table(name = "file_transfer")
 public class FileTransfer extends LcEntity
 {
 

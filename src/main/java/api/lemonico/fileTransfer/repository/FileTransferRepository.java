@@ -12,6 +12,7 @@ import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.fileTransfer.dao.FileTransferDao;
 import api.lemonico.fileTransfer.entity.FileTransfer;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,8 +68,11 @@ public class FileTransferRepository
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
-            .withCreatedBy("")
-            .withModifiedBy(""))
+            .withCreatedAt(LocalDateTime.now())
+            .withCreatedBy("Yuan")
+            .withModifiedAt(LocalDateTime.now())
+            .withModifiedBy("Yuan")
+            .withIsDeleted(0))
             .getEntity()
             .getId();
     }
