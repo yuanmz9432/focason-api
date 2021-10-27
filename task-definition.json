@@ -1,12 +1,19 @@
 {
-  "family": "webserver",
-  "executionRoleArn": "ecsTaskExecutionRole",
+  "family": "lemonico-app",
+  "executionRoleArn": "arn:aws:iam::account_ID:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "name": "sample-app",
       "image": "lemonico-api:latest",
       "memory": "100",
-      "cpu": "99"
+      "cpu": "99",
+      "portMappings": [
+          {
+              "hostPort": 80,
+              "protocol": "tcp",
+              "containerPort": 80
+          }
+      ]
     }
   ],
   "requiresCompatibilities": [
