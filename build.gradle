@@ -292,3 +292,11 @@ spotless {
         removeUnusedImports()
     }
 }
+
+//デプロイ用JARファイル作成してから、releaseフォルダにコピーする
+task copyJarToRelease(type: Copy, dependsOn: bootJar) {
+    group = 'build'
+    from 'build/libs'
+    into 'release'
+    include 'lemonico-api-1.0-SNAPSHOT.jar'
+}
