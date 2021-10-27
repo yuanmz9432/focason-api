@@ -7,12 +7,20 @@ spring:
 
 server:
   port: 80
-  
-logging: 
+
+logging:
   level:
     root: INFO
-      api.lemonico: TRACE
+    api.lemonico: TRACE
 
+cloud:
+  aws:
+    region: 'ap-northeast-1'
+    s3:
+      item-upload:
+        bucket-name: s3-lemonico-upload-sandbox
+        prefix: items
+        pre-signed-url-valid-minutes: 15
 
 jwt:
   secret: iWpJnu21sTumTsfy
