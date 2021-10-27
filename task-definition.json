@@ -1,5 +1,6 @@
 {
   "family": "webserver",
+  "executionRoleArn": "ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "name": "sample-app",
