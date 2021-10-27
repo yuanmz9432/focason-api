@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: develop #develop #production #staging
+    active: production #develop #production #staging
   servlet:
     multipart:
       max-file-size: -1
