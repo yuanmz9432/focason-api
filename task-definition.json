@@ -16,7 +16,11 @@
       },
       "entryPoint": null,
       "portMappings": [
-        
+        {
+          "containerPort" : 0,
+          "hostPort" : 0,
+          "protocol" : "tcp"
+        }
       ],
       "command": null,
       "linuxParameters": null,
