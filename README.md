@@ -5,13 +5,6 @@ This is a practice project about automatic code generation.
 ## Description
 
 You can use gradle tasks to generate a lot of CRUD code. For example Controller, Service, Entity, Dao and SQL file.
-```
-#gradle ⇒ gen tasks
-
-genAll
-genController
-...
-```
 
 ## Demo
 
@@ -26,6 +19,29 @@ Coming soon...
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 ## Usage
+
+## Command
+
+#### 1. generate code with gen
+```
+./gradlew genAll -P TABLE_NAME={TABLE_NAME} -P FOLDER={FOLDER_NAME}
+```
+
+#### 2. build docker image
+```
+docker build -t {CONTAINER_NAME}:{TAG} .
+```
+### Before commit & push the code to git, we should run No.3 and No.4 commands.To make sure build process success.
+
+#### 3. Java code format
+```
+./gradlew spotlessApply
+```
+
+#### 4. build project
+```
+./gradlew build
+```
 
 ## Contribution
 
