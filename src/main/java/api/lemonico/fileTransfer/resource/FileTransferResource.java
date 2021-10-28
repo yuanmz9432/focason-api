@@ -27,7 +27,7 @@ public class FileTransferResource
     /** ファイル転送ID */
     private final ID<FileTransfer> id;
 
-    /**  */
+    /** ユーザーID */
     private final Integer userId;
 
     /** バケット名 */
@@ -36,13 +36,10 @@ public class FileTransferResource
     /** ファイル名 */
     private final String fileName;
 
-    /** ファイル種類（1:CSV 2:PDF） */
+    /** ファイル種類（1:CSV 2:PDF 3:IMAGE） */
     private final Integer fileType;
 
-    /** 転送タイプ（1:インポート 2:エクスポート） */
-    private final Integer transferType;
-
-    /** ステータス（1:未転送 2:転送済） */
+    /** ステータス（1:転送中 2:転送済） */
     private final Integer status;
 
     /** 作成者 */
@@ -71,7 +68,6 @@ public class FileTransferResource
         this.bucketName = entity.getBucketName();
         this.fileName = entity.getFileName();
         this.fileType = entity.getFileType();
-        this.transferType = entity.getTransferType();
         this.status = entity.getStatus();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
@@ -92,7 +88,6 @@ public class FileTransferResource
             .bucketName(bucketName)
             .fileName(fileName)
             .fileType(fileType)
-            .transferType(transferType)
             .status(status)
             .createdBy(createdBy)
             .createdAt(createdAt)

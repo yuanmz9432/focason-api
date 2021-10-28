@@ -33,7 +33,7 @@ public class FileTransfer extends LcEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     ID<FileTransfer> id;
 
-    /**  */
+    /** ユーザーID */
     @Column(name = "user_id")
     Integer userId;
 
@@ -45,15 +45,11 @@ public class FileTransfer extends LcEntity
     @Column(name = "file_name")
     String fileName;
 
-    /** ファイル種類（1:CSV 2:PDF） */
+    /** ファイル種類（1:CSV 2:PDF 3:IMAGE） */
     @Column(name = "file_type")
     Integer fileType;
 
-    /** 転送タイプ（1:インポート 2:エクスポート） */
-    @Column(name = "transfer_type")
-    Integer transferType;
-
-    /** ステータス（1:未転送 2:転送済） */
+    /** ステータス（1:転送中 2:転送済） */
     @Column(name = "status")
     Integer status;
 

@@ -1,13 +1,13 @@
 buildscript {
     ext {
         /************* 開発環境 *************/
-//        dbUrl = 'jdbc:mysql://localhost:3306/lemonico?useSSL=false&useInformationSchema=true'
-//        dbUser = 'root'
-//        dbPassword = 'kawasemi'
+        dbUrl = 'jdbc:mysql://localhost:3306/lemonico?useSSL=false&useInformationSchema=true'
+        dbUser = 'root'
+        dbPassword = 'kawasemi'
         /************* 本番環境 *************/
-        dbUrl = 'jdbc:mysql://lemonico.crwkn7mkbqkv.ap-northeast-1.rds.amazonaws.com:3306/lemonico?useSSL=false&useInformationSchema=true'
-        dbUser = 'admin'
-        dbPassword = 'password'
+//        dbUrl = 'jdbc:mysql://lemonico.crwkn7mkbqkv.ap-northeast-1.rds.amazonaws.com:3306/lemonico?useSSL=false&useInformationSchema=true'
+//        dbUser = 'admin'
+//        dbPassword = 'password'
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.5.5"
@@ -48,11 +48,11 @@ configurations {
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.seasar.doma:doma-processor:2.45.0'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.5'
 
-    compileOnly 'org.projectlombok:lombok:1.18.20'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
 
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.5.5'
@@ -267,11 +267,11 @@ task genTestCases {
  * cleanGenAll → genService → genRepository → genEntity → genDao → genResource → genAll
  */
 genAll.dependsOn genController
-genController.dependsOn genService
-genService.dependsOn genResource
-genResource.dependsOn genDao
-genDao.dependsOn genEntity
-genEntity.dependsOn genRepository
+genAll.dependsOn genService
+genAll.dependsOn genResource
+genAll.dependsOn genDao
+genAll.dependsOn genEntity
+genAll.dependsOn genRepository
 
 // JavaクラスとSQLファイルの出力先ディレクトリを同じにする
 processResources.destinationDir = compileJava.destinationDir

@@ -22,11 +22,19 @@ Coming soon...
 
 ## Command
 
-#### 1. generate code with gen
+### 1. generate code
+#### 1.1 genAll<br>(genSql → genEntity → genResource → genDao → genRepository → genService → genController)
 ```
 ./gradlew genAll -P TABLE_NAME={TABLE_NAME} -P FOLDER={FOLDER_NAME}
 ```
-
+#### 1.2 genSql
+```
+./gradlew genSql -P TABLE_NAME={TABLE_NAME} -P FOLDER={FOLDER_NAME}
+```
+#### 1.2 genEntity
+```
+./gradlew genEntity -P TABLE_NAME={TABLE_NAME} -P FOLDER={FOLDER_NAME}
+```
 #### 2. build docker image
 ```
 docker build -t {CONTAINER_NAME}:{TAG} .
