@@ -14,15 +14,18 @@ import api.lemonico.core.exception.LcIllegalUserException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
+import api.lemonico.user.controller.UserController;
 import api.lemonico.user.entity.User;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.user.service.UserService;
 import java.util.Optional;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * 認証コントローラー
@@ -35,15 +38,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthenticationController
 {
-
     /**
      * ログインURI
      */
     private static final String LOGIN_URI = "/login";
 
+    /**
+     * 登録URI
+     */
+    private static final String REGISTER_URI = "/register";
+
     private final UserService service;
 
     private final JWTGenerator generator;
+
+    private final UserController userController;
 
     /**
      * ログイン
@@ -64,6 +73,19 @@ public class AuthenticationController
                 .accessToken(accessToken)
                 .expirationTime(expirationTime)
                 .build());
+    }
+
+    /**
+     * 登録
+     *
+     * @param resource ユーザーリソース
+     * @return ユーザーリソース作成APIレスポンス
+     */
+    @PostMapping(REGISTER_URI)
+    public ResponseEntity<Void> register(
+        @Valid @RequestBody UserResource resource,
+        UriComponentsBuilder uriBuilder) {
+        return userController.createUser(resource, uriBuilder);
     }
 
     /**
