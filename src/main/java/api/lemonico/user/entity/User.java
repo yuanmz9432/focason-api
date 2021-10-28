@@ -24,6 +24,7 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
+@Table(name = "user")
 public class User extends LcEntity
 {
 
