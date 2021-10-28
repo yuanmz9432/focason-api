@@ -16,9 +16,7 @@
       },
       "entryPoint": null,
       "portMappings": [
-        {
-          "hostPort" : 0
-        }
+        
       ],
       "command": null,
       "linuxParameters": null,
