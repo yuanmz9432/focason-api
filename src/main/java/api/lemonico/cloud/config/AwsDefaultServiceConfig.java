@@ -3,12 +3,14 @@ package api.lemonico.cloud.config;
 
 
 import api.lemonico.cloud.props.AwsProps;
+import api.lemonico.cloud.service.RekognitionService;
 import api.lemonico.cloud.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
@@ -36,6 +38,16 @@ public class AwsDefaultServiceConfig
             .prefix(props.getPrefix())
             .bucketName(props.getBucketName())
             .preSignedUrlValidMinutes(props.getPreSignedUrlValidMinutes())
+            .build();
+    }
+
+    @Bean
+    public RekognitionService rekognitionService(RekognitionClient rekClient) {
+        var props = awsProps.getS3().get("item-upload");
+        return RekognitionService.builder()
+            .rekClient(rekClient)
+            .bucketName(props.getBucketName())
+            .prefix(props.getPrefix())
             .build();
     }
 }
