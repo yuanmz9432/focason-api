@@ -7,8 +7,6 @@ package api.lemonico.core.handler;
 
 import api.lemonico.core.attribute.LcEntity;
 import api.lemonico.core.attribute.LcEntityListenerManager;
-import api.lemonico.domain.ClientStatus;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.seasar.doma.jdbc.entity.EntityListener;
@@ -41,13 +39,14 @@ public class LcEntityListenerHandler<E extends LcEntity> implements EntityListen
 
     @Override
     public void preInsert(E entity, PreInsertContext<E> context) {
-        entity.setCreatedAt(LocalDateTime.now());
-        entity.setCreatedBy(getClientCode());
-        entity.setModifiedAt(LocalDateTime.now());
-        entity.setModifiedBy(getClientCode());
-        entity.setIsDeleted(ClientStatus.NORMAL.getValue());
+        // entity.setCreatedAt(LocalDateTime.now());
+        // entity.setCreatedBy(getClientCode());
+        // entity.setModifiedAt(LocalDateTime.now());
+        // entity.setModifiedBy(getClientCode());
+        // entity.setIsDeleted(ClientStatus.NORMAL.getValue());
         LcEntityListenerManager.forEachListener((listener) -> {
             try {
+
                 listener.preInsert(entity, context);
             } catch (ClassCastException ignored) {
             }

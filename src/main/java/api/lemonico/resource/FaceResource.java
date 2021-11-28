@@ -7,7 +7,6 @@ package api.lemonico.resource;
 
 import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.Face;
-import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,21 +38,6 @@ public class FaceResource
     /** イメージの名前 */
     private final String externalImageId;
 
-    /** 作成者 */
-    private final String createdBy;
-
-    /** 作成日時 */
-    private final LocalDateTime createdAt;
-
-    /** 更新者 */
-    private final String modifiedBy;
-
-    /** 更新日時 */
-    private final LocalDateTime modifiedAt;
-
-    /** 削除フラグ */
-    private final Integer isDeleted;
-
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
@@ -65,11 +49,6 @@ public class FaceResource
         this.faceId = entity.getFaceId();
         this.imageId = entity.getImageId();
         this.externalImageId = entity.getExternalImageId();
-        this.createdBy = entity.getCreatedBy();
-        this.createdAt = entity.getCreatedAt();
-        this.modifiedBy = entity.getModifiedBy();
-        this.modifiedAt = entity.getModifiedAt();
-        this.isDeleted = entity.getIsDeleted();
     }
 
     /**

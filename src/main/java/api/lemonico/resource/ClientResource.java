@@ -7,7 +7,6 @@ package api.lemonico.resource;
 
 import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.Client;
-import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,21 +44,6 @@ public class ClientResource
     /** ステータス（1:通常 2:ブラックユーザー 3:退会） */
     private final Integer status;
 
-    /** 作成者 */
-    private final String createdBy;
-
-    /** 作成日時 */
-    private final LocalDateTime createdAt;
-
-    /** 更新者 */
-    private final String modifiedBy;
-
-    /** 更新日時 */
-    private final LocalDateTime modifiedAt;
-
-    /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
-    private final Integer isDeleted;
-
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
@@ -73,11 +57,6 @@ public class ClientResource
         this.email = entity.getEmail();
         this.password = entity.getPassword();
         this.status = entity.getStatus();
-        this.createdBy = entity.getCreatedBy();
-        this.createdAt = entity.getCreatedAt();
-        this.modifiedBy = entity.getModifiedBy();
-        this.modifiedAt = entity.getModifiedAt();
-        this.isDeleted = entity.getIsDeleted();
     }
 
     /**

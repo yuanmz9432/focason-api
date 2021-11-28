@@ -7,7 +7,6 @@ package api.lemonico.resource;
 
 import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.Collection;
-import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,21 +32,6 @@ public class CollectionResource
     /** クレクションコード */
     private final String collectionCode;
 
-    /** 作成者 */
-    private final String createdBy;
-
-    /** 作成日時 */
-    private final LocalDateTime createdAt;
-
-    /** 更新者 */
-    private final String modifiedBy;
-
-    /** 更新日時 */
-    private final LocalDateTime modifiedAt;
-
-    /** 削除フラグ */
-    private final Integer isDeleted;
-
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
@@ -57,11 +41,6 @@ public class CollectionResource
         this.id = entity.getId();
         this.clientId = entity.getClientId();
         this.collectionCode = entity.getCollectionCode();
-        this.createdBy = entity.getCreatedBy();
-        this.createdAt = entity.getCreatedAt();
-        this.modifiedBy = entity.getModifiedBy();
-        this.modifiedAt = entity.getModifiedAt();
-        this.isDeleted = entity.getIsDeleted();
     }
 
     /**

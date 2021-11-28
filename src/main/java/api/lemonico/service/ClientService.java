@@ -12,11 +12,9 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
-import api.lemonico.domain.ClientStatus;
 import api.lemonico.entity.Client;
 import api.lemonico.repository.ClientRepository;
 import api.lemonico.resource.ClientResource;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -89,12 +87,7 @@ public class ClientService
         }
 
         // クライアントを作成します。
-        var id = repository.create(
-            resource.withCreatedAt(LocalDateTime.now())
-                .withCreatedBy(resource.getClientCode())
-                .withModifiedAt(LocalDateTime.now())
-                .withModifiedBy(resource.getClientCode())
-                .withIsDeleted(ClientStatus.NORMAL.getValue()).toEntity());
+        var id = repository.create(resource.toEntity());
 
         // クライアントを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
