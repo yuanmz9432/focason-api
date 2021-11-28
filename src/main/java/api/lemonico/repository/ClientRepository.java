@@ -1,13 +1,7 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.EntityDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.repository;
 
 import static java.util.stream.Collectors.toList;
 
@@ -16,8 +10,8 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.dao.${simpleName}Dao;
-import api.lemonico.entity.${simpleName};
+import api.lemonico.dao.ClientDao;
+import api.lemonico.entity.Client;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,18 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * ${comment}リポジトリ
+ * クライアントリポジトリ
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ${simpleName}${entitySuffix}
+public class ClientRepository
 {
 
-    private final ${simpleName}Dao dao;
+    private final ClientDao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。
@@ -48,7 +40,7 @@ public class ${simpleName}${entitySuffix}
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<${simpleName}> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<Client> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -61,7 +53,7 @@ public class ${simpleName}${entitySuffix}
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<${simpleName}> findById(ID<${simpleName}> id) throws IllegalArgumentException {
+    public Optional<Client> findById(ID<Client> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -71,12 +63,10 @@ public class ${simpleName}${entitySuffix}
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<${simpleName}> create(${simpleName} entity) {
+    public ID<Client> create(Client entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
-            .withId(null)
-            .withCreatedBy("")
-            .withModifiedBy(""))
+            .withId(null))
             .getEntity()
             .getId();
     }
@@ -86,11 +76,11 @@ public class ${simpleName}${entitySuffix}
      *
      * @param entity エンティティ
      */
-    public void update(ID<${simpleName}> id, ${simpleName} entity) {
+    public void update(ID<Client> id, Client entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(${simpleName}.class, entity.getId());
+            throw new LcEntityNotFoundException(Client.class, entity.getId());
         }
     }
 
@@ -99,10 +89,10 @@ public class ${simpleName}${entitySuffix}
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<${simpleName}> id) throws IllegalArgumentException {
+    public void deleteById(ID<Client> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}.class, id);
+            throw new LcEntityNotFoundException(Client.class, id);
         }
     }
 
@@ -111,10 +101,10 @@ public class ${simpleName}${entitySuffix}
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<${simpleName}> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<Client> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}.class, id);
+            throw new LcEntityNotFoundException(Client.class, id);
         }
     }
 
@@ -124,8 +114,17 @@ public class ${simpleName}${entitySuffix}
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<${simpleName}> id) {
+    public boolean exists(ID<Client> id) {
         return findById(id).isPresent();
+    }
+
+    /**
+     * メールアドレスを指定してエンティティを一件取得します。
+     *
+     * @return ユーザーエンティティ
+     */
+    public Optional<Client> findByEmail(String email) {
+        return dao.selectByEmail(email);
     }
 
     /**
@@ -145,9 +144,9 @@ public class ${simpleName}${entitySuffix}
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * ${comment}IDのセット（完全一致、複数指定可）
+         * クライアントIDのセット（完全一致、複数指定可）
          */
-        private Set<ID<${simpleName}>> ids;
+        private Set<ID<Client>> ids;
     }
 
     /**

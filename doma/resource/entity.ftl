@@ -12,7 +12,7 @@ package ${packageName};
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.${simpleName?uncap_first}.entity.${simpleName};
+import api.lemonico.entity.${simpleName};
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;

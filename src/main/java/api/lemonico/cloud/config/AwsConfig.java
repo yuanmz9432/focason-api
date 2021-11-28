@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Profile;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -22,7 +21,6 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
  * @since 1.0
  */
 @EnableConfigurationProperties(AwsProps.class)
-@Profile("!default")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Configuration
 public class AwsConfig

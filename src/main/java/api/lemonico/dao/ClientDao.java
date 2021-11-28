@@ -1,19 +1,13 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.DaoDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.dao;
 
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.${entityDesc.simpleName};
-import api.lemonico.repository.${entityDesc.simpleName}Repository;
+import api.lemonico.entity.Client;
+import api.lemonico.repository.ClientRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -24,15 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * ${entityDesc.comment}のDao
+ * クライアントのDao
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
-@Dao<#if configClassSimpleName??>(config = ${configClassSimpleName}.class)</#if>
+@Dao
 @ConfigAutowireable
-public interface ${simpleName}
+public interface ClientDao
 {
 
     /**
@@ -47,10 +39,10 @@ public interface ${simpleName}
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        ${entityDesc.simpleName}Repository.Condition condition,
+        ClientRepository.Condition condition,
         SelectOptions options,
-        ${entityDesc.simpleName}Repository.Sort sort,
-        Collector<${entityDesc.simpleName}, ?, R> collector);
+        ClientRepository.Sort sort,
+        Collector<Client, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -62,10 +54,10 @@ public interface ${simpleName}
      * @return 検索結果
      */
     default <R> R selectAll(
-        ${entityDesc.simpleName}Repository.Condition condition,
+        ClientRepository.Condition condition,
         SelectOptions options,
-        Collector<${entityDesc.simpleName}, ?, R> collector) {
-        return selectAll(condition, options, ${entityDesc.simpleName}Repository.Sort.DEFAULT, collector);
+        Collector<Client, ?, R> collector) {
+        return selectAll(condition, options, ClientRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -79,9 +71,9 @@ public interface ${simpleName}
      */
     default <R> R selectAll(
         SelectOptions options,
-        ${entityDesc.simpleName}Repository.Sort sort,
-        Collector<${entityDesc.simpleName}, ?, R> collector) {
-        return selectAll(${entityDesc.simpleName}Repository.Condition.DEFAULT, options, sort, collector);
+        ClientRepository.Sort sort,
+        Collector<Client, ?, R> collector) {
+        return selectAll(ClientRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -94,8 +86,8 @@ public interface ${simpleName}
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<${entityDesc.simpleName}, ?, R> collector) {
-        return selectAll(${entityDesc.simpleName}Repository.Condition.DEFAULT, options, ${entityDesc.simpleName}Repository.Sort.DEFAULT, collector);
+        Collector<Client, ?, R> collector) {
+        return selectAll(ClientRepository.Condition.DEFAULT, options, ClientRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -106,7 +98,7 @@ public interface ${simpleName}
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<${entityDesc.simpleName}> selectById(ID<${entityDesc.simpleName}> id, SelectOptions options);
+    Optional<Client> selectById(ID<Client> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -114,7 +106,7 @@ public interface ${simpleName}
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<${entityDesc.simpleName}> selectById(ID<${entityDesc.simpleName}> id) {
+    default Optional<Client> selectById(ID<Client> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -125,7 +117,7 @@ public interface ${simpleName}
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<${entityDesc.simpleName}> insert(${entityDesc.simpleName} entity);
+    Result<Client> insert(Client entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -134,7 +126,7 @@ public interface ${simpleName}
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<${entityDesc.simpleName}> update(${entityDesc.simpleName} entity);
+    Result<Client> update(Client entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -143,7 +135,7 @@ public interface ${simpleName}
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<${entityDesc.simpleName}> id);
+    int deleteById(ID<Client> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -152,26 +144,35 @@ public interface ${simpleName}
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<${entityDesc.simpleName}> id);
+    int deleteLogicById(ID<Client> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<${entityDesc.simpleName}> insert(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<Client> insert(List<Client> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<${entityDesc.simpleName}> update(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<Client> update(List<Client> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<${entityDesc.simpleName}> delete(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<Client> delete(List<Client> entities);
+
+    /**
+     * メールアドレスを指定して、データベースからエンティティを一件を取得します。
+     *
+     * @param email メールアドレス
+     * @return エンティティが {@link Optional} で返されます。
+     */
+    @Select
+    Optional<Client> selectByEmail(String email);
 }

@@ -5,10 +5,10 @@ package api.lemonico.auth.config;
 
 
 
-import api.lemonico.auth.domain.UserStatus;
 import api.lemonico.core.attribute.LcErrorCode;
 import api.lemonico.core.attribute.LcErrorResource;
-import api.lemonico.user.service.UserService;
+import api.lemonico.domain.ClientStatus;
+import api.lemonico.service.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -21,7 +21,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
+@Slf4j
 public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter
 {
 
@@ -39,7 +42,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     private JWTGenerator jwtGenerator;
 
     @Autowired
-    private UserService service;
+    private ClientService service;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -79,7 +82,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         if (Strings.isNotBlank(email) && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userResource = service.getResourceByEmail(email);
             if (userResource.isPresent()) {
-                if (!UserStatus.NORMAL.equals(UserStatus.of(userResource.get().getStatus()))) {
+                if (!ClientStatus.NORMAL.equals(ClientStatus.of(userResource.get().getStatus()))) {
                     response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
                         LcErrorResource.builder()
                             .code(LcErrorCode.FORBIDDEN.getValue())
@@ -91,6 +94,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
                     var authentication = new UsernamePasswordAuthenticationToken(userResource, null, null);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    MDC.put("CLIENT_CODE", userResource.get().getClientCode());
                 }
             }
         }

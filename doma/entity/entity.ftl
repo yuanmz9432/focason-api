@@ -36,7 +36,6 @@ import org.seasar.doma.*;
 public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LcEntity
 {
 <#list ownEntityPropertyDescs as property>
-
   <#if showDbComment && property.comment??>
     /** ${property.comment} */
   <#else>

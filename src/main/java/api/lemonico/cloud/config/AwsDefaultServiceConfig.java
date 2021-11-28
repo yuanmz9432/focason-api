@@ -3,8 +3,8 @@ package api.lemonico.cloud.config;
 
 
 import api.lemonico.cloud.props.AwsProps;
-import api.lemonico.cloud.service.RekognitionService;
-import api.lemonico.cloud.service.S3Service;
+import api.lemonico.service.RekognitionService;
+import api.lemonico.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
