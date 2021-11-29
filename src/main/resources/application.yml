@@ -21,13 +21,13 @@ server:
 
 logging:
   level:
-    root: INFO
-    api.lemonico: TRACE
+    root: WARN
+    api.lemonico: INFO
 
 jwt:
   secret: ${APP_SECRET:iWpJnu21sTumTsfyldkfjpo23iiu34tierfjwerjfop43oeorgfsndhfopoewkrjti43orweksdnfjw4e}
-  access_token_expires_in: 3600
-  refresh_token_expires_in: 604800
+  access_token_expires_in: 3600 # 単位：秒
+  refresh_token_expires_in: 604800 # 単位：秒
   access_token_header: X-ACCESS-TOKEN
   refresh_token_header: X-REFRESH-TOKEN
 

@@ -88,4 +88,8 @@ public class LoginUser implements UserDetails
         return this.credentialsNonExpired;
     }
 
+    @Override
+    public String toString() {
+        return String.format("LoginUser(username=%s, password=%s)", username, password);
+    }
 }
