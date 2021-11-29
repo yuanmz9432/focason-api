@@ -12,6 +12,7 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.entity.Client;
 import api.lemonico.repository.ClientRepository;
 import api.lemonico.resource.ClientResource;
@@ -87,7 +88,9 @@ public class ClientService
         }
 
         // クライアントを作成します。
-        var id = repository.create(resource.toEntity());
+        var id = repository.create(
+            resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
+                .toEntity());
 
         // クライアントを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);

@@ -11,12 +11,15 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.dao.ClientDao;
+import api.lemonico.domain.BooleanValue;
 import api.lemonico.entity.Client;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.*;
+import org.jboss.logging.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -66,9 +69,13 @@ public class ClientRepository
     public ID<Client> create(Client entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
-            .withId(null))
-            .getEntity()
-            .getId();
+            .withId(null)
+            .withCreatedBy(String.valueOf(MDC.get("CLIENT_CODE")))
+            .withCreatedAt(LocalDateTime.now())
+            .withModifiedBy(String.valueOf(MDC.get("CLIENT_CODE")))
+            .withModifiedAt(LocalDateTime.now())
+            .withIsDeleted(BooleanValue.FALSE.getValue()))
+            .getEntity().getId();
     }
 
     /**

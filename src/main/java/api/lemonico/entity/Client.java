@@ -6,7 +6,7 @@ package api.lemonico.entity;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcEntity;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -48,4 +48,19 @@ public class Client extends LcEntity
     /** ステータス（1:通常 2:ブラックユーザー 3:退会） */
     @Column(name = "status")
     Integer status;
+    /** 作成者 */
+    @Column(name = "created_by")
+    String createdBy;
+    /** 作成日時 */
+    @Column(name = "created_at")
+    LocalDateTime createdAt;
+    /** 更新者 */
+    @Column(name = "modified_by")
+    String modifiedBy;
+    /** 更新日時 */
+    @Column(name = "modified_at")
+    LocalDateTime modifiedAt;
+    /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
+    @Column(name = "is_deleted")
+    Integer isDeleted;
 }
