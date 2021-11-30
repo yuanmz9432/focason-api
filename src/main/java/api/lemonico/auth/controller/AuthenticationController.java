@@ -5,6 +5,8 @@ package api.lemonico.auth.controller;
 
 
 
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
+
 import api.lemonico.auth.config.JWTGenerator;
 import api.lemonico.auth.config.LoginUser;
 import api.lemonico.auth.resource.JWTResource;
@@ -30,8 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
 /**
  * 認証コントローラー
@@ -92,12 +92,12 @@ public class AuthenticationController
         @Valid @RequestBody ClientResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = clientService.createResource(
-                resource.withClientCode(UUID.randomUUID().toString().substring(0, 8))).getId();
+            resource.withClientCode(UUID.randomUUID().toString().substring(0, 8))).getId();
         var uri = relativeTo(uriBuilder)
-                .withMethodCall(clientService.getResource(id))
-                .build()
-                .encode()
-                .toUri();
+            .withMethodCall(clientService.getResource(id))
+            .build()
+            .encode()
+            .toUri();
         return ResponseEntity.created(uri).build();
     }
 
