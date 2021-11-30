@@ -19,6 +19,7 @@ import api.lemonico.entity.Client;
 import api.lemonico.resource.ClientResource;
 import api.lemonico.service.ClientService;
 import java.util.Optional;
+import java.util.UUID;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
 /**
  * 認証コントローラー
@@ -51,7 +54,7 @@ public class AuthenticationController
      */
     private static final String REGISTER_URI = "/register";
 
-    private final ClientService service;
+    private final ClientService clientService;
 
     private final JWTGenerator generator;
 
@@ -64,7 +67,7 @@ public class AuthenticationController
      */
     @PostMapping(LOGIN_URI)
     public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
-        final var client = service.getResourceByEmail(loginUser.getUsername());
+        final var client = clientService.getResourceByEmail(loginUser.getUsername());
         if (client.isEmpty()) {
             throw new LcEntityNotFoundException(Client.class, loginUser.getUsername());
         }
@@ -88,7 +91,14 @@ public class AuthenticationController
     public ResponseEntity<Void> register(
         @Valid @RequestBody ClientResource resource,
         UriComponentsBuilder uriBuilder) {
-        return clientController.createClient(resource, uriBuilder);
+        var id = clientService.createResource(
+                resource.withClientCode(UUID.randomUUID().toString().substring(0, 8))).getId();
+        var uri = relativeTo(uriBuilder)
+                .withMethodCall(clientService.getResource(id))
+                .build()
+                .encode()
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     /**
