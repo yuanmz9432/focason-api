@@ -3,6 +3,8 @@ package api.lemonico.service;
 
 
 import java.util.List;
+
+import api.lemonico.resource.APIResource;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,14 +13,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ColorMeService extends OrderAbstractService implements FetchOrderInterface
+public class ColorMeService extends OrderAbstractService implements OrderInterface
 {
     private static final Logger logger = LoggerFactory.getLogger(ColorMeService.class);
 
     @Override
     public void fetchOrder() {
         // 連携対象店舗取得
-        var clients = getClients();
+        var clients = getClientAPIList();
         super.getProduct();
     }
 
@@ -35,7 +37,7 @@ public class ColorMeService extends OrderAbstractService implements FetchOrderIn
     }
 
     @Override
-    public List<Object> getClients() {
+    public List<APIResource> getClientAPIList() {
         return null;
     }
 }

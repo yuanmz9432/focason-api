@@ -2,9 +2,12 @@ package api.lemonico.service;
 
 
 
+import api.lemonico.resource.APIResource;
+import api.lemonico.resource.ClientAPIResource;
+
 import java.util.List;
 
-public interface FetchOrderInterface
+public interface OrderInterface
 {
     /**
      * 受注自動連携
@@ -26,7 +29,5 @@ public interface FetchOrderInterface
      *
      * @return 受注連携クライアントリスト
      */
-    List<Object> getClients();
-
-
+    List<APIResource> getClientAPIList();
 }
