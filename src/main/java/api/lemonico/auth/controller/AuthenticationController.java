@@ -91,7 +91,6 @@ public class AuthenticationController
         UriComponentsBuilder uriBuilder) {
         var id = clientService.createResource(
             resource.withClientCode(UUID.randomUUID().toString())).getId();
-        var client = clientService.getResource(id);
         var uri = relativeTo(uriBuilder).withMethodCall(on(ClientController.class).getClient(id))
             .build()
             .encode()

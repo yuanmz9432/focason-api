@@ -72,8 +72,7 @@ public class ClientService
     public Optional<ClientResource> getResource(ID<Client> id) {
         // クライアントを取得します。
         var client = repository.findById(id);
-        var clientResource = client.map(this::convertEntityToResource);
-        return clientResource;
+        return client.map(this::convertEntityToResource);
     }
 
     /**
