@@ -13,6 +13,7 @@ import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.utils.BCryptEncoder;
+import api.lemonico.domain.ClientStatus;
 import api.lemonico.entity.Client;
 import api.lemonico.repository.ClientRepository;
 import api.lemonico.resource.ClientResource;
@@ -70,7 +71,9 @@ public class ClientService
     @Transactional(readOnly = true)
     public Optional<ClientResource> getResource(ID<Client> id) {
         // クライアントを取得します。
-        return repository.findById(id).map(this::convertEntityToResource);
+        var client = repository.findById(id);
+        var clientResource = client.map(this::convertEntityToResource);
+        return clientResource;
     }
 
     /**
@@ -90,6 +93,7 @@ public class ClientService
         // クライアントを作成します。
         var id = repository.create(
             resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
+                .withStatus(ClientStatus.NORMAL.getValue())
                 .toEntity());
 
         // クライアントを取得します。

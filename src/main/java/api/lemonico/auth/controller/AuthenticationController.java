@@ -5,6 +5,7 @@ package api.lemonico.auth.controller;
 
 
 
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
 import api.lemonico.auth.config.JWTGenerator;
@@ -27,10 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -58,14 +56,13 @@ public class AuthenticationController
 
     private final JWTGenerator generator;
 
-    private final ClientController clientController;
-
     /**
      * ログイン
      *
      * @return JWTトークン
      */
     @PostMapping(LOGIN_URI)
+    @CrossOrigin
     public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
         final var client = clientService.getResourceByEmail(loginUser.getUsername());
         if (client.isEmpty()) {
@@ -78,6 +75,7 @@ public class AuthenticationController
             JWTResource.builder()
                 .accessToken(accessToken)
                 .expirationTime(expirationTime)
+                .clientResource(client.get())
                 .build());
     }
 
@@ -92,9 +90,9 @@ public class AuthenticationController
         @Valid @RequestBody ClientResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = clientService.createResource(
-            resource.withClientCode(UUID.randomUUID().toString().substring(0, 8))).getId();
-        var uri = relativeTo(uriBuilder)
-            .withMethodCall(clientService.getResource(id))
+            resource.withClientCode(UUID.randomUUID().toString())).getId();
+        var client = clientService.getResource(id);
+        var uri = relativeTo(uriBuilder).withMethodCall(on(ClientController.class).getClient(id))
             .build()
             .encode()
             .toUri();

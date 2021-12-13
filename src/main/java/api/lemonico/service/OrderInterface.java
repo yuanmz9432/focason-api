@@ -3,8 +3,6 @@ package api.lemonico.service;
 
 
 import api.lemonico.resource.APIResource;
-import api.lemonico.resource.ClientAPIResource;
-
 import java.util.List;
 
 public interface OrderInterface
