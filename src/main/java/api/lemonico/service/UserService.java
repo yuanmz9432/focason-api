@@ -13,10 +13,10 @@ import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.utils.BCryptEncoder;
-import api.lemonico.domain.ClientStatus;
-import api.lemonico.entity.Client;
-import api.lemonico.repository.ClientRepository;
-import api.lemonico.resource.ClientResource;
+import api.lemonico.domain.UserType;
+import api.lemonico.entity.User;
+import api.lemonico.repository.UserRepository;
+import api.lemonico.resource.UserResource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,19 +27,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- * クライアントサービス
+ * ユーザーサービス
  *
  * @since 1.0.0
  */
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ClientService
+public class UserService
 {
-
     /**
-     * クライアントリポジトリ
+     * ユーザーリポジトリ
      */
-    private final ClientRepository repository;
+    private final UserRepository userRepository;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、クライアントリソースの一覧を取得します。
@@ -50,12 +49,12 @@ public class ClientService
      * @return クライアントリソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
-    public LcResultSet<ClientResource> getResourceList(
-        ClientRepository.Condition condition,
+    public LcResultSet<UserResource> getResourceList(
+        UserRepository.Condition condition,
         LcPagination pagination,
-        ClientRepository.Sort sort) {
+        UserRepository.Sort sort) {
         // クライアントの一覧と全体件数を取得します。
-        var resultSet = repository.findAll(condition, pagination, sort);
+        var resultSet = userRepository.findAll(condition, pagination, sort);
 
         // クライアントエンティティのリストをクライアントリソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
@@ -69,9 +68,9 @@ public class ClientService
      * @return クライアントリソース
      */
     @Transactional(readOnly = true)
-    public Optional<ClientResource> getResource(ID<Client> id) {
+    public Optional<UserResource> getResource(ID<User> id) {
         // クライアントを取得します。
-        var client = repository.findById(id);
+        var client = userRepository.findById(id);
         return client.map(this::convertEntityToResource);
     }
 
@@ -82,17 +81,17 @@ public class ClientService
      * @return 作成されたクライアントリソース
      */
     @Transactional
-    public ClientResource createResource(ClientResource resource) {
+    public UserResource createResource(UserResource resource) {
         // メールアドレスにおいて重複したデータが存在していることを示す。
         var client = getResourceByEmail(resource.getEmail());
         if (client.isPresent()) {
-            throw new LcResourceAlreadyExistsException(Client.class, client.get().getEmail());
+            throw new LcResourceAlreadyExistsException(User.class, client.get().getEmail());
         }
 
         // クライアントを作成します。
-        var id = repository.create(
+        var id = userRepository.create(
             resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
-                .withStatus(ClientStatus.NORMAL.getValue())
+                .withType(UserType.PREMIUM.getValue())
                 .toEntity());
 
         // クライアントを取得します。
@@ -107,34 +106,34 @@ public class ClientService
      * @return 更新後のクライアントリソース
      */
     @Transactional
-    public ClientResource updateResource(ID<Client> id, ClientResource resource) {
+    public UserResource updateResource(ID<User> id, UserResource resource) {
         // クライアントIDにおいて重複したデータが存在していることを示す。
-        if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(Client.class, id);
+        if (!userRepository.exists(id)) {
+            throw new LcResourceNotFoundException(User.class, id);
         }
 
         // クライアントを更新します。
-        repository.update(id, resource.toEntity());
+        userRepository.update(id, resource.toEntity());
 
         // クライアントを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
     }
 
     /**
-     * クライアントIDを指定して、クライアントを削除します。
+     * ユーザーIDを指定して、ユーザーを削除します。
      *
-     * @param id クライアントID
+     * @param id ユーザーID
      */
     @Transactional
-    public void deleteResource(ID<Client> id) {
+    public void deleteResource(ID<User> id) {
         // TODO Waiting for finalization of basic design according to Q&A
         // クライアントIDにおいて重複したデータが存在していることを示す。
-        if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(Client.class, id);
+        if (!userRepository.exists(id)) {
+            throw new LcResourceNotFoundException(User.class, id);
         }
 
         // クライアントを削除します。
-        repository.deleteLogicById(id);
+        userRepository.deleteLogicById(id);
     }
 
     /**
@@ -144,8 +143,8 @@ public class ClientService
      * @return クライアントエンティティ
      */
     @Transactional(readOnly = true)
-    public Optional<ClientResource> getResourceByEmail(String email) {
-        return repository.findByEmail(email).map(this::convertEntityToResource);
+    public Optional<UserResource> getResourceByEmail(String email) {
+        return userRepository.findByEmail(email).map(this::convertEntityToResource);
     }
 
     /**
@@ -164,26 +163,26 @@ public class ClientService
     }
 
     /**
-     * クライアントエンティティをクライアントリソースに変換します。
+     * ユーザーエンティティをユーザーリソースに変換します。
      *
      * @param entity エンティティ
      * @return リソース
      */
     @Transactional(readOnly = true)
-    public ClientResource convertEntityToResource(Client entity) {
+    public UserResource convertEntityToResource(User entity) {
         return convertEntitiesToResources(Collections.singletonList(entity)).get(0);
     }
 
     /**
-     * クライアントエンティティのリストをクライアントリソースのリストに変換します。
+     * ユーザーエンティティのリストをユーザーリソースのリストに変換します。
      *
      * @param entities エンティティのリスト
      * @return リソースのリスト
      */
     @Transactional(readOnly = true)
-    public List<ClientResource> convertEntitiesToResources(List<Client> entities) {
+    public List<UserResource> convertEntitiesToResources(List<User> entities) {
         return entities.stream()
-            .map(ClientResource::new)
+            .map(UserResource::new)
             .collect(toList());
     }
 

@@ -10,30 +10,28 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.dao.ClientDao;
-import api.lemonico.domain.BooleanValue;
-import api.lemonico.entity.Client;
+import api.lemonico.dao.UserDao;
+import api.lemonico.entity.User;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.*;
-import org.jboss.logging.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * クライアントリポジトリ
+ * ユーザーリポジトリ
  *
  * @since 1.0.0
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ClientRepository
+public class UserRepository
 {
 
-    private final ClientDao dao;
+    private final UserDao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。
@@ -43,7 +41,7 @@ public class ClientRepository
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<Client> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<User> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -56,7 +54,7 @@ public class ClientRepository
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<Client> findById(ID<Client> id) throws IllegalArgumentException {
+    public Optional<User> findById(ID<User> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -66,16 +64,16 @@ public class ClientRepository
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<Client> create(Client entity) {
+    public ID<User> create(User entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
-            .withCreatedBy(String.valueOf(MDC.get("CLIENT_CODE")))
+            .withCreatedBy("admin")
             .withCreatedAt(LocalDateTime.now())
-            .withModifiedBy(String.valueOf(MDC.get("CLIENT_CODE")))
-            .withModifiedAt(LocalDateTime.now())
-            .withIsDeleted(BooleanValue.FALSE.getValue()))
-            .getEntity().getId();
+            .withModifiedBy("admin")
+            .withModifiedAt(LocalDateTime.now()))
+            .getEntity()
+            .getId();
     }
 
     /**
@@ -83,11 +81,11 @@ public class ClientRepository
      *
      * @param entity エンティティ
      */
-    public void update(ID<Client> id, Client entity) {
+    public void update(ID<User> id, User entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(Client.class, entity.getId());
+            throw new LcEntityNotFoundException(User.class, entity.getId());
         }
     }
 
@@ -96,10 +94,10 @@ public class ClientRepository
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<Client> id) throws IllegalArgumentException {
+    public void deleteById(ID<User> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(Client.class, id);
+            throw new LcEntityNotFoundException(User.class, id);
         }
     }
 
@@ -108,10 +106,10 @@ public class ClientRepository
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<Client> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<User> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(Client.class, id);
+            throw new LcEntityNotFoundException(User.class, id);
         }
     }
 
@@ -121,7 +119,7 @@ public class ClientRepository
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<Client> id) {
+    public boolean exists(ID<User> id) {
         return findById(id).isPresent();
     }
 
@@ -130,7 +128,7 @@ public class ClientRepository
      *
      * @return ユーザーエンティティ
      */
-    public Optional<Client> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return dao.selectByEmail(email);
     }
 
@@ -151,9 +149,9 @@ public class ClientRepository
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * クライアントIDのセット（完全一致、複数指定可）
+         * ユーザーIDのセット（完全一致、複数指定可）
          */
-        private Set<ID<Client>> ids;
+        private Set<ID<User>> ids;
     }
 
     /**

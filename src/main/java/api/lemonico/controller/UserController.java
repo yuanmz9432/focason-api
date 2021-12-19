@@ -15,10 +15,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.entity.Client;
-import api.lemonico.repository.ClientRepository;
-import api.lemonico.resource.ClientResource;
-import api.lemonico.service.ClientService;
+import api.lemonico.entity.User;
+import api.lemonico.repository.UserRepository;
+import api.lemonico.resource.UserResource;
+import api.lemonico.service.UserService;
 import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
@@ -30,14 +30,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * クライアントコントローラー
+ * ユーザーコントローラー
  *
  * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ClientController
+public class UserController
 {
     /**
      * コレクションリソースURI
@@ -50,61 +50,61 @@ public class ClientController
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * クライアントサービス
+     * ユーザーサービス
      */
-    private final ClientService service;
+    private final UserService service;
 
     /**
-     * クライアントリソースの一覧取得API
+     * ユーザーリソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return クライアントリソース一覧取得APIレスポンス
+     * @return ユーザーリソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<ClientResource>> getClientList(
-        @LcConditionParam ClientRepository.Condition condition,
+    public ResponseEntity<LcResultSet<UserResource>> getUserList(
+        @LcConditionParam UserRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = ClientRepository.Condition.DEFAULT;
+            condition = UserRepository.Condition.DEFAULT;
         }
-        var sort = ClientRepository.Sort.fromLcSort(lcSort);
+        var sort = UserRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * クライアントIDを指定して、クライアントリソース取得API
+     * ユーザーIDを指定して、ユーザーリソース取得API
      *
-     * @param id クライアントID
-     * @return クライアントリソース取得APIレスポンス
+     * @param id ユーザーID
+     * @return ユーザーリソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<ClientResource> getClient(
-        @PathVariable("id") ID<Client> id) {
+    public ResponseEntity<UserResource> getUser(
+        @PathVariable("id") ID<User> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(ClientResource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
     }
 
     /**
-     * クライアントリソース作成API
+     * ユーザーリソース作成API
      *
-     * @param resource クライアントリソース
-     * @return クライアントリソース作成APIレスポンス
+     * @param resource ユーザーリソース
+     * @return ユーザーリソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> createClient(
-        @Valid @RequestBody ClientResource resource,
+    public ResponseEntity<Void> createUser(
+        @Valid @RequestBody UserResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = service.createResource(
-            resource.withClientCode(UUID.randomUUID().toString().substring(0, 8))).getId();
+            resource.withUserCode(UUID.randomUUID().toString())).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).getClient(id))
+            .withMethodCall(on(getClass()).getUser(id))
             .build()
             .encode()
             .toUri();
@@ -112,32 +112,32 @@ public class ClientController
     }
 
     /**
-     * クライアントIDを指定して、クライアントリソース更新API
+     * ユーザーIDを指定して、ユーザーリソース更新API
      *
-     * @param id クライアントID
-     * @param resource クライアントリソース更新APIレスポンス
-     * @return クライアントリソース更新APIレスポンス
+     * @param id ユーザーID
+     * @param resource ユーザーリソース更新APIレスポンス
+     * @return ユーザーリソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<ClientResource> updateClient(
-        @PathVariable("id") ID<Client> id,
-        @Valid @RequestBody ClientResource resource) {
+    public ResponseEntity<UserResource> updateUser(
+        @PathVariable("id") ID<User> id,
+        @Valid @RequestBody UserResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * クライアントIDを指定して、クライアントリソース削除API
+     * ユーザーIDを指定して、ユーザーリソース削除API
      *
-     * @param id クライアントID
-     * @return クライアントリソース削除APIレスポンス
+     * @param id ユーザーID
+     * @return ユーザーリソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> deleteClient(
-        @PathVariable("id") ID<Client> id) {
+    public ResponseEntity<Void> deleteUser(
+        @PathVariable("id") ID<User> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

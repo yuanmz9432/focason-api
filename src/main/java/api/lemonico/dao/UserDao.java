@@ -6,8 +6,8 @@ package api.lemonico.dao;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.Client;
-import api.lemonico.repository.ClientRepository;
+import api.lemonico.entity.User;
+import api.lemonico.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -18,13 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * クライアントのDao
+ * ユーザーのDao
  *
  * @since 1.0.0
  */
 @Dao
 @ConfigAutowireable
-public interface ClientDao
+public interface UserDao
 {
 
     /**
@@ -39,10 +39,10 @@ public interface ClientDao
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        ClientRepository.Condition condition,
+        UserRepository.Condition condition,
         SelectOptions options,
-        ClientRepository.Sort sort,
-        Collector<Client, ?, R> collector);
+        UserRepository.Sort sort,
+        Collector<User, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -54,10 +54,10 @@ public interface ClientDao
      * @return 検索結果
      */
     default <R> R selectAll(
-        ClientRepository.Condition condition,
+        UserRepository.Condition condition,
         SelectOptions options,
-        Collector<Client, ?, R> collector) {
-        return selectAll(condition, options, ClientRepository.Sort.DEFAULT, collector);
+        Collector<User, ?, R> collector) {
+        return selectAll(condition, options, UserRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -71,9 +71,9 @@ public interface ClientDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        ClientRepository.Sort sort,
-        Collector<Client, ?, R> collector) {
-        return selectAll(ClientRepository.Condition.DEFAULT, options, sort, collector);
+        UserRepository.Sort sort,
+        Collector<User, ?, R> collector) {
+        return selectAll(UserRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -86,8 +86,8 @@ public interface ClientDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<Client, ?, R> collector) {
-        return selectAll(ClientRepository.Condition.DEFAULT, options, ClientRepository.Sort.DEFAULT, collector);
+        Collector<User, ?, R> collector) {
+        return selectAll(UserRepository.Condition.DEFAULT, options, UserRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -98,7 +98,7 @@ public interface ClientDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<Client> selectById(ID<Client> id, SelectOptions options);
+    Optional<User> selectById(ID<User> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -106,7 +106,7 @@ public interface ClientDao
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<Client> selectById(ID<Client> id) {
+    default Optional<User> selectById(ID<User> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -117,7 +117,7 @@ public interface ClientDao
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<Client> insert(Client entity);
+    Result<User> insert(User entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -126,7 +126,7 @@ public interface ClientDao
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<Client> update(Client entity);
+    Result<User> update(User entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -135,7 +135,7 @@ public interface ClientDao
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<Client> id);
+    int deleteById(ID<User> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -144,28 +144,29 @@ public interface ClientDao
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<Client> id);
+    int deleteLogicById(ID<User> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<Client> insert(List<Client> entities);
+    BatchResult<User> insert(List<User> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<Client> update(List<Client> entities);
+    BatchResult<User> update(List<User> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<Client> delete(List<Client> entities);
+    BatchResult<User> delete(List<User> entities);
+
 
     /**
      * メールアドレスを指定して、データベースからエンティティを一件を取得します。
@@ -174,5 +175,5 @@ public interface ClientDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<Client> selectByEmail(String email);
+    Optional<User> selectByEmail(String email);
 }

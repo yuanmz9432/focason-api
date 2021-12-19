@@ -5,7 +5,7 @@ package api.lemonico.auth.resource;
 
 
 
-import api.lemonico.resource.ClientResource;
+import api.lemonico.resource.UserResource;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,5 +29,5 @@ public class JWTResource
     /**
      * クライアントリソース
      */
-    private final ClientResource clientResource;
+    private final UserResource userResource;
 }

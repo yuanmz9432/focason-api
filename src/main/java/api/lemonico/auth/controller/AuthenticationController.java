@@ -11,16 +11,16 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import api.lemonico.auth.config.JWTGenerator;
 import api.lemonico.auth.config.LoginUser;
 import api.lemonico.auth.resource.JWTResource;
-import api.lemonico.controller.ClientController;
+import api.lemonico.controller.UserController;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.core.exception.LcIllegalUserException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
-import api.lemonico.domain.ClientStatus;
-import api.lemonico.entity.Client;
-import api.lemonico.resource.ClientResource;
-import api.lemonico.service.ClientService;
+import api.lemonico.domain.UserType;
+import api.lemonico.entity.User;
+import api.lemonico.resource.UserResource;
+import api.lemonico.service.UserService;
 import java.util.Optional;
 import java.util.UUID;
 import javax.validation.Valid;
@@ -52,7 +52,7 @@ public class AuthenticationController
      */
     private static final String REGISTER_URI = "/register";
 
-    private final ClientService clientService;
+    private final UserService userService;
 
     private final JWTGenerator generator;
 
@@ -64,18 +64,18 @@ public class AuthenticationController
     @PostMapping(LOGIN_URI)
     @CrossOrigin
     public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
-        final var client = clientService.getResourceByEmail(loginUser.getUsername());
-        if (client.isEmpty()) {
-            throw new LcEntityNotFoundException(Client.class, loginUser.getUsername());
+        final var user = userService.getResourceByEmail(loginUser.getUsername());
+        if (user.isEmpty()) {
+            throw new LcEntityNotFoundException(User.class, loginUser.getUsername());
         }
-        this.checkLoginUser(loginUser, client);
+        this.checkLoginUser(loginUser, user);
         final var expirationTime = generator.generateExpirationTime();
-        final var accessToken = generator.generateAccessToken(client.get().getEmail(), expirationTime);
+        final var accessToken = generator.generateAccessToken(user.get().getEmail(), expirationTime);
         return ResponseEntity.ok().body(
             JWTResource.builder()
                 .accessToken(accessToken)
                 .expirationTime(expirationTime)
-                .clientResource(client.get())
+                .userResource(user.get())
                 .build());
     }
 
@@ -87,11 +87,11 @@ public class AuthenticationController
      */
     @PostMapping(REGISTER_URI)
     public ResponseEntity<Void> register(
-        @Valid @RequestBody ClientResource resource,
+        @Valid @RequestBody UserResource resource,
         UriComponentsBuilder uriBuilder) {
-        var id = clientService.createResource(
-            resource.withClientCode(UUID.randomUUID().toString())).getId();
-        var uri = relativeTo(uriBuilder).withMethodCall(on(ClientController.class).getClient(id))
+        var id = userService.createResource(
+            resource.withUserCode(UUID.randomUUID().toString())).getId();
+        var uri = relativeTo(uriBuilder).withMethodCall(on(UserController.class).getUser(id))
             .build()
             .encode()
             .toUri();
@@ -102,25 +102,25 @@ public class AuthenticationController
      * ログインクライアント有効性チェック
      *
      * @param loginUser ログインクライアント
-     * @param client クライアント
+     * @param user クライアント
      */
-    private void checkLoginUser(LoginUser loginUser, Optional<ClientResource> client) {
-        if (loginUser == null || client.isEmpty()) {
-            throw new LcResourceNotFoundException(ClientResource.class, null);
+    private void checkLoginUser(LoginUser loginUser, Optional<UserResource> user) {
+        if (loginUser == null || user.isEmpty()) {
+            throw new LcResourceNotFoundException(UserResource.class, null);
         }
-        switch (ClientStatus.of(client.get().getStatus())) {
-            case NORMAL:
+        switch (UserType.of(user.get().getType())) {
+            case SILVER:
+            case GOLD:
+            case PREMIUM:
                 // パスワード一致性チェック
                 var isMatched =
-                    BCryptEncoder.getInstance().matches(loginUser.getPassword(), client.get().getPassword());
+                    BCryptEncoder.getInstance().matches(loginUser.getPassword(), user.get().getPassword());
                 if (!isMatched) {
                     throw new LcValidationErrorException("Password was not matched, please check again.");
                 }
                 break;
-            case BLOCKED:
-                throw new LcIllegalUserException(client.get().getEmail(), ClientStatus.BLOCKED.name());
             case LOGOUT:
-                throw new LcIllegalUserException(client.get().getEmail(), ClientStatus.LOGOUT.name());
+                throw new LcIllegalUserException(user.get().getEmail(), UserType.LOGOUT.name());
         }
     }
 }

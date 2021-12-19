@@ -14,14 +14,16 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Base64Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor(onConstructor = @__(@Autowired))
+@EnableConfigurationProperties(JwtProps.class)
 public class JWTGenerator
 {
 
-    private final JWTProperties properties;
+    private final JwtProps jwtProps;
 
     /**
      * 有効期間が過ぎたのかどうかをチェックする
@@ -41,7 +43,7 @@ public class JWTGenerator
      */
     public Claims getClaims(String accessToken) {
         return Jwts.parser()
-            .setSigningKey(Base64Util.encode(properties.getSecret()))
+            .setSigningKey(Base64Util.encode(jwtProps.getSecret()))
             .parseClaimsJws(accessToken)
             .getBody();
     }
@@ -70,7 +72,7 @@ public class JWTGenerator
         return Jwts.builder()
             .setClaims(payload)
             .setExpiration(exp)
-            .signWith(SignatureAlgorithm.HS256, Base64Util.encode(properties.getSecret())).compact();
+            .signWith(SignatureAlgorithm.HS256, Base64Util.encode(jwtProps.getSecret())).compact();
     }
 
     /**
@@ -79,7 +81,7 @@ public class JWTGenerator
      * @return Date
      */
     public Date generateExpirationTime() {
-        return new Date(System.currentTimeMillis() + properties.getAccessTokenExpiresIn() * 1000);
+        return new Date(System.currentTimeMillis() + jwtProps.getAccessTokenExpiresIn() * 1000);
     }
 
 }
