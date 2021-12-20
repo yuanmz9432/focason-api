@@ -75,7 +75,7 @@ public class AuthenticationController
             JWTResource.builder()
                 .accessToken(accessToken)
                 .expirationTime(expirationTime)
-                .userResource(user.get())
+                .userResource(user.get().withPassword(""))
                 .build());
     }
 

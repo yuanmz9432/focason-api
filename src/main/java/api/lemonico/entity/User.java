@@ -59,8 +59,8 @@ public class User extends LcEntity
     @Column(name = "url")
     String url;
     /** 画像 */
-    @Column(name = "image")
-    String image;
+    @Column(name = "profile_image")
+    String profileImage;
     /** 郵便番号 */
     @Column(name = "zip")
     String zip;

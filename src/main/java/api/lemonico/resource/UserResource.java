@@ -8,6 +8,8 @@ package api.lemonico.resource;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.User;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,6 +45,7 @@ public class UserResource
     private final String email;
 
     /** パスワード */
+    @JsonIgnore
     private final String password;
 
     /** タイプ（1:シルバー 2:ゴールド 3:プレミアム 4:退会） */
@@ -55,7 +58,7 @@ public class UserResource
     private final String url;
 
     /** 画像 */
-    private final String image;
+    private final String profileImage;
 
     /** 郵便番号 */
     private final String zip;
@@ -106,7 +109,7 @@ public class UserResource
         this.type = entity.getType();
         this.phone = entity.getPhone();
         this.url = entity.getUrl();
-        this.image = entity.getImage();
+        this.profileImage = entity.getProfileImage();
         this.zip = entity.getZip();
         this.prefecture = entity.getPrefecture();
         this.municipality = entity.getMunicipality();
@@ -137,7 +140,7 @@ public class UserResource
             .type(type)
             .phone(phone)
             .url(url)
-            .image(image)
+            .profileImage(profileImage)
             .zip(zip)
             .prefecture(prefecture)
             .municipality(municipality)

@@ -27,6 +27,7 @@ logging:
   level:
     root: WARN
     api.lemonico: INFO
+    org.springframework.data.convert.CustomConversions: ERROR
 
 # JWTトークン
 jwt:
