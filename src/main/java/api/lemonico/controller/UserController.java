@@ -42,7 +42,7 @@ public class UserController
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "/clients";
+    private static final String COLLECTION_RESOURCE_URI = "/users";
 
     /**
      * メンバーリソースURI
