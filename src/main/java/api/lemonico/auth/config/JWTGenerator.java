@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 @EnableConfigurationProperties(JwtProps.class)
 public class JWTGenerator
 {
-
     private final JwtProps jwtProps;
 
     /**

@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class LoginUser implements UserDetails
 {
-
     private static final long serialVersionUID = 3993597711944310497L;
     private Integer userId;
     private String username;

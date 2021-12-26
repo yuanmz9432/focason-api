@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailsServiceImpl implements UserDetailsService
 {
-
     private final UserService service;
 
     @Override
