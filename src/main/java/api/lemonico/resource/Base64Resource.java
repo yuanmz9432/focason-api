@@ -1,5 +1,7 @@
 package api.lemonico.resource;
 
+
+
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class Base64Resource {
+public class Base64Resource
+{
     /** ターゲットコード */
     @NonNull
     private final String originalInput;

@@ -8,7 +8,6 @@ package api.lemonico.core.configurer;
 import api.lemonico.core.interceptor.CorsInterceptor;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
