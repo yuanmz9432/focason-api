@@ -25,15 +25,41 @@
       "command": null,
       "linuxParameters": null,
       "cpu": 10,
-      "environment": [],
+      "environment": [
+        {
+          "name": "APP_PORT",
+          "value": "80"
+        }
+      ],
       "resourceRequirements": null,
       "ulimits": null,
       "dnsServers": null,
       "mountPoints": [],
       "workingDirectory": null,
-      "secrets": null,
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:557969691251:secret:lemonico-db-secret-DHdBeu:host::",
+          "name": "DB_HOST"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:557969691251:secret:lemonico-db-secret-DHdBeu:password::",
+          "name": "DB_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:557969691251:secret:lemonico-db-secret-DHdBeu:port::",
+          "name": "DB_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:557969691251:secret:lemonico-db-secret-DHdBeu:dbname::",
+          "name": "DB_SCHAME"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-1:557969691251:secret:lemonico-db-secret-DHdBeu:username::",
+          "name": "DB_USERNAME"
+        }
+      ],
       "dockerSecurityOptions": null,
-      "memory": 300,
+      "memory": 512,
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
