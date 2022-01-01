@@ -8,6 +8,9 @@ package api.lemonico;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * Lemonico API アプリケーション
+ */
 @SpringBootApplication
 public class LemonicoAPIApplication
 {

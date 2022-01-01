@@ -12,7 +12,7 @@ package ${packageName};
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcEntity;
+import api.lemonico.entity.LcEntity;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -36,7 +36,6 @@ import org.seasar.doma.*;
 public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LcEntity
 {
 <#list ownEntityPropertyDescs as property>
-
   <#if showDbComment && property.comment??>
     /** ${property.comment} */
   <#else>

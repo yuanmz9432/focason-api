@@ -8,9 +8,11 @@ package api.lemonico.core.aop;
 import java.util.Arrays;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Aspect
 @Component
+@Slf4j
 public class LemonicoAPIAspect
 {
 
@@ -35,6 +38,7 @@ public class LemonicoAPIAspect
     public void beforeExecution(JoinPoint joinPoint) {
         ServletRequestAttributes requestAttributes =
             (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        MDC.put("CLIENT_CODE", "admin");
         if (requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
             logger.info("★ URI : {}", request.getRequestURL().toString());

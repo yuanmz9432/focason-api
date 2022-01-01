@@ -5,7 +5,7 @@ package api.lemonico.auth.config;
 
 
 
-import api.lemonico.user.service.UserService;
+import api.lemonico.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailsServiceImpl implements UserDetailsService
 {
-
     private final UserService service;
 
     @Override

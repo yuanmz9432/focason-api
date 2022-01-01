@@ -34,11 +34,11 @@ on:
 env:
   AWS_REGION: ap-northeast-1                    # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: lemonico-api                  # set this to your Amazon ECR repository name
-  ECS_SERVICE: Lemonico-service                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: Lemonico-cluster                 # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: task-definition.json     # set this to the path to your Amazon ECS task definition
+  ECS_CLUSTER: lemonico-cluster                 # set this to your Amazon ECS cluster name
+  ECS_SERVICE: lemonico-api-ec2-service         # set this to your Amazon ECS service name
                                                 # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: Lemonico-container            # set this to the name of the container in the
+  CONTAINER_NAME: lemonico-api-container        # set this to the name of the container in the
                                                 # containerDefinitions section of your task definition
   IMAGE_TAG: latest
 jobs:

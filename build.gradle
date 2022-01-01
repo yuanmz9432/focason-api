@@ -1,13 +1,13 @@
 buildscript {
     ext {
         /************* 開発環境 *************/
-//        dbUrl = 'jdbc:mysql://localhost:3306/lemonico?useSSL=false&useInformationSchema=true'
-//        dbUser = 'root'
-//        dbPassword = 'kawasemi'
+        dbUrl = 'jdbc:mysql://localhost:3306/lemonico?useSSL=false&useInformationSchema=true'
+        dbUser = 'root'
+        dbPassword = 'kawasemi'
         /************* 本番環境 *************/
-        dbUrl = 'jdbc:mysql://lemonico.crwkn7mkbqkv.ap-northeast-1.rds.amazonaws.com:3306/lemonico?useSSL=false&useInformationSchema=true'
-        dbUser = 'admin'
-        dbPassword = 'password'
+//        dbUrl = 'jdbc:mysql://lemonico.crwkn7mkbqkv.ap-northeast-1.rds.amazonaws.com:3306/lemonico?useSSL=false&useInformationSchema=true'
+//        dbUser = 'admin'
+//        dbPassword = 'password'
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.5.5"
@@ -39,6 +39,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+compileJava.options.encoding = "UTF-8"
+
 repositories {
     mavenCentral()
 }
@@ -48,33 +50,33 @@ configurations {
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.seasar.doma:doma-processor:2.45.0'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.5'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.seasar.doma:doma-processor:2.50.0'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.6.1'
 
-    compileOnly 'org.projectlombok:lombok:1.18.20'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.5.5'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.5'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:2.5.5'
-    implementation 'org.springframework.boot:spring-boot-starter-aop:2.5.5'
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.5.5'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.5.5'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.5.5'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-logging:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-aop:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.6.1'
 
     // json web token
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
     // aop関連
     implementation 'org.aspectj:aspectjweaver:1.9.7'
 
     // DBアクセス関連
-    implementation 'org.seasar.doma:doma-core:2.45.0'
+    implementation 'org.seasar.doma:doma-core:2.50.0'
     implementation 'org.seasar.doma.boot:doma-spring-boot-starter:1.5.0'
     implementation 'mysql:mysql-connector-java:5.1.49'
-    implementation 'com.h2database:h2:1.4.200'
+    implementation 'com.h2database:h2:2.0.202'
 
     domaGenRuntime 'mysql:mysql-connector-java:5.1.49'
     domaGenRuntime 'org.seasar.doma:doma-gen:2.28.0'
@@ -83,15 +85,20 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     // AWS JAVA SDK For Amazon S3
-    implementation 'software.amazon.awssdk:s3:2.17.66'
+    implementation 'software.amazon.awssdk:s3:2.17.99'
+
+    // AWS JAVA SDK For Amazon Rekognition
+    implementation 'software.amazon.awssdk:rekognition:2.17.91'
 }
 
 sourceSets {
     main {
         java {
+            srcDirs 'src/generated/main/java'
             srcDirs 'src/main/java'
         }
         resources {
+            srcDirs 'src/generated/main/resources'
             srcDirs 'src/main/resources'
         }
     }
@@ -112,33 +119,6 @@ compileJava {
     options.encoding = 'UTF-8'
 }
 
-task genAll {
-    group = 'doma-gen'
-}
-
-task genController {
-    group = 'doma-gen'
-    doLast {
-        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
-        ant.gen(
-                url: "${dbUrl}",
-                user: "${dbUser}",
-                password: "${dbPassword}",
-                tableNamePattern: TABLE_NAME,
-                ignoredTableNamePattern: "flyway_schema_history",
-                templatePrimaryDir: "doma/controller")
-                {
-                    entityConfig(
-                            overwrite: true,
-                            useListener: false,
-                            packageName: "api.lemonico." + FOLDER + ".controller",
-                            entitySuffix: "Controller",
-                            destDir: 'src/main/java'
-                    )
-                }
-    }
-}
-
 task genRepository {
     group = 'doma-gen'
     doLast {
@@ -146,34 +126,13 @@ task genRepository {
         ant.gen(url: "${dbUrl}",
                 user: "${dbUser}",
                 password: "${dbPassword}",
-                tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/repository")
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico." + FOLDER + ".repository",
+                            packageName: "api.lemonico.repository",
                             entitySuffix: "Repository",
-                            destDir: 'src/main/java')
-                }
-    }
-}
-
-task genService {
-    group = 'doma-gen'
-    doLast {
-        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
-        ant.gen(url: "${dbUrl}",
-                user: "${dbUser}",
-                password: "${dbPassword}",
-                tableNamePattern: TABLE_NAME,
-                ignoredTableNamePattern: "flyway_schema_history",
-                templatePrimaryDir: "doma/service")
-                {
-                    entityConfig(
-                            overwrite: true, useListener: false,
-                            packageName: "api.lemonico." + FOLDER + ".service",
-                            entitySuffix: "Service",
                             destDir: 'src/main/java')
                 }
     }
@@ -186,13 +145,12 @@ task genResource {
         ant.gen(url: "${dbUrl}",
                 user: "${dbUser}",
                 password: "${dbPassword}",
-                tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/resource")
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico." + FOLDER + ".resource",
+                            packageName: "api.lemonico.resource",
                             entitySuffix: "Resource",
                             destDir: 'src/main/java')
                 }
@@ -207,14 +165,14 @@ task genEntity {
                 url: "${dbUrl}",
                 user: "${dbUser}",
                 password: "${dbPassword}",
-                tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/entity")
                 {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-                            packageName: "api.lemonico." + FOLDER + ".entity",
+//                            superclassName: 'api.lemonico.entity.LcEntity',
+                            packageName: "api.lemonico.entity",
                             destDir: 'src/main/java'
                     )
                 }
@@ -229,13 +187,12 @@ task genDao {
                 url: "${dbUrl}",
                 user: "${dbUser}",
                 password: "${dbPassword}",
-                tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/dao")
                 {
                     daoConfig(
                             overwrite: true,
-                            packageName: "api.lemonico." + FOLDER + ".dao",
+                            packageName: "api.lemonico.dao",
                             suffix: "Dao",
                             destDir: 'src/main/java')
                     sqlConfig(
@@ -261,17 +218,6 @@ task genTestCases {
         }
     }
 }
-
-/**
- * genAllの実行順序は下記となります。
- * cleanGenAll → genService → genRepository → genEntity → genDao → genResource → genAll
- */
-genAll.dependsOn genController
-genController.dependsOn genService
-genService.dependsOn genResource
-genResource.dependsOn genDao
-genDao.dependsOn genEntity
-genEntity.dependsOn genRepository
 
 // JavaクラスとSQLファイルの出力先ディレクトリを同じにする
 processResources.destinationDir = compileJava.destinationDir

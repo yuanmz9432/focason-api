@@ -12,8 +12,8 @@ package ${packageName};
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.${entityDesc.simpleName?uncap_first}.entity.${entityDesc.simpleName};
-import api.lemonico.${entityDesc.simpleName?uncap_first}.repository.${entityDesc.simpleName}Repository;
+import api.lemonico.entity.${entityDesc.simpleName};
+import api.lemonico.repository.${entityDesc.simpleName}Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
