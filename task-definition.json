@@ -9,7 +9,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/Lemonico-task",
+          "awslogs-group": "/ecs/lemonico-api-ec2",
           "awslogs-region": "ap-northeast-1",
           "awslogs-stream-prefix": "ecs"
         }
@@ -24,7 +24,7 @@
       ],
       "command": null,
       "linuxParameters": null,
-      "cpu": 0,
+      "cpu": 10,
       "environment": [],
       "resourceRequirements": null,
       "ulimits": null,
@@ -33,7 +33,7 @@
       "workingDirectory": null,
       "secrets": null,
       "dockerSecurityOptions": null,
-      "memory": null,
+      "memory": 300,
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
@@ -54,18 +54,18 @@
       "dockerLabels": null,
       "systemControls": null,
       "privileged": null,
-      "name": "Lemonico-container"
+      "name": "lemonico-api-container"
     }
   ],
   "placementConstraints": [],
   "memory": "1024",
-  "taskRoleArn": "arn:aws:iam::557969691251:role/Lemonico-ECS-task-role",
+  "taskRoleArn": "arn:aws:iam::557969691251:role/ecsTaskExecutionRole",
   "compatibilities": [
     "EC2",
-    "FARGATE"
+    "EXTERNAL"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-1:557969691251:task-definition/Lemonico-task:1",
-  "family": "Lemonico-task",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-1:557969691251:task-definition/lemonico-api-task:1",
+  "family": "lemonico-api-task",
   "requiresAttributes": [
     {
       "targetId": null,
@@ -117,11 +117,9 @@
     }
   ],
   "pidMode": null,
-  "requiresCompatibilities": [
-    "FARGATE"
-  ],
-  "networkMode": "awsvpc",
-  "cpu": "256",
+  "requiresCompatibilities": [],
+  "networkMode": null,
+  "cpu": null,
   "revision": 1,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
