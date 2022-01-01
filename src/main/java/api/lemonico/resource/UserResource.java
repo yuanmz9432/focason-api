@@ -7,7 +7,6 @@ package api.lemonico.resource;
 
 import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,6 @@ public class UserResource
     private final String email;
 
     /** パスワード */
-    @JsonIgnore
     private final String password;
 
     /** タイプ（1:シルバー 2:ゴールド 3:プレミアム 4:退会） */
