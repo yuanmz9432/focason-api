@@ -24,8 +24,8 @@
       ],
       "command": null,
       "linuxParameters": null,
-      "cpu": 10,
-      "memory": 1024,
+      "cpu": 900,
+      "memory": 900,
       "environment": [
         {
           "name": "APP_PORT",
