@@ -24,7 +24,8 @@
       ],
       "command": null,
       "linuxParameters": null,
-      "cpu": 1024,
+      "cpu": 512,
+      "memory": 1024,
       "environment": [
         {
           "name": "APP_PORT",
@@ -59,7 +60,6 @@
         }
       ],
       "dockerSecurityOptions": null,
-      "memory": 1024,
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
