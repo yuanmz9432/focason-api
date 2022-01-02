@@ -24,7 +24,7 @@
       ],
       "command": null,
       "linuxParameters": null,
-      "cpu": 900,
+      "cpu": 512,
       "memory": 900,
       "environment": [
         {
