@@ -23,7 +23,7 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-@Table(name = "User")
+@Table(name = "user")
 public class User extends LcEntity
 {
     /** クライアントの自動採番ID */
