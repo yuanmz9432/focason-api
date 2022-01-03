@@ -167,7 +167,6 @@ public interface UserDao
     @BatchDelete
     BatchResult<User> delete(List<User> entities);
 
-
     /**
      * メールアドレスを指定して、データベースからエンティティを一件を取得します。
      *

@@ -1,5 +1,5 @@
 UPDATE
-    User
+    user
 SET
     is_deleted = 1
 WHERE

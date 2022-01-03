@@ -24,10 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserResource
 {
 
-    /** クライアントの自動採番ID */
+    /** ユーザー自動採番ID */
     private final ID<User> id;
 
-    /** ユーザーコード */
+    /** ユーザーコード（UUID） */
     private final String userCode;
 
     /** 姓 */
@@ -54,7 +54,7 @@ public class UserResource
     /** 個人ページ */
     private final String url;
 
-    /** 画像 */
+    /** 個人ページ画像 */
     private final String profileImage;
 
     /** 郵便番号 */

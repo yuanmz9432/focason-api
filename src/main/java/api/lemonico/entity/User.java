@@ -26,11 +26,11 @@ import org.seasar.doma.*;
 @Table(name = "user")
 public class User extends LcEntity
 {
-    /** クライアントの自動採番ID */
+    /** ユーザー自動採番ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     ID<User> id;
-    /** ユーザーコード */
+    /** ユーザーコード（UUID） */
     @Column(name = "user_code")
     String userCode;
     /** 姓 */
@@ -57,7 +57,7 @@ public class User extends LcEntity
     /** 個人ページ */
     @Column(name = "url")
     String url;
-    /** 画像 */
+    /** 個人ページ画像 */
     @Column(name = "profile_image")
     String profileImage;
     /** 郵便番号 */
