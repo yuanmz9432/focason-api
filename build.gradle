@@ -50,33 +50,33 @@ configurations {
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.seasar.doma:doma-processor:2.50.0'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.6.1'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.seasar.doma:doma-processor:2.51.0'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.6.7'
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter-aop:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.6.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-logging:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-aop:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.6.7'
 
     // json web token
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
     // aop関連
-    implementation 'org.aspectj:aspectjweaver:1.9.7'
+    implementation 'org.aspectj:aspectjweaver:1.9.9.1'
 
     // DBアクセス関連
-    implementation 'org.seasar.doma:doma-core:2.50.0'
-    implementation 'org.seasar.doma.boot:doma-spring-boot-starter:1.5.0'
+    implementation 'org.seasar.doma:doma-core:2.51.0'
+    implementation 'org.seasar.doma.boot:doma-spring-boot-starter:1.6.0'
     implementation 'mysql:mysql-connector-java:5.1.49'
-    implementation 'com.h2database:h2:2.0.202'
+    implementation 'com.h2database:h2:2.1.212'
 
     domaGenRuntime 'mysql:mysql-connector-java:5.1.49'
     domaGenRuntime 'org.seasar.doma:doma-gen:2.28.0'
@@ -85,10 +85,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     // AWS JAVA SDK For Amazon S3
-    implementation 'software.amazon.awssdk:s3:2.17.99'
+    implementation 'software.amazon.awssdk:s3:2.17.174'
 
     // AWS JAVA SDK For Amazon Rekognition
-    implementation 'software.amazon.awssdk:rekognition:2.17.91'
+    implementation 'software.amazon.awssdk:rekognition:2.17.174'
 }
 
 sourceSets {

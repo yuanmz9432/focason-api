@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -50,10 +51,10 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
         return authenticationTokenFilter;
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("index.html", "favicon.ico", "/static/**");
-    }
+//    @Override
+//    public void configure(WebSecurity web) {
+//        web.ignoring().antMatchers("index.html", "favicon.ico", "/static/**");
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -61,7 +62,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
             // OPTIONS请求全部放行
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 登录接口放行
-            .antMatchers("/healthcheck", "/auth/**").permitAll()
+            .antMatchers("/heartbeat", "/auth/**").permitAll()
             // 其他接口全部接受验证
             .anyRequest().authenticated()
             .and()

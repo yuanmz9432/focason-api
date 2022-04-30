@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class HealthCheckController
 {
-    @RequestMapping(method = RequestMethod.GET, path = "/healthcheck")
-    public ResponseEntity<Void> healthCheck() {
+    @RequestMapping(method = RequestMethod.GET, path = "/heartbeat")
+    public ResponseEntity<Void> heartbeat() {
         return ResponseEntity.noContent().build();
     }
 }

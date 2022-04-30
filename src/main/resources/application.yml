@@ -5,9 +5,9 @@ spring:
       max-file-size: -1
       max-request-size: -1
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_SCHAME:lemonico}?useSSL=false&autoReconnect=true
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_SCHEMA:lemonico}?useSSL=false&autoReconnect=true
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:kawasemi}
+    password: ${DB_PASSWORD:password}
     driver-class-name: com.mysql.jdbc.Driver
   jackson:
     time-zone: Asia/Tokyo
