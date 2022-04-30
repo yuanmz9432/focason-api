@@ -1,4 +1,4 @@
 DELETE FROM
-    face
+    role
 WHERE
     id = /* id */1

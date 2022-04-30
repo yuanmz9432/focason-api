@@ -6,7 +6,7 @@ package api.lemonico.dao;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.User;
+import api.lemonico.entity.UserEntity;
 import api.lemonico.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +42,7 @@ public interface UserDao
         UserRepository.Condition condition,
         SelectOptions options,
         UserRepository.Sort sort,
-        Collector<User, ?, R> collector);
+        Collector<UserEntity, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -56,7 +56,7 @@ public interface UserDao
     default <R> R selectAll(
         UserRepository.Condition condition,
         SelectOptions options,
-        Collector<User, ?, R> collector) {
+        Collector<UserEntity, ?, R> collector) {
         return selectAll(condition, options, UserRepository.Sort.DEFAULT, collector);
     }
 
@@ -72,7 +72,7 @@ public interface UserDao
     default <R> R selectAll(
         SelectOptions options,
         UserRepository.Sort sort,
-        Collector<User, ?, R> collector) {
+        Collector<UserEntity, ?, R> collector) {
         return selectAll(UserRepository.Condition.DEFAULT, options, sort, collector);
     }
 
@@ -86,7 +86,7 @@ public interface UserDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<User, ?, R> collector) {
+        Collector<UserEntity, ?, R> collector) {
         return selectAll(UserRepository.Condition.DEFAULT, options, UserRepository.Sort.DEFAULT, collector);
     }
 
@@ -98,7 +98,7 @@ public interface UserDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<User> selectById(ID<User> id, SelectOptions options);
+    Optional<UserEntity> selectById(ID<UserEntity> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -106,7 +106,7 @@ public interface UserDao
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<User> selectById(ID<User> id) {
+    default Optional<UserEntity> selectById(ID<UserEntity> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -117,7 +117,7 @@ public interface UserDao
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<User> insert(User entity);
+    Result<UserEntity> insert(UserEntity entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -126,7 +126,7 @@ public interface UserDao
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<User> update(User entity);
+    Result<UserEntity> update(UserEntity entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -135,7 +135,7 @@ public interface UserDao
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<User> id);
+    int deleteById(ID<UserEntity> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -144,28 +144,28 @@ public interface UserDao
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<User> id);
+    int deleteLogicById(ID<UserEntity> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<User> insert(List<User> entities);
+    BatchResult<UserEntity> insert(List<UserEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<User> update(List<User> entities);
+    BatchResult<UserEntity> update(List<UserEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<User> delete(List<User> entities);
+    BatchResult<UserEntity> delete(List<UserEntity> entities);
 
 
     /**
@@ -175,5 +175,5 @@ public interface UserDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<User> selectByEmail(String email);
+    Optional<UserEntity> selectByEmail(String email);
 }

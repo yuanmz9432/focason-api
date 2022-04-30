@@ -1,7 +1,7 @@
 SELECT
     /*%expand*/*
 FROM
-    collection
+    role
 WHERE
     is_deleted = 0
     /*%if condition.getIds() != null */

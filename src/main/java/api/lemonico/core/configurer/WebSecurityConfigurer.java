@@ -15,10 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -50,11 +48,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
         authenticationTokenFilter.setAuthenticationManager(authenticationManager());
         return authenticationTokenFilter;
     }
-
-//    @Override
-//    public void configure(WebSecurity web) {
-//        web.ignoring().antMatchers("index.html", "favicon.ico", "/static/**");
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -16,9 +16,9 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
-import api.lemonico.${simpleName?uncap_first}.entity.${simpleName};
-import api.lemonico.${simpleName?uncap_first}.repository.${simpleName}Repository;
-import api.lemonico.${simpleName?uncap_first}.resource.${simpleName}Resource;
+import api.lemonico.entity.${simpleName}Entity;
+import api.lemonico.repository.${simpleName}Repository;
+import api.lemonico.resource.${simpleName}Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +73,7 @@ public class ${simpleName}${entitySuffix}
      * @return ${comment}リソース
      */
     @Transactional(readOnly = true)
-    public Optional<${simpleName}Resource> getResource(ID<${simpleName}> id) {
+    public Optional<${simpleName}Resource> getResource(ID<${simpleName}Entity> id) {
         // ${comment}を取得します。
         return repository.findById(id).map(this::convertEntityToResource);
     }
@@ -101,11 +101,11 @@ public class ${simpleName}${entitySuffix}
      * @return 更新後の${comment}リソース
      */
     @Transactional
-    public ${simpleName}Resource updateResource(ID<${simpleName}> id, ${simpleName}Resource resource) {
+    public ${simpleName}Resource updateResource(ID<${simpleName}Entity> id, ${simpleName}Resource resource) {
         // TODO Waiting for finalization of basic design according to Q&A
         // ${comment}IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(${simpleName}.class, id);
+            throw new LcResourceNotFoundException(${simpleName}Entity.class, id);
         }
 
         // ${comment}を更新します。
@@ -121,11 +121,11 @@ public class ${simpleName}${entitySuffix}
      * @param id ${comment}ID
      */
     @Transactional
-    public void deleteResource(ID<${simpleName}> id) {
+    public void deleteResource(ID<${simpleName}Entity> id) {
         // TODO Waiting for finalization of basic design according to Q&A
         // ${comment}IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(${simpleName}.class, id);
+            throw new LcResourceNotFoundException(${simpleName}Entity.class, id);
         }
 
         // ${comment}を削除します。
@@ -139,7 +139,7 @@ public class ${simpleName}${entitySuffix}
      * @return リソース
      */
     @Transactional(readOnly = true)
-    public ${simpleName}Resource convertEntityToResource(${simpleName} entity) {
+    public ${simpleName}Resource convertEntityToResource(${simpleName}Entity entity) {
         return convertEntitiesToResources(Collections.singletonList(entity)).get(0);
     }
 
@@ -150,7 +150,7 @@ public class ${simpleName}${entitySuffix}
      * @return リソースのリスト
      */
     @Transactional(readOnly = true)
-    public List<${simpleName}Resource> convertEntitiesToResources(List<${simpleName}> entities) {
+    public List<${simpleName}Resource> convertEntitiesToResources(List<${simpleName}Entity> entities) {
         return entities.stream()
             .map(${simpleName}Resource::new)
             .collect(toList());

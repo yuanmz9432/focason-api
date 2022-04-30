@@ -14,7 +14,7 @@ import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.domain.UserType;
-import api.lemonico.entity.User;
+import api.lemonico.entity.UserEntity;
 import api.lemonico.repository.UserRepository;
 import api.lemonico.resource.UserResource;
 import java.util.Collections;
@@ -68,7 +68,7 @@ public class UserService
      * @return クライアントリソース
      */
     @Transactional(readOnly = true)
-    public Optional<UserResource> getResource(ID<User> id) {
+    public Optional<UserResource> getResource(ID<UserEntity> id) {
         // クライアントを取得します。
         var client = userRepository.findById(id);
         return client.map(this::convertEntityToResource);
@@ -85,7 +85,7 @@ public class UserService
         // メールアドレスにおいて重複したデータが存在していることを示す。
         var client = getResourceByEmail(resource.getEmail());
         if (client.isPresent()) {
-            throw new LcResourceAlreadyExistsException(User.class, client.get().getEmail());
+            throw new LcResourceAlreadyExistsException(UserEntity.class, client.get().getEmail());
         }
 
         // クライアントを作成します。
@@ -106,10 +106,10 @@ public class UserService
      * @return 更新後のクライアントリソース
      */
     @Transactional
-    public UserResource updateResource(ID<User> id, UserResource resource) {
+    public UserResource updateResource(ID<UserEntity> id, UserResource resource) {
         // クライアントIDにおいて重複したデータが存在していることを示す。
         if (!userRepository.exists(id)) {
-            throw new LcResourceNotFoundException(User.class, id);
+            throw new LcResourceNotFoundException(UserEntity.class, id);
         }
 
         // クライアントを更新します。
@@ -125,11 +125,11 @@ public class UserService
      * @param id ユーザーID
      */
     @Transactional
-    public void deleteResource(ID<User> id) {
+    public void deleteResource(ID<UserEntity> id) {
         // TODO Waiting for finalization of basic design according to Q&A
         // クライアントIDにおいて重複したデータが存在していることを示す。
         if (!userRepository.exists(id)) {
-            throw new LcResourceNotFoundException(User.class, id);
+            throw new LcResourceNotFoundException(UserEntity.class, id);
         }
 
         // クライアントを削除します。
@@ -169,7 +169,7 @@ public class UserService
      * @return リソース
      */
     @Transactional(readOnly = true)
-    public UserResource convertEntityToResource(User entity) {
+    public UserResource convertEntityToResource(UserEntity entity) {
         return convertEntitiesToResources(Collections.singletonList(entity)).get(0);
     }
 
@@ -180,7 +180,7 @@ public class UserService
      * @return リソースのリスト
      */
     @Transactional(readOnly = true)
-    public List<UserResource> convertEntitiesToResources(List<User> entities) {
+    public List<UserResource> convertEntitiesToResources(List<UserEntity> entities) {
         return entities.stream()
             .map(UserResource::new)
             .collect(toList());

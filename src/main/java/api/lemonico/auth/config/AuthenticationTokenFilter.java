@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,7 +55,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         // リクエストヘッダーからアクセストークンを取得する。
-        var accessToken = request.getHeader(jwtProps.getAccessTokenHeader());
+        var accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         String email = null;
         if (Strings.isNotBlank(accessToken)) {
             Claims accessTokenClaims;
@@ -93,7 +94,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
                     var authentication = new UsernamePasswordAuthenticationToken(userResource, null, null);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    MDC.put("CLIENT_CODE", userResource.get().getUserCode());
+                    MDC.put("CLIENT_CODE", userResource.get().getUuid());
                 }
             }
         }

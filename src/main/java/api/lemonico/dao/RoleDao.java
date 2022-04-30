@@ -1,19 +1,13 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.DaoDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.dao;
 
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.${entityDesc.simpleName}Entity;
-import api.lemonico.repository.${entityDesc.simpleName}Repository;
+import api.lemonico.entity.RoleEntity;
+import api.lemonico.repository.RoleRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -24,15 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * ${entityDesc.comment}のDao
+ * ロールマスタのDao
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
-@Dao<#if configClassSimpleName??>(config = ${configClassSimpleName}.class)</#if>
+@Dao
 @ConfigAutowireable
-public interface ${simpleName}
+public interface RoleDao
 {
 
     /**
@@ -47,10 +39,10 @@ public interface ${simpleName}
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        ${entityDesc.simpleName}Repository.Condition condition,
+        RoleRepository.Condition condition,
         SelectOptions options,
-        ${entityDesc.simpleName}Repository.Sort sort,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector);
+        RoleRepository.Sort sort,
+        Collector<RoleEntity, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -62,10 +54,10 @@ public interface ${simpleName}
      * @return 検索結果
      */
     default <R> R selectAll(
-        ${entityDesc.simpleName}Repository.Condition condition,
+        RoleRepository.Condition condition,
         SelectOptions options,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector) {
-        return selectAll(condition, options, ${entityDesc.simpleName}Repository.Sort.DEFAULT, collector);
+        Collector<RoleEntity, ?, R> collector) {
+        return selectAll(condition, options, RoleRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -79,9 +71,9 @@ public interface ${simpleName}
      */
     default <R> R selectAll(
         SelectOptions options,
-        ${entityDesc.simpleName}Repository.Sort sort,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector) {
-        return selectAll(${entityDesc.simpleName}Repository.Condition.DEFAULT, options, sort, collector);
+        RoleRepository.Sort sort,
+        Collector<RoleEntity, ?, R> collector) {
+        return selectAll(RoleRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -94,8 +86,8 @@ public interface ${simpleName}
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector) {
-        return selectAll(${entityDesc.simpleName}Repository.Condition.DEFAULT, options, ${entityDesc.simpleName}Repository.Sort.DEFAULT, collector);
+        Collector<RoleEntity, ?, R> collector) {
+        return selectAll(RoleRepository.Condition.DEFAULT, options, RoleRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -106,7 +98,7 @@ public interface ${simpleName}
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<${entityDesc.simpleName}Entity> selectById(ID<${entityDesc.simpleName}Entity> id, SelectOptions options);
+    Optional<RoleEntity> selectById(ID<RoleEntity> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -114,7 +106,7 @@ public interface ${simpleName}
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<${entityDesc.simpleName}Entity> selectById(ID<${entityDesc.simpleName}Entity> id) {
+    default Optional<RoleEntity> selectById(ID<RoleEntity> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -125,7 +117,7 @@ public interface ${simpleName}
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<${entityDesc.simpleName}Entity> insert(${entityDesc.simpleName}Entity entity);
+    Result<RoleEntity> insert(RoleEntity entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -134,7 +126,7 @@ public interface ${simpleName}
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<${entityDesc.simpleName}Entity> update(${entityDesc.simpleName}Entity entity);
+    Result<RoleEntity> update(RoleEntity entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -143,7 +135,7 @@ public interface ${simpleName}
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<${entityDesc.simpleName}Entity> id);
+    int deleteById(ID<RoleEntity> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -152,26 +144,26 @@ public interface ${simpleName}
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<${entityDesc.simpleName}Entity> id);
+    int deleteLogicById(ID<RoleEntity> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<${entityDesc.simpleName}Entity> insert(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}Entity<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<RoleEntity> insert(List<RoleEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<${entityDesc.simpleName}Entity> update(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}Entity<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<RoleEntity> update(List<RoleEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<${entityDesc.simpleName}Entity> delete(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}Entity<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<RoleEntity> delete(List<RoleEntity> entities);
 }

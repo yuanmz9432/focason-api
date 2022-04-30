@@ -17,7 +17,7 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.dao.${simpleName}Dao;
-import api.lemonico.entity.${simpleName};
+import api.lemonico.entity.${simpleName}Entity;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,7 +48,7 @@ public class ${simpleName}${entitySuffix}
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<${simpleName}> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<${simpleName}Entity> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -61,7 +61,7 @@ public class ${simpleName}${entitySuffix}
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<${simpleName}> findById(ID<${simpleName}> id) throws IllegalArgumentException {
+    public Optional<${simpleName}Entity> findById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -71,7 +71,7 @@ public class ${simpleName}${entitySuffix}
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<${simpleName}> create(${simpleName} entity) {
+    public ID<${simpleName}Entity> create(${simpleName}Entity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
@@ -86,11 +86,11 @@ public class ${simpleName}${entitySuffix}
      *
      * @param entity エンティティ
      */
-    public void update(ID<${simpleName}> id, ${simpleName} entity) {
+    public void update(ID<${simpleName}Entity> id, ${simpleName}Entity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(${simpleName}.class, entity.getId());
+            throw new LcEntityNotFoundException(${simpleName}Entity.class, entity.getId());
         }
     }
 
@@ -99,10 +99,10 @@ public class ${simpleName}${entitySuffix}
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<${simpleName}> id) throws IllegalArgumentException {
+    public void deleteById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}.class, id);
+            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
         }
     }
 
@@ -111,10 +111,10 @@ public class ${simpleName}${entitySuffix}
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<${simpleName}> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}.class, id);
+            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
         }
     }
 
@@ -124,7 +124,7 @@ public class ${simpleName}${entitySuffix}
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<${simpleName}> id) {
+    public boolean exists(ID<${simpleName}Entity> id) {
         return findById(id).isPresent();
     }
 
@@ -147,7 +147,7 @@ public class ${simpleName}${entitySuffix}
         /**
          * ${comment}IDのセット（完全一致、複数指定可）
          */
-        private Set<ID<${simpleName}>> ids;
+        private Set<ID<${simpleName}Entity>> ids;
     }
 
     /**

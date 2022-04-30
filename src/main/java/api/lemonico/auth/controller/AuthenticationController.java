@@ -18,7 +18,7 @@ import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.domain.UserType;
-import api.lemonico.entity.User;
+import api.lemonico.entity.UserEntity;
 import api.lemonico.resource.UserResource;
 import api.lemonico.service.UserService;
 import java.util.Optional;
@@ -66,7 +66,7 @@ public class AuthenticationController
     public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
         final var user = userService.getResourceByEmail(loginUser.getUsername());
         if (user.isEmpty()) {
-            throw new LcEntityNotFoundException(User.class, loginUser.getUsername());
+            throw new LcEntityNotFoundException(UserEntity.class, loginUser.getUsername());
         }
         this.checkLoginUser(loginUser, user);
         final var expirationTime = generator.generateExpirationTime();
@@ -74,8 +74,7 @@ public class AuthenticationController
         return ResponseEntity.ok().body(
             JWTResource.builder()
                 .accessToken(accessToken)
-                .expirationTime(expirationTime)
-                .userResource(user.get().withPassword(""))
+                .expirationTime(expirationTime.getTime())
                 .build());
     }
 
@@ -90,7 +89,7 @@ public class AuthenticationController
         @Valid @RequestBody UserResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = userService.createResource(
-            resource.withUserCode(UUID.randomUUID().toString())).getId();
+            resource.withUuid(UUID.randomUUID().toString())).getId();
         var uri = relativeTo(uriBuilder).withMethodCall(on(UserController.class).getUser(id))
             .build()
             .encode()
