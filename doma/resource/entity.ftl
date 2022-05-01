@@ -12,7 +12,7 @@ package ${packageName};
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.${simpleName};
+import api.lemonico.entity.${simpleName}Entity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     /** */
     </#if>
     <#if property.id>
-    private final ID<${simpleName}> ${property.name};
+    private final ID<${simpleName}Entity> ${property.name};
     <#else>
     private final ${property.propertyClassSimpleName} ${property.name};
     </#if>
@@ -50,7 +50,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      *
      * @param entity ${comment}エンティティ
      */
-    public ${simpleName}${entitySuffix}(${simpleName} entity) {
+    public ${simpleName}${entitySuffix}(${simpleName}Entity entity) {
         <#list ownEntityPropertyDescs as property>
         this.${property.name} = entity.get${property.name?cap_first}();
         </#list>
@@ -61,8 +61,8 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      *
      * @return ${comment}エンティティ
      */
-    public ${simpleName} toEntity() {
-        return ${simpleName}.builder()
+    public ${simpleName}Entity toEntity() {
+        return ${simpleName}Entity.builder()
             <#list ownEntityPropertyDescs as property>
             .${property.name}(${property.name})
             </#list>

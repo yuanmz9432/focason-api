@@ -5,8 +5,6 @@ package api.lemonico.auth.resource;
 
 
 
-import api.lemonico.resource.UserResource;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,10 +22,5 @@ public class JWTResource
     /**
      * 有効期間
      */
-    private final Date expirationTime;
-
-    /**
-     * クライアントリソース
-     */
-    private final UserResource userResource;
+    private final long expirationTime;
 }

@@ -1,6 +1,6 @@
 select
   /*%expand*/*
 from
-  User
+  user
 where
   id = /* id */1

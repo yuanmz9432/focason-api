@@ -1,6 +1,6 @@
 select
   /*%expand*/*
 from
-  client
+  role
 where
   id = /* id */1

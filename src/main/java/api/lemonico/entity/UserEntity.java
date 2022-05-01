@@ -23,16 +23,16 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-@Table(name = "User")
-public class User extends LcEntity
+@Table(name = "user")
+public class UserEntity extends LcEntity
 {
-    /** クライアントの自動採番ID */
+    /** ユーザー自動採番ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    ID<User> id;
-    /** ユーザーコード */
-    @Column(name = "user_code")
-    String userCode;
+    ID<UserEntity> id;
+    /** UUID */
+    @Column(name = "uuid")
+    String uuid;
     /** 姓 */
     @Column(name = "first_name")
     String firstName;
@@ -57,7 +57,7 @@ public class User extends LcEntity
     /** 個人ページ */
     @Column(name = "url")
     String url;
-    /** 画像 */
+    /** 個人ページ画像 */
     @Column(name = "profile_image")
     String profileImage;
     /** 郵便番号 */

@@ -11,7 +11,7 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.dao.UserDao;
-import api.lemonico.entity.User;
+import api.lemonico.entity.UserEntity;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class UserRepository
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<User> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<UserEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -54,7 +54,7 @@ public class UserRepository
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<User> findById(ID<User> id) throws IllegalArgumentException {
+    public Optional<UserEntity> findById(ID<UserEntity> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -64,7 +64,7 @@ public class UserRepository
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<User> create(User entity) {
+    public ID<UserEntity> create(UserEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
@@ -81,11 +81,11 @@ public class UserRepository
      *
      * @param entity エンティティ
      */
-    public void update(ID<User> id, User entity) {
+    public void update(ID<UserEntity> id, UserEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(User.class, entity.getId());
+            throw new LcEntityNotFoundException(UserEntity.class, entity.getId());
         }
     }
 
@@ -94,10 +94,10 @@ public class UserRepository
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<User> id) throws IllegalArgumentException {
+    public void deleteById(ID<UserEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(User.class, id);
+            throw new LcEntityNotFoundException(UserEntity.class, id);
         }
     }
 
@@ -106,10 +106,10 @@ public class UserRepository
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<User> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<UserEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(User.class, id);
+            throw new LcEntityNotFoundException(UserEntity.class, id);
         }
     }
 
@@ -119,7 +119,7 @@ public class UserRepository
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<User> id) {
+    public boolean exists(ID<UserEntity> id) {
         return findById(id).isPresent();
     }
 
@@ -128,7 +128,7 @@ public class UserRepository
      *
      * @return ユーザーエンティティ
      */
-    public Optional<User> findByEmail(String email) {
+    public Optional<UserEntity> findByEmail(String email) {
         return dao.selectByEmail(email);
     }
 
@@ -151,7 +151,7 @@ public class UserRepository
         /**
          * ユーザーIDのセット（完全一致、複数指定可）
          */
-        private Set<ID<User>> ids;
+        private Set<ID<UserEntity>> ids;
     }
 
     /**

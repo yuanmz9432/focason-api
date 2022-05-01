@@ -15,33 +15,33 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.entity.UserEntity;
-import api.lemonico.repository.UserRepository;
-import api.lemonico.resource.UserResource;
-import api.lemonico.service.UserService;
-import java.util.UUID;
+import api.lemonico.entity.RoleEntity;
+import api.lemonico.repository.RoleRepository;
+import api.lemonico.resource.RoleResource;
+import api.lemonico.service.RoleService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ユーザーコントローラー
+ * ロールマスタコントローラー
  *
  * @since 1.0.0
  */
 @RestController
 @Validated
-@RequiredArgsConstructor
-public class UserController
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class RoleController
 {
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "/users";
+    private static final String COLLECTION_RESOURCE_URI = "/role";
 
     /**
      * メンバーリソースURI
@@ -49,61 +49,60 @@ public class UserController
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ユーザーサービス
+     * ロールマスタサービス
      */
-    private final UserService service;
+    private final RoleService service;
 
     /**
-     * ユーザーリソースの一覧取得API
+     * ロールマスタリソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ユーザーリソース一覧取得APIレスポンス
+     * @return ロールマスタリソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<UserResource>> getUserList(
-        @LcConditionParam UserRepository.Condition condition,
+    public ResponseEntity<LcResultSet<RoleResource>> getRoleList(
+        @LcConditionParam RoleRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = UserRepository.Condition.DEFAULT;
+            condition = RoleRepository.Condition.DEFAULT;
         }
-        var sort = UserRepository.Sort.fromLcSort(lcSort);
+        var sort = RoleRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * ユーザーIDを指定して、ユーザーリソース取得API
+     * ロールマスタIDを指定して、ロールマスタリソース取得API
      *
-     * @param id ユーザーID
-     * @return ユーザーリソース取得APIレスポンス
+     * @param id ロールマスタID
+     * @return ロールマスタリソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<UserResource> getUser(
-        @PathVariable("id") ID<UserEntity> id) {
+    public ResponseEntity<RoleResource> getRole(
+        @PathVariable("id") ID<RoleEntity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(RoleResource.class, id));
     }
 
     /**
-     * ユーザーリソース作成API
+     * ロールマスタリソース作成API
      *
-     * @param resource ユーザーリソース
-     * @return ユーザーリソース作成APIレスポンス
+     * @param resource ロールマスタリソース
+     * @return ロールマスタリソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> createUser(
-        @Valid @RequestBody UserResource resource,
+    public ResponseEntity<Void> createRole(
+        @Valid @RequestBody RoleResource resource,
         UriComponentsBuilder uriBuilder) {
-        var id = service.createResource(
-            resource.withUuid(UUID.randomUUID().toString())).getId();
+        var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).getUser(id))
+            .withMethodCall(on(getClass()).getRole(id))
             .build()
             .encode()
             .toUri();
@@ -111,32 +110,32 @@ public class UserController
     }
 
     /**
-     * ユーザーIDを指定して、ユーザーリソース更新API
+     * ロールマスタIDを指定して、ロールマスタリソース更新API
      *
-     * @param id ユーザーID
-     * @param resource ユーザーリソース更新APIレスポンス
-     * @return ユーザーリソース更新APIレスポンス
+     * @param id ロールマスタID
+     * @param resource ロールマスタリソース更新APIレスポンス
+     * @return ロールマスタリソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<UserResource> updateUser(
-        @PathVariable("id") ID<UserEntity> id,
-        @Valid @RequestBody UserResource resource) {
+    public ResponseEntity<RoleResource> updateRole(
+        @PathVariable("id") ID<RoleEntity> id,
+        @Valid @RequestBody RoleResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * ユーザーIDを指定して、ユーザーリソース削除API
+     * ロールマスタIDを指定して、ロールマスタリソース削除API
      *
-     * @param id ユーザーID
-     * @return ユーザーリソース削除APIレスポンス
+     * @param id ロールマスタID
+     * @return ロールマスタリソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> deleteUser(
-        @PathVariable("id") ID<UserEntity> id) {
+    public ResponseEntity<Void> deleteRole(
+        @PathVariable("id") ID<RoleEntity> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

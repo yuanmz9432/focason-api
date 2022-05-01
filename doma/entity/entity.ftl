@@ -47,7 +47,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     </#if>
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    <#if !useAccessor>public </#if>ID<${simpleName}> ${property.name};
+    <#if !useAccessor>public </#if>ID<${simpleName}<#if entitySuffix??>${entitySuffix}</#if>> ${property.name};
   <#else>
     <#if property.version>
     @Version

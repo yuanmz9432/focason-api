@@ -21,10 +21,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.${simpleName?uncap_first}.entity.${simpleName};
-import api.lemonico.${simpleName?uncap_first}.repository.${simpleName}Repository;
-import api.lemonico.${simpleName?uncap_first}.resource.${simpleName}Resource;
-import api.lemonico.${simpleName?uncap_first}.service.${simpleName}Service;
+import api.lemonico.entity.${simpleName}Entity;
+import api.lemonico.repository.${simpleName}Repository;
+import api.lemonico.resource.${simpleName}Resource;
+import api.lemonico.service.${simpleName}Service;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -89,7 +89,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      */
     @GetMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<${simpleName}Resource> get${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id) {
+        @PathVariable("id") ID<${simpleName}Entity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
             .orElseThrow(() -> new LcResourceNotFoundException(${simpleName}Resource.class, id));
@@ -129,7 +129,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     })
     @PutMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<${simpleName}Resource> update${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id,
+        @PathVariable("id") ID<${simpleName}Entity> id,
         @Valid @RequestBody ${simpleName}Resource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
@@ -143,7 +143,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<Void> delete${simpleName}(
-        @PathVariable("id") ID<${simpleName}> id) {
+        @PathVariable("id") ID<${simpleName}Entity> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

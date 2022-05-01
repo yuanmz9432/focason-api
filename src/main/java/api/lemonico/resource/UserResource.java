@@ -6,8 +6,7 @@ package api.lemonico.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import api.lemonico.entity.UserEntity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserResource
 {
 
-    /** クライアントの自動採番ID */
-    private final ID<User> id;
+    /** ユーザー自動採番ID */
+    private final ID<UserEntity> id;
 
-    /** ユーザーコード */
-    private final String userCode;
+    /** UUID */
+    private final String uuid;
 
     /** 姓 */
     private final String firstName;
@@ -44,7 +43,6 @@ public class UserResource
     private final String email;
 
     /** パスワード */
-    @JsonIgnore
     private final String password;
 
     /** タイプ（1:シルバー 2:ゴールド 3:プレミアム 4:退会） */
@@ -56,7 +54,7 @@ public class UserResource
     /** 個人ページ */
     private final String url;
 
-    /** 画像 */
+    /** 個人ページ画像 */
     private final String profileImage;
 
     /** 郵便番号 */
@@ -97,9 +95,9 @@ public class UserResource
      *
      * @param entity ユーザーエンティティ
      */
-    public UserResource(User entity) {
+    public UserResource(UserEntity entity) {
         this.id = entity.getId();
-        this.userCode = entity.getUserCode();
+        this.uuid = entity.getUuid();
         this.firstName = entity.getFirstName();
         this.lastName = entity.getLastName();
         this.gender = entity.getGender();
@@ -127,10 +125,10 @@ public class UserResource
      *
      * @return ユーザーエンティティ
      */
-    public User toEntity() {
-        return User.builder()
+    public UserEntity toEntity() {
+        return UserEntity.builder()
             .id(id)
-            .userCode(userCode)
+            .uuid(uuid)
             .firstName(firstName)
             .lastName(lastName)
             .gender(gender)

@@ -6,8 +6,8 @@ package api.lemonico.dao;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.Collection;
-import api.lemonico.repository.CollectionRepository;
+import api.lemonico.entity.RoleEntity;
+import api.lemonico.repository.RoleRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -18,13 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * クレクションのDao
+ * ロールマスタのDao
  *
  * @since 1.0.0
  */
 @Dao
 @ConfigAutowireable
-public interface CollectionDao
+public interface RoleDao
 {
 
     /**
@@ -39,10 +39,10 @@ public interface CollectionDao
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        CollectionRepository.Condition condition,
+        RoleRepository.Condition condition,
         SelectOptions options,
-        CollectionRepository.Sort sort,
-        Collector<Collection, ?, R> collector);
+        RoleRepository.Sort sort,
+        Collector<RoleEntity, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -54,10 +54,10 @@ public interface CollectionDao
      * @return 検索結果
      */
     default <R> R selectAll(
-        CollectionRepository.Condition condition,
+        RoleRepository.Condition condition,
         SelectOptions options,
-        Collector<Collection, ?, R> collector) {
-        return selectAll(condition, options, CollectionRepository.Sort.DEFAULT, collector);
+        Collector<RoleEntity, ?, R> collector) {
+        return selectAll(condition, options, RoleRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -71,9 +71,9 @@ public interface CollectionDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        CollectionRepository.Sort sort,
-        Collector<Collection, ?, R> collector) {
-        return selectAll(CollectionRepository.Condition.DEFAULT, options, sort, collector);
+        RoleRepository.Sort sort,
+        Collector<RoleEntity, ?, R> collector) {
+        return selectAll(RoleRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -86,8 +86,8 @@ public interface CollectionDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<Collection, ?, R> collector) {
-        return selectAll(CollectionRepository.Condition.DEFAULT, options, CollectionRepository.Sort.DEFAULT, collector);
+        Collector<RoleEntity, ?, R> collector) {
+        return selectAll(RoleRepository.Condition.DEFAULT, options, RoleRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -98,7 +98,7 @@ public interface CollectionDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<Collection> selectById(ID<Collection> id, SelectOptions options);
+    Optional<RoleEntity> selectById(ID<RoleEntity> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -106,7 +106,7 @@ public interface CollectionDao
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<Collection> selectById(ID<Collection> id) {
+    default Optional<RoleEntity> selectById(ID<RoleEntity> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -117,7 +117,7 @@ public interface CollectionDao
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<Collection> insert(Collection entity);
+    Result<RoleEntity> insert(RoleEntity entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -126,7 +126,7 @@ public interface CollectionDao
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<Collection> update(Collection entity);
+    Result<RoleEntity> update(RoleEntity entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -135,7 +135,7 @@ public interface CollectionDao
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<Collection> id);
+    int deleteById(ID<RoleEntity> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -144,26 +144,26 @@ public interface CollectionDao
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<Collection> id);
+    int deleteLogicById(ID<RoleEntity> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<Collection> insert(List<Collection> entities);
+    BatchResult<RoleEntity> insert(List<RoleEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<Collection> update(List<Collection> entities);
+    BatchResult<RoleEntity> update(List<RoleEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<Collection> delete(List<Collection> entities);
+    BatchResult<RoleEntity> delete(List<RoleEntity> entities);
 }

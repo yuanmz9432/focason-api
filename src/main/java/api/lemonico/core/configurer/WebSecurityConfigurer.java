@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -51,17 +50,12 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
     }
 
     @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("index.html", "favicon.ico", "/static/**");
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             // OPTIONS请求全部放行
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 登录接口放行
-            .antMatchers("/healthcheck", "/auth/**").permitAll()
+            .antMatchers("/heartbeat", "/auth/**").permitAll()
             // 其他接口全部接受验证
             .anyRequest().authenticated()
             .and()

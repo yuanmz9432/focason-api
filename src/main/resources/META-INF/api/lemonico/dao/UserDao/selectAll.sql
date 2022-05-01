@@ -1,7 +1,7 @@
 SELECT
     /*%expand*/*
 FROM
-    User
+    user
 WHERE
     is_deleted = 0
     /*%if condition.getIds() != null */

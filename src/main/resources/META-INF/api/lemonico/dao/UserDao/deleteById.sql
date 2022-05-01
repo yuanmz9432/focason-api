@@ -1,4 +1,4 @@
 DELETE FROM
-    User
+    user
 WHERE
     id = /* id */1

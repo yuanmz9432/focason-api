@@ -10,8 +10,9 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.dao.CollectionDao;
-import api.lemonico.entity.Collection;
+import api.lemonico.dao.RoleDao;
+import api.lemonico.entity.RoleEntity;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,16 +22,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * クレクションリポジトリ
+ * ロールマスタリポジトリ
  *
  * @since 1.0.0
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CollectionRepository
+public class RoleRepository
 {
 
-    private final CollectionDao dao;
+    private final RoleDao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。
@@ -40,7 +41,7 @@ public class CollectionRepository
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<Collection> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<RoleEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -53,7 +54,7 @@ public class CollectionRepository
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<Collection> findById(ID<Collection> id) throws IllegalArgumentException {
+    public Optional<RoleEntity> findById(ID<RoleEntity> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -63,10 +64,14 @@ public class CollectionRepository
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<Collection> create(Collection entity) {
+    public ID<RoleEntity> create(RoleEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
-            .withId(null))
+            .withId(null)
+            .withCreatedBy("admin")
+            .withCreatedAt(LocalDateTime.now())
+            .withModifiedBy("admin")
+            .withModifiedAt(LocalDateTime.now()))
             .getEntity()
             .getId();
     }
@@ -76,11 +81,11 @@ public class CollectionRepository
      *
      * @param entity エンティティ
      */
-    public void update(ID<Collection> id, Collection entity) {
+    public void update(ID<RoleEntity> id, RoleEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(Collection.class, entity.getId());
+            throw new LcEntityNotFoundException(RoleEntity.class, entity.getId());
         }
     }
 
@@ -89,10 +94,10 @@ public class CollectionRepository
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<Collection> id) throws IllegalArgumentException {
+    public void deleteById(ID<RoleEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(Collection.class, id);
+            throw new LcEntityNotFoundException(RoleEntity.class, id);
         }
     }
 
@@ -101,10 +106,10 @@ public class CollectionRepository
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<Collection> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<RoleEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(Collection.class, id);
+            throw new LcEntityNotFoundException(RoleEntity.class, id);
         }
     }
 
@@ -114,7 +119,7 @@ public class CollectionRepository
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<Collection> id) {
+    public boolean exists(ID<RoleEntity> id) {
         return findById(id).isPresent();
     }
 
@@ -135,9 +140,9 @@ public class CollectionRepository
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * クレクションIDのセット（完全一致、複数指定可）
+         * ロールマスタIDのセット（完全一致、複数指定可）
          */
-        private Set<ID<Collection>> ids;
+        private Set<ID<RoleEntity>> ids;
     }
 
     /**

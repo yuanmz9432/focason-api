@@ -1,5 +1,5 @@
 UPDATE
-    collection
+    role
 SET
     is_deleted = 1
 WHERE
