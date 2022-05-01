@@ -30,9 +30,11 @@ public class UserRelationResource
     /** UUID */
     private final String uuid;
 
-    /** 所属コード
-倉庫コードの場合、倉庫関連のストア情報がすべて参照できる
-ストアコードの場合、対象ストアの情報のみ参照できる */
+    /**
+     * 所属コード
+     * 倉庫コードの場合、倉庫関連のストア情報がすべて参照できる
+     * ストアコードの場合、対象ストアの情報のみ参照できる
+     */
     private final String relationCode;
 
     /** 作成者 */

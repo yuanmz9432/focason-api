@@ -7,10 +7,9 @@ package api.lemonico.resource;
 
 import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

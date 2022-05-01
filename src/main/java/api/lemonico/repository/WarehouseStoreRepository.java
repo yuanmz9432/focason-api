@@ -140,6 +140,11 @@ public class WarehouseStoreRepository
          * 倉庫ストア関連情報IDのセット（完全一致、複数指定可）
          */
         private Set<ID<WarehouseStoreEntity>> ids;
+
+        /**
+         * 倉庫コードのセット（完全一致、複数指定可）
+         */
+        private Set<String> warehouseCodes;
     }
 
     /**

@@ -6,7 +6,6 @@ package api.lemonico.entity;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.LcEntity;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -34,9 +33,11 @@ public class UserRelationEntity extends LcEntity
     /** UUID */
     @Column(name = "uuid")
     String uuid;
-    /** 所属コード
-倉庫コードの場合、倉庫関連のストア情報がすべて参照できる
-ストアコードの場合、対象ストアの情報のみ参照できる */
+    /**
+     * 所属コード
+     * 倉庫コードの場合、倉庫関連のストア情報がすべて参照できる
+     * ストアコードの場合、対象ストアの情報のみ参照できる
+     */
     @Column(name = "relation_code")
     String relationCode;
     /** 作成者 */

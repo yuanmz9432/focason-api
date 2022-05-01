@@ -109,7 +109,7 @@ public class AuthenticationController
         }
         switch (UserType.of(user.get().getType())) {
             case SILVER:
-            case GOLD:
+            case GOLDEN:
             case PREMIUM:
                 // パスワード一致性チェック
                 var isMatched =

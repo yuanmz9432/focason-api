@@ -87,7 +87,8 @@ public interface UserRelationDao
     default <R> R selectAll(
         SelectOptions options,
         Collector<UserRelationEntity, ?, R> collector) {
-        return selectAll(UserRelationRepository.Condition.DEFAULT, options, UserRelationRepository.Sort.DEFAULT, collector);
+        return selectAll(UserRelationRepository.Condition.DEFAULT, options, UserRelationRepository.Sort.DEFAULT,
+            collector);
     }
 
     /**

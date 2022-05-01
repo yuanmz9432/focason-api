@@ -24,7 +24,7 @@ public enum UserType
     /**
      * ゴールド
      */
-    GOLD(2),
+    GOLDEN(2),
 
     /**
      * プレミアム

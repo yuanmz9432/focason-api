@@ -9,22 +9,15 @@ import api.lemonico.auth.config.LoginUser;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.domain.UserType;
 import api.lemonico.entity.UserEntity;
-import api.lemonico.repository.StoreRepository;
-import api.lemonico.repository.UserRelationRepository;
-import api.lemonico.repository.UserRepository;
-import api.lemonico.repository.WarehouseRepository;
-import api.lemonico.resource.StoreResource;
+import api.lemonico.repository.*;
 import api.lemonico.resource.UserResource;
-
 import java.util.*;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,14 +44,19 @@ public class UserService
     private final UserRelationRepository userRelationRepository;
 
     /**
-     * 倉庫リポジトリ
+     * 倉庫サービス
      */
     private final WarehouseService warehouseService;
 
     /**
-     * ストアリポジトリ
+     * ストアサービス
      */
     private final StoreService storeService;
+
+    /**
+     * 倉庫ーストア関連サービス
+     */
+    private final WarehouseStoreService warehouseStoreService;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、クライアントリソースの一覧を取得します。
@@ -94,15 +92,15 @@ public class UserService
         var userEntity = userRepository.findById(id);
         var userResource = userEntity.map(this::convertEntityToResource);
 
-        // ユーザー所属検索
-        var condition = new UserRelationRepository.Condition();
-        condition.setUuid(userResource.get().getUuid());
-        var userRelations = userRelationRepository.findAll(condition, LcPagination.DEFAULT, UserRelationRepository.Sort.DEFAULT);
+        // ユーザー所属単位検索
+        var userRelations =
+            userRelationRepository.findAll(
+                UserRelationRepository.Condition.builder().uuid(userResource.get().getUuid()).build(),
+                LcPagination.DEFAULT, UserRelationRepository.Sort.DEFAULT);
 
-        System.out.println(userRelations.getData().toString());
+        // 所属単位コードを纒める
         Set<String> storeCodes = new HashSet<>();
         Set<String> warehouseCodes = new HashSet<>();
-
         userRelations.getData().forEach((userRelation) -> {
             if (1 == userRelation.getRelationType()) {
                 storeCodes.add(userRelation.getRelationCode());
@@ -111,16 +109,28 @@ public class UserService
             }
         });
 
-        var warehouseCondition = new WarehouseRepository.Condition();
-        warehouseCondition.withWarehouseCodes(warehouseCodes);
-        var warehouses = warehouseService.getResourceList(warehouseCondition, LcPagination.DEFAULT, WarehouseRepository.Sort.DEFAULT);
+        // 倉庫情報取得
+        var warehouses = warehouseService.getResourceList(
+            WarehouseRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
+            WarehouseRepository.Sort.DEFAULT);
 
-        var storeCondition = new StoreRepository.Condition();
-        storeCondition.withStoreCodes(storeCodes);
-        var stores = storeService.getResourceList(storeCondition, LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
+        // 倉庫-ストア関連情報取得
+        var warehouseStores = warehouseStoreService.getResourceList(
+            WarehouseStoreRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
+            WarehouseStoreRepository.Sort.DEFAULT);
 
-        return Optional.of(userResource.get().withWarehouses(warehouses.getData())
-                .withStores(stores.getData()));
+        warehouseStores.getData().forEach((item) -> {
+            storeCodes.add(item.getStoreCode());
+        });
+
+        // ストア情報取得
+        var stores = storeService.getResourceList(StoreRepository.Condition.builder().storeCodes(storeCodes).build(),
+            LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
+
+        return Optional.of(userResource.get()
+            .withWarehouses(warehouses.getData())
+            .withStores(stores.getData())
+            .withPassword(""));
     }
 
     /**

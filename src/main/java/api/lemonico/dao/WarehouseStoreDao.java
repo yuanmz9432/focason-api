@@ -87,7 +87,8 @@ public interface WarehouseStoreDao
     default <R> R selectAll(
         SelectOptions options,
         Collector<WarehouseStoreEntity, ?, R> collector) {
-        return selectAll(WarehouseStoreRepository.Condition.DEFAULT, options, WarehouseStoreRepository.Sort.DEFAULT, collector);
+        return selectAll(WarehouseStoreRepository.Condition.DEFAULT, options, WarehouseStoreRepository.Sort.DEFAULT,
+            collector);
     }
 
     /**
