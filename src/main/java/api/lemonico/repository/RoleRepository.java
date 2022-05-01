@@ -12,6 +12,7 @@ import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.dao.RoleDao;
 import api.lemonico.entity.RoleEntity;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,8 +68,10 @@ public class RoleRepository
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
-            .withCreatedBy("")
-            .withModifiedBy(""))
+            .withCreatedBy("admin")
+            .withCreatedAt(LocalDateTime.now())
+            .withModifiedBy("admin")
+            .withModifiedAt(LocalDateTime.now()))
             .getEntity()
             .getId();
     }
