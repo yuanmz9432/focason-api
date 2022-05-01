@@ -134,7 +134,7 @@ task genController {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.controller",
                             entitySuffix: "Controller",
-                            destDir: 'src/generated/main/java')
+                            destDir: 'src/main/java')
                 }
     }
 }
@@ -154,7 +154,7 @@ task genService {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.service",
                             entitySuffix: "Service",
-                            destDir: 'src/generated/main/java')
+                            destDir: 'src/main/java')
                 }
     }
 }
@@ -174,7 +174,7 @@ task genRepository {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.repository",
                             entitySuffix: "Repository",
-                            destDir: 'src/generated/main/java')
+                            destDir: 'src/main/java')
                 }
     }
 }
@@ -194,7 +194,7 @@ task genResource {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.resource",
                             entitySuffix: "Resource",
-                            destDir: 'src/generated/main/java')
+                            destDir: 'src/main/java')
                 }
     }
 }
@@ -217,7 +217,7 @@ task genEntity {
 //                            superclassName: 'api.lemonico.entity.LcEntity',
                             packageName: "api.lemonico.entity",
                             entitySuffix: "Entity",
-                            destDir: 'src/generated/main/java'
+                            destDir: 'src/main/java'
                     )
                 }
     }
@@ -239,7 +239,7 @@ task genDao {
                             overwrite: true,
                             packageName: "api.lemonico.dao",
                             suffix: "Dao",
-                            destDir: 'src/generated/main/java')
+                            destDir: 'src/main/java')
                     sqlConfig(
                             generate: true,
                             overwrite: true,

@@ -8,6 +8,9 @@ package api.lemonico.resource;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.entity.UserEntity;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -76,19 +79,27 @@ public class UserResource
     private final Integer subscribe;
 
     /** 作成者 */
+    @JsonIgnore
     private final String createdBy;
 
     /** 作成日時 */
+    @JsonIgnore
     private final LocalDateTime createdAt;
 
     /** 更新者 */
+    @JsonIgnore
     private final String modifiedBy;
 
     /** 更新日時 */
+    @JsonIgnore
     private final LocalDateTime modifiedAt;
 
     /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
     private final Integer isDeleted;
+
+    private final List<StoreResource> stores;
+
+    private final List<WarehouseResource> warehouses;
 
     /**
      * 指定したエンティティを使用して、リソースを構築します。
@@ -118,6 +129,8 @@ public class UserResource
         this.modifiedBy = entity.getModifiedBy();
         this.modifiedAt = entity.getModifiedAt();
         this.isDeleted = entity.getIsDeleted();
+        this.warehouses = null;
+        this.stores = null;
     }
 
     /**

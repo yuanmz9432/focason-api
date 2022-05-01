@@ -15,10 +15,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.entity.RoleEntity;
-import api.lemonico.repository.RoleRepository;
-import api.lemonico.resource.RoleResource;
-import api.lemonico.service.RoleService;
+import api.lemonico.entity.WarehouseEntity;
+import api.lemonico.repository.WarehouseRepository;
+import api.lemonico.resource.WarehouseResource;
+import api.lemonico.service.WarehouseService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +29,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ロールマスタコントローラー
+ * 倉庫情報コントローラー
  *
  * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class RoleController
+public class WarehouseController
 {
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "/roles";
+    private static final String COLLECTION_RESOURCE_URI = "/warehouses";
 
     /**
      * メンバーリソースURI
@@ -49,60 +49,60 @@ public class RoleController
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ロールマスタサービス
+     * 倉庫情報サービス
      */
-    private final RoleService service;
+    private final WarehouseService service;
 
     /**
-     * ロールマスタリソースの一覧取得API
+     * 倉庫情報リソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ロールマスタリソース一覧取得APIレスポンス
+     * @return 倉庫情報リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<RoleResource>> getRoleList(
-        @LcConditionParam RoleRepository.Condition condition,
+    public ResponseEntity<LcResultSet<WarehouseResource>> getWarehouseList(
+        @LcConditionParam WarehouseRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = RoleRepository.Condition.DEFAULT;
+            condition = WarehouseRepository.Condition.DEFAULT;
         }
-        var sort = RoleRepository.Sort.fromLcSort(lcSort);
+        var sort = WarehouseRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * ロールマスタIDを指定して、ロールマスタリソース取得API
+     * 倉庫情報IDを指定して、倉庫情報リソース取得API
      *
-     * @param id ロールマスタID
-     * @return ロールマスタリソース取得APIレスポンス
+     * @param id 倉庫情報ID
+     * @return 倉庫情報リソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<RoleResource> getRole(
-        @PathVariable("id") ID<RoleEntity> id) {
+    public ResponseEntity<WarehouseResource> getWarehouse(
+        @PathVariable("id") ID<WarehouseEntity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(RoleResource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(WarehouseResource.class, id));
     }
 
     /**
-     * ロールマスタリソース作成API
+     * 倉庫情報リソース作成API
      *
-     * @param resource ロールマスタリソース
-     * @return ロールマスタリソース作成APIレスポンス
+     * @param resource 倉庫情報リソース
+     * @return 倉庫情報リソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> createRole(
-        @Valid @RequestBody RoleResource resource,
+    public ResponseEntity<Void> createWarehouse(
+        @Valid @RequestBody WarehouseResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).getRole(id))
+            .withMethodCall(on(getClass()).getWarehouse(id))
             .build()
             .encode()
             .toUri();
@@ -110,32 +110,32 @@ public class RoleController
     }
 
     /**
-     * ロールマスタIDを指定して、ロールマスタリソース更新API
+     * 倉庫情報IDを指定して、倉庫情報リソース更新API
      *
-     * @param id ロールマスタID
-     * @param resource ロールマスタリソース更新APIレスポンス
-     * @return ロールマスタリソース更新APIレスポンス
+     * @param id 倉庫情報ID
+     * @param resource 倉庫情報リソース更新APIレスポンス
+     * @return 倉庫情報リソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<RoleResource> updateRole(
-        @PathVariable("id") ID<RoleEntity> id,
-        @Valid @RequestBody RoleResource resource) {
+    public ResponseEntity<WarehouseResource> updateWarehouse(
+        @PathVariable("id") ID<WarehouseEntity> id,
+        @Valid @RequestBody WarehouseResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * ロールマスタIDを指定して、ロールマスタリソース削除API
+     * 倉庫情報IDを指定して、倉庫情報リソース削除API
      *
-     * @param id ロールマスタID
-     * @return ロールマスタリソース削除APIレスポンス
+     * @param id 倉庫情報ID
+     * @return 倉庫情報リソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> deleteRole(
-        @PathVariable("id") ID<RoleEntity> id) {
+    public ResponseEntity<Void> deleteWarehouse(
+        @PathVariable("id") ID<WarehouseEntity> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

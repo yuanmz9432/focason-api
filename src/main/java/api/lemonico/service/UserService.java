@@ -9,17 +9,22 @@ import api.lemonico.auth.config.LoginUser;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.domain.UserType;
 import api.lemonico.entity.UserEntity;
+import api.lemonico.repository.StoreRepository;
+import api.lemonico.repository.UserRelationRepository;
 import api.lemonico.repository.UserRepository;
+import api.lemonico.repository.WarehouseRepository;
+import api.lemonico.resource.StoreResource;
 import api.lemonico.resource.UserResource;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +46,21 @@ public class UserService
     private final UserRepository userRepository;
 
     /**
+     * ユーザー所属リポジトリ
+     */
+    private final UserRelationRepository userRelationRepository;
+
+    /**
+     * 倉庫リポジトリ
+     */
+    private final WarehouseService warehouseService;
+
+    /**
+     * ストアリポジトリ
+     */
+    private final StoreService storeService;
+
+    /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、クライアントリソースの一覧を取得します。
      *
      * @param condition 検索条件
@@ -58,6 +78,7 @@ public class UserService
 
         // クライアントエンティティのリストをクライアントリソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
+
         return new LcResultSet<>(resources, resultSet.getCount());
     }
 
@@ -70,8 +91,36 @@ public class UserService
     @Transactional(readOnly = true)
     public Optional<UserResource> getResource(ID<UserEntity> id) {
         // クライアントを取得します。
-        var client = userRepository.findById(id);
-        return client.map(this::convertEntityToResource);
+        var userEntity = userRepository.findById(id);
+        var userResource = userEntity.map(this::convertEntityToResource);
+
+        // ユーザー所属検索
+        var condition = new UserRelationRepository.Condition();
+        condition.setUuid(userResource.get().getUuid());
+        var userRelations = userRelationRepository.findAll(condition, LcPagination.DEFAULT, UserRelationRepository.Sort.DEFAULT);
+
+        System.out.println(userRelations.getData().toString());
+        Set<String> storeCodes = new HashSet<>();
+        Set<String> warehouseCodes = new HashSet<>();
+
+        userRelations.getData().forEach((userRelation) -> {
+            if (1 == userRelation.getRelationType()) {
+                storeCodes.add(userRelation.getRelationCode());
+            } else {
+                warehouseCodes.add(userRelation.getRelationCode());
+            }
+        });
+
+        var warehouseCondition = new WarehouseRepository.Condition();
+        warehouseCondition.withWarehouseCodes(warehouseCodes);
+        var warehouses = warehouseService.getResourceList(warehouseCondition, LcPagination.DEFAULT, WarehouseRepository.Sort.DEFAULT);
+
+        var storeCondition = new StoreRepository.Condition();
+        storeCondition.withStoreCodes(storeCodes);
+        var stores = storeService.getResourceList(storeCondition, LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
+
+        return Optional.of(userResource.get().withWarehouses(warehouses.getData())
+                .withStores(stores.getData()));
     }
 
     /**

@@ -6,8 +6,8 @@ package api.lemonico.dao;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.UserEntity;
-import api.lemonico.repository.UserRepository;
+import api.lemonico.entity.WarehouseStoreEntity;
+import api.lemonico.repository.WarehouseStoreRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -18,13 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * ユーザーのDao
+ * 倉庫ストア関連情報のDao
  *
  * @since 1.0.0
  */
 @Dao
 @ConfigAutowireable
-public interface UserDao
+public interface WarehouseStoreDao
 {
 
     /**
@@ -39,10 +39,10 @@ public interface UserDao
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        UserRepository.Condition condition,
+        WarehouseStoreRepository.Condition condition,
         SelectOptions options,
-        UserRepository.Sort sort,
-        Collector<UserEntity, ?, R> collector);
+        WarehouseStoreRepository.Sort sort,
+        Collector<WarehouseStoreEntity, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -54,10 +54,10 @@ public interface UserDao
      * @return 検索結果
      */
     default <R> R selectAll(
-        UserRepository.Condition condition,
+        WarehouseStoreRepository.Condition condition,
         SelectOptions options,
-        Collector<UserEntity, ?, R> collector) {
-        return selectAll(condition, options, UserRepository.Sort.DEFAULT, collector);
+        Collector<WarehouseStoreEntity, ?, R> collector) {
+        return selectAll(condition, options, WarehouseStoreRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -71,9 +71,9 @@ public interface UserDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        UserRepository.Sort sort,
-        Collector<UserEntity, ?, R> collector) {
-        return selectAll(UserRepository.Condition.DEFAULT, options, sort, collector);
+        WarehouseStoreRepository.Sort sort,
+        Collector<WarehouseStoreEntity, ?, R> collector) {
+        return selectAll(WarehouseStoreRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -86,8 +86,8 @@ public interface UserDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<UserEntity, ?, R> collector) {
-        return selectAll(UserRepository.Condition.DEFAULT, options, UserRepository.Sort.DEFAULT, collector);
+        Collector<WarehouseStoreEntity, ?, R> collector) {
+        return selectAll(WarehouseStoreRepository.Condition.DEFAULT, options, WarehouseStoreRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -98,7 +98,7 @@ public interface UserDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<UserEntity> selectById(ID<UserEntity> id, SelectOptions options);
+    Optional<WarehouseStoreEntity> selectById(ID<WarehouseStoreEntity> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -106,7 +106,7 @@ public interface UserDao
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<UserEntity> selectById(ID<UserEntity> id) {
+    default Optional<WarehouseStoreEntity> selectById(ID<WarehouseStoreEntity> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -117,7 +117,7 @@ public interface UserDao
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<UserEntity> insert(UserEntity entity);
+    Result<WarehouseStoreEntity> insert(WarehouseStoreEntity entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -126,7 +126,7 @@ public interface UserDao
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<UserEntity> update(UserEntity entity);
+    Result<WarehouseStoreEntity> update(WarehouseStoreEntity entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -135,7 +135,7 @@ public interface UserDao
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<UserEntity> id);
+    int deleteById(ID<WarehouseStoreEntity> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -144,38 +144,26 @@ public interface UserDao
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<UserEntity> id);
+    int deleteLogicById(ID<WarehouseStoreEntity> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<UserEntity> insert(List<UserEntity> entities);
+    BatchResult<WarehouseStoreEntity> insert(List<WarehouseStoreEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<UserEntity> update(List<UserEntity> entities);
+    BatchResult<WarehouseStoreEntity> update(List<WarehouseStoreEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<UserEntity> delete(List<UserEntity> entities);
-
-    //***************************************************************
-    //**********************  自動生成コード分割線  ********************
-    //***************************************************************
-    /**
-     * メールアドレスを指定して、データベースからエンティティを一件を取得します。
-     *
-     * @param email メールアドレス
-     * @return エンティティが {@link Optional} で返されます。
-     */
-    @Select
-    Optional<UserEntity> selectByEmail(String email);
+    BatchResult<WarehouseStoreEntity> delete(List<WarehouseStoreEntity> entities);
 }
