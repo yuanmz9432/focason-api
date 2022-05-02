@@ -18,11 +18,11 @@ import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.entity.UserEntity;
 import api.lemonico.repository.UserRepository;
 import api.lemonico.resource.UserResource;
+import api.lemonico.service.StoreService;
 import api.lemonico.service.UserService;
 import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +35,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @RestController
 @Validated
-@RequiredArgsConstructor
-public class UserController
+public class UserController extends AbstractController
 {
     /**
      * コレクションリソースURI
@@ -48,10 +47,9 @@ public class UserController
      */
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
-    /**
-     * ユーザーサービス
-     */
-    private final UserService service;
+    public UserController(StoreService storeService, UserService service) {
+        super(storeService, service);
+    }
 
     /**
      * ユーザーリソースの一覧取得API
@@ -82,6 +80,9 @@ public class UserController
     @GetMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<UserResource> getUser(
         @PathVariable("id") ID<UserEntity> id) {
+        // if (!super.hasPermission(MDC.get("STORE_CODE"), "SILVER")) {
+        // throw new LcResourceNotFoundException(UserResource.class, id);
+        // }
         return service.getResource(id)
             .map(ResponseEntity::ok)
             .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));

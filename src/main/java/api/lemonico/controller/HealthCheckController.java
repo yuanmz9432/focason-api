@@ -25,6 +25,7 @@ public class HealthCheckController
 {
     @RequestMapping(method = RequestMethod.GET, path = "/heartbeat")
     public ResponseEntity<Void> heartbeat() {
+
         return ResponseEntity.noContent().build();
     }
 }

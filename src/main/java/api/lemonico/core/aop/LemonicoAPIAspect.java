@@ -38,13 +38,17 @@ public class LemonicoAPIAspect
     public void beforeExecution(JoinPoint joinPoint) {
         ServletRequestAttributes requestAttributes =
             (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        MDC.put("CLIENT_CODE", "admin");
-        if (requestAttributes != null) {
-            HttpServletRequest request = requestAttributes.getRequest();
-            logger.info("★ URI : {}", request.getRequestURL().toString());
-            logger.info("★ HTTP Method : {}", request.getMethod());
-            logger.info("★ Request Body : {}", Arrays.toString(joinPoint.getArgs()));
+        if (requestAttributes == null) {
+            throw new RuntimeException();
         }
+
+        HttpServletRequest request = requestAttributes.getRequest();
+        MDC.put("STORE_CODE", request.getHeader("Store-Code"));
+        MDC.put("WAREHOUSE_CODE", request.getHeader("Warehouse-Code"));
+        logger.info("★ Store-Code : {}", request.getHeader("Store-Code"));
+        logger.info("★ URI : {}", request.getRequestURL().toString());
+        logger.info("★ HTTP Method : {}", request.getMethod());
+        logger.info("★ Request Body : {}", Arrays.toString(joinPoint.getArgs()));
     }
 
     @AfterReturning(returning = "returnObject", pointcut = "pointCut()")

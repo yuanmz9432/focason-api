@@ -13,7 +13,6 @@ import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.utils.BCryptEncoder;
-import api.lemonico.domain.UserType;
 import api.lemonico.entity.UserEntity;
 import api.lemonico.repository.*;
 import api.lemonico.resource.UserResource;
@@ -124,9 +123,7 @@ public class UserService
             WarehouseStoreRepository.Sort.DEFAULT);
 
         // 倉庫所属のストア情報纒める
-        warehouseStores.getData().forEach((item) -> {
-            storeCodes.add(item.getStoreCode());
-        });
+        warehouseStores.getData().forEach((item) -> storeCodes.add(item.getStoreCode()));
 
         // ストア情報取得
         var stores = storeService.getResourceList(StoreRepository.Condition.builder().storeCodes(storeCodes).build(),
@@ -159,7 +156,7 @@ public class UserService
         // クライアントを作成します。
         var id = userRepository.create(
             resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
-                .withType(UserType.PREMIUM.getValue())
+                // .withType(UserType.PREMIUM.getValue())
                 .toEntity());
 
         // クライアントを取得します。

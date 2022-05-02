@@ -71,7 +71,8 @@ public class UserRepository
             .withCreatedBy("admin")
             .withCreatedAt(LocalDateTime.now())
             .withModifiedBy("admin")
-            .withModifiedAt(LocalDateTime.now()))
+            .withModifiedAt(LocalDateTime.now())
+            .withIsDeleted(0))
             .getEntity()
             .getId();
     }
