@@ -18,7 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class LoginUser implements UserDetails
 {
     private static final long serialVersionUID = 3993597711944310497L;
-    private Integer userId;
+    private long id;
+    private String uuid;
     private String username;
     private String password;
     private String email;
@@ -35,6 +36,10 @@ public class LoginUser implements UserDetails
     @Override
     public String getUsername() {
         return this.username;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     @Override
@@ -85,10 +90,5 @@ public class LoginUser implements UserDetails
     @JsonIgnore
     public Boolean getCredentialsNonExpired() {
         return this.credentialsNonExpired;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("LoginUser(username=%s, password=%s)", username, password);
     }
 }

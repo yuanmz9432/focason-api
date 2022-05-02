@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  * ユーザーリソース
@@ -32,11 +33,8 @@ public class UserResource
     /** UUID */
     private final String uuid;
 
-    /** 姓 */
-    private final String firstName;
-
-    /** 名 */
-    private final String lastName;
+    /** ユーザー名 */
+    private final String username;
 
     /** 性別（1:男性 2:女性） */
     private final Integer gender;
@@ -96,9 +94,14 @@ public class UserResource
     /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
     private final Integer isDeleted;
 
+    /** ユーザー所属のストアリスト */
     private final List<StoreResource> stores;
 
+    /** ユーザー所属の倉庫リスト */
     private final List<WarehouseResource> warehouses;
+
+    /** ユーザー所属の倉庫リスト */
+    private final List<SimpleGrantedAuthority> authorities;
 
     /**
      * 指定したエンティティを使用して、リソースを構築します。
@@ -108,8 +111,7 @@ public class UserResource
     public UserResource(UserEntity entity) {
         this.id = entity.getId();
         this.uuid = entity.getUuid();
-        this.firstName = entity.getFirstName();
-        this.lastName = entity.getLastName();
+        this.username = entity.getUsername();
         this.gender = entity.getGender();
         this.email = entity.getEmail();
         this.password = entity.getPassword();
@@ -130,6 +132,7 @@ public class UserResource
         this.isDeleted = entity.getIsDeleted();
         this.warehouses = null;
         this.stores = null;
+        this.authorities = null;
     }
 
     /**
@@ -141,8 +144,7 @@ public class UserResource
         return UserEntity.builder()
             .id(id)
             .uuid(uuid)
-            .firstName(firstName)
-            .lastName(lastName)
+            .username(username)
             .gender(gender)
             .email(email)
             .password(password)

@@ -21,12 +21,13 @@ import api.lemonico.domain.UserType;
 import api.lemonico.entity.UserEntity;
 import api.lemonico.resource.UserResource;
 import api.lemonico.service.UserService;
-import java.util.Optional;
 import java.util.UUID;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -56,6 +57,8 @@ public class AuthenticationController
 
     private final JWTGenerator generator;
 
+    private final UserDetailsService userDetailsService;
+
     /**
      * ログイン
      *
@@ -64,13 +67,13 @@ public class AuthenticationController
     @PostMapping(LOGIN_URI)
     @CrossOrigin
     public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
-        final var user = userService.getResourceByEmail(loginUser.getUsername());
-        if (user.isEmpty()) {
+        var userDetails = userDetailsService.loadUserByUsername(loginUser.getUsername());
+        if (userDetails == null) {
             throw new LcEntityNotFoundException(UserEntity.class, loginUser.getUsername());
         }
-        this.checkLoginUser(loginUser, user);
+        this.checkLoginUser(loginUser, userDetails);
         final var expirationTime = generator.generateExpirationTime();
-        final var accessToken = generator.generateAccessToken(user.get().getEmail(), expirationTime);
+        final var accessToken = generator.generateAccessToken(loginUser.getUsername(), expirationTime);
         return ResponseEntity.ok().body(
             JWTResource.builder()
                 .accessToken(accessToken)
@@ -101,25 +104,21 @@ public class AuthenticationController
      * ログインクライアント有効性チェック
      *
      * @param loginUser ログインクライアント
-     * @param user クライアント
+     * @param userDetails ユーザー
      */
-    private void checkLoginUser(LoginUser loginUser, Optional<UserResource> user) {
-        if (loginUser == null || user.isEmpty()) {
+    private void checkLoginUser(LoginUser loginUser, UserDetails userDetails) {
+        if (loginUser == null || userDetails == null) {
             throw new LcResourceNotFoundException(UserResource.class, null);
         }
-        switch (UserType.of(user.get().getType())) {
-            case SILVER:
-            case GOLDEN:
-            case PREMIUM:
-                // パスワード一致性チェック
-                var isMatched =
-                    BCryptEncoder.getInstance().matches(loginUser.getPassword(), user.get().getPassword());
-                if (!isMatched) {
-                    throw new LcValidationErrorException("Password was not matched, please check again.");
-                }
-                break;
-            case LOGOUT:
-                throw new LcIllegalUserException(user.get().getEmail(), UserType.LOGOUT.name());
+        if (userDetails.isEnabled()) {
+            // パスワード一致性チェック
+            var isMatched =
+                BCryptEncoder.getInstance().matches(loginUser.getPassword(), userDetails.getPassword());
+            if (!isMatched) {
+                throw new LcValidationErrorException("Password was not matched, please check again.");
+            }
+        } else {
+            throw new LcIllegalUserException(userDetails.getUsername(), UserType.LOGOUT.name());
         }
     }
 }

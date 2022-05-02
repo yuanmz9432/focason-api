@@ -33,12 +33,9 @@ public class UserEntity extends LcEntity
     /** UUID */
     @Column(name = "uuid")
     String uuid;
-    /** 姓 */
-    @Column(name = "first_name")
-    String firstName;
-    /** 名 */
-    @Column(name = "last_name")
-    String lastName;
+    /** ユーザー名 */
+    @Column(name = "username")
+    String username;
     /** 性別（1:男性 2:女性） */
     @Column(name = "gender")
     Integer gender;

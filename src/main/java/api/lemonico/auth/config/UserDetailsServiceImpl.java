@@ -19,8 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService
     private final UserService service;
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
-        return service.getLoginUserByEmail(email);
+    public UserDetails loadUserByUsername(String subject) {
+        return service.getLoginUserBySubject(subject);
     }
 
 }

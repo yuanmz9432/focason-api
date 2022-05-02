@@ -2,7 +2,6 @@ package api.lemonico.core.exception;
 
 
 
-import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcErrorCode;
 
 public class LcResourceNotFoundException extends LcException
@@ -15,7 +14,7 @@ public class LcResourceNotFoundException extends LcException
         ERROR_CODE = LcErrorCode.RESOURCE_NOT_FOUND;
     }
 
-    public LcResourceNotFoundException(Class<?> resourceClass, ID<?> id) {
-        super(ERROR_CODE, MESSAGE_TEMPLATE, resourceClass.getSimpleName(), id);
+    public LcResourceNotFoundException(Class<?> resourceClass, Object object) {
+        super(ERROR_CODE, MESSAGE_TEMPLATE, resourceClass.getSimpleName(), object);
     }
 }

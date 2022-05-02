@@ -7,5 +7,11 @@ WHERE
     /*%if condition.getIds() != null */
     AND id IN /* condition.getIds() */(1,2,3)
     /*%end */
+    /*%if condition.getUsername() != null */
+    AND username = /* condition.getUsername() */'username'
+    /*%end */
+    /*%if condition.getEmail() != null */
+    AND email = /* condition.getEmail() */'admin@lemonico.com'
+    /*%end */
 ORDER BY
     /*# sort.toSql() */

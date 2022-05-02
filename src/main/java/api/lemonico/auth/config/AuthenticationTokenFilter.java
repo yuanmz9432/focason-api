@@ -7,7 +7,6 @@ package api.lemonico.auth.config;
 
 import api.lemonico.core.attribute.LcErrorCode;
 import api.lemonico.core.attribute.LcErrorResource;
-import api.lemonico.domain.UserType;
 import api.lemonico.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -15,6 +14,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
+import java.util.Objects;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -55,12 +55,12 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         // リクエストヘッダーからアクセストークンを取得する。
-        var accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String email = null;
-        if (Strings.isNotBlank(accessToken)) {
+        var requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String subject = null;
+        if (Strings.isNotBlank(requestTokenHeader)) {
             Claims accessTokenClaims;
             try {
-                accessTokenClaims = this.jwtGenerator.getClaims(accessToken);
+                accessTokenClaims = this.jwtGenerator.getClaims(requestTokenHeader);
             } catch (ExpiredJwtException e) {
                 response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
                     LcErrorResource.builder()
@@ -76,26 +76,18 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
                         .build()));
                 return;
             }
-            email = (String) accessTokenClaims.get(Claims.SUBJECT);
+            subject = (String) accessTokenClaims.get(Claims.SUBJECT);
         }
 
-        if (Strings.isNotBlank(email) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var userResource = service.getResourceByEmail(email);
-            if (userResource.isPresent()) {
-                if (UserType.LOGOUT.equals(UserType.of(userResource.get().getType()))) {
-                    response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
-                        LcErrorResource.builder()
-                            .code(LcErrorCode.FORBIDDEN.getValue())
-                            .message(LcErrorCode.FORBIDDEN.name())
-                            .build()));
-                    return;
-                }
-                if (email.equals(userResource.get().getEmail())) {
-                    var authentication = new UsernamePasswordAuthenticationToken(userResource, null, null);
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    MDC.put("CLIENT_CODE", userResource.get().getUuid());
-                }
+        if (Strings.isNotBlank(subject) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            var loginUser = service.getLoginUserBySubject(subject);
+            if (!Objects.isNull(loginUser)
+                && (subject.equals(loginUser.getUsername()) || subject.equals(loginUser.getEmail()))) {
+                var authentication =
+                    new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                MDC.put("USERNAME", loginUser.getUsername());
             }
         }
 

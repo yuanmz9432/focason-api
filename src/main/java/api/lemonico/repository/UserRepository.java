@@ -152,6 +152,16 @@ public class UserRepository
          * ユーザーIDのセット（完全一致、複数指定可）
          */
         private Set<ID<UserEntity>> ids;
+
+        /**
+         * ユーザー名称（完全一致、複数指定不可）
+         */
+        private String username;
+
+        /**
+         * ユーザーメールアドレス（完全一致、複数指定不可）
+         */
+        private String email;
     }
 
     /**

@@ -18,8 +18,10 @@ import api.lemonico.entity.UserEntity;
 import api.lemonico.repository.*;
 import api.lemonico.resource.UserResource;
 import java.util.*;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,11 +93,13 @@ public class UserService
         // クライアントを取得します。
         var userEntity = userRepository.findById(id);
         var userResource = userEntity.map(this::convertEntityToResource);
+        var uuid = userResource.map(UserResource::getUuid)
+            .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
 
         // ユーザー所属単位検索
         var userRelations =
             userRelationRepository.findAll(
-                UserRelationRepository.Condition.builder().uuid(userResource.get().getUuid()).build(),
+                UserRelationRepository.Condition.builder().uuid(uuid).build(),
                 LcPagination.DEFAULT, UserRelationRepository.Sort.DEFAULT);
 
         // 所属単位コードを纒める
@@ -119,6 +123,7 @@ public class UserService
             WarehouseStoreRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
             WarehouseStoreRepository.Sort.DEFAULT);
 
+        // 倉庫所属のストア情報纒める
         warehouseStores.getData().forEach((item) -> {
             storeCodes.add(item.getStoreCode());
         });
@@ -127,9 +132,13 @@ public class UserService
         var stores = storeService.getResourceList(StoreRepository.Condition.builder().storeCodes(storeCodes).build(),
             LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
 
+        // ユーザー権限取得
+        var authorities = new ArrayList<SimpleGrantedAuthority>();
+
         return Optional.of(userResource.get()
             .withWarehouses(warehouses.getData())
             .withStores(stores.getData())
+            .withAuthorities(authorities)
             .withPassword(""));
     }
 
@@ -209,15 +218,38 @@ public class UserService
     /**
      * メールアドレスを指定して、LoginUserを取得する。
      *
-     * @param email メールアドレス
+     * @param subject JWTサブジェクト
      * @return LoginUser
      */
     @Transactional(readOnly = true)
-    public LoginUser getLoginUserByEmail(String email) {
+    public LoginUser getLoginUserBySubject(String subject) {
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
+        var condition = UserRepository.Condition.DEFAULT;
+        if (pattern.matcher(subject).matches()) {
+            condition = UserRepository.Condition.builder().email(subject).build();
+        } else {
+            condition = UserRepository.Condition.builder().username(subject).build();
+        }
+        final var userResourceLcResultSet = getResourceList(
+            condition,
+            LcPagination.DEFAULT,
+            UserRepository.Sort.DEFAULT);
+        if (userResourceLcResultSet.getCount() < 1) {
+            throw new LcResourceNotFoundException(LoginUser.class, subject);
+        }
+        var loginUser = userResourceLcResultSet.getData().get(0);
+        var authorities = new ArrayList<SimpleGrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("AUTH_USER"));
+        authorities.add(new SimpleGrantedAuthority("AUTH_STORE"));
+        authorities.add(new SimpleGrantedAuthority("AUTH_WAREHOUSE"));
         return LoginUser.builder()
-            .email(email)
-            .userId(1)
-            .username("").enabled(true)
+            .id(loginUser.getId().getValue())
+            .uuid(loginUser.getUuid())
+            .email(loginUser.getEmail())
+            .username(loginUser.getUsername())
+            .password(loginUser.getPassword())
+            .enabled(true)
+            .authorities(authorities)
             .build();
     }
 
