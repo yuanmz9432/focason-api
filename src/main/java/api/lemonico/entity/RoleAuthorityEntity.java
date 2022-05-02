@@ -14,7 +14,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * ロールマスタエンティティ
+ * ロール権限関連情報エンティティ
  *
  * @since 1.0.0
  */
@@ -23,16 +23,19 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-@Table(name = "role")
-public class RoleEntity extends LcEntity
+@Table(name = "role_authority")
+public class RoleAuthorityEntity extends LcEntity
 {
     /** 自動採番ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    ID<RoleEntity> id;
-    /** ロール名称 */
-    @Column(name = "name")
-    String name;
+    ID<RoleAuthorityEntity> id;
+    /** ロールID */
+    @Column(name = "role_id")
+    Integer roleId;
+    /** 権限ID */
+    @Column(name = "authority_id")
+    Integer authorityId;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

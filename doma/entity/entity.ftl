@@ -12,7 +12,6 @@ package ${packageName};
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.LcEntity;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

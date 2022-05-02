@@ -33,6 +33,9 @@ public class StoreResource
     /** ストア名称 */
     private final String storeName;
 
+    /** プランID */
+    private final String planId;
+
     /** 作成者 */
     private final String createdBy;
 
@@ -45,8 +48,8 @@ public class StoreResource
     /** 更新日時 */
     private final LocalDateTime modifiedAt;
 
-    /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
-    private final Integer isDeleted;
+    /** 削除フラグ（0: 未削除 1: 削除済） */
+    private final Byte isDeleted;
 
     /**
      * 指定したエンティティを使用して、リソースを構築します。
@@ -57,6 +60,7 @@ public class StoreResource
         this.id = entity.getId();
         this.storeCode = entity.getStoreCode();
         this.storeName = entity.getStoreName();
+        this.planId = entity.getPlanId();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -74,6 +78,7 @@ public class StoreResource
             .id(id)
             .storeCode(storeCode)
             .storeName(storeName)
+            .planId(planId)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

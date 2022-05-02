@@ -33,11 +33,12 @@ public class UserRelationEntity extends LcEntity
     /** UUID */
     @Column(name = "uuid")
     String uuid;
-    /**
-     * 所属コード
-     * 倉庫コードの場合、倉庫関連のストア情報がすべて参照できる
-     * ストアコードの場合、対象ストアの情報のみ参照できる
-     */
+    /** 所属タイプ（1: ストア 2: 倉庫 3: 管理） */
+    @Column(name = "relation_type")
+    Byte relationType;
+    /** 所属コード
+倉庫コードの場合、倉庫関連のストア情報がすべて参照できる
+ストアコードの場合、対象ストアの情報のみ参照できる */
     @Column(name = "relation_code")
     String relationCode;
     /** 作成者 */
@@ -52,10 +53,7 @@ public class UserRelationEntity extends LcEntity
     /** 更新日時 */
     @Column(name = "modified_at")
     LocalDateTime modifiedAt;
-    /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
+    /** 削除フラグ（0: 未削除 1: 削除済） */
     @Column(name = "is_deleted")
-    Integer isDeleted;
-    /** 所属タイプ（1: ストア 2: 倉庫 3: 管理） */
-    @Column(name = "relation_type")
-    Byte relationType;
+    Byte isDeleted;
 }

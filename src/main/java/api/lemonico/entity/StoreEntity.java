@@ -36,6 +36,9 @@ public class StoreEntity extends LcEntity
     /** ストア名称 */
     @Column(name = "store_name")
     String storeName;
+    /** プランID */
+    @Column(name = "plan_id")
+    String planId;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;
@@ -48,7 +51,7 @@ public class StoreEntity extends LcEntity
     /** 更新日時 */
     @Column(name = "modified_at")
     LocalDateTime modifiedAt;
-    /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
+    /** 削除フラグ（0: 未削除 1: 削除済） */
     @Column(name = "is_deleted")
-    Integer isDeleted;
+    Byte isDeleted;
 }
