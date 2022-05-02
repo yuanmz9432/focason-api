@@ -36,9 +36,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter
 {
     @Autowired
-    private JwtProps jwtProps;
-
-    @Autowired
     private JWTGenerator jwtGenerator;
 
     @Autowired

@@ -14,26 +14,31 @@ import org.seasar.doma.Domain;
 
 @Domain(valueType = Integer.class, factoryMethod = "of")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum BooleanValue
+public enum Gender
 {
     /**
-     * FALSE
+     * 男性
      */
-    FALSE(0),
+    MALE(1),
 
     /**
-     * TRUE
+     * 女性
      */
-    TRUE(1);
+    FEMALE(2),
+
+    /**
+     * 未知
+     */
+    UNKNOWN(3);
 
     @Getter(onMethod = @__(@JsonValue))
     private final Integer value;
 
-    public static BooleanValue of(Integer value) {
+    public static Gender of(Integer value) {
         return Arrays.stream(values())
             .filter(v -> v.getValue().equals(value))
             .findFirst()
             .orElseThrow(
-                () -> new IllegalArgumentException("BooleanValue = '" + value + "' is not supported."));
+                () -> new IllegalArgumentException("Gender = '" + value + "' is not supported."));
     }
 }

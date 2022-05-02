@@ -30,11 +30,6 @@ public class JwtProps
     private Long refreshTokenExpiresIn;
 
     /**
-     * アクセストークンヘッダー
-     */
-    private String accessTokenHeader;
-
-    /**
      * リフレッシュトークンヘッダー
      */
     private String refreshTokenHeader;

@@ -92,7 +92,7 @@ public class UserResource
     private final LocalDateTime modifiedAt;
 
     /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
-    private final Integer isDeleted;
+    private final Boolean isDeleted;
 
     /** ユーザー所属のストアリスト */
     private final List<StoreResource> stores;
@@ -129,7 +129,7 @@ public class UserResource
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
         this.modifiedAt = entity.getModifiedAt();
-        this.isDeleted = entity.getIsDeleted();
+        this.isDeleted = entity.getIsDeleted() == 0 ? Boolean.FALSE : Boolean.TRUE;
         this.warehouses = null;
         this.stores = null;
         this.authorities = null;
@@ -162,7 +162,7 @@ public class UserResource
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)
             .modifiedAt(modifiedAt)
-            .isDeleted(isDeleted)
+            .isDeleted(isDeleted ? 1 : 0)
             .build();
     }
 }
