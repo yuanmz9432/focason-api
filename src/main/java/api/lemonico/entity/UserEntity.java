@@ -89,5 +89,5 @@ public class UserEntity extends LcEntity
     LocalDateTime modifiedAt;
     /** 削除フラグ（0: 未削除 1: 削除済） */
     @Column(name = "is_deleted")
-    Byte isDeleted;
+    Integer isDeleted;
 }

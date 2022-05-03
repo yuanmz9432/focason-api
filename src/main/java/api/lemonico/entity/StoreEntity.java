@@ -36,9 +36,9 @@ public class StoreEntity extends LcEntity
     /** ストア名称 */
     @Column(name = "store_name")
     String storeName;
-    /** プランID */
-    @Column(name = "plan_id")
-    String planId;
+    /** 契約タイプ */
+    @Column(name = "contract_type")
+    String contractType;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;
@@ -53,5 +53,5 @@ public class StoreEntity extends LcEntity
     LocalDateTime modifiedAt;
     /** 削除フラグ（0: 未削除 1: 削除済） */
     @Column(name = "is_deleted")
-    Byte isDeleted;
+    Integer isDeleted;
 }

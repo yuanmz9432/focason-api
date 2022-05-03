@@ -14,7 +14,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * 倉庫ストア関連情報エンティティ
+ * ユーザー所属情報エンティティ
  *
  * @since 1.0.0
  */
@@ -36,11 +36,12 @@ public class UserRelationEntity extends LcEntity
     /** 所属タイプ（1: ストア 2: 倉庫 3: 管理） */
     @Column(name = "relation_type")
     Byte relationType;
-    /** 所属コード
-倉庫コードの場合、倉庫関連のストア情報がすべて参照できる
-ストアコードの場合、対象ストアの情報のみ参照できる */
+    /** 所属コード */
     @Column(name = "relation_code")
     String relationCode;
+    /** ロール */
+    @Column(name = "role")
+    String role;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;
@@ -55,5 +56,5 @@ public class UserRelationEntity extends LcEntity
     LocalDateTime modifiedAt;
     /** 削除フラグ（0: 未削除 1: 削除済） */
     @Column(name = "is_deleted")
-    Byte isDeleted;
+    Integer isDeleted;
 }

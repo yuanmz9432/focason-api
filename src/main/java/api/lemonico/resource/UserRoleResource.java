@@ -6,13 +6,13 @@ package api.lemonico.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.WarehouseStoreEntity;
+import api.lemonico.entity.UserRoleEntity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * 倉庫ストア関連情報リソース
+ * ユーザーロール関連情報リソース
  *
  * @since 1.0.0
  */
@@ -21,17 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class WarehouseStoreResource
+public class UserRoleResource
 {
 
     /** 自動採番ID */
-    private final ID<WarehouseStoreEntity> id;
+    private final ID<UserRoleEntity> id;
 
-    /** 倉庫コード */
-    private final String warehouseCode;
+    /** ユーザーID */
+    private final Integer userId;
 
-    /** ストアコード */
-    private final String storeCode;
+    /** ロールID */
+    private final Integer roleId;
 
     /** 作成者 */
     private final String createdBy;
@@ -51,12 +51,12 @@ public class WarehouseStoreResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity 倉庫ストア関連情報エンティティ
+     * @param entity ユーザーロール関連情報エンティティ
      */
-    public WarehouseStoreResource(WarehouseStoreEntity entity) {
+    public UserRoleResource(UserRoleEntity entity) {
         this.id = entity.getId();
-        this.warehouseCode = entity.getWarehouseCode();
-        this.storeCode = entity.getStoreCode();
+        this.userId = entity.getUserId();
+        this.roleId = entity.getRoleId();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -67,13 +67,13 @@ public class WarehouseStoreResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return 倉庫ストア関連情報エンティティ
+     * @return ユーザーロール関連情報エンティティ
      */
-    public WarehouseStoreEntity toEntity() {
-        return WarehouseStoreEntity.builder()
+    public UserRoleEntity toEntity() {
+        return UserRoleEntity.builder()
             .id(id)
-            .warehouseCode(warehouseCode)
-            .storeCode(storeCode)
+            .userId(userId)
+            .roleId(roleId)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

@@ -45,7 +45,7 @@ public class WarehouseResource
     /** 更新日時 */
     private final LocalDateTime modifiedAt;
 
-    /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
+    /** 削除フラグ（0: 未削除 1: 削除済） */
     private final Integer isDeleted;
 
     /**

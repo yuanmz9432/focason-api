@@ -6,13 +6,13 @@ package api.lemonico.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.entity.RoleEntity;
+import api.lemonico.entity.AuthorityEntity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * ロールマスタリソース
+ * 権限マスタリソース
  *
  * @since 1.0.0
  */
@@ -21,13 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class RoleResource
+public class AuthorityResource
 {
 
     /** 自動採番ID */
-    private final ID<RoleEntity> id;
+    private final ID<AuthorityEntity> id;
 
-    /** ロール名称 */
+    /** 権限名称 */
     private final String name;
 
     /** 作成者 */
@@ -42,15 +42,15 @@ public class RoleResource
     /** 更新日時 */
     private final LocalDateTime modifiedAt;
 
-    /** 削除フラグ（退会から一定時間経過後に削除状態になる） */
+    /** 削除フラグ（0: 未削除 1: 削除済） */
     private final Integer isDeleted;
 
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity ロールマスタエンティティ
+     * @param entity 権限マスタエンティティ
      */
-    public RoleResource(RoleEntity entity) {
+    public AuthorityResource(AuthorityEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.createdBy = entity.getCreatedBy();
@@ -63,10 +63,10 @@ public class RoleResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return ロールマスタエンティティ
+     * @return 権限マスタエンティティ
      */
-    public RoleEntity toEntity() {
-        return RoleEntity.builder()
+    public AuthorityEntity toEntity() {
+        return AuthorityEntity.builder()
             .id(id)
             .name(name)
             .createdBy(createdBy)

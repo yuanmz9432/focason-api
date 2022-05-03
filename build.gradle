@@ -186,7 +186,7 @@ task genResource {
         ant.gen(url: "${dbUrl}",
                 user: "${dbUser}",
                 password: "${dbPassword}",
-                tableNamePattern: TABLE_NAME,
+//                tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/resource")
                 {
