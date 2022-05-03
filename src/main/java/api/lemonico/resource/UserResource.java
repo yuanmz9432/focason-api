@@ -72,7 +72,7 @@ public class UserResource
     private final String building;
 
     /** おすすめ情報読込 */
-    private final Integer subscribe;
+    private final Integer isSubscribed;
 
     /** 作成者 */
     private final String createdBy;
@@ -119,7 +119,7 @@ public class UserResource
         this.municipality = entity.getMunicipality();
         this.address = entity.getAddress();
         this.building = entity.getBuilding();
-        this.subscribe = entity.getSubscribe();
+        this.isSubscribed = entity.getIsSubscribed();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -152,7 +152,7 @@ public class UserResource
             .municipality(municipality)
             .address(address)
             .building(building)
-            .subscribe(subscribe)
+            .isSubscribed(isSubscribed)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

@@ -73,8 +73,8 @@ public class UserEntity extends LcEntity
     @Column(name = "building")
     String building;
     /** おすすめ情報読込 */
-    @Column(name = "subscribe")
-    Integer subscribe;
+    @Column(name = "is_subscribed")
+    Integer isSubscribed;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;
