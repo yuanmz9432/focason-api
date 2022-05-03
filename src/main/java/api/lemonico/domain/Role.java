@@ -14,32 +14,27 @@ import org.seasar.doma.Domain;
 
 @Domain(valueType = Integer.class, factoryMethod = "of")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum UserType
+public enum Role
 {
     /**
-     * シルバー
+     * マネージャー
      */
-    SILVER(1),
+    MANAGER(1),
 
     /**
-     * ゴールド
+     * 作業者
      */
-    GOLDEN(2),
+    OPERATOR(2),
 
     /**
-     * プレミアム
+     * メンテナー
      */
-    PREMIUM(3),
-
-    /**
-     * 退会
-     */
-    LOGOUT(3);
+    MAINTAINER(3);
 
     @Getter(onMethod = @__(@JsonValue))
     private final Integer value;
 
-    public static UserType of(Integer value) {
+    public static Role of(Integer value) {
         return Arrays.stream(values())
             .filter(v -> v.getValue().equals(value))
             .findFirst()

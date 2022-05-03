@@ -37,7 +37,7 @@ public class UserRelationResource
     private final String relationCode;
 
     /** ロール */
-    private final String role;
+    private final Integer role;
 
     /** 作成者 */
     private final String createdBy;

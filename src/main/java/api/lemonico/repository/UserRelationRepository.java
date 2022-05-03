@@ -12,11 +12,9 @@ import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.dao.UserRelationDao;
 import api.lemonico.entity.UserRelationEntity;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import lombok.*;
+import org.seasar.doma.jdbc.BatchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -118,6 +116,17 @@ public class UserRelationRepository
      */
     public boolean exists(ID<UserRelationEntity> id) {
         return findById(id).isPresent();
+    }
+
+    /**
+     * 複数エンティティを作成します。
+     *
+     * @param entities エンティティリスト
+     * @return 作成したエンティティが返されます。
+     */
+    public BatchResult<UserRelationEntity> create(List<UserRelationEntity> entities) {
+        Objects.requireNonNull(entities, "'entities' must not be NULL.");
+        return dao.insert(entities);
     }
 
     /**

@@ -12,10 +12,14 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
+import api.lemonico.domain.Role;
 import api.lemonico.entity.UserEntity;
+import api.lemonico.entity.UserRelationEntity;
 import api.lemonico.repository.*;
 import api.lemonico.resource.UserResource;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -147,20 +151,60 @@ public class UserService
      */
     @Transactional
     public UserResource createResource(UserResource resource) {
-        // メールアドレスにおいて重複したデータが存在していることを示す。
-        var client = getResourceByEmail(resource.getEmail());
-        if (client.isPresent()) {
-            throw new LcResourceAlreadyExistsException(UserEntity.class, client.get().getEmail());
+        // ユーザー重複性チェック（username と email）
+        if (isUserExisted(resource)) {
+            throw new LcResourceAlreadyExistsException(UserEntity.class,
+                resource.getEmail() + " or " + resource.getUsername());
         }
 
-        // クライアントを作成します。
+        // ユーザー作成
         var id = userRepository.create(
             resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
                 // .withType(UserType.PREMIUM.getValue())
                 .toEntity());
 
+        // ユーザー所属情報作成
+        Optional.of(resource.getUserRelations()).ifPresentOrElse(
+            (userRelationResources) -> {
+                var userRelationEntities = new ArrayList<UserRelationEntity>();
+                userRelationResources.forEach((item) -> userRelationEntities.add(
+                    item
+                        .withId(null)
+                        .withUuid(resource.getUuid())
+                        .withRole(Role.of(item.getRole()).getValue())
+                        .withCreatedBy("admin")
+                        .withCreatedAt(LocalDateTime.now())
+                        .withModifiedBy("admin")
+                        .withModifiedAt(LocalDateTime.now())
+                        .withIsDeleted(0)
+                        .toEntity()));
+                userRelationRepository.create(userRelationEntities);
+            }, () -> {
+                throw new LcValidationErrorException("UserRelations can not be null or empty.");
+            });
+
         // クライアントを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+    }
+
+    private boolean isUserExisted(UserResource resource) {
+        var client = getResourceList(
+            UserRepository.Condition.builder()
+                .email(resource.getEmail())
+                .build(),
+            LcPagination.DEFAULT,
+            UserRepository.Sort.DEFAULT);
+        if (client.getCount() > 0) {
+            return true;
+        }
+
+        client = getResourceList(
+            UserRepository.Condition.builder()
+                .username(resource.getUsername())
+                .build(),
+            LcPagination.DEFAULT,
+            UserRepository.Sort.DEFAULT);
+        return client.getCount() > 0;
     }
 
     /**

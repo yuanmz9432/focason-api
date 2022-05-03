@@ -11,13 +11,13 @@ public class LcIllegalUserException extends LcException
 {
     private static final long serialVersionUID = 1L;
     private static final LcErrorCode ERROR_CODE;
-    private static final String MESSAGE_TEMPLATE = "The User('%s') was %s.";
+    private static final String MESSAGE_TEMPLATE = "The User('%s') was enable.";
 
     static {
         ERROR_CODE = LcErrorCode.ILLEGAL_STATE;
     }
 
-    public LcIllegalUserException(String email, String reason) {
-        super(ERROR_CODE, MESSAGE_TEMPLATE, email, reason);
+    public LcIllegalUserException(String email) {
+        super(ERROR_CODE, MESSAGE_TEMPLATE, email);
     }
 }

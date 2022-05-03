@@ -89,13 +89,16 @@ public class UserResource
     /** 削除フラグ（0: 未削除 1: 削除済） */
     private final Integer isDeleted;
 
+    /** ユーザー所属リスト */
+    private final List<UserRelationResource> userRelations;
+
     /** ユーザー所属のストアリスト */
     private final List<StoreResource> stores;
 
     /** ユーザー所属の倉庫リスト */
     private final List<WarehouseResource> warehouses;
 
-    /** ユーザー所属の倉庫リスト */
+    /** ユーザーの権限リスト */
     private final List<SimpleGrantedAuthority> authorities;
 
     /**
@@ -125,8 +128,9 @@ public class UserResource
         this.modifiedBy = entity.getModifiedBy();
         this.modifiedAt = entity.getModifiedAt();
         this.isDeleted = entity.getIsDeleted();
-        this.warehouses = null;
+        this.userRelations = null;
         this.stores = null;
+        this.warehouses = null;
         this.authorities = null;
     }
 

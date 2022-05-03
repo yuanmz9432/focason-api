@@ -17,7 +17,6 @@ import api.lemonico.core.exception.LcIllegalUserException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
-import api.lemonico.domain.UserType;
 import api.lemonico.entity.UserEntity;
 import api.lemonico.resource.UserResource;
 import api.lemonico.service.UserService;
@@ -118,7 +117,7 @@ public class AuthenticationController
                 throw new LcValidationErrorException("Password was not matched, please check again.");
             }
         } else {
-            throw new LcIllegalUserException(userDetails.getUsername(), UserType.LOGOUT.name());
+            throw new LcIllegalUserException(userDetails.getUsername());
         }
     }
 }

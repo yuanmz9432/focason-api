@@ -39,9 +39,9 @@ public class UserRelationEntity extends LcEntity
     /** 所属コード */
     @Column(name = "relation_code")
     String relationCode;
-    /** ロール */
+    /** ロール（1: 管理者 2: 作業者 3: メンテナー） */
     @Column(name = "role")
-    String role;
+    Integer role;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;
