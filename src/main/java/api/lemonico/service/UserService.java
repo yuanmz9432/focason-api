@@ -246,17 +246,6 @@ public class UserService
     }
 
     /**
-     * メールアドレスを指定して、クライアントエンティティを取得する。
-     *
-     * @param email メールアドレス
-     * @return クライアントエンティティ
-     */
-    @Transactional(readOnly = true)
-    public Optional<UserResource> getResourceByEmail(String email) {
-        return userRepository.findByEmail(email).map(this::convertEntityToResource);
-    }
-
-    /**
      * メールアドレスを指定して、LoginUserを取得する。
      *
      * @param subject JWTサブジェクト
@@ -279,6 +268,7 @@ public class UserService
             throw new LcResourceNotFoundException(LoginUser.class, subject);
         }
         var loginUser = userResourceLcResultSet.getData().get(0);
+        // TODO ユーザー権限取得
         var authorities = new ArrayList<SimpleGrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("AUTH_USER"));
         authorities.add(new SimpleGrantedAuthority("AUTH_STORE"));

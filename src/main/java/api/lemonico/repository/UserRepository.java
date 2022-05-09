@@ -125,15 +125,6 @@ public class UserRepository
     }
 
     /**
-     * メールアドレスを指定してエンティティを一件取得します。
-     *
-     * @return ユーザーエンティティ
-     */
-    public Optional<UserEntity> findByEmail(String email) {
-        return dao.selectByEmail(email);
-    }
-
-    /**
      * 検索条件
      */
     @Data
