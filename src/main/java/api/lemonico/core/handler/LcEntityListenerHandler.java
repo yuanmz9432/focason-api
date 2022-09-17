@@ -5,8 +5,8 @@ package api.lemonico.core.handler;
 
 
 
-import api.lemonico.entity.LcEntity;
-import api.lemonico.entity.LcEntityListenerManager;
+import api.lemonico.core.entity.LcEntity;
+import api.lemonico.core.entity.LcEntityListenerManager;
 import org.seasar.doma.jdbc.entity.EntityListener;
 import org.seasar.doma.jdbc.entity.PostDeleteContext;
 import org.seasar.doma.jdbc.entity.PostInsertContext;

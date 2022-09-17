@@ -5,8 +5,8 @@ package api.lemonico.core.configurer;
 
 
 
-import api.lemonico.entity.LcEntityListener;
-import api.lemonico.entity.LcEntityListenerManager;
+import api.lemonico.core.entity.LcEntityListener;
+import api.lemonico.core.entity.LcEntityListenerManager;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,13 +1,7 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.EntityDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.warehouse.repository;
 
 import static java.util.stream.Collectors.toList;
 
@@ -16,8 +10,8 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.dao.${simpleName}Dao;
-import api.lemonico.core.entity.${simpleName}Entity;
+import api.lemonico.warehouse.dao.WarehouseDao;
+import api.lemonico.warehouse.entity.WarehouseEntity;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,18 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * ${comment}リポジトリ
+ * 倉庫情報リポジトリ
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ${simpleName}${entitySuffix}
+public class WarehouseRepository
 {
 
-    private final ${simpleName}Dao dao;
+    private final WarehouseDao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。
@@ -48,7 +40,7 @@ public class ${simpleName}${entitySuffix}
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<${simpleName}Entity> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<WarehouseEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -61,7 +53,7 @@ public class ${simpleName}${entitySuffix}
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<${simpleName}Entity> findById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
+    public Optional<WarehouseEntity> findById(ID<WarehouseEntity> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -71,7 +63,7 @@ public class ${simpleName}${entitySuffix}
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<${simpleName}Entity> create(${simpleName}Entity entity) {
+    public ID<WarehouseEntity> create(WarehouseEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
@@ -86,11 +78,11 @@ public class ${simpleName}${entitySuffix}
      *
      * @param entity エンティティ
      */
-    public void update(ID<${simpleName}Entity> id, ${simpleName}Entity entity) {
+    public void update(ID<WarehouseEntity> id, WarehouseEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, entity.getId());
+            throw new LcEntityNotFoundException(WarehouseEntity.class, entity.getId());
         }
     }
 
@@ -99,10 +91,10 @@ public class ${simpleName}${entitySuffix}
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
+    public void deleteById(ID<WarehouseEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
+            throw new LcEntityNotFoundException(WarehouseEntity.class, id);
         }
     }
 
@@ -111,10 +103,10 @@ public class ${simpleName}${entitySuffix}
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<WarehouseEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
+            throw new LcEntityNotFoundException(WarehouseEntity.class, id);
         }
     }
 
@@ -124,7 +116,7 @@ public class ${simpleName}${entitySuffix}
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<${simpleName}Entity> id) {
+    public boolean exists(ID<WarehouseEntity> id) {
         return findById(id).isPresent();
     }
 
@@ -145,9 +137,14 @@ public class ${simpleName}${entitySuffix}
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * ${comment}IDのセット（完全一致、複数指定可）
+         * 倉庫情報IDのセット（完全一致、複数指定可）
          */
-        private Set<ID<${simpleName}Entity>> ids;
+        private Set<ID<WarehouseEntity>> ids;
+
+        /**
+         * 倉庫コード（完全一致、複数指定可）
+         */
+        private Set<String> warehouseCodes;
     }
 
     /**

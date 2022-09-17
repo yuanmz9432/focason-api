@@ -213,8 +213,8 @@ task genEntity {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-//                            superclassName: 'api.lemonico.entity.LcEntity',
-                            packageName: "api.lemonico.entity",
+//                            superclassName: 'api.lemonico.core.entity.LcEntity',
+                            packageName: "api.lemonico.core.entity",
                             entitySuffix: "Entity",
                             destDir: 'src/main/java'
                     )

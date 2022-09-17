@@ -1,18 +1,16 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.EntityDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.auth.controller;
 
 
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
+import api.lemonico.auth.entity.AuthorityEntity;
+import api.lemonico.auth.repository.AuthorityRepository;
+import api.lemonico.auth.resource.AuthorityResource;
+import api.lemonico.auth.service.AuthorityService;
 import api.lemonico.core.annotation.LcConditionParam;
 import api.lemonico.core.annotation.LcPaginationParam;
 import api.lemonico.core.annotation.LcSortParam;
@@ -21,10 +19,6 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.core.entity.${simpleName}Entity;
-import api.lemonico.repository.${simpleName}Repository;
-import api.lemonico.resource.${simpleName}Resource;
-import api.lemonico.service.${simpleName}Service;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +29,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ${comment}コントローラー
+ * 権限マスタコントローラー
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if>
+public class AuthorityController
 {
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "";
+    private static final String COLLECTION_RESOURCE_URI = "/authorities";
 
     /**
      * メンバーリソースURI
@@ -57,60 +49,60 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ${comment}サービス
+     * 権限マスタサービス
      */
-    private final ${simpleName}Service service;
+    private final AuthorityService service;
 
     /**
-     * ${comment}リソースの一覧取得API
+     * 権限マスタリソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ${comment}リソース一覧取得APIレスポンス
+     * @return 権限マスタリソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
-        @LcConditionParam ${simpleName}Repository.Condition condition,
+    public ResponseEntity<LcResultSet<AuthorityResource>> getAuthorityList(
+        @LcConditionParam AuthorityRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = ${simpleName}Repository.Condition.DEFAULT;
+            condition = AuthorityRepository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(lcSort);
+        var sort = AuthorityRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース取得API
+     * 権限マスタIDを指定して、権限マスタリソース取得API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース取得APIレスポンス
+     * @param id 権限マスタID
+     * @return 権限マスタリソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> get${simpleName}(
-        @PathVariable("id") ID<${simpleName}Entity> id) {
+    public ResponseEntity<AuthorityResource> getAuthority(
+        @PathVariable("id") ID<AuthorityEntity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(${simpleName}Resource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(AuthorityResource.class, id));
     }
 
     /**
-     * ${comment}リソース作成API
+     * 権限マスタリソース作成API
      *
-     * @param resource ${comment}リソース
-     * @return ${comment}リソース作成APIレスポンス
+     * @param resource 権限マスタリソース
+     * @return 権限マスタリソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> create${simpleName}(
-        @Valid @RequestBody ${simpleName}Resource resource,
+    public ResponseEntity<Void> createAuthority(
+        @Valid @RequestBody AuthorityResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).get${simpleName}(id))
+            .withMethodCall(on(getClass()).getAuthority(id))
             .build()
             .encode()
             .toUri();
@@ -118,32 +110,32 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース更新API
+     * 権限マスタIDを指定して、権限マスタリソース更新API
      *
-     * @param id ${comment}ID
-     * @param resource ${comment}リソース更新APIレスポンス
-     * @return ${comment}リソース更新APIレスポンス
+     * @param id 権限マスタID
+     * @param resource 権限マスタリソース更新APIレスポンス
+     * @return 権限マスタリソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> update${simpleName}(
-        @PathVariable("id") ID<${simpleName}Entity> id,
-        @Valid @RequestBody ${simpleName}Resource resource) {
+    public ResponseEntity<AuthorityResource> updateAuthority(
+        @PathVariable("id") ID<AuthorityEntity> id,
+        @Valid @RequestBody AuthorityResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース削除API
+     * 権限マスタIDを指定して、権限マスタリソース削除API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース削除APIレスポンス
+     * @param id 権限マスタID
+     * @return 権限マスタリソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> delete${simpleName}(
-        @PathVariable("id") ID<${simpleName}Entity> id) {
+    public ResponseEntity<Void> deleteAuthority(
+        @PathVariable("id") ID<AuthorityEntity> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

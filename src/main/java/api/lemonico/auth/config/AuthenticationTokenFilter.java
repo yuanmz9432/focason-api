@@ -7,7 +7,7 @@ package api.lemonico.auth.config;
 
 import api.lemonico.core.attribute.LcErrorCode;
 import api.lemonico.core.attribute.LcErrorResource;
-import api.lemonico.service.UserService;
+import api.lemonico.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

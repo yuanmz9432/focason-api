@@ -1,19 +1,13 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.DaoDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.user.dao;
 
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.core.entity.${entityDesc.simpleName}Entity;
-import api.lemonico.repository.${entityDesc.simpleName}Repository;
+import api.lemonico.user.entity.UserRelationEntity;
+import api.lemonico.user.repository.UserRelationRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -24,15 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * ${entityDesc.comment}のDao
+ * 倉庫ストア関連情報のDao
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
-@Dao<#if configClassSimpleName??>(config = ${configClassSimpleName}.class)</#if>
+@Dao
 @ConfigAutowireable
-public interface ${simpleName}
+public interface UserRelationDao
 {
 
     /**
@@ -47,10 +39,10 @@ public interface ${simpleName}
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        ${entityDesc.simpleName}Repository.Condition condition,
+        UserRelationRepository.Condition condition,
         SelectOptions options,
-        ${entityDesc.simpleName}Repository.Sort sort,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector);
+        UserRelationRepository.Sort sort,
+        Collector<UserRelationEntity, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -62,10 +54,10 @@ public interface ${simpleName}
      * @return 検索結果
      */
     default <R> R selectAll(
-        ${entityDesc.simpleName}Repository.Condition condition,
+        UserRelationRepository.Condition condition,
         SelectOptions options,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector) {
-        return selectAll(condition, options, ${entityDesc.simpleName}Repository.Sort.DEFAULT, collector);
+        Collector<UserRelationEntity, ?, R> collector) {
+        return selectAll(condition, options, UserRelationRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -79,9 +71,9 @@ public interface ${simpleName}
      */
     default <R> R selectAll(
         SelectOptions options,
-        ${entityDesc.simpleName}Repository.Sort sort,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector) {
-        return selectAll(${entityDesc.simpleName}Repository.Condition.DEFAULT, options, sort, collector);
+        UserRelationRepository.Sort sort,
+        Collector<UserRelationEntity, ?, R> collector) {
+        return selectAll(UserRelationRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -94,8 +86,9 @@ public interface ${simpleName}
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<${entityDesc.simpleName}Entity, ?, R> collector) {
-        return selectAll(${entityDesc.simpleName}Repository.Condition.DEFAULT, options, ${entityDesc.simpleName}Repository.Sort.DEFAULT, collector);
+        Collector<UserRelationEntity, ?, R> collector) {
+        return selectAll(UserRelationRepository.Condition.DEFAULT, options, UserRelationRepository.Sort.DEFAULT,
+            collector);
     }
 
     /**
@@ -106,7 +99,7 @@ public interface ${simpleName}
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<${entityDesc.simpleName}Entity> selectById(ID<${entityDesc.simpleName}Entity> id, SelectOptions options);
+    Optional<UserRelationEntity> selectById(ID<UserRelationEntity> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -114,7 +107,7 @@ public interface ${simpleName}
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<${entityDesc.simpleName}Entity> selectById(ID<${entityDesc.simpleName}Entity> id) {
+    default Optional<UserRelationEntity> selectById(ID<UserRelationEntity> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -125,7 +118,7 @@ public interface ${simpleName}
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<${entityDesc.simpleName}Entity> insert(${entityDesc.simpleName}Entity entity);
+    Result<UserRelationEntity> insert(UserRelationEntity entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -134,7 +127,7 @@ public interface ${simpleName}
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<${entityDesc.simpleName}Entity> update(${entityDesc.simpleName}Entity entity);
+    Result<UserRelationEntity> update(UserRelationEntity entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -143,7 +136,7 @@ public interface ${simpleName}
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<${entityDesc.simpleName}Entity> id);
+    int deleteById(ID<UserRelationEntity> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -152,26 +145,26 @@ public interface ${simpleName}
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<${entityDesc.simpleName}Entity> id);
+    int deleteLogicById(ID<UserRelationEntity> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<${entityDesc.simpleName}Entity> insert(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}Entity<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<UserRelationEntity> insert(List<UserRelationEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<${entityDesc.simpleName}Entity> update(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}Entity<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<UserRelationEntity> update(List<UserRelationEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<${entityDesc.simpleName}Entity> delete(List<<#if entityDesc.entityPrefix??>${entityDesc.entityPrefix}</#if>${entityDesc.simpleName}Entity<#if entityDesc.entitySuffix??>${entityDesc.entitySuffix}</#if>> entities);
+    BatchResult<UserRelationEntity> delete(List<UserRelationEntity> entities);
 }

@@ -16,7 +16,7 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
-import api.lemonico.entity.${simpleName}Entity;
+import api.lemonico.core.entity.${simpleName}Entity;
 import api.lemonico.repository.${simpleName}Repository;
 import api.lemonico.resource.${simpleName}Resource;
 import java.util.Collections;

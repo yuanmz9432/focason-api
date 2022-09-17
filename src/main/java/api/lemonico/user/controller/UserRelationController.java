@@ -1,13 +1,7 @@
-<#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.EntityDesc です -->
-<#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
- * ${lib.copyright}
-</#if>
+ * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-<#if packageName??>
-package ${packageName};
-</#if>
+package api.lemonico.user.controller;
 
 
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
@@ -21,10 +15,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.core.entity.${simpleName}Entity;
-import api.lemonico.repository.${simpleName}Repository;
-import api.lemonico.resource.${simpleName}Resource;
-import api.lemonico.service.${simpleName}Service;
+import api.lemonico.user.entity.UserRelationEntity;
+import api.lemonico.user.repository.UserRelationRepository;
+import api.lemonico.user.resource.UserRelationResource;
+import api.lemonico.user.service.UserRelationService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +29,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ${comment}コントローラー
+ * 倉庫ストア関連情報コントローラー
  *
-<#if lib.since??>
- * @since ${lib.since}
-</#if>
+ * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if>
+public class UserRelationController
 {
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "";
+    private static final String COLLECTION_RESOURCE_URI = "/user-relations";
 
     /**
      * メンバーリソースURI
@@ -57,60 +49,60 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ${comment}サービス
+     * 倉庫ストア関連情報サービス
      */
-    private final ${simpleName}Service service;
+    private final UserRelationService service;
 
     /**
-     * ${comment}リソースの一覧取得API
+     * 倉庫ストア関連情報リソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ${comment}リソース一覧取得APIレスポンス
+     * @return 倉庫ストア関連情報リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
-        @LcConditionParam ${simpleName}Repository.Condition condition,
+    public ResponseEntity<LcResultSet<UserRelationResource>> getUserRelationList(
+        @LcConditionParam UserRelationRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = ${simpleName}Repository.Condition.DEFAULT;
+            condition = UserRelationRepository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(lcSort);
+        var sort = UserRelationRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース取得API
+     * 倉庫ストア関連情報IDを指定して、倉庫ストア関連情報リソース取得API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース取得APIレスポンス
+     * @param id 倉庫ストア関連情報ID
+     * @return 倉庫ストア関連情報リソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> get${simpleName}(
-        @PathVariable("id") ID<${simpleName}Entity> id) {
+    public ResponseEntity<UserRelationResource> getUserRelation(
+        @PathVariable("id") ID<UserRelationEntity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(${simpleName}Resource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(UserRelationResource.class, id));
     }
 
     /**
-     * ${comment}リソース作成API
+     * 倉庫ストア関連情報リソース作成API
      *
-     * @param resource ${comment}リソース
-     * @return ${comment}リソース作成APIレスポンス
+     * @param resource 倉庫ストア関連情報リソース
+     * @return 倉庫ストア関連情報リソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> create${simpleName}(
-        @Valid @RequestBody ${simpleName}Resource resource,
+    public ResponseEntity<Void> createUserRelation(
+        @Valid @RequestBody UserRelationResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).get${simpleName}(id))
+            .withMethodCall(on(getClass()).getUserRelation(id))
             .build()
             .encode()
             .toUri();
@@ -118,32 +110,32 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース更新API
+     * 倉庫ストア関連情報IDを指定して、倉庫ストア関連情報リソース更新API
      *
-     * @param id ${comment}ID
-     * @param resource ${comment}リソース更新APIレスポンス
-     * @return ${comment}リソース更新APIレスポンス
+     * @param id 倉庫ストア関連情報ID
+     * @param resource 倉庫ストア関連情報リソース更新APIレスポンス
+     * @return 倉庫ストア関連情報リソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<${simpleName}Resource> update${simpleName}(
-        @PathVariable("id") ID<${simpleName}Entity> id,
-        @Valid @RequestBody ${simpleName}Resource resource) {
+    public ResponseEntity<UserRelationResource> updateUserRelation(
+        @PathVariable("id") ID<UserRelationEntity> id,
+        @Valid @RequestBody UserRelationResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * ${comment}IDを指定して、${comment}リソース削除API
+     * 倉庫ストア関連情報IDを指定して、倉庫ストア関連情報リソース削除API
      *
-     * @param id ${comment}ID
-     * @return ${comment}リソース削除APIレスポンス
+     * @param id 倉庫ストア関連情報ID
+     * @return 倉庫ストア関連情報リソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> delete${simpleName}(
-        @PathVariable("id") ID<${simpleName}Entity> id) {
+    public ResponseEntity<Void> deleteUserRelation(
+        @PathVariable("id") ID<UserRelationEntity> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

@@ -3,7 +3,7 @@ package api.lemonico.cloud.config;
 
 
 import api.lemonico.cloud.props.AwsProps;
-import api.lemonico.service.S3Service;
+import api.lemonico.cloud.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
