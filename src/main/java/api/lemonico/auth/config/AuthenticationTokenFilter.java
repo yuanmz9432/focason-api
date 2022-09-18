@@ -51,6 +51,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
+        // TODO 下記URLであれば、ヘッダ取得処理を行わない。
         // リクエストヘッダーからアクセストークンを取得する。
         var requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String subject = null;
