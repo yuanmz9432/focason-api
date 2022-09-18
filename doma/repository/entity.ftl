@@ -17,7 +17,7 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.dao.${simpleName}Dao;
-import api.lemonico.core.entity.${simpleName}Entity;
+import api.lemonico.entity.${simpleName}Entity;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;

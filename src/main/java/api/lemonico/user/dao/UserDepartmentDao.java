@@ -6,8 +6,8 @@ package api.lemonico.user.dao;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.user.entity.UserRelationEntity;
-import api.lemonico.user.repository.UserRelationRepository;
+import api.lemonico.user.entity.UserDepartmentEntity;
+import api.lemonico.user.repository.UserDepartmentRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -18,13 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * 倉庫ストア関連情報のDao
+ * ユーザー部署のDao
  *
  * @since 1.0.0
  */
 @Dao
 @ConfigAutowireable
-public interface UserRelationDao
+public interface UserDepartmentDao
 {
 
     /**
@@ -39,10 +39,10 @@ public interface UserRelationDao
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        UserRelationRepository.Condition condition,
+        UserDepartmentRepository.Condition condition,
         SelectOptions options,
-        UserRelationRepository.Sort sort,
-        Collector<UserRelationEntity, ?, R> collector);
+        UserDepartmentRepository.Sort sort,
+        Collector<UserDepartmentEntity, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -54,10 +54,10 @@ public interface UserRelationDao
      * @return 検索結果
      */
     default <R> R selectAll(
-        UserRelationRepository.Condition condition,
+        UserDepartmentRepository.Condition condition,
         SelectOptions options,
-        Collector<UserRelationEntity, ?, R> collector) {
-        return selectAll(condition, options, UserRelationRepository.Sort.DEFAULT, collector);
+        Collector<UserDepartmentEntity, ?, R> collector) {
+        return selectAll(condition, options, UserDepartmentRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -71,9 +71,9 @@ public interface UserRelationDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        UserRelationRepository.Sort sort,
-        Collector<UserRelationEntity, ?, R> collector) {
-        return selectAll(UserRelationRepository.Condition.DEFAULT, options, sort, collector);
+        UserDepartmentRepository.Sort sort,
+        Collector<UserDepartmentEntity, ?, R> collector) {
+        return selectAll(UserDepartmentRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -86,8 +86,8 @@ public interface UserRelationDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<UserRelationEntity, ?, R> collector) {
-        return selectAll(UserRelationRepository.Condition.DEFAULT, options, UserRelationRepository.Sort.DEFAULT,
+        Collector<UserDepartmentEntity, ?, R> collector) {
+        return selectAll(UserDepartmentRepository.Condition.DEFAULT, options, UserDepartmentRepository.Sort.DEFAULT,
             collector);
     }
 
@@ -99,7 +99,7 @@ public interface UserRelationDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<UserRelationEntity> selectById(ID<UserRelationEntity> id, SelectOptions options);
+    Optional<UserDepartmentEntity> selectById(ID<UserDepartmentEntity> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -107,7 +107,7 @@ public interface UserRelationDao
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<UserRelationEntity> selectById(ID<UserRelationEntity> id) {
+    default Optional<UserDepartmentEntity> selectById(ID<UserDepartmentEntity> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -118,7 +118,7 @@ public interface UserRelationDao
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<UserRelationEntity> insert(UserRelationEntity entity);
+    Result<UserDepartmentEntity> insert(UserDepartmentEntity entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -127,7 +127,7 @@ public interface UserRelationDao
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<UserRelationEntity> update(UserRelationEntity entity);
+    Result<UserDepartmentEntity> update(UserDepartmentEntity entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -136,7 +136,7 @@ public interface UserRelationDao
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<UserRelationEntity> id);
+    int deleteById(ID<UserDepartmentEntity> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -145,26 +145,26 @@ public interface UserRelationDao
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<UserRelationEntity> id);
+    int deleteLogicById(ID<UserDepartmentEntity> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<UserRelationEntity> insert(List<UserRelationEntity> entities);
+    BatchResult<UserDepartmentEntity> insert(List<UserDepartmentEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<UserRelationEntity> update(List<UserRelationEntity> entities);
+    BatchResult<UserDepartmentEntity> update(List<UserDepartmentEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<UserRelationEntity> delete(List<UserRelationEntity> entities);
+    BatchResult<UserDepartmentEntity> delete(List<UserDepartmentEntity> entities);
 }

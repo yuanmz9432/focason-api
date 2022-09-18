@@ -6,13 +6,13 @@ package api.lemonico.user.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.user.entity.UserRelationEntity;
+import api.lemonico.user.entity.UserDepartmentEntity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * ユーザー所属情報リソース
+ * ユーザー部署リソース
  *
  * @since 1.0.0
  */
@@ -21,23 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class UserRelationResource
+public class UserDepartmentResource
 {
 
     /** 自動採番ID */
-    private final ID<UserRelationEntity> id;
+    private final ID<UserDepartmentEntity> id;
 
     /** UUID */
     private final String uuid;
 
-    /** 所属タイプ（1: ストア 2: 倉庫 3: 管理） */
-    private final Byte relationType;
-
-    /** 所属コード */
-    private final String relationCode;
-
-    /** ロール */
-    private final Integer role;
+    /** 部署コード（倉庫、ストア） */
+    private final String departmentCode;
 
     /** 作成者 */
     private final String createdBy;
@@ -57,14 +51,12 @@ public class UserRelationResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity ユーザー所属情報エンティティ
+     * @param entity ユーザー部署エンティティ
      */
-    public UserRelationResource(UserRelationEntity entity) {
+    public UserDepartmentResource(UserDepartmentEntity entity) {
         this.id = entity.getId();
         this.uuid = entity.getUuid();
-        this.relationType = entity.getRelationType();
-        this.relationCode = entity.getRelationCode();
-        this.role = entity.getRole();
+        this.departmentCode = entity.getDepartmentCode();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -75,15 +67,13 @@ public class UserRelationResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return ユーザー所属情報エンティティ
+     * @return ユーザー部署エンティティ
      */
-    public UserRelationEntity toEntity() {
-        return UserRelationEntity.builder()
+    public UserDepartmentEntity toEntity() {
+        return UserDepartmentEntity.builder()
             .id(id)
             .uuid(uuid)
-            .relationType(relationType)
-            .relationCode(relationCode)
-            .role(role)
+            .departmentCode(departmentCode)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

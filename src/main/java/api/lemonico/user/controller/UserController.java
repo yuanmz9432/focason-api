@@ -14,16 +14,15 @@ import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
-import api.lemonico.core.controller.AbstractController;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.store.service.StoreService;
 import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.user.service.UserService;
-import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,8 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @RestController
 @Validated
-public class UserController extends AbstractController
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class UserController
 {
     /**
      * コレクションリソースURI
@@ -48,9 +48,10 @@ public class UserController extends AbstractController
      */
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
-    public UserController(StoreService storeService, UserService service) {
-        super(storeService, service);
-    }
+    /**
+     * ユーザーサービス
+     */
+    private final UserService service;
 
     /**
      * ユーザーリソースの一覧取得API
@@ -81,9 +82,6 @@ public class UserController extends AbstractController
     @GetMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<UserResource> getUser(
         @PathVariable("id") ID<UserEntity> id) {
-        // if (!super.hasPermission(MDC.get("STORE_CODE"), "SILVER")) {
-        // throw new LcResourceNotFoundException(UserResource.class, id);
-        // }
         return service.getResource(id)
             .map(ResponseEntity::ok)
             .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
@@ -102,8 +100,7 @@ public class UserController extends AbstractController
     public ResponseEntity<Void> createUser(
         @Valid @RequestBody UserResource resource,
         UriComponentsBuilder uriBuilder) {
-        var id = service.createResource(
-            resource.withUuid(UUID.randomUUID().toString())).getId();
+        var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
             .withMethodCall(on(getClass()).getUser(id))
             .build()

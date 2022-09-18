@@ -15,7 +15,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * ユーザー所属情報エンティティ
+ * ユーザー部署エンティティ
  *
  * @since 1.0.0
  */
@@ -24,25 +24,19 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-@Table(name = "user_relation")
-public class UserRelationEntity extends LcEntity
+@Table(name = "user_department")
+public class UserDepartmentEntity extends LcEntity
 {
     /** 自動採番ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    ID<UserRelationEntity> id;
+    ID<UserDepartmentEntity> id;
     /** UUID */
     @Column(name = "uuid")
     String uuid;
-    /** 所属タイプ（1: ストア 2: 倉庫 3: 管理） */
-    @Column(name = "relation_type")
-    Byte relationType;
-    /** 所属コード */
-    @Column(name = "relation_code")
-    String relationCode;
-    /** ロール（1: 管理者 2: 作業者 3: メンテナー） */
-    @Column(name = "role")
-    Integer role;
+    /** 部署コード（倉庫、ストア） */
+    @Column(name = "department_code")
+    String departmentCode;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

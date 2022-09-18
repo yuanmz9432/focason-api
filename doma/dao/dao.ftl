@@ -12,7 +12,7 @@ package ${packageName};
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.core.entity.${entityDesc.simpleName}Entity;
+import api.lemonico.entity.${entityDesc.simpleName}Entity;
 import api.lemonico.repository.${entityDesc.simpleName}Repository;
 import java.util.List;
 import java.util.Optional;

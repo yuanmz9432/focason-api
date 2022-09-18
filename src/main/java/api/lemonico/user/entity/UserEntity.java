@@ -27,7 +27,7 @@ import org.seasar.doma.*;
 @Table(name = "user")
 public class UserEntity extends LcEntity
 {
-    /** ユーザー自動採番ID */
+    /** 自動採番ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     ID<UserEntity> id;

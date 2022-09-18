@@ -134,7 +134,7 @@ task genController {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.controller",
                             entitySuffix: "Controller",
-                            destDir: 'src/main/java')
+                            destDir: 'src/generated/main/java')
                 }
     }
 }
@@ -154,7 +154,7 @@ task genService {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.service",
                             entitySuffix: "Service",
-                            destDir: 'src/main/java')
+                            destDir: 'src/generated/main/java')
                 }
     }
 }
@@ -174,7 +174,7 @@ task genRepository {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.repository",
                             entitySuffix: "Repository",
-                            destDir: 'src/main/java')
+                            destDir: 'src/generated/main/java')
                 }
     }
 }
@@ -186,7 +186,7 @@ task genResource {
         ant.gen(url: "${dbUrl}",
                 user: "${dbUser}",
                 password: "${dbPassword}",
-//                tableNamePattern: TABLE_NAME,
+                tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/resource")
                 {
@@ -194,7 +194,7 @@ task genResource {
                             overwrite: true, useListener: false,
                             packageName: "api.lemonico.resource",
                             entitySuffix: "Resource",
-                            destDir: 'src/main/java')
+                            destDir: 'src/generated/main/java')
                 }
     }
 }
@@ -207,6 +207,7 @@ task genEntity {
                 url: "${dbUrl}",
                 user: "${dbUser}",
                 password: "${dbPassword}",
+                tableNamePattern: TABLE_NAME,
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/entity")
                 {
@@ -214,9 +215,9 @@ task genEntity {
                             overwrite: true,
                             useListener: false,
 //                            superclassName: 'api.lemonico.core.entity.LcEntity',
-                            packageName: "api.lemonico.core.entity",
+                            packageName: "api.lemonico.entity",
                             entitySuffix: "Entity",
-                            destDir: 'src/main/java'
+                            destDir: 'src/generated/main/java'
                     )
                 }
     }
@@ -238,11 +239,11 @@ task genDao {
                             overwrite: true,
                             packageName: "api.lemonico.dao",
                             suffix: "Dao",
-                            destDir: 'src/main/java')
+                            destDir: 'src/generated/main/java')
                     sqlConfig(
                             generate: true,
                             overwrite: true,
-                            destDir: 'src/main/resources',
+                            destDir: 'src/generated/main/resources',
                     )
                 }
     }
@@ -272,7 +273,7 @@ flyway {
     url = "${dbUrl}"
     user = "${dbUser}"
     password = "${dbPassword}"
-    locations = ["filesystem:$projectDir/db/migration"]
+    locations = ["filesystem:$projectDir/db/ddl"]
 }
 
 spotless {

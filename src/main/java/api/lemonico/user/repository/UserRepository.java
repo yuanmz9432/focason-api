@@ -12,7 +12,6 @@ import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.user.dao.UserDao;
 import api.lemonico.user.entity.UserEntity;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -68,11 +67,8 @@ public class UserRepository
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
-            .withCreatedBy("admin")
-            .withCreatedAt(LocalDateTime.now())
-            .withModifiedBy("admin")
-            .withModifiedAt(LocalDateTime.now())
-            .withIsDeleted(0))
+            .withCreatedBy("")
+            .withModifiedBy(""))
             .getEntity()
             .getId();
     }

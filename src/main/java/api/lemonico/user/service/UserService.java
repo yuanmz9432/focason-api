@@ -9,21 +9,17 @@ import api.lemonico.auth.config.LoginUser;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.domain.Role;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
-import api.lemonico.store.repository.StoreRepository;
 import api.lemonico.store.service.StoreService;
+import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
-import api.lemonico.user.entity.UserRelationEntity;
-import api.lemonico.user.repository.UserRelationRepository;
+import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
-import api.lemonico.warehouse.repository.WarehouseRepository;
-import api.lemonico.warehouse.repository.WarehouseStoreRepository;
 import api.lemonico.warehouse.service.WarehouseService;
 import api.lemonico.warehouse.service.WarehouseStoreService;
 import java.time.LocalDateTime;
@@ -53,7 +49,7 @@ public class UserService
     /**
      * ユーザー所属リポジトリ
      */
-    private final UserRelationRepository userRelationRepository;
+    private final UserDepartmentRepository userDepartmentRepository;
 
     /**
      * 倉庫サービス
@@ -106,48 +102,49 @@ public class UserService
         var uuid = userResource.map(UserResource::getUuid)
             .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
 
-        // ユーザー所属単位検索
-        var userRelations =
-            userRelationRepository.findAll(
-                UserRelationRepository.Condition.builder().uuid(uuid).build(),
-                LcPagination.DEFAULT, UserRelationRepository.Sort.DEFAULT);
+        // // ユーザー所属単位検索
+        // var userRelations =
+        // userRelationRepository.findAll(
+        // UserRelationRepository.Condition.builder().uuid(uuid).build(),
+        // LcPagination.DEFAULT, UserRelationRepository.Sort.DEFAULT);
+        //
+        // // 所属単位コードを纒める
+        // Set<String> storeCodes = new HashSet<>();
+        // Set<String> warehouseCodes = new HashSet<>();
+        // userRelations.getData().forEach((userRelation) -> {
+        // if (1 == userRelation.getRelationType()) {
+        // storeCodes.add(userRelation.getRelationCode());
+        // } else {
+        // warehouseCodes.add(userRelation.getRelationCode());
+        // }
+        // });
 
-        // 所属単位コードを纒める
-        Set<String> storeCodes = new HashSet<>();
-        Set<String> warehouseCodes = new HashSet<>();
-        userRelations.getData().forEach((userRelation) -> {
-            if (1 == userRelation.getRelationType()) {
-                storeCodes.add(userRelation.getRelationCode());
-            } else {
-                warehouseCodes.add(userRelation.getRelationCode());
-            }
-        });
-
-        // 倉庫情報取得
-        var warehouses = warehouseService.getResourceList(
-            WarehouseRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
-            WarehouseRepository.Sort.DEFAULT);
-
-        // 倉庫-ストア関連情報取得
-        var warehouseStores = warehouseStoreService.getResourceList(
-            WarehouseStoreRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
-            WarehouseStoreRepository.Sort.DEFAULT);
-
-        // 倉庫所属のストア情報纒める
-        warehouseStores.getData().forEach((item) -> storeCodes.add(item.getStoreCode()));
-
-        // ストア情報取得
-        var stores = storeService.getResourceList(StoreRepository.Condition.builder().storeCodes(storeCodes).build(),
-            LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
-
-        // ユーザー権限取得
-        var authorities = new ArrayList<SimpleGrantedAuthority>();
-
-        return Optional.of(userResource.get()
-            .withWarehouses(warehouses.getData())
-            .withStores(stores.getData())
-            .withAuthorities(authorities)
-            .withPassword(""));
+        // // 倉庫情報取得
+        // var warehouses = warehouseService.getResourceList(
+        // WarehouseRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
+        // WarehouseRepository.Sort.DEFAULT);
+        //
+        // // 倉庫-ストア関連情報取得
+        // var warehouseStores = warehouseStoreService.getResourceList(
+        // WarehouseStoreRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
+        // WarehouseStoreRepository.Sort.DEFAULT);
+        //
+        // // 倉庫所属のストア情報纒める
+        // warehouseStores.getData().forEach((item) -> storeCodes.add(item.getStoreCode()));
+        //
+        // // ストア情報取得
+        // var stores = storeService.getResourceList(StoreRepository.Condition.builder().storeCodes(storeCodes).build(),
+        // LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
+        //
+        // // ユーザー権限取得
+        // var authorities = new ArrayList<SimpleGrantedAuthority>();
+        //
+        // return Optional.of(userResource.get()
+        // .withWarehouses(warehouses.getData())
+        // .withStores(stores.getData())
+        // .withAuthorities(authorities)
+        // .withPassword(""));
+        return null;
     }
 
     /**
@@ -158,34 +155,33 @@ public class UserService
      */
     @Transactional
     public UserResource createResource(UserResource resource) {
-        // ユーザー重複性チェック（username と email）
+        // ユーザ重複性チェック（username と email）
         if (isUserExisted(resource)) {
             throw new LcResourceAlreadyExistsException(UserEntity.class,
                 resource.getEmail() + " or " + resource.getUsername());
         }
 
-        // ユーザー作成
+        // ユーザ登録
         var id = userRepository.create(
             resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
                 // .withType(UserType.PREMIUM.getValue())
                 .toEntity());
 
-        // ユーザー所属情報作成
-        Optional.of(resource.getUserRelations()).ifPresentOrElse(
-            (userRelationResources) -> {
-                var userRelationEntities = new ArrayList<UserRelationEntity>();
-                userRelationResources.forEach((item) -> userRelationEntities.add(
+        // ユーザ部署情報登録
+        Optional.of(resource.getUserDepartments()).ifPresentOrElse(
+            (userDepartmentResources) -> {
+                var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
+                userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
                     item
                         .withId(null)
                         .withUuid(resource.getUuid())
-                        .withRole(Role.of(item.getRole()).getValue())
                         .withCreatedBy("admin")
                         .withCreatedAt(LocalDateTime.now())
                         .withModifiedBy("admin")
                         .withModifiedAt(LocalDateTime.now())
                         .withIsDeleted(0)
                         .toEntity()));
-                userRelationRepository.create(userRelationEntities);
+                userDepartmentRepository.create(userDepartmentEntities);
             }, () -> {
                 throw new LcValidationErrorException("UserRelations can not be null or empty.");
             });

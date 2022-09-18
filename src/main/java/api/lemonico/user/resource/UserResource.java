@@ -28,7 +28,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public class UserResource
 {
 
-    /** ユーザー自動採番ID */
+    /** 自動採番ID */
     private final ID<UserEntity> id;
 
     /** UUID */
@@ -92,7 +92,7 @@ public class UserResource
     private final Integer isDeleted;
 
     /** ユーザー所属リスト */
-    private final List<UserRelationResource> userRelations;
+    private final List<UserDepartmentResource> userDepartments;
 
     /** ユーザー所属のストアリスト */
     private final List<StoreResource> stores;
@@ -130,7 +130,7 @@ public class UserResource
         this.modifiedBy = entity.getModifiedBy();
         this.modifiedAt = entity.getModifiedAt();
         this.isDeleted = entity.getIsDeleted();
-        this.userRelations = null;
+        this.userDepartments = null;
         this.stores = null;
         this.warehouses = null;
         this.authorities = null;

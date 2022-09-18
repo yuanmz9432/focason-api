@@ -10,8 +10,8 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.user.dao.UserRelationDao;
-import api.lemonico.user.entity.UserRelationEntity;
+import api.lemonico.user.dao.UserDepartmentDao;
+import api.lemonico.user.entity.UserDepartmentEntity;
 import java.util.*;
 import lombok.*;
 import org.seasar.doma.jdbc.BatchResult;
@@ -19,16 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * 倉庫ストア関連情報リポジトリ
+ * ユーザー部署リポジトリ
  *
  * @since 1.0.0
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class UserRelationRepository
+public class UserDepartmentRepository
 {
 
-    private final UserRelationDao dao;
+    private final UserDepartmentDao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。
@@ -38,7 +38,7 @@ public class UserRelationRepository
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<UserRelationEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<UserDepartmentEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -51,7 +51,7 @@ public class UserRelationRepository
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<UserRelationEntity> findById(ID<UserRelationEntity> id) throws IllegalArgumentException {
+    public Optional<UserDepartmentEntity> findById(ID<UserDepartmentEntity> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -61,7 +61,7 @@ public class UserRelationRepository
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<UserRelationEntity> create(UserRelationEntity entity) {
+    public ID<UserDepartmentEntity> create(UserDepartmentEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
@@ -76,11 +76,11 @@ public class UserRelationRepository
      *
      * @param entity エンティティ
      */
-    public void update(ID<UserRelationEntity> id, UserRelationEntity entity) {
+    public void update(ID<UserDepartmentEntity> id, UserDepartmentEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(UserRelationEntity.class, entity.getId());
+            throw new LcEntityNotFoundException(UserDepartmentEntity.class, entity.getId());
         }
     }
 
@@ -89,10 +89,10 @@ public class UserRelationRepository
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<UserRelationEntity> id) throws IllegalArgumentException {
+    public void deleteById(ID<UserDepartmentEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(UserRelationEntity.class, id);
+            throw new LcEntityNotFoundException(UserDepartmentEntity.class, id);
         }
     }
 
@@ -101,10 +101,10 @@ public class UserRelationRepository
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<UserRelationEntity> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<UserDepartmentEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(UserRelationEntity.class, id);
+            throw new LcEntityNotFoundException(UserDepartmentEntity.class, id);
         }
     }
 
@@ -114,7 +114,7 @@ public class UserRelationRepository
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<UserRelationEntity> id) {
+    public boolean exists(ID<UserDepartmentEntity> id) {
         return findById(id).isPresent();
     }
 
@@ -124,7 +124,7 @@ public class UserRelationRepository
      * @param entities エンティティリスト
      * @return 作成したエンティティが返されます。
      */
-    public BatchResult<UserRelationEntity> create(List<UserRelationEntity> entities) {
+    public BatchResult<UserDepartmentEntity> create(List<UserDepartmentEntity> entities) {
         Objects.requireNonNull(entities, "'entities' must not be NULL.");
         return dao.insert(entities);
     }
@@ -146,11 +146,9 @@ public class UserRelationRepository
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * 倉庫ストア関連情報IDのセット（完全一致、複数指定可）
+         * ユーザー部署IDのセット（完全一致、複数指定可）
          */
-        private Set<ID<UserRelationEntity>> ids;
-
-        private String uuid;
+        private Set<ID<UserDepartmentEntity>> ids;
     }
 
     /**
