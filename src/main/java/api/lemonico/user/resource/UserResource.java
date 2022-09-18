@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
- * ユーザーリソース
+ * ユーザリソース
  *
  * @since 1.0.0
  */
@@ -34,10 +34,10 @@ public class UserResource
     /** UUID */
     private final String uuid;
 
-    /** ユーザー名 */
+    /** ユーザ名 */
     private final String username;
 
-    /** 性別（1:男性 2:女性） */
+    /** 性別（１：男性、２：女性、９：不明） */
     private final Integer gender;
 
     /** メールアドレス（ログインID） */
@@ -46,17 +46,14 @@ public class UserResource
     /** パスワード */
     private final String password;
 
-    /** タイプ（1:シルバー 2:ゴールド 3:プレミアム 4:退会） */
+    /** ステータス（１：有効、０：無効） */
+    private final Integer status;
+
+    /** タイプ（１：本番、２：デモ、９：スーパーユーザ） */
     private final Integer type;
 
     /** 電話番号 */
     private final String phone;
-
-    /** 個人ページ */
-    private final String url;
-
-    /** 個人ページ画像 */
-    private final String profileImage;
 
     /** 郵便番号 */
     private final String zip;
@@ -68,13 +65,10 @@ public class UserResource
     private final String municipality;
 
     /** 字・町目 */
-    private final String address;
+    private final String address1;
 
-    /** ビル */
-    private final String building;
-
-    /** おすすめ情報読込 */
-    private final Integer isSubscribed;
+    /** 部屋 */
+    private final String address2;
 
     /** 作成者 */
     private final String createdBy;
@@ -106,7 +100,7 @@ public class UserResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity ユーザーエンティティ
+     * @param entity ユーザエンティティ
      */
     public UserResource(UserEntity entity) {
         this.id = entity.getId();
@@ -115,16 +109,14 @@ public class UserResource
         this.gender = entity.getGender();
         this.email = entity.getEmail();
         this.password = entity.getPassword();
+        this.status = entity.getStatus();
         this.type = entity.getType();
         this.phone = entity.getPhone();
-        this.url = entity.getUrl();
-        this.profileImage = entity.getProfileImage();
         this.zip = entity.getZip();
         this.prefecture = entity.getPrefecture();
         this.municipality = entity.getMunicipality();
-        this.address = entity.getAddress();
-        this.building = entity.getBuilding();
-        this.isSubscribed = entity.getIsSubscribed();
+        this.address1 = entity.getAddress1();
+        this.address2 = entity.getAddress2();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -139,7 +131,7 @@ public class UserResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return ユーザーエンティティ
+     * @return ユーザエンティティ
      */
     public UserEntity toEntity() {
         return UserEntity.builder()
@@ -149,16 +141,14 @@ public class UserResource
             .gender(gender)
             .email(email)
             .password(password)
+            .status(status)
             .type(type)
             .phone(phone)
-            .url(url)
-            .profileImage(profileImage)
             .zip(zip)
             .prefecture(prefecture)
             .municipality(municipality)
-            .address(address)
-            .building(building)
-            .isSubscribed(isSubscribed)
+            .address1(address1)
+            .address2(address2)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

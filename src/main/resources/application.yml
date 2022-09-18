@@ -25,7 +25,7 @@ server:
 # ログ
 logging:
   level:
-    root: WARN
+    root: INFO
     api.lemonico: INFO
     org.springframework.data.convert.CustomConversions: ERROR
 

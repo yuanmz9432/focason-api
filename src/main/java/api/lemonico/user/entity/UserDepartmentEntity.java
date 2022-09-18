@@ -15,7 +15,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * ユーザー部署エンティティ
+ * ユーザ部署エンティティ
  *
  * @since 1.0.0
  */
@@ -34,9 +34,15 @@ public class UserDepartmentEntity extends LcEntity
     /** UUID */
     @Column(name = "uuid")
     String uuid;
-    /** 部署コード（倉庫、ストア） */
+    /** 部署コード */
     @Column(name = "department_code")
     String departmentCode;
+    /** 部署タイプ */
+    @Column(name = "department_type")
+    Integer departmentType;
+    /** ロールタイプ（１：管理者、２：スタッフ） */
+    @Column(name = "role_type")
+    Integer roleType;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

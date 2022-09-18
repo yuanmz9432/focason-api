@@ -15,7 +15,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * ユーザーエンティティ
+ * ユーザエンティティ
  *
  * @since 1.0.0
  */
@@ -34,10 +34,10 @@ public class UserEntity extends LcEntity
     /** UUID */
     @Column(name = "uuid")
     String uuid;
-    /** ユーザー名 */
+    /** ユーザ名 */
     @Column(name = "username")
     String username;
-    /** 性別（1:男性 2:女性） */
+    /** 性別（１：男性、２：女性、９：不明） */
     @Column(name = "gender")
     Integer gender;
     /** メールアドレス（ログインID） */
@@ -46,18 +46,15 @@ public class UserEntity extends LcEntity
     /** パスワード */
     @Column(name = "password")
     String password;
-    /** タイプ（1:シルバー 2:ゴールド 3:プレミアム 4:退会） */
+    /** ステータス（１：有効、０：無効） */
+    @Column(name = "status")
+    Integer status;
+    /** タイプ（１：本番、２：デモ、９：スーパーユーザ） */
     @Column(name = "type")
     Integer type;
     /** 電話番号 */
     @Column(name = "phone")
     String phone;
-    /** 個人ページ */
-    @Column(name = "url")
-    String url;
-    /** 個人ページ画像 */
-    @Column(name = "profile_image")
-    String profileImage;
     /** 郵便番号 */
     @Column(name = "zip")
     String zip;
@@ -68,14 +65,11 @@ public class UserEntity extends LcEntity
     @Column(name = "municipality")
     String municipality;
     /** 字・町目 */
-    @Column(name = "address")
-    String address;
-    /** ビル */
-    @Column(name = "building")
-    String building;
-    /** おすすめ情報読込 */
-    @Column(name = "is_subscribed")
-    Integer isSubscribed;
+    @Column(name = "address1")
+    String address1;
+    /** 部屋 */
+    @Column(name = "address2")
+    String address2;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

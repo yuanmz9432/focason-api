@@ -12,14 +12,17 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.store.service.StoreService;
+import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.service.WarehouseService;
 import api.lemonico.warehouse.service.WarehouseStoreService;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -99,11 +102,11 @@ public class UserService
         var uuid = userResource.map(UserResource::getUuid)
             .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
 
-        // // ユーザー所属単位検索
-        // var userRelations =
-        // userRelationRepository.findAll(
-        // UserRelationRepository.Condition.builder().uuid(uuid).build(),
-        // LcPagination.DEFAULT, UserRelationRepository.Sort.DEFAULT);
+        // ユーザー所属単位検索
+        var userDepartments =
+            userDepartmentRepository.findAll(
+                UserDepartmentRepository.Condition.builder().uuid(uuid).build(),
+                LcPagination.DEFAULT, UserDepartmentRepository.Sort.DEFAULT);
         //
         // // 所属単位コードを纒める
         // Set<String> storeCodes = new HashSet<>();
@@ -163,24 +166,25 @@ public class UserService
                 // .withType(UserType.PREMIUM.getValue())
                 .toEntity());
 
-        // ユーザ部署情報登録
-        // Optional.of(resource.getUserDepartments()).ifPresentOrElse(
-        // (userDepartmentResources) -> {
-        // var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
-        // userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
-        // item
-        // .withId(null)
-        // .withUuid(resource.getUuid())
-        // .withCreatedBy("admin")
-        // .withCreatedAt(LocalDateTime.now())
-        // .withModifiedBy("admin")
-        // .withModifiedAt(LocalDateTime.now())
-        // .withIsDeleted(0)
-        // .toEntity()));
-        // userDepartmentRepository.create(userDepartmentEntities);
-        // }, () -> {
-        // throw new LcValidationErrorException("UserRelations can not be null or empty.");
-        // });
+        // ユーザ部署登録
+        Optional.of(resource.getUserDepartments()).ifPresentOrElse(
+            (userDepartmentResources) -> {
+                var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
+                userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
+                    item
+                        .withId(null)
+                        .withUuid(resource.getUuid())
+                        .withDepartmentCode(item.getDepartmentCode())
+                        .withCreatedBy("admin")
+                        .withCreatedAt(LocalDateTime.now())
+                        .withModifiedBy("admin")
+                        .withModifiedAt(LocalDateTime.now())
+                        .withIsDeleted(0)
+                        .toEntity()));
+                userDepartmentRepository.create(userDepartmentEntities);
+            }, () -> {
+                throw new LcValidationErrorException("UserRelations can not be null or empty.");
+            });
 
         // ユーザを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);

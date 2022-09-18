@@ -57,9 +57,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
             // 登录接口放行
             .antMatchers("/heartbeat", "/auth/**").permitAll()
             // 権限設定
-            .antMatchers("/roles/**").hasAnyAuthority("AUTH_PREMIUM")
-            .antMatchers("/stores/**").hasAnyAuthority("AUTH_GOLDEN", "AUTH_PREMIUM")
-            .antMatchers("/warehouses/**").hasAnyAuthority("AUTH_GOLDEN", "AUTH_PREMIUM", "AUTH_SILVER")
+            // .antMatchers("/roles/**").hasAnyAuthority("AUTH_PREMIUM")
+            // .antMatchers("/stores/**").hasAnyAuthority("AUTH_GOLDEN", "AUTH_PREMIUM")
+            // .antMatchers("/warehouses/**").hasAnyAuthority("AUTH_GOLDEN", "AUTH_PREMIUM", "AUTH_SILVER")
             // 其他接口全部接受验证
             .anyRequest().authenticated()
             .and()

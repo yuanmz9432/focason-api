@@ -12,7 +12,7 @@ import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * ユーザー部署リソース
+ * ユーザ部署リソース
  *
  * @since 1.0.0
  */
@@ -30,8 +30,14 @@ public class UserDepartmentResource
     /** UUID */
     private final String uuid;
 
-    /** 部署コード（倉庫、ストア） */
+    /** 部署コード */
     private final String departmentCode;
+
+    /** 部署タイプ */
+    private final Integer departmentType;
+
+    /** ロールタイプ（１：管理者、２：スタッフ） */
+    private final Integer roleType;
 
     /** 作成者 */
     private final String createdBy;
@@ -51,12 +57,14 @@ public class UserDepartmentResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity ユーザー部署エンティティ
+     * @param entity ユーザ部署エンティティ
      */
     public UserDepartmentResource(UserDepartmentEntity entity) {
         this.id = entity.getId();
         this.uuid = entity.getUuid();
         this.departmentCode = entity.getDepartmentCode();
+        this.departmentType = entity.getDepartmentType();
+        this.roleType = entity.getRoleType();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -67,13 +75,15 @@ public class UserDepartmentResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return ユーザー部署エンティティ
+     * @return ユーザ部署エンティティ
      */
     public UserDepartmentEntity toEntity() {
         return UserDepartmentEntity.builder()
             .id(id)
             .uuid(uuid)
             .departmentCode(departmentCode)
+            .departmentType(departmentType)
+            .roleType(roleType)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

@@ -149,6 +149,11 @@ public class UserDepartmentRepository
          * ユーザー部署IDのセット（完全一致、複数指定可）
          */
         private Set<ID<UserDepartmentEntity>> ids;
+
+        /**
+         * ユーザーUUID（完全一致）
+         */
+        private String uuid;
     }
 
     /**
