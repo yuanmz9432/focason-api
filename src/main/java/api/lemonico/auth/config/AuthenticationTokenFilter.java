@@ -14,6 +14,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -43,6 +44,12 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    /**
+     * 認証必要ないURI
+     */
+    private static final List<String> UN_AUTHORITY_PATHS =
+        List.of("/api/heartbeat", "/api/auth/login", "/api/auth/register");
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
         throws IOException, ServletException {
@@ -51,44 +58,50 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        // TODO 下記URLであれば、ヘッダ取得処理を行わない。
-        // リクエストヘッダーからアクセストークンを取得する。
-        var requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String subject = null;
-        if (Strings.isNotBlank(requestTokenHeader)) {
-            Claims accessTokenClaims;
-            try {
-                accessTokenClaims = this.jwtGenerator.getClaims(requestTokenHeader);
-            } catch (ExpiredJwtException e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
-                    LcErrorResource.builder()
-                        .code(LcErrorCode.AUTH_TOKEN_EXPIRED.getValue())
-                        .message(LcErrorCode.AUTH_TOKEN_EXPIRED.name())
-                        .build()));
-                return;
-            } catch (SignatureException | MalformedJwtException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
-                    LcErrorResource.builder()
-                        .code(LcErrorCode.AUTH_TOKEN_INVALID.getValue())
-                        .message(LcErrorCode.AUTH_TOKEN_INVALID.name())
-                        .build()));
-                return;
+        // 下記URL以外であれば、ヘッダ取得処理を行わない。
+        if (!UN_AUTHORITY_PATHS.contains(request.getRequestURI())) {
+            // リクエストヘッダーからアクセストークンを取得する。
+            var requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String subject = null;
+            if (Strings.isNotBlank(requestTokenHeader)) {
+                Claims accessTokenClaims;
+                try {
+                    // リクエストヘッダから、アクセストークン情報を洗い出す。
+                    accessTokenClaims = this.jwtGenerator.getClaims(requestTokenHeader);
+                } catch (ExpiredJwtException e) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
+                        LcErrorResource.builder()
+                            .code(LcErrorCode.AUTH_TOKEN_EXPIRED.getValue())
+                            .message(LcErrorCode.AUTH_TOKEN_EXPIRED.name())
+                            .build()));
+                    return;
+                } catch (SignatureException | MalformedJwtException e) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
+                        LcErrorResource.builder()
+                            .code(LcErrorCode.AUTH_TOKEN_INVALID.getValue())
+                            .message(LcErrorCode.AUTH_TOKEN_INVALID.name())
+                            .build()));
+                    return;
+                }
+                // アクセストークン情報から、SUB情報を取得
+                subject = (String) accessTokenClaims.get(Claims.SUBJECT);
             }
-            subject = (String) accessTokenClaims.get(Claims.SUBJECT);
-        }
 
-        if (Strings.isNotBlank(subject) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var loginUser = service.getLoginUserBySubject(subject);
-            if (!Objects.isNull(loginUser)
-                && (subject.equals(loginUser.getUuid()))) {
-                var authentication =
-                    new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                MDC.put("UUID", loginUser.getUuid());
-                MDC.put("USERNAME", loginUser.getUsername());
+            // SUB情報が存在し、かつ認証が取れない場合、下記処理を行う
+            if (Strings.isNotBlank(subject) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                var loginUser = service.getLoginUserBySubject(subject);
+                if (!Objects.isNull(loginUser)
+                    && (subject.equals(loginUser.getUuid()))) {
+                    var authentication =
+                        new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    // MDCにUUIDとユーザ名を設定する
+                    MDC.put("UUID", loginUser.getUuid());
+                    MDC.put("USERNAME", loginUser.getUsername());
+                }
             }
         }
 
