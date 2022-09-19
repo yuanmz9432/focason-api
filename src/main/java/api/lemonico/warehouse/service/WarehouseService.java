@@ -8,14 +8,18 @@ import static java.util.stream.Collectors.toList;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.exception.LcIllegalUserException;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.user.repository.UserRepository;
+import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.entity.WarehouseEntity;
 import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.resource.WarehouseResource;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +39,11 @@ public class WarehouseService
      * 倉庫情報リポジトリ
      */
     private final WarehouseRepository repository;
+
+    /**
+     * ユーザ情報リポジトリ
+     */
+    private final UserRepository userRepository;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、倉庫情報リソースの一覧を取得します。
@@ -82,6 +91,16 @@ public class WarehouseService
             throw new LcResourceAlreadyExistsException(WarehouseEntity.class,
                 resource.getWarehouseCode() + ":" + resource.getWarehouseName());
         }
+        // 倉庫登録権限チェック
+        var uuid = MDC.get("UUID");
+        var user = userRepository.findAll(UserRepository.Condition.builder().uuid(uuid).build(),
+            LcPagination.DEFAULT, UserRepository.Sort.DEFAULT);
+        if (user == null) {
+            throw new LcResourceNotFoundException(UserResource.class, uuid);
+        } else if (user.getData().get(0).getType() == 2) {
+            throw new LcIllegalUserException(user.getData().get(0).getEmail());
+        }
+
         // 倉庫情報を作成します。
         var id = repository.create(resource.toEntity());
 

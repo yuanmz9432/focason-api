@@ -115,13 +115,10 @@ public class UserService
                 LcPagination.DEFAULT, UserDepartmentRepository.Sort.DEFAULT);
 
         // 部署情報整理
-        Set<String> storeCodes = new HashSet<>();
         Set<String> warehouseCodes = new HashSet<>();
         userDepartments.getData().forEach((department) -> {
             if (Objects.equals(Department.WAREHOUSE.getValue(), department.getDepartmentType())) {
                 warehouseCodes.add(department.getDepartmentCode());
-            } else {
-                storeCodes.add(department.getDepartmentCode());
             }
         });
 
@@ -129,26 +126,9 @@ public class UserService
         var warehouses = warehouseService.getResourceList(
             WarehouseRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
             WarehouseRepository.Sort.DEFAULT);
-        //
-        // // 倉庫-ストア関連情報取得
-        // var warehouseStores = warehouseStoreService.getResourceList(
-        // WarehouseStoreRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
-        // WarehouseStoreRepository.Sort.DEFAULT);
-        //
-        // // 倉庫所属のストア情報纒める
-        // warehouseStores.getData().forEach((item) -> storeCodes.add(item.getStoreCode()));
-        //
-        // // ストア情報取得
-        // var stores = storeService.getResourceList(StoreRepository.Condition.builder().storeCodes(storeCodes).build(),
-        // LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
-        //
-        // // ユーザー権限取得
-        // var authorities = new ArrayList<SimpleGrantedAuthority>();
-        //
+
         return Optional.of(userResource.get()
             .withWarehouses(warehouses.getData())
-            .withStores(null)
-            .withAuthorities(null)
             .withPassword(""));
     }
 
