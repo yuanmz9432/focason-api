@@ -8,14 +8,13 @@ import static java.util.stream.Collectors.toList;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.warehouse.entity.WarehouseEntity;
 import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.resource.WarehouseResource;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,11 +77,32 @@ public class WarehouseService
      */
     @Transactional
     public WarehouseResource createResource(WarehouseResource resource) {
+        // ユーザ重複性チェック（username と email）
+        if (isWarehouseExisted(resource)) {
+            throw new LcResourceAlreadyExistsException(WarehouseEntity.class,
+                resource.getWarehouseCode() + ":" + resource.getWarehouseName());
+        }
         // 倉庫情報を作成します。
         var id = repository.create(resource.toEntity());
 
         // 倉庫情報を取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+    }
+
+    /**
+     * ユーザ重複性チェック
+     *
+     * @param resource ユーザリソース
+     * @return true：重複した、false：重複しない
+     */
+    private boolean isWarehouseExisted(WarehouseResource resource) {
+        var warehouses = getResourceList(
+            WarehouseRepository.Condition.builder()
+                .warehouseCodes(Set.of(resource.getWarehouseCode()))
+                .build(),
+            LcPagination.DEFAULT,
+            WarehouseRepository.Sort.DEFAULT);
+        return warehouses.getCount() > 0;
     }
 
     /**

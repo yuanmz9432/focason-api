@@ -64,32 +64,32 @@ public class UserService
     private final WarehouseStoreService warehouseStoreService;
 
     /**
-     * 検索条件・ページングパラメータ・ソート条件を指定して、クライアントリソースの一覧を取得します。
+     * 検索条件・ページングパラメータ・ソート条件を指定して、ユーザリソースの一覧を取得します。
      *
      * @param condition 検索条件
      * @param pagination ページングパラメータ
      * @param sort ソートパラメータ
-     * @return クライアントリソースの結果セットが返されます。
+     * @return ユーザリソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
     public LcResultSet<UserResource> getResourceList(
         UserRepository.Condition condition,
         LcPagination pagination,
         UserRepository.Sort sort) {
-        // クライアントの一覧と全体件数を取得します。
+        // ユーザの一覧と全体件数を取得します。
         var resultSet = userRepository.findAll(condition, pagination, sort);
 
-        // クライアントエンティティのリストをクライアントリソースのリストに変換します。
+        // ユーザエンティティのリストをユーザリソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
 
         return new LcResultSet<>(resources, resultSet.getCount());
     }
 
     /**
-     * クライアントIDを指定して、クライアントを取得します。
+     * ユーザIDを指定して、ユーザを取得します。
      *
-     * @param id クライアントID
-     * @return クライアントリソース
+     * @param id ユーザID
+     * @return ユーザリソース
      */
     @Transactional(readOnly = true)
     public Optional<UserResource> getResource(ID<UserEntity> id) {
@@ -144,10 +144,10 @@ public class UserService
     }
 
     /**
-     * クライアントを作成します。
+     * ユーザを作成します。
      *
-     * @param resource クライアントリソース
-     * @return 作成されたクライアントリソース
+     * @param resource ユーザリソース
+     * @return 作成されたユーザリソース
      */
     @Transactional
     public UserResource createResource(UserResource resource) {
@@ -187,6 +187,12 @@ public class UserService
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
     }
 
+    /**
+     * ユーザ重複性チェック
+     *
+     * @param resource ユーザリソース
+     * @return true：重複した、false：重複しない
+     */
     private boolean isUserExisted(UserResource resource) {
         var client = getResourceList(
             UserRepository.Condition.builder()
@@ -208,23 +214,23 @@ public class UserService
     }
 
     /**
-     * クライアントIDを指定して、クライアントを更新します。
+     * ユーザIDを指定して、ユーザを更新します。
      *
-     * @param id クライアントID
-     * @param resource クライアントリソース
-     * @return 更新後のクライアントリソース
+     * @param id ユーザID
+     * @param resource ユーザリソース
+     * @return 更新後のユーザリソース
      */
     @Transactional
     public UserResource updateResource(ID<UserEntity> id, UserResource resource) {
-        // クライアントIDにおいて重複したデータが存在していることを示す。
+        // ユーザIDにおいて重複したデータが存在していることを示す。
         if (!userRepository.exists(id)) {
             throw new LcResourceNotFoundException(UserEntity.class, id);
         }
 
-        // クライアントを更新します。
+        // ユーザを更新します。
         userRepository.update(id, resource.toEntity());
 
-        // クライアントを取得します。
+        // ユーザを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
     }
 
@@ -236,12 +242,12 @@ public class UserService
     @Transactional
     public void deleteResource(ID<UserEntity> id) {
         // TODO Waiting for finalization of basic design according to Q&A
-        // クライアントIDにおいて重複したデータが存在していることを示す。
+        // ユーザIDにおいて重複したデータが存在していることを示す。
         if (!userRepository.exists(id)) {
             throw new LcResourceNotFoundException(UserEntity.class, id);
         }
 
-        // クライアントを削除します。
+        // ユーザを削除します。
         userRepository.deleteLogicById(id);
     }
 
