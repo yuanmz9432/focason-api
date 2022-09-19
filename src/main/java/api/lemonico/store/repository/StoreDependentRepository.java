@@ -10,29 +10,25 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.store.dao.StoreDao;
-import api.lemonico.store.entity.StoreEntity;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import api.lemonico.store.dao.StoreDependentDao;
+import api.lemonico.store.entity.StoreDependentEntity;
+import java.util.*;
 import lombok.*;
-import org.slf4j.MDC;
+import org.seasar.doma.jdbc.BatchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * ストアリポジトリ
+ * ストア所属リポジトリ
  *
  * @since 1.0.0
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class StoreRepository
+public class StoreDependentRepository
 {
 
-    private final StoreDao dao;
+    private final StoreDependentDao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。
@@ -42,7 +38,7 @@ public class StoreRepository
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<StoreEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<StoreDependentEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -55,7 +51,7 @@ public class StoreRepository
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<StoreEntity> findById(ID<StoreEntity> id) throws IllegalArgumentException {
+    public Optional<StoreDependentEntity> findById(ID<StoreDependentEntity> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -65,15 +61,12 @@ public class StoreRepository
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<StoreEntity> create(StoreEntity entity) {
+    public ID<StoreDependentEntity> create(StoreDependentEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
-            .withCreatedBy(MDC.get("USERNAME"))
-            .withCreatedAt(LocalDateTime.now())
-            .withModifiedBy(MDC.get("USERNAME"))
-            .withModifiedAt(LocalDateTime.now())
-            .withIsDeleted(0))
+            .withCreatedBy("")
+            .withModifiedBy(""))
             .getEntity()
             .getId();
     }
@@ -83,11 +76,11 @@ public class StoreRepository
      *
      * @param entity エンティティ
      */
-    public void update(ID<StoreEntity> id, StoreEntity entity) {
+    public void update(ID<StoreDependentEntity> id, StoreDependentEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(StoreEntity.class, entity.getId());
+            throw new LcEntityNotFoundException(StoreDependentEntity.class, entity.getId());
         }
     }
 
@@ -96,10 +89,10 @@ public class StoreRepository
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<StoreEntity> id) throws IllegalArgumentException {
+    public void deleteById(ID<StoreDependentEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(StoreEntity.class, id);
+            throw new LcEntityNotFoundException(StoreDependentEntity.class, id);
         }
     }
 
@@ -108,10 +101,10 @@ public class StoreRepository
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<StoreEntity> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<StoreDependentEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(StoreEntity.class, id);
+            throw new LcEntityNotFoundException(StoreDependentEntity.class, id);
         }
     }
 
@@ -121,8 +114,19 @@ public class StoreRepository
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<StoreEntity> id) {
+    public boolean exists(ID<StoreDependentEntity> id) {
         return findById(id).isPresent();
+    }
+
+    /**
+     * 複数エンティティを作成します。
+     *
+     * @param entities エンティティリスト
+     * @return 作成したエンティティが返されます。
+     */
+    public BatchResult<StoreDependentEntity> create(List<StoreDependentEntity> entities) {
+        Objects.requireNonNull(entities, "'entities' must not be NULL.");
+        return dao.insert(entities);
     }
 
     /**
@@ -142,14 +146,9 @@ public class StoreRepository
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * ストアIDのセット（完全一致、複数指定可）
+         * ストア所属IDのセット（完全一致、複数指定可）
          */
-        private Set<ID<StoreEntity>> ids;
-
-        /**
-         * ストアコード（完全一致、複数指定可）
-         */
-        private Set<String> storeCodes;
+        private Set<ID<StoreDependentEntity>> ids;
     }
 
     /**

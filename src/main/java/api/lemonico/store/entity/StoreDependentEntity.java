@@ -15,7 +15,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * ストアエンティティ
+ * ストア所属エンティティ
  *
  * @since 1.0.0
  */
@@ -24,19 +24,19 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-@Table(name = "store")
-public class StoreEntity extends LcEntity
+@Table(name = "store_dependent")
+public class StoreDependentEntity extends LcEntity
 {
     /** 自動採番ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    ID<StoreEntity> id;
+    ID<StoreDependentEntity> id;
     /** ストアコード */
     @Column(name = "store_code")
     String storeCode;
-    /** ストア名称 */
-    @Column(name = "store_name")
-    String storeName;
+    /** 倉庫コード */
+    @Column(name = "warehouse_code")
+    String warehouseCode;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

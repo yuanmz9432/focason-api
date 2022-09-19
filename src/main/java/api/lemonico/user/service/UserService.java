@@ -15,6 +15,8 @@ import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
+import api.lemonico.store.repository.StoreRepository;
+import api.lemonico.store.resource.StoreResource;
 import api.lemonico.store.service.StoreService;
 import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
@@ -22,6 +24,7 @@ import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.repository.WarehouseRepository;
+import api.lemonico.warehouse.resource.WarehouseResource;
 import api.lemonico.warehouse.service.WarehouseService;
 import api.lemonico.warehouse.service.WarehouseStoreService;
 import java.time.LocalDateTime;
@@ -173,8 +176,29 @@ public class UserService
         Optional.of(resource.getUserDepartments()).ifPresentOrElse(
             (userDepartmentResources) -> {
                 var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
-                userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
-                    item
+                userDepartmentResources.forEach((item) -> {
+                    if (Objects.equals(item.getDepartmentType(), Department.WAREHOUSE.getValue())) {
+                        // 指定する倉庫コードが存在するかチェック
+                        var warehouses = warehouseService.getResourceList(
+                            WarehouseRepository.Condition.builder().warehouseCodes(Set.of(item.getDepartmentCode()))
+                                .build(),
+                            LcPagination.DEFAULT,
+                            WarehouseRepository.Sort.DEFAULT);
+                        if (warehouses == null || warehouses.isEmpty()) {
+                            throw new LcResourceNotFoundException(WarehouseResource.class, item.getDepartmentCode());
+                        }
+                    } else if (Objects.equals(item.getDepartmentType(), Department.STORE.getValue())) {
+                        // 指定する倉庫コードが存在するかチェック
+                        var stores = storeService.getResourceList(
+                            StoreRepository.Condition.builder().storeCodes(Set.of(item.getDepartmentCode()))
+                                .build(),
+                            LcPagination.DEFAULT,
+                            StoreRepository.Sort.DEFAULT);
+                        if (stores == null || stores.isEmpty()) {
+                            throw new LcResourceNotFoundException(StoreResource.class, item.getDepartmentCode());
+                        }
+                    }
+                    userDepartmentEntities.add(item
                         .withId(null)
                         .withUuid(resource.getUuid())
                         .withDepartmentCode(item.getDepartmentCode())
@@ -185,7 +209,8 @@ public class UserService
                         .withModifiedBy(MDC.get("USERNAME"))
                         .withModifiedAt(LocalDateTime.now())
                         .withIsDeleted(0)
-                        .toEntity()));
+                        .toEntity());
+                });
                 userDepartmentRepository.create(userDepartmentEntities);
             }, () -> {
                 throw new LcValidationErrorException("UserDepartment can not be null or empty.");

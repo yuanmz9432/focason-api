@@ -6,14 +6,13 @@ package api.lemonico.store.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.store.entity.StoreEntity;
+import api.lemonico.store.entity.StoreDependentEntity;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * ストアリソース
+ * ストア所属リソース
  *
  * @since 1.0.0
  */
@@ -22,17 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class StoreResource
+public class StoreDependentResource
 {
 
     /** 自動採番ID */
-    private final ID<StoreEntity> id;
+    private final ID<StoreDependentEntity> id;
 
     /** ストアコード */
     private final String storeCode;
 
-    /** ストア名称 */
-    private final String storeName;
+    /** 倉庫コード */
+    private final String warehouseCode;
 
     /** 作成者 */
     private final String createdBy;
@@ -49,36 +48,32 @@ public class StoreResource
     /** 削除フラグ（0: 未削除 1: 削除済） */
     private final Integer isDeleted;
 
-    /** ストア所属リスト */
-    private final List<StoreDependentResource> storeDependents;
-
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity ストアエンティティ
+     * @param entity ストア所属エンティティ
      */
-    public StoreResource(StoreEntity entity) {
+    public StoreDependentResource(StoreDependentEntity entity) {
         this.id = entity.getId();
         this.storeCode = entity.getStoreCode();
-        this.storeName = entity.getStoreName();
+        this.warehouseCode = entity.getWarehouseCode();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
         this.modifiedAt = entity.getModifiedAt();
         this.isDeleted = entity.getIsDeleted();
-        this.storeDependents = null;
     }
 
     /**
      * リソースをエンティティに変換します。
      *
-     * @return ストアエンティティ
+     * @return ストア所属エンティティ
      */
-    public StoreEntity toEntity() {
-        return StoreEntity.builder()
+    public StoreDependentEntity toEntity() {
+        return StoreDependentEntity.builder()
             .id(id)
             .storeCode(storeCode)
-            .storeName(storeName)
+            .warehouseCode(warehouseCode)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

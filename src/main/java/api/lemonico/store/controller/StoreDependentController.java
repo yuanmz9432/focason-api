@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.user.controller;
+package api.lemonico.store.controller;
 
 
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
@@ -15,11 +15,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.user.entity.UserEntity;
-import api.lemonico.user.repository.UserRepository;
-import api.lemonico.user.resource.UserResource;
-import api.lemonico.user.service.UserService;
-import java.util.UUID;
+import api.lemonico.store.entity.StoreDependentEntity;
+import api.lemonico.store.repository.StoreDependentRepository;
+import api.lemonico.store.resource.StoreDependentResource;
+import api.lemonico.store.service.StoreDependentService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -30,19 +29,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ユーザーコントローラー
+ * ストア所属コントローラー
  *
  * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class UserController
+public class StoreDependentController
 {
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "/users";
+    private static final String COLLECTION_RESOURCE_URI = "/storeDependent";
 
     /**
      * メンバーリソースURI
@@ -50,61 +49,60 @@ public class UserController
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ユーザーサービス
+     * ストア所属サービス
      */
-    private final UserService service;
+    private final StoreDependentService service;
 
     /**
-     * ユーザーリソースの一覧取得API
+     * ストア所属リソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ユーザーリソース一覧取得APIレスポンス
+     * @return ストア所属リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<UserResource>> getUserList(
-        @LcConditionParam UserRepository.Condition condition,
+    public ResponseEntity<LcResultSet<StoreDependentResource>> getStoreDependentList(
+        @LcConditionParam StoreDependentRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = UserRepository.Condition.DEFAULT;
+            condition = StoreDependentRepository.Condition.DEFAULT;
         }
-        var sort = UserRepository.Sort.fromLcSort(lcSort);
+        var sort = StoreDependentRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * ユーザーIDを指定して、ユーザーリソース取得API
+     * ストア所属IDを指定して、ストア所属リソース取得API
      *
-     * @param id ユーザーID
-     * @return ユーザーリソース取得APIレスポンス
+     * @param id ストア所属ID
+     * @return ストア所属リソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<UserResource> getUser(
-        @PathVariable("id") ID<UserEntity> id) {
+    public ResponseEntity<StoreDependentResource> getStoreDependent(
+        @PathVariable("id") ID<StoreDependentEntity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(StoreDependentResource.class, id));
     }
 
     /**
-     * ユーザーリソース作成API
+     * ストア所属リソース作成API
      *
-     * @param resource ユーザーリソース
-     * @return ユーザーリソース作成APIレスポンス
+     * @param resource ストア所属リソース
+     * @return ストア所属リソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> createUser(
-        @Valid @RequestBody UserResource resource,
+    public ResponseEntity<Void> createStoreDependent(
+        @Valid @RequestBody StoreDependentResource resource,
         UriComponentsBuilder uriBuilder) {
-        var id = service.createResource(
-            resource.withUuid(UUID.randomUUID().toString())).getId();
+        var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).getUser(id))
+            .withMethodCall(on(getClass()).getStoreDependent(id))
             .build()
             .encode()
             .toUri();
@@ -112,32 +110,32 @@ public class UserController
     }
 
     /**
-     * ユーザーIDを指定して、ユーザーリソース更新API
+     * ストア所属IDを指定して、ストア所属リソース更新API
      *
-     * @param id ユーザーID
-     * @param resource ユーザーリソース更新APIレスポンス
-     * @return ユーザーリソース更新APIレスポンス
+     * @param id ストア所属ID
+     * @param resource ストア所属リソース更新APIレスポンス
+     * @return ストア所属リソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<UserResource> updateUser(
-        @PathVariable("id") ID<UserEntity> id,
-        @Valid @RequestBody UserResource resource) {
+    public ResponseEntity<StoreDependentResource> updateStoreDependent(
+        @PathVariable("id") ID<StoreDependentEntity> id,
+        @Valid @RequestBody StoreDependentResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * ユーザーIDを指定して、ユーザーリソース削除API
+     * ストア所属IDを指定して、ストア所属リソース削除API
      *
-     * @param id ユーザーID
-     * @return ユーザーリソース削除APIレスポンス
+     * @param id ストア所属ID
+     * @return ストア所属リソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> deleteUser(
-        @PathVariable("id") ID<UserEntity> id) {
+    public ResponseEntity<Void> deleteStoreDependent(
+        @PathVariable("id") ID<StoreDependentEntity> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }

@@ -10,20 +10,26 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.core.exception.LcValidationErrorException;
+import api.lemonico.store.entity.StoreDependentEntity;
 import api.lemonico.store.entity.StoreEntity;
+import api.lemonico.store.repository.StoreDependentRepository;
 import api.lemonico.store.repository.StoreRepository;
 import api.lemonico.store.resource.StoreResource;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import api.lemonico.warehouse.repository.WarehouseRepository;
+import api.lemonico.warehouse.resource.WarehouseResource;
+import api.lemonico.warehouse.service.WarehouseService;
+import java.time.LocalDateTime;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- * ストア情報サービス
+ * ストアサービス
  *
  * @since 1.0.0
  */
@@ -33,99 +39,135 @@ public class StoreService
 {
 
     /**
-     * ストア情報リポジトリ
+     * ストアリポジトリ
      */
     private final StoreRepository repository;
 
     /**
-     * 検索条件・ページングパラメータ・ソート条件を指定して、ストア情報リソースの一覧を取得します。
+     * ストア所属リポジトリ
+     */
+    private final StoreDependentRepository storeDependentRepository;
+
+    /**
+     * 倉庫サービス
+     */
+    private final WarehouseService warehouseService;
+
+    /**
+     * 検索条件・ページングパラメータ・ソート条件を指定して、ストアリソースの一覧を取得します。
      *
      * @param condition 検索条件
      * @param pagination ページングパラメータ
      * @param sort ソートパラメータ
-     * @return ストア情報リソースの結果セットが返されます。
+     * @return ストアリソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
     public LcResultSet<StoreResource> getResourceList(
         StoreRepository.Condition condition,
         LcPagination pagination,
         StoreRepository.Sort sort) {
-        // ストア情報の一覧と全体件数を取得します。
+        // ストアの一覧と全体件数を取得します。
         var resultSet = repository.findAll(condition, pagination, sort);
 
-        // ストア情報エンティティのリストをストア情報リソースのリストに変換します。
+        // ストアエンティティのリストをストアリソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
         return new LcResultSet<>(resources, resultSet.getCount());
     }
 
     /**
-     * ストア情報IDを指定して、ストア情報を取得します。
+     * ストアIDを指定して、ストアを取得します。
      *
-     * @param id ストア情報ID
-     * @return ストア情報リソース
+     * @param id ストアID
+     * @return ストアリソース
      */
     @Transactional(readOnly = true)
     public Optional<StoreResource> getResource(ID<StoreEntity> id) {
-        // ストア情報を取得します。
+        // ストアを取得します。
         return repository.findById(id).map(this::convertEntityToResource);
     }
 
     /**
-     * ストア情報を作成します。
+     * ストアを作成します。
      *
-     * @param resource ストア情報リソース
-     * @return 作成されたストア情報リソース
+     * @param resource ストアリソース
+     * @return 作成されたストアリソース
      */
     @Transactional
     public StoreResource createResource(StoreResource resource) {
-        // ストア情報を作成します。
+        if (resource.getStoreDependents() == null || resource.getStoreDependents().isEmpty()) {
+            throw new LcValidationErrorException("storeDependents can not be null or empty.");
+        }
+        // ストアを作成します。
         var id = repository.create(resource.toEntity());
 
-        // ストア情報を取得します。
+        var storeDependentEntities = new ArrayList<StoreDependentEntity>();
+        resource.getStoreDependents().forEach((item) -> {
+            // 指定する倉庫コードが存在するかチェック
+            var warehouses = warehouseService.getResourceList(
+                WarehouseRepository.Condition.builder().warehouseCodes(Set.of(item.getWarehouseCode())).build(),
+                LcPagination.DEFAULT,
+                WarehouseRepository.Sort.DEFAULT);
+            if (warehouses == null || warehouses.isEmpty()) {
+                throw new LcResourceNotFoundException(WarehouseResource.class, item.getWarehouseCode());
+            }
+            storeDependentEntities.add(item
+                .withId(null)
+                .withStoreCode(item.getStoreCode())
+                .withWarehouseCode(item.getWarehouseCode())
+                .withCreatedBy(MDC.get("USERNAME"))
+                .withCreatedAt(LocalDateTime.now())
+                .withModifiedBy(MDC.get("USERNAME"))
+                .withModifiedAt(LocalDateTime.now())
+                .withIsDeleted(0)
+                .toEntity());
+        });
+        storeDependentRepository.create(storeDependentEntities);
+
+        // ストアを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
     }
 
     /**
-     * ストア情報IDを指定して、ストア情報を更新します。
+     * ストアIDを指定して、ストアを更新します。
      *
-     * @param id ストア情報ID
-     * @param resource ストア情報リソース
-     * @return 更新後のストア情報リソース
+     * @param id ストアID
+     * @param resource ストアリソース
+     * @return 更新後のストアリソース
      */
     @Transactional
     public StoreResource updateResource(ID<StoreEntity> id, StoreResource resource) {
         // TODO Waiting for finalization of basic design according to Q&A
-        // ストア情報IDにおいて重複したデータが存在していることを示す。
+        // ストアIDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
             throw new LcResourceNotFoundException(StoreEntity.class, id);
         }
 
-        // ストア情報を更新します。
+        // ストアを更新します。
         repository.update(id, resource.toEntity());
 
-        // ストア情報を取得します。
+        // ストアを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
     }
 
     /**
-     * ストア情報IDを指定して、ストア情報を削除します。
+     * ストアIDを指定して、ストアを削除します。
      *
-     * @param id ストア情報ID
+     * @param id ストアID
      */
     @Transactional
     public void deleteResource(ID<StoreEntity> id) {
         // TODO Waiting for finalization of basic design according to Q&A
-        // ストア情報IDにおいて重複したデータが存在していることを示す。
+        // ストアIDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
             throw new LcResourceNotFoundException(StoreEntity.class, id);
         }
 
-        // ストア情報を削除します。
+        // ストアを削除します。
         repository.deleteLogicById(id);
     }
 
     /**
-     * ストア情報エンティティをストア情報リソースに変換します。
+     * ストアエンティティをストアリソースに変換します。
      *
      * @param entity エンティティ
      * @return リソース
@@ -136,7 +178,7 @@ public class StoreService
     }
 
     /**
-     * ストア情報エンティティのリストをストア情報リソースのリストに変換します。
+     * ストアエンティティのリストをストアリソースのリストに変換します。
      *
      * @param entities エンティティのリスト
      * @return リソースのリスト

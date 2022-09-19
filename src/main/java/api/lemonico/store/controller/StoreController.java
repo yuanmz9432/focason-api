@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * ストア情報コントローラー
+ * ストアコントローラー
  *
  * @since 1.0.0
  */
@@ -49,17 +49,17 @@ public class StoreController
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * ストア情報サービス
+     * ストアサービス
      */
     private final StoreService service;
 
     /**
-     * ストア情報リソースの一覧取得API
+     * ストアリソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return ストア情報リソース一覧取得APIレスポンス
+     * @return ストアリソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
     public ResponseEntity<LcResultSet<StoreResource>> getStoreList(
@@ -74,10 +74,10 @@ public class StoreController
     }
 
     /**
-     * ストア情報IDを指定して、ストア情報リソース取得API
+     * ストアIDを指定して、ストアリソース取得API
      *
-     * @param id ストア情報ID
-     * @return ストア情報リソース取得APIレスポンス
+     * @param id ストアID
+     * @return ストアリソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<StoreResource> getStore(
@@ -88,10 +88,10 @@ public class StoreController
     }
 
     /**
-     * ストア情報リソース作成API
+     * ストアリソース作成API
      *
-     * @param resource ストア情報リソース
-     * @return ストア情報リソース作成APIレスポンス
+     * @param resource ストアリソース
+     * @return ストアリソース作成APIレスポンス
      */
     @Validated({
         Default.class
@@ -110,11 +110,11 @@ public class StoreController
     }
 
     /**
-     * ストア情報IDを指定して、ストア情報リソース更新API
+     * ストアIDを指定して、ストアリソース更新API
      *
-     * @param id ストア情報ID
-     * @param resource ストア情報リソース更新APIレスポンス
-     * @return ストア情報リソース更新APIレスポンス
+     * @param id ストアID
+     * @param resource ストアリソース更新APIレスポンス
+     * @return ストアリソース更新APIレスポンス
      */
     @Validated({
         Default.class
@@ -128,10 +128,10 @@ public class StoreController
     }
 
     /**
-     * ストア情報IDを指定して、ストア情報リソース削除API
+     * ストアIDを指定して、ストアリソース削除API
      *
-     * @param id ストア情報ID
-     * @return ストア情報リソース削除APIレスポンス
+     * @param id ストアID
+     * @return ストアリソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<Void> deleteStore(

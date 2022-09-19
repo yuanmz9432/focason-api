@@ -6,8 +6,8 @@ package api.lemonico.store.dao;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.store.entity.StoreEntity;
-import api.lemonico.store.repository.StoreRepository;
+import api.lemonico.store.entity.StoreDependentEntity;
+import api.lemonico.store.repository.StoreDependentRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -18,13 +18,13 @@ import org.seasar.doma.jdbc.Result;
 import org.seasar.doma.jdbc.SelectOptions;
 
 /**
- * ストアのDao
+ * ストア所属のDao
  *
  * @since 1.0.0
  */
 @Dao
 @ConfigAutowireable
-public interface StoreDao
+public interface StoreDependentDao
 {
 
     /**
@@ -39,10 +39,10 @@ public interface StoreDao
      */
     @Select(strategy = SelectType.COLLECT)
     <R> R selectAll(
-        StoreRepository.Condition condition,
+        StoreDependentRepository.Condition condition,
         SelectOptions options,
-        StoreRepository.Sort sort,
-        Collector<StoreEntity, ?, R> collector);
+        StoreDependentRepository.Sort sort,
+        Collector<StoreDependentEntity, ?, R> collector);
 
     /**
      * 指定したパラメータを使用してエンティティの一覧を取得します。
@@ -54,10 +54,10 @@ public interface StoreDao
      * @return 検索結果
      */
     default <R> R selectAll(
-        StoreRepository.Condition condition,
+        StoreDependentRepository.Condition condition,
         SelectOptions options,
-        Collector<StoreEntity, ?, R> collector) {
-        return selectAll(condition, options, StoreRepository.Sort.DEFAULT, collector);
+        Collector<StoreDependentEntity, ?, R> collector) {
+        return selectAll(condition, options, StoreDependentRepository.Sort.DEFAULT, collector);
     }
 
     /**
@@ -71,9 +71,9 @@ public interface StoreDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        StoreRepository.Sort sort,
-        Collector<StoreEntity, ?, R> collector) {
-        return selectAll(StoreRepository.Condition.DEFAULT, options, sort, collector);
+        StoreDependentRepository.Sort sort,
+        Collector<StoreDependentEntity, ?, R> collector) {
+        return selectAll(StoreDependentRepository.Condition.DEFAULT, options, sort, collector);
     }
 
     /**
@@ -86,8 +86,9 @@ public interface StoreDao
      */
     default <R> R selectAll(
         SelectOptions options,
-        Collector<StoreEntity, ?, R> collector) {
-        return selectAll(StoreRepository.Condition.DEFAULT, options, StoreRepository.Sort.DEFAULT, collector);
+        Collector<StoreDependentEntity, ?, R> collector) {
+        return selectAll(StoreDependentRepository.Condition.DEFAULT, options, StoreDependentRepository.Sort.DEFAULT,
+            collector);
     }
 
     /**
@@ -98,7 +99,7 @@ public interface StoreDao
      * @return エンティティが {@link Optional} で返されます。
      */
     @Select
-    Optional<StoreEntity> selectById(ID<StoreEntity> id, SelectOptions options);
+    Optional<StoreDependentEntity> selectById(ID<StoreDependentEntity> id, SelectOptions options);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを一件を取得します。
@@ -106,7 +107,7 @@ public interface StoreDao
      * @param id エンティティID
      * @return エンティティが {@link Optional} で返されます。
      */
-    default Optional<StoreEntity> selectById(ID<StoreEntity> id) {
+    default Optional<StoreDependentEntity> selectById(ID<StoreDependentEntity> id) {
         return selectById(id, SelectOptions.get());
     }
 
@@ -117,7 +118,7 @@ public interface StoreDao
      * @return エンティティ挿入結果が返されます。
      */
     @Insert(excludeNull = true)
-    Result<StoreEntity> insert(StoreEntity entity);
+    Result<StoreDependentEntity> insert(StoreDependentEntity entity);
 
     /**
      * データベースのエンティティを更新します。
@@ -126,7 +127,7 @@ public interface StoreDao
      * @return エンティティ更新結果が返されます。
      */
     @Update(excludeNull = true)
-    Result<StoreEntity> update(StoreEntity entity);
+    Result<StoreDependentEntity> update(StoreDependentEntity entity);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -135,7 +136,7 @@ public interface StoreDao
      * @return エンティティ削除件数が返されます。
      */
     @Delete(sqlFile = true)
-    int deleteById(ID<StoreEntity> id);
+    int deleteById(ID<StoreDependentEntity> id);
 
     /**
      * エンティティIDを指定して、データベースからエンティティを削除します。
@@ -144,26 +145,26 @@ public interface StoreDao
      * @return エンティティ削除件数が返されます。
      */
     @Update(sqlFile = true)
-    int deleteLogicById(ID<StoreEntity> id);
+    int deleteLogicById(ID<StoreDependentEntity> id);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ作成結果が返されます。
      */
     @BatchInsert
-    BatchResult<StoreEntity> insert(List<StoreEntity> entities);
+    BatchResult<StoreDependentEntity> insert(List<StoreDependentEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ更新結果が返されます。
      */
     @BatchUpdate
-    BatchResult<StoreEntity> update(List<StoreEntity> entities);
+    BatchResult<StoreDependentEntity> update(List<StoreDependentEntity> entities);
 
     /**
      * @param entities エンティティリスト
      * @return エンティティ削除結果が返されます。
      */
     @BatchDelete
-    BatchResult<StoreEntity> delete(List<StoreEntity> entities);
+    BatchResult<StoreDependentEntity> delete(List<StoreDependentEntity> entities);
 }

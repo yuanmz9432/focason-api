@@ -1,14 +1,11 @@
 SELECT
     /*%expand*/*
 FROM
-    store
+    store_dependent
 WHERE
     is_deleted = 0
     /*%if condition.getIds() != null */
     AND id IN /* condition.getIds() */(1,2,3)
-    /*%end */
-    /*%if condition.getStoreCodes() != null */
-    AND store_code IN /* condition.getStoreCodes() */("STA00001")
     /*%end */
 ORDER BY
     /*# sort.toSql() */
