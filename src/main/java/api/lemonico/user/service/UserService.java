@@ -13,8 +13,10 @@ import api.lemonico.core.domain.Department;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.store.service.StoreService;
+import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
@@ -22,9 +24,11 @@ import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.service.WarehouseService;
 import api.lemonico.warehouse.service.WarehouseStoreService;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -166,24 +170,26 @@ public class UserService
                 .toEntity());
 
         // ユーザ部署登録
-        // Optional.of(resource.getUserDepartments()).ifPresentOrElse(
-        // (userDepartmentResources) -> {
-        // var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
-        // userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
-        // item
-        // .withId(null)
-        // .withUuid(resource.getUuid())
-        // .withDepartmentCode(item.getDepartmentCode())
-        // .withCreatedBy("admin")
-        // .withCreatedAt(LocalDateTime.now())
-        // .withModifiedBy("admin")
-        // .withModifiedAt(LocalDateTime.now())
-        // .withIsDeleted(0)
-        // .toEntity()));
-        // userDepartmentRepository.create(userDepartmentEntities);
-        // }, () -> {
-        // throw new LcValidationErrorException("UserRelations can not be null or empty.");
-        // });
+        Optional.of(resource.getUserDepartments()).ifPresentOrElse(
+            (userDepartmentResources) -> {
+                var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
+                userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
+                    item
+                        .withId(null)
+                        .withUuid(resource.getUuid())
+                        .withDepartmentCode(item.getDepartmentCode())
+                        .withDepartmentType(item.getDepartmentType())
+                        .withRoleType(item.getRoleType())
+                        .withCreatedBy(MDC.get("USERNAME"))
+                        .withCreatedAt(LocalDateTime.now())
+                        .withModifiedBy(MDC.get("USERNAME"))
+                        .withModifiedAt(LocalDateTime.now())
+                        .withIsDeleted(0)
+                        .toEntity()));
+                userDepartmentRepository.create(userDepartmentEntities);
+            }, () -> {
+                throw new LcValidationErrorException("UserDepartment can not be null or empty.");
+            });
 
         // ユーザを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
