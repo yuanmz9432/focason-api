@@ -9,6 +9,7 @@ import api.lemonico.auth.config.LoginUser;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
+import api.lemonico.core.domain.Department;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
@@ -18,6 +19,7 @@ import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
+import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.service.WarehouseService;
 import api.lemonico.warehouse.service.WarehouseStoreService;
 import java.util.*;
@@ -93,33 +95,33 @@ public class UserService
      */
     @Transactional(readOnly = true)
     public Optional<UserResource> getResource(ID<UserEntity> id) {
-        // ユーザを取得します。
+        // ユーザ情報取得
         var userEntity = userRepository.findById(id);
         var userResource = userEntity.map(this::convertEntityToResource);
         var uuid = userResource.map(UserResource::getUuid)
             .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
 
-        // ユーザー所属単位検索
+        // ユーザ部署情報取得
         var userDepartments =
             userDepartmentRepository.findAll(
                 UserDepartmentRepository.Condition.builder().uuid(uuid).build(),
                 LcPagination.DEFAULT, UserDepartmentRepository.Sort.DEFAULT);
-        //
-        // // 所属単位コードを纒める
-        // Set<String> storeCodes = new HashSet<>();
-        // Set<String> warehouseCodes = new HashSet<>();
-        // userRelations.getData().forEach((userRelation) -> {
-        // if (1 == userRelation.getRelationType()) {
-        // storeCodes.add(userRelation.getRelationCode());
-        // } else {
-        // warehouseCodes.add(userRelation.getRelationCode());
-        // }
-        // });
 
-        // // 倉庫情報取得
-        // var warehouses = warehouseService.getResourceList(
-        // WarehouseRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
-        // WarehouseRepository.Sort.DEFAULT);
+        // 部署情報整理
+        Set<String> storeCodes = new HashSet<>();
+        Set<String> warehouseCodes = new HashSet<>();
+        userDepartments.getData().forEach((department) -> {
+            if (Objects.equals(Department.WAREHOUSE.getValue(), department.getDepartmentType())) {
+                warehouseCodes.add(department.getDepartmentCode());
+            } else {
+                storeCodes.add(department.getDepartmentCode());
+            }
+        });
+
+        // 倉庫情報取得
+        var warehouses = warehouseService.getResourceList(
+            WarehouseRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
+            WarehouseRepository.Sort.DEFAULT);
         //
         // // 倉庫-ストア関連情報取得
         // var warehouseStores = warehouseStoreService.getResourceList(
@@ -137,7 +139,7 @@ public class UserService
         // var authorities = new ArrayList<SimpleGrantedAuthority>();
         //
         return Optional.of(userResource.get()
-            .withWarehouses(null)
+            .withWarehouses(warehouses.getData())
             .withStores(null)
             .withAuthorities(null)
             .withPassword(""));

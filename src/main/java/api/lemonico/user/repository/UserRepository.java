@@ -85,7 +85,7 @@ public class UserRepository
      */
     public void update(ID<UserEntity> id, UserEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
-        var result = dao.update(entity.withId(id));
+        var result = dao.update(entity.withId(id).withModifiedBy(MDC.get("USERNAME")));
         if (result.getCount() != 1) {
             throw new LcEntityNotFoundException(UserEntity.class, entity.getId());
         }
