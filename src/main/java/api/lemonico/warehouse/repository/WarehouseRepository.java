@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.*;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -68,9 +69,9 @@ public class WarehouseRepository
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
-            .withCreatedBy("admin")
+            .withCreatedBy(MDC.get("USERNAME"))
             .withCreatedAt(LocalDateTime.now())
-            .withModifiedBy("admin")
+            .withModifiedBy(MDC.get("USERNAME"))
             .withModifiedAt(LocalDateTime.now())
             .withIsDeleted(0))
             .getEntity()

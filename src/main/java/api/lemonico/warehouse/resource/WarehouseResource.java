@@ -12,7 +12,7 @@ import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * 倉庫情報リソース
+ * 倉庫リソース
  *
  * @since 1.0.0
  */
@@ -51,7 +51,7 @@ public class WarehouseResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity 倉庫情報エンティティ
+     * @param entity 倉庫エンティティ
      */
     public WarehouseResource(WarehouseEntity entity) {
         this.id = entity.getId();
@@ -67,7 +67,7 @@ public class WarehouseResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return 倉庫情報エンティティ
+     * @return 倉庫エンティティ
      */
     public WarehouseEntity toEntity() {
         return WarehouseEntity.builder()

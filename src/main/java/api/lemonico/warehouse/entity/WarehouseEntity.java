@@ -15,7 +15,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * 倉庫情報エンティティ
+ * 倉庫エンティティ
  *
  * @since 1.0.0
  */

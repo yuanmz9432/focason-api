@@ -12,17 +12,14 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
-import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
 import api.lemonico.store.service.StoreService;
-import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.service.WarehouseService;
 import api.lemonico.warehouse.service.WarehouseStoreService;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -167,24 +164,24 @@ public class UserService
                 .toEntity());
 
         // ユーザ部署登録
-        Optional.of(resource.getUserDepartments()).ifPresentOrElse(
-            (userDepartmentResources) -> {
-                var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
-                userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
-                    item
-                        .withId(null)
-                        .withUuid(resource.getUuid())
-                        .withDepartmentCode(item.getDepartmentCode())
-                        .withCreatedBy("admin")
-                        .withCreatedAt(LocalDateTime.now())
-                        .withModifiedBy("admin")
-                        .withModifiedAt(LocalDateTime.now())
-                        .withIsDeleted(0)
-                        .toEntity()));
-                userDepartmentRepository.create(userDepartmentEntities);
-            }, () -> {
-                throw new LcValidationErrorException("UserRelations can not be null or empty.");
-            });
+        // Optional.of(resource.getUserDepartments()).ifPresentOrElse(
+        // (userDepartmentResources) -> {
+        // var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
+        // userDepartmentResources.forEach((item) -> userDepartmentEntities.add(
+        // item
+        // .withId(null)
+        // .withUuid(resource.getUuid())
+        // .withDepartmentCode(item.getDepartmentCode())
+        // .withCreatedBy("admin")
+        // .withCreatedAt(LocalDateTime.now())
+        // .withModifiedBy("admin")
+        // .withModifiedAt(LocalDateTime.now())
+        // .withIsDeleted(0)
+        // .toEntity()));
+        // userDepartmentRepository.create(userDepartmentEntities);
+        // }, () -> {
+        // throw new LcValidationErrorException("UserRelations can not be null or empty.");
+        // });
 
         // ユーザを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
@@ -256,12 +253,12 @@ public class UserService
      */
     @Transactional(readOnly = true)
     public LoginUser getLoginUserBySubject(String subject) {
-        Pattern pattern = Pattern.compile("^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
-        var condition = UserRepository.Condition.DEFAULT;
+        Pattern pattern = Pattern.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
+        UserRepository.Condition condition;
         if (pattern.matcher(subject).matches()) {
-            condition = UserRepository.Condition.builder().email(subject).build();
+            condition = UserRepository.Condition.builder().uuid(subject).build();
         } else {
-            condition = UserRepository.Condition.builder().username(subject).build();
+            condition = UserRepository.Condition.DEFAULT;
         }
         final var userResourceLcResultSet = getResourceList(
             condition,

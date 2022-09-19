@@ -42,6 +42,10 @@ public class LoginUser implements UserDetails
         return this.email;
     }
 
+    public String getUuid() {
+        return this.uuid;
+    }
+
     @Override
     public String getPassword() {
         return this.password;

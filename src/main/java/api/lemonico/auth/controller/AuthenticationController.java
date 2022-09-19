@@ -72,7 +72,8 @@ public class AuthenticationController
         }
         this.checkLoginUser(loginUser, userDetails);
         final var expirationTime = generator.generateExpirationTime();
-        final var accessToken = generator.generateAccessToken(loginUser.getUsername(), expirationTime);
+        loginUser = (LoginUser) userDetails;
+        final var accessToken = generator.generateAccessToken(loginUser.getUuid(), expirationTime);
         return ResponseEntity.ok().body(
             JWTResource.builder()
                 .accessToken(accessToken)

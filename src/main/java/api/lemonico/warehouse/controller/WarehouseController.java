@@ -14,7 +14,11 @@ import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
+import api.lemonico.core.domain.Department;
+import api.lemonico.core.domain.Role;
 import api.lemonico.core.exception.LcResourceNotFoundException;
+import api.lemonico.user.resource.UserDepartmentResource;
+import api.lemonico.user.service.UserDepartmentService;
 import api.lemonico.warehouse.entity.WarehouseEntity;
 import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.resource.WarehouseResource;
@@ -22,6 +26,7 @@ import api.lemonico.warehouse.service.WarehouseService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -52,6 +57,10 @@ public class WarehouseController
      * 倉庫情報サービス
      */
     private final WarehouseService service;
+    /**
+     * ユーザ部署情報サービス
+     */
+    private final UserDepartmentService userDepartmentService;
 
     /**
      * 倉庫情報リソースの一覧取得API
@@ -100,7 +109,13 @@ public class WarehouseController
     public ResponseEntity<Void> createWarehouse(
         @Valid @RequestBody WarehouseResource resource,
         UriComponentsBuilder uriBuilder) {
+        var uuid = MDC.get("UUID");
         var id = service.createResource(resource).getId();
+        userDepartmentService.createResource(UserDepartmentResource.builder()
+            .uuid(uuid)
+            .departmentCode(resource.getWarehouseCode())
+            .departmentType(Department.WAREHOUSE.getValue())
+            .roleType(Role.MANAGER.getValue()).build());
         var uri = relativeTo(uriBuilder)
             .withMethodCall(on(getClass()).getWarehouse(id))
             .build()

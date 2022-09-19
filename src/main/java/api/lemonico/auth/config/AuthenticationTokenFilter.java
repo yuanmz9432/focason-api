@@ -80,11 +80,12 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         if (Strings.isNotBlank(subject) && SecurityContextHolder.getContext().getAuthentication() == null) {
             var loginUser = service.getLoginUserBySubject(subject);
             if (!Objects.isNull(loginUser)
-                && (subject.equals(loginUser.getUsername()) || subject.equals(loginUser.getEmail()))) {
+                && (subject.equals(loginUser.getUuid()))) {
                 var authentication =
                     new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                MDC.put("UUID", loginUser.getUuid());
                 MDC.put("USERNAME", loginUser.getUsername());
             }
         }
