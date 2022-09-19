@@ -23,10 +23,11 @@ public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
         throws IOException {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
             LcErrorResource.builder()
-                .code(LcErrorCode.AUTH_TOKEN_INVALID.getValue())
-                .message(LcErrorCode.AUTH_TOKEN_INVALID.name())
+                .code(LcErrorCode.MISSING_AUTH_TOKEN.getValue())
+                .message(LcErrorCode.MISSING_AUTH_TOKEN.name())
                 .build()));
 
     }

@@ -23,6 +23,7 @@ public class DefaultAccessDeniedHandler implements AccessDeniedHandler
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
         AccessDeniedException accessDeniedException) throws IOException {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
             LcErrorResource.builder()
                 .code(LcErrorCode.FORBIDDEN.getValue())

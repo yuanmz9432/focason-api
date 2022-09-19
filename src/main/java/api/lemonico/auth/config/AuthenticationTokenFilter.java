@@ -60,6 +60,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
             try {
                 accessTokenClaims = this.jwtGenerator.getClaims(requestTokenHeader);
             } catch (ExpiredJwtException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
                     LcErrorResource.builder()
                         .code(LcErrorCode.AUTH_TOKEN_EXPIRED.getValue())
@@ -67,6 +68,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
                         .build()));
                 return;
             } catch (SignatureException | MalformedJwtException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
                     LcErrorResource.builder()
                         .code(LcErrorCode.AUTH_TOKEN_INVALID.getValue())
