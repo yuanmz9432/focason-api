@@ -15,7 +15,7 @@ import lombok.With;
 import org.seasar.doma.*;
 
 /**
- * 倉庫エンティティ
+ * 会社エンティティ
  *
  * @since 1.0.0
  */
@@ -24,22 +24,19 @@ import org.seasar.doma.*;
 @EqualsAndHashCode(callSuper = false)
 @Builder(toBuilder = true)
 @With
-@Table(name = "warehouse")
-public class WarehouseEntity extends LcEntity
+@Table(name = "company")
+public class CompanyEntity extends LcEntity
 {
     /** 自動採番ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    ID<WarehouseEntity> id;
-    /** 倉庫コード */
-    @Column(name = "warehouse_code")
-    String warehouseCode;
-    /** 倉庫名称 */
-    @Column(name = "warehouse_name")
-    String warehouseName;
-    /** グループコード */
-    @Column(name = "group_code")
-    String groupCode;
+    ID<CompanyEntity> id;
+    /** 会社コード */
+    @Column(name = "company_code")
+    String companyCode;
+    /** 会社名称 */
+    @Column(name = "company_name")
+    String companyName;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

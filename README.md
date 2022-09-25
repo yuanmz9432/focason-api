@@ -22,34 +22,32 @@ Coming soon...
 
 ## Command
 
-### 1. generate code
-#### 1.1 genAll<br>(genSql → genEntity → genResource → genDao → genRepository → genService → genController)
-```
-./gradlew genAll -P TABLE_NAME={TABLE_NAME} -P FOLDER={FOLDER_NAME}
-```
-#### 1.2 genSql
-```
-./gradlew genSql -P TABLE_NAME={TABLE_NAME} -P FOLDER={FOLDER_NAME}
-```
-#### 1.2 genEntity
-```
-./gradlew genEntity -P TABLE_NAME={TABLE_NAME} -P FOLDER={FOLDER_NAME}
-```
-#### 2. build docker image
-```
-docker build -t {CONTAINER_NAME}:{TAG} .
-```
-### Before commit & push the code to git, we should run No.3 and No.4 commands.To make sure build process success.
+### 1. Doma Gen
+* Generate Code
+    ```
+    ./gradlew genEntity -P TABLE_NAME={TABLE_NAME}
+    ./gradlew genResource -P TABLE_NAME={TABLE_NAME}
+    ./gradlew genController -P TABLE_NAME={TABLE_NAME}
+    ./gradlew genService -P TABLE_NAME={TABLE_NAME}
+    ./gradlew genRepository -P TABLE_NAME={TABLE_NAME}
+    ./gradlew genDao -P TABLE_NAME={TABLE_NAME}
+    ```
+#### 2. Docker
+* build docker image
+    ```
+    docker build -t {CONTAINER_NAME}:{TAG} .
+    ```
 
-#### 3. Java code format
-```
-./gradlew spotlessApply
-```
+#### 3. JAVA
+* Code Format
+    ```
+    ./gradlew spotlessApply
+    ```
 
-#### 4. build project
-```
-./gradlew build
-```
+* build project
+    ```
+    ./gradlew build
+    ```
 
 ## Contribution
 

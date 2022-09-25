@@ -6,13 +6,13 @@ package api.lemonico.warehouse.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.warehouse.entity.WarehouseEntity;
+import api.lemonico.warehouse.entity.CompanyEntity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * 倉庫リソース
+ * 会社リソース
  *
  * @since 1.0.0
  */
@@ -21,20 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class WarehouseResource
+public class CompanyResource
 {
 
     /** 自動採番ID */
-    private final ID<WarehouseEntity> id;
+    private final ID<CompanyEntity> id;
 
-    /** 倉庫コード */
-    private final String warehouseCode;
+    /** 会社コード */
+    private final String companyCode;
 
-    /** 倉庫名称 */
-    private final String warehouseName;
-
-    /** グループコード */
-    private final String groupCode;
+    /** 会社名称 */
+    private final String companyName;
 
     /** 作成者 */
     private final String createdBy;
@@ -54,13 +51,12 @@ public class WarehouseResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity 倉庫エンティティ
+     * @param entity 会社エンティティ
      */
-    public WarehouseResource(WarehouseEntity entity) {
+    public CompanyResource(CompanyEntity entity) {
         this.id = entity.getId();
-        this.warehouseCode = entity.getWarehouseCode();
-        this.warehouseName = entity.getWarehouseName();
-        this.groupCode = entity.getGroupCode();
+        this.companyCode = entity.getCompanyCode();
+        this.companyName = entity.getCompanyName();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -71,14 +67,13 @@ public class WarehouseResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return 倉庫エンティティ
+     * @return 会社エンティティ
      */
-    public WarehouseEntity toEntity() {
-        return WarehouseEntity.builder()
+    public CompanyEntity toEntity() {
+        return CompanyEntity.builder()
             .id(id)
-            .warehouseCode(warehouseCode)
-            .warehouseName(warehouseName)
-            .groupCode(groupCode)
+            .companyCode(companyCode)
+            .companyName(companyName)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

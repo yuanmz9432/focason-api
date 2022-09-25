@@ -15,6 +15,7 @@ import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.entity.WarehouseEntity;
+import api.lemonico.warehouse.repository.CompanyRepository;
 import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.resource.WarehouseResource;
 import java.util.*;
@@ -44,6 +45,11 @@ public class WarehouseService
      * ユーザ情報リポジトリ
      */
     private final UserRepository userRepository;
+
+    /**
+     * 会社サービス
+     */
+    private final CompanyService companyService;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、倉庫情報リソースの一覧を取得します。
@@ -86,10 +92,19 @@ public class WarehouseService
      */
     @Transactional
     public WarehouseResource createResource(WarehouseResource resource) {
-        // ユーザ重複性チェック（username と email）
+        // 倉庫重複性チェック（倉庫コード）
         if (isWarehouseExisted(resource)) {
             throw new LcResourceAlreadyExistsException(WarehouseEntity.class,
                 resource.getWarehouseCode() + ":" + resource.getWarehouseName());
+        }
+        // 会社存在するかどうかチェック（会社コード）TODO
+        if (companyService.getResourceList(CompanyRepository.Condition.builder()
+                        .companyCode(resource.getGroupCode())
+                        .build(),
+                LcPagination.DEFAULT,
+                CompanyRepository.Sort.DEFAULT) == null) {
+            throw new LcResourceAlreadyExistsException(WarehouseEntity.class,
+                    resource.getWarehouseCode() + ":" + resource.getWarehouseName());
         }
         // 倉庫登録権限チェック
         var uuid = MDC.get("UUID");

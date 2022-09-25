@@ -13,5 +13,8 @@ WHERE
     /*%if condition.getEmail() != null */
     AND email = /* condition.getEmail() */'admin@lemonico.com'
     /*%end */
+    /*%if condition.getUuid() != null */
+    AND uuid = /* condition.getUuid() */'uuid'
+    /*%end */
 ORDER BY
     /*# sort.toSql() */
