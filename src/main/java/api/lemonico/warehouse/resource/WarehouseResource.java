@@ -6,8 +6,10 @@ package api.lemonico.warehouse.resource;
 
 
 import api.lemonico.core.attribute.ID;
+import api.lemonico.store.resource.StoreResource;
 import api.lemonico.warehouse.entity.WarehouseEntity;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,8 +35,8 @@ public class WarehouseResource
     /** 倉庫名称 */
     private final String warehouseName;
 
-    /** グループコード */
-    private final String groupCode;
+    /** 会社コード */
+    private final String companyCode;
 
     /** 作成者 */
     private final String createdBy;
@@ -51,6 +53,9 @@ public class WarehouseResource
     /** 削除フラグ（0: 未削除 1: 削除済） */
     private final Integer isDeleted;
 
+    /** 削除フラグ（0: 未削除 1: 削除済） */
+    private final List<StoreResource> stores;
+
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
@@ -60,12 +65,13 @@ public class WarehouseResource
         this.id = entity.getId();
         this.warehouseCode = entity.getWarehouseCode();
         this.warehouseName = entity.getWarehouseName();
-        this.groupCode = entity.getGroupCode();
+        this.companyCode = entity.getCompanyCode();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
         this.modifiedAt = entity.getModifiedAt();
         this.isDeleted = entity.getIsDeleted();
+        this.stores = null;
     }
 
     /**
@@ -78,7 +84,7 @@ public class WarehouseResource
             .id(id)
             .warehouseCode(warehouseCode)
             .warehouseName(warehouseName)
-            .groupCode(groupCode)
+            .companyCode(companyCode)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

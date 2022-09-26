@@ -12,6 +12,12 @@ import api.lemonico.core.exception.LcIllegalUserException;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.store.repository.StoreDependentRepository;
+import api.lemonico.store.repository.StoreRepository;
+import api.lemonico.store.resource.StoreDependentResource;
+import api.lemonico.store.resource.StoreResource;
+import api.lemonico.store.service.StoreDependentService;
+import api.lemonico.store.service.StoreService;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.entity.WarehouseEntity;
@@ -19,9 +25,11 @@ import api.lemonico.warehouse.repository.CompanyRepository;
 import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.resource.WarehouseResource;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__({
+    @Autowired, @Lazy
+}))
 public class WarehouseService
 {
 
@@ -50,6 +60,16 @@ public class WarehouseService
      * 会社サービス
      */
     private final CompanyService companyService;
+
+    /**
+     * 倉庫ストア関連情報サービス
+     */
+    private final StoreDependentService storeDependentService;
+
+    /**
+     * ストア情報サービス
+     */
+    private final StoreService storeService;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、倉庫情報リソースの一覧を取得します。
@@ -80,8 +100,32 @@ public class WarehouseService
      */
     @Transactional(readOnly = true)
     public Optional<WarehouseResource> getResource(ID<WarehouseEntity> id) {
+        // 倉庫IDで倉庫情報を取得する。
+        var warehouseResource = repository.findById(id).map(this::convertEntityToResource);
+
+        // 該当倉庫の所属ストア情報を取得する。
+        if (warehouseResource.isPresent()) {
+            var storeDependentResources = storeDependentService.getResourceList(
+                StoreDependentRepository.Condition.builder()
+                    .warehouseCode(warehouseResource.get().getWarehouseCode()).build(),
+                LcPagination.DEFAULT, StoreDependentRepository.Sort.DEFAULT);
+            if (storeDependentResources.getCount() > 0) {
+                var storeCodes = storeDependentResources.getData().stream()
+                    .map(StoreDependentResource::getStoreCode).collect(Collectors.toSet());
+                var storeResources = storeService.getResourceList(
+                    StoreRepository.Condition.builder()
+                        .storeCodes(storeCodes)
+                        .build(),
+                    LcPagination.DEFAULT, StoreRepository.Sort.DEFAULT);
+                if (storeResources.getCount() > 0) {
+                    return Optional.of(warehouseResource.get().withStores(storeResources.getData()));
+                } else {
+                    throw new LcResourceNotFoundException(StoreResource.class, storeCodes);
+                }
+            }
+        }
         // 倉庫情報を取得します。
-        return repository.findById(id).map(this::convertEntityToResource);
+        return warehouseResource;
     }
 
     /**
@@ -97,15 +141,18 @@ public class WarehouseService
             throw new LcResourceAlreadyExistsException(WarehouseEntity.class,
                 resource.getWarehouseCode() + ":" + resource.getWarehouseName());
         }
-        // 会社存在するかどうかチェック（会社コード）TODO
-        if (companyService.getResourceList(CompanyRepository.Condition.builder()
-                        .companyCode(resource.getGroupCode())
-                        .build(),
-                LcPagination.DEFAULT,
-                CompanyRepository.Sort.DEFAULT) == null) {
+
+        // 会社存在するかどうかチェック（会社コード）
+        var companies = companyService.getResourceList(CompanyRepository.Condition.builder()
+            .companyCode(resource.getCompanyCode())
+            .build(),
+            LcPagination.DEFAULT,
+            CompanyRepository.Sort.DEFAULT);
+        if (companies.getCount() == 0) {
             throw new LcResourceAlreadyExistsException(WarehouseEntity.class,
-                    resource.getWarehouseCode() + ":" + resource.getWarehouseName());
+                resource.getWarehouseCode() + ":" + resource.getWarehouseName());
         }
+
         // 倉庫登録権限チェック
         var uuid = MDC.get("UUID");
         var user = userRepository.findAll(UserRepository.Condition.builder().uuid(uuid).build(),

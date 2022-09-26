@@ -37,9 +37,9 @@ public class WarehouseEntity extends LcEntity
     /** 倉庫名称 */
     @Column(name = "warehouse_name")
     String warehouseName;
-    /** グループコード */
-    @Column(name = "group_code")
-    String groupCode;
+    /** 会社コード */
+    @Column(name = "company_code")
+    String companyCode;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

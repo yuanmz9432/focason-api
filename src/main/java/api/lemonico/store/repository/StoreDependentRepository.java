@@ -149,6 +149,11 @@ public class StoreDependentRepository
          * ストア所属IDのセット（完全一致、複数指定可）
          */
         private Set<ID<StoreDependentEntity>> ids;
+
+        /**
+         * 倉庫コード（完全一致）
+         */
+        private String warehouseCode;
     }
 
     /**

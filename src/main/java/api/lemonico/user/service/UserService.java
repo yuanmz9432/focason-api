@@ -26,13 +26,13 @@ import api.lemonico.user.resource.UserResource;
 import api.lemonico.warehouse.repository.WarehouseRepository;
 import api.lemonico.warehouse.resource.WarehouseResource;
 import api.lemonico.warehouse.service.WarehouseService;
-import api.lemonico.warehouse.service.WarehouseStoreService;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__({
+    @Autowired, @Lazy
+}))
 public class UserService
 {
     /**
@@ -66,11 +68,6 @@ public class UserService
      * ストアサービス
      */
     private final StoreService storeService;
-
-    /**
-     * 倉庫ーストア関連サービス
-     */
-    private final WarehouseStoreService warehouseStoreService;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、ユーザリソースの一覧を取得します。
