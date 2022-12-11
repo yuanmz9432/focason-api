@@ -77,7 +77,7 @@ public class AuthenticationController
         return ResponseEntity.ok().body(
             JWTResource.builder()
                 .accessToken(accessToken)
-                .expirationTime(expirationTime.getTime())
+                .expiresIn(expirationTime.getTime())
                 .build());
     }
 
