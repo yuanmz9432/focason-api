@@ -11,7 +11,12 @@ import api.lemonico.user.entity.UserEntity;
 import api.lemonico.warehouse.resource.WarehouseResource;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -34,12 +39,17 @@ public class UserResource
     private final String uuid;
 
     /** ユーザ名 */
+    @NotNull(message = "Username can not be null.")
     private final String username;
 
     /** 性別（１：男性、２：女性、９：不明） */
+    @NotNull(message = "Gender can not be null.")
+    @Max(1)
     private final Integer gender;
 
     /** メールアドレス（ログインID） */
+    @NotNull(message = "Email can not be null.")
+    @Email(message = "Email is not right.")
     private final String email;
 
     /** パスワード */
@@ -52,8 +62,11 @@ public class UserResource
     private final Integer type;
 
     /** 電話番号 */
+    @NotNull(message = "Phone can not be null.")
+    @Length(min = 10, max = 11, message = "Phone number is too long.")
     private final String phone;
 
+    @NotNull(message = "Zip can not be null.")
     /** 郵便番号 */
     private final String zip;
 

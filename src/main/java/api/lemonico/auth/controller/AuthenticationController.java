@@ -11,6 +11,7 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import api.lemonico.auth.config.JWTGenerator;
 import api.lemonico.auth.config.LoginUser;
 import api.lemonico.auth.resource.JWTResource;
+import api.lemonico.core.controller.AbstractController;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.core.exception.LcIllegalUserException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
@@ -40,7 +41,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping("/auth")
-public class AuthenticationController
+public class AuthenticationController extends AbstractController
 {
     /**
      * ログインURI

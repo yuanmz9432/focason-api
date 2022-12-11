@@ -164,6 +164,9 @@ public class UserService
         // ユーザ権限付与
         userAuthorityRepository.grantAuthorization(resource.getUuid(), resource.getAuthorities());
 
+        if (resource.getUserDepartments() == null || resource.getUserDepartments().size() == 0) {
+            throw new LcValidationErrorException("UserDepartment can not be null or empty.");
+        }
         // ユーザ部署登録
         Optional.of(resource.getUserDepartments()).ifPresentOrElse(
             (userDepartmentResources) -> {

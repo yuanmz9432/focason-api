@@ -8,12 +8,14 @@ package api.lemonico.core.handler;
 import api.lemonico.core.attribute.LcErrorCode;
 import api.lemonico.core.attribute.LcErrorResource;
 import api.lemonico.core.exception.LcException;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @ControllerAdvice
@@ -39,5 +41,26 @@ public class GlobalExceptionHandler
             .body(LcErrorResource.builder()
                 .code(LcErrorCode.INTERNAL_SERVER_ERROR.getValue())
                 .message(e.getMessage()).build());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+        MethodArgumentNotValidException.class
+    })
+    public ResponseEntity<LcErrorResource> paramExceptionHandler(MethodArgumentNotValidException e) {
+        BindingResult exceptions = e.getBindingResult();
+        if (exceptions.hasErrors()) {
+            List<ObjectError> errors = exceptions.getAllErrors();
+            if (!errors.isEmpty()) {
+                FieldError fieldError = (FieldError) errors.get(0);
+                String message = fieldError.getDefaultMessage();
+                return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(LcErrorResource.builder()
+                        .code(LcErrorCode.VALIDATION_ERROR.getValue())
+                        .message(message).build());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
