@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  * ユーザリソース
@@ -95,7 +94,7 @@ public class UserResource
     private final List<WarehouseResource> warehouses;
 
     /** ユーザーの権限リスト */
-    private final List<SimpleGrantedAuthority> authorities;
+    private final List<String> authorities;
 
     /**
      * 指定したエンティティを使用して、リソースを構築します。

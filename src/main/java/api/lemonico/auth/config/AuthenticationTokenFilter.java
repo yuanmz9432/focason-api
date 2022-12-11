@@ -57,7 +57,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
+        MDC.put("USERNAME", "ADMIN");
         // 下記URL以外であれば、ヘッダ取得処理を行わない。
         if (!UN_AUTHORITY_PATHS.contains(request.getRequestURI())) {
             // リクエストヘッダーからアクセストークンを取得する。

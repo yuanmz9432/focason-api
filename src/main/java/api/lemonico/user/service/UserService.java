@@ -57,6 +57,11 @@ public class UserService
     private final UserRepository userRepository;
 
     /**
+     * ユーザー権限リポジトリ
+     */
+    private final UserAuthorityRepository userAuthorityRepository;
+
+    /**
      * ユーザー所属リポジトリ
      */
     private final UserDepartmentRepository userDepartmentRepository;
@@ -155,6 +160,9 @@ public class UserService
             resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
                 // .withType(UserType.PREMIUM.getValue())
                 .toEntity());
+
+        // ユーザ権限付与
+        userAuthorityRepository.grantAuthorization(resource.getUuid(), resource.getAuthorities());
 
         // ユーザ部署登録
         Optional.of(resource.getUserDepartments()).ifPresentOrElse(

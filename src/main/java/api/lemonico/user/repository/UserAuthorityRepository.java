@@ -10,13 +10,14 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
+import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.user.dao.UserAuthorityDao;
 import api.lemonico.user.entity.UserAuthorityEntity;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.*;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -118,6 +119,27 @@ public class UserAuthorityRepository
      */
     public boolean exists(ID<UserAuthorityEntity> id) {
         return findById(id).isPresent();
+    }
+
+    /**
+     * ユーザに権限情報を付与する。
+     *
+     * @param uuid ユーザUUID
+     * @param authorities 権限リスト
+     */
+    public void grantAuthorization(@NonNull String uuid, List<String> authorities) {
+        if (authorities == null || authorities.size() == 0) {
+            throw new LcValidationErrorException("ユーザ権限情報が存在しません。");
+        }
+        List<UserAuthorityEntity> entities = authorities.stream().map((authority) -> UserAuthorityEntity.builder()
+            .authorityCode(authority)
+            .uuid(uuid)
+            .createdAt(LocalDateTime.now())
+            .createdBy(MDC.get("USERNAME"))
+            .modifiedAt(LocalDateTime.now())
+            .modifiedBy(MDC.get("USERNAME"))
+            .isDeleted(0).build()).collect(Collectors.toList());
+        dao.insert(entities);
     }
 
     /**
