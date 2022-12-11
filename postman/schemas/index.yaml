@@ -2,65 +2,67 @@ openapi: '3.0.0'
 info:
   version: '0.0.1'
   title: 'Lemonico API'
-  description: Order Management System.
-
+  description: Order Management System designed by Yuan.
+  contact: 
+    name: Yuan
+    email: yuanmz9432@gmail.com
+servers: [
+  {
+    url: https://api-stg.lemonico.com/api
+  },
+  {
+    url: https://api.lemonico.com/api
+  }
+]
+tags:
+  - name: Commons
+    description: 共通API
 paths:
-  /spacecrafts/{spacecraftId}:
-    parameters:
-      - name: spacecraftId
-        description: The unique identifier of the spacecraft
-        in: path
-        required: true
-        schema:
-          $ref: '#/components/schemas/SpacecraftId'
+  /heartbeat:
     get:
-      summary: Read a spacecraft
+      summary: For AWS target group health check.
+      responses:
+        '204':
+          description: No content.
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /login:
+    post:
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/UserResource'
       responses:
         '200':
-          description: The spacecraft corresponding to the provided `spacecraftId`
+          description: 'success'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Spacecraft'
-        404:
-          description: No spacecraft found for the provided `spacecraftId`
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        500:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: access token.
+                  expires_in:
+                    type: integer
+                    description: Validity period of access token.
+        
 components:
   schemas:
-    SpacecraftId:
-      description: The unique identifier of a spacecraft
-      type: string
-    Spacecraft:
+    UserResource:
       type: object
       required:
-        - id
-        - name
-        - type
+        - username
       properties:
-        id:
-          $ref: '#/components/schemas/SpacecraftId'
-        name:
+        username:
           type: string
-        type:
-          type: string
-          enum:
-            - capsule
-            - probe
-            - satellite
-            - spaceplane
-            - station
-        description:
-          type: string
+          description: the name of user.
     Error:
       type: object
       required:
@@ -70,9 +72,9 @@ components:
           description: A human readable error message
           type: string
   securitySchemes:
-    ApiKey:
-      type: apiKey
-      in: header
-      name: X-Api-Key
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 security:
-  - ApiKey: []
+  - bearerAuth: []

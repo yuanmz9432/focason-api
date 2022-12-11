@@ -12,6 +12,7 @@ files[] = {"id":"5151157-2e1a4490-c17f-4b98-b777-623bfd41fbb8","path":"02.認証
 
 [relations.apiDefinition]
 rootDirectory = postman/schemas
+files[] = {"path":"index.yaml","metaData":{}}
 
 [relations.apiDefinition.metaData]
 type = openapi:3
