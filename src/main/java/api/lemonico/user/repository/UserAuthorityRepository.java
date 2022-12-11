@@ -10,26 +10,27 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.user.dao.UserDao;
-import api.lemonico.user.entity.UserEntity;
-import java.time.LocalDateTime;
-import java.util.*;
+import api.lemonico.user.dao.UserAuthorityDao;
+import api.lemonico.user.entity.UserAuthorityEntity;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import lombok.*;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * ユーザーリポジトリ
+ * ユーザ権限リポジトリ
  *
  * @since 1.0.0
  */
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class UserRepository
+public class UserAuthorityRepository
 {
 
-    private final UserDao dao;
+    private final UserAuthorityDao dao;
 
     /**
      * 検索オプションを指定してエンティティの一覧を取得します。
@@ -39,7 +40,7 @@ public class UserRepository
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<UserEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public LcResultSet<UserAuthorityEntity> findAll(Condition condition, LcPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
         return new LcResultSet<>(entities, options.getCount());
@@ -52,7 +53,7 @@ public class UserRepository
      * @return エンティティが {@link Optional} で返されます。<br>
      *         エンティティが存在しない場合は空の {@link Optional} が返されます。
      */
-    public Optional<UserEntity> findById(ID<UserEntity> id) throws IllegalArgumentException {
+    public Optional<UserAuthorityEntity> findById(ID<UserAuthorityEntity> id) throws IllegalArgumentException {
         return dao.selectById(id);
     }
 
@@ -62,15 +63,12 @@ public class UserRepository
      * @param entity エンティティ
      * @return 作成したエンティティのIDが返されます。
      */
-    public ID<UserEntity> create(UserEntity entity) {
+    public ID<UserAuthorityEntity> create(UserAuthorityEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         return dao.insert(entity
             .withId(null)
-            .withCreatedBy(MDC.get("USERNAME"))
-            .withCreatedAt(LocalDateTime.now())
-            .withModifiedBy(MDC.get("USERNAME"))
-            .withModifiedAt(LocalDateTime.now())
-            .withIsDeleted(0))
+            .withCreatedBy("")
+            .withModifiedBy(""))
             .getEntity()
             .getId();
     }
@@ -80,11 +78,11 @@ public class UserRepository
      *
      * @param entity エンティティ
      */
-    public void update(ID<UserEntity> id, UserEntity entity) {
+    public void update(ID<UserAuthorityEntity> id, UserAuthorityEntity entity) {
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
-        var result = dao.update(entity.withId(id).withModifiedBy(MDC.get("USERNAME")));
+        var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(UserEntity.class, entity.getId());
+            throw new LcEntityNotFoundException(UserAuthorityEntity.class, entity.getId());
         }
     }
 
@@ -93,10 +91,10 @@ public class UserRepository
      *
      * @param id エンティティID
      */
-    public void deleteById(ID<UserEntity> id) throws IllegalArgumentException {
+    public void deleteById(ID<UserAuthorityEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(UserEntity.class, id);
+            throw new LcEntityNotFoundException(UserAuthorityEntity.class, id);
         }
     }
 
@@ -105,10 +103,10 @@ public class UserRepository
      *
      * @param id エンティティID
      */
-    public void deleteLogicById(ID<UserEntity> id) throws IllegalArgumentException {
+    public void deleteLogicById(ID<UserAuthorityEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(UserEntity.class, id);
+            throw new LcEntityNotFoundException(UserAuthorityEntity.class, id);
         }
     }
 
@@ -118,7 +116,7 @@ public class UserRepository
      * @param id エンティティID
      * @return エンティティが存在する場合は true が返されます。
      */
-    public boolean exists(ID<UserEntity> id) {
+    public boolean exists(ID<UserAuthorityEntity> id) {
         return findById(id).isPresent();
     }
 
@@ -139,23 +137,10 @@ public class UserRepository
         public static final Condition DEFAULT = new Condition();
 
         /**
-         * ユーザーIDのセット（完全一致、複数指定可）
+         * ユーザ権限IDのセット（完全一致、複数指定可）
          */
-        private Set<ID<UserEntity>> ids;
+        private Set<ID<UserAuthorityEntity>> ids;
 
-        /**
-         * ユーザー名称（完全一致、複数指定不可）
-         */
-        private String username;
-
-        /**
-         * ユーザーメールアドレス（完全一致、複数指定不可）
-         */
-        private String email;
-
-        /**
-         * UUID（完全一致、複数指定不可）
-         */
         private String uuid;
     }
 

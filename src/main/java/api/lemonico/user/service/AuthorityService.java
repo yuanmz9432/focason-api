@@ -5,14 +5,14 @@ package api.lemonico.user.service;
 
 import static java.util.stream.Collectors.toList;
 
-import api.lemonico.user.entity.AuthorityEntity;
-import api.lemonico.user.repository.AuthorityRepository;
-import api.lemonico.user.resource.AuthorityResource;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import api.lemonico.user.entity.AuthorityEntity;
+import api.lemonico.user.repository.AuthorityRepository;
+import api.lemonico.user.resource.AuthorityResource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

@@ -20,7 +20,7 @@ import api.lemonico.store.resource.StoreResource;
 import api.lemonico.store.service.StoreService;
 import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
-import api.lemonico.user.repository.AuthorityRepository;
+import api.lemonico.user.repository.UserAuthorityRepository;
 import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
@@ -31,7 +31,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +74,7 @@ public class UserService
     /**
      * 権限サービス
      */
-    private final AuthorityService authorityService;
+    private final UserAuthorityService userAuthorityService;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、ユーザリソースの一覧を取得します。
@@ -282,7 +281,7 @@ public class UserService
         UserRepository.Condition condition;
         if (uuidPattern.matcher(subject).matches()) {
             condition = UserRepository.Condition.builder().uuid(subject).build();
-        } else if (mailPattern.matcher(subject).matches())  {
+        } else if (mailPattern.matcher(subject).matches()) {
             condition = UserRepository.Condition.builder().email(subject).build();
         } else {
             condition = UserRepository.Condition.DEFAULT;
@@ -295,11 +294,13 @@ public class UserService
             throw new LcResourceNotFoundException(LoginUser.class, subject);
         }
         var loginUser = userResourceLcResultSet.getData().get(0);
-        // TODO ユーザー権限取得
-        var authorities = new ArrayList<SimpleGrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("AUTH_USER"));
-        authorities.add(new SimpleGrantedAuthority("AUTH_STORE"));
-        authorities.add(new SimpleGrantedAuthority("AUTH_WAREHOUSE"));
+        // ユーザ権限取得
+        var authorities = userAuthorityService.getResourceList(
+            UserAuthorityRepository.Condition.builder().uuid(loginUser.getUuid()).build(),
+            LcPagination.DEFAULT,
+            UserAuthorityRepository.Sort.DEFAULT).stream()
+            .map((item) -> new SimpleGrantedAuthority(item.getAuthorityCode()))
+            .collect(Collectors.toList());
         return LoginUser.builder()
             .id(loginUser.getId().getValue())
             .uuid(loginUser.getUuid())

@@ -5,13 +5,13 @@ package api.lemonico.user.repository;
 
 import static java.util.stream.Collectors.toList;
 
-import api.lemonico.user.dao.AuthorityDao;
-import api.lemonico.user.entity.AuthorityEntity;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
+import api.lemonico.user.dao.AuthorityDao;
+import api.lemonico.user.entity.AuthorityEntity;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;

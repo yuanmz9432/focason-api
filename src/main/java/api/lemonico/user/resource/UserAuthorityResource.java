@@ -6,13 +6,13 @@ package api.lemonico.user.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.user.entity.AuthorityEntity;
+import api.lemonico.user.entity.UserAuthorityEntity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * 権限マスタリソース
+ * ユーザ権限リソース
  *
  * @since 1.0.0
  */
@@ -21,17 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder(toBuilder = true)
 @With
 @ToString
-public class AuthorityResource
+public class UserAuthorityResource
 {
 
     /** 自動採番ID */
-    private final ID<AuthorityEntity> id;
+    private final ID<UserAuthorityEntity> id;
+
+    /** UUID */
+    private final String uuid;
 
     /** 権限コード */
     private final String authorityCode;
-
-    /** 権限名称 */
-    private final String authorityName;
 
     /** 作成者 */
     private final String createdBy;
@@ -51,12 +51,12 @@ public class AuthorityResource
     /**
      * 指定したエンティティを使用して、リソースを構築します。
      *
-     * @param entity 権限マスタエンティティ
+     * @param entity ユーザ権限エンティティ
      */
-    public AuthorityResource(AuthorityEntity entity) {
+    public UserAuthorityResource(UserAuthorityEntity entity) {
         this.id = entity.getId();
+        this.uuid = entity.getUuid();
         this.authorityCode = entity.getAuthorityCode();
-        this.authorityName = entity.getAuthorityName();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -67,13 +67,13 @@ public class AuthorityResource
     /**
      * リソースをエンティティに変換します。
      *
-     * @return 権限マスタエンティティ
+     * @return ユーザ権限エンティティ
      */
-    public AuthorityEntity toEntity() {
-        return AuthorityEntity.builder()
+    public UserAuthorityEntity toEntity() {
+        return UserAuthorityEntity.builder()
             .id(id)
+            .uuid(uuid)
             .authorityCode(authorityCode)
-            .authorityName(authorityName)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

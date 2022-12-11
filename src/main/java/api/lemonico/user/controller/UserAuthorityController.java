@@ -15,10 +15,10 @@ import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.user.entity.AuthorityEntity;
-import api.lemonico.user.repository.AuthorityRepository;
-import api.lemonico.user.resource.AuthorityResource;
-import api.lemonico.user.service.AuthorityService;
+import api.lemonico.user.entity.UserAuthorityEntity;
+import api.lemonico.user.repository.UserAuthorityRepository;
+import api.lemonico.user.resource.UserAuthorityResource;
+import api.lemonico.user.service.UserAuthorityService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +29,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * 権限マスタコントローラー
+ * ユーザ権限コントローラー
  *
  * @since 1.0.0
  */
 @RestController
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class AuthorityController
+public class UserAuthorityController
 {
     /**
      * コレクションリソースURI
      */
-    private static final String COLLECTION_RESOURCE_URI = "/authorities";
+    private static final String COLLECTION_RESOURCE_URI = "/userAuthorities";
 
     /**
      * メンバーリソースURI
@@ -49,60 +49,60 @@ public class AuthorityController
     private static final String MEMBER_RESOURCE_URI = COLLECTION_RESOURCE_URI + "/{id}";
 
     /**
-     * 権限マスタサービス
+     * ユーザ権限サービス
      */
-    private final AuthorityService service;
+    private final UserAuthorityService service;
 
     /**
-     * 権限マスタリソースの一覧取得API
+     * ユーザ権限リソースの一覧取得API
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
      * @param lcSort ソートパラメータ
-     * @return 権限マスタリソース一覧取得APIレスポンス
+     * @return ユーザ権限リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<AuthorityResource>> getAuthorityList(
-        @LcConditionParam AuthorityRepository.Condition condition,
+    public ResponseEntity<LcResultSet<UserAuthorityResource>> getUserAuthorityList(
+        @LcConditionParam UserAuthorityRepository.Condition condition,
         @LcPaginationParam LcPagination pagination,
         @LcSortParam(allowedValues = {}) LcSort lcSort) {
         if (condition == null) {
-            condition = AuthorityRepository.Condition.DEFAULT;
+            condition = UserAuthorityRepository.Condition.DEFAULT;
         }
-        var sort = AuthorityRepository.Sort.fromLcSort(lcSort);
+        var sort = UserAuthorityRepository.Sort.fromLcSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
     /**
-     * 権限マスタIDを指定して、権限マスタリソース取得API
+     * ユーザ権限IDを指定して、ユーザ権限リソース取得API
      *
-     * @param id 権限マスタID
-     * @return 権限マスタリソース取得APIレスポンス
+     * @param id ユーザ権限ID
+     * @return ユーザ権限リソース取得APIレスポンス
      */
     @GetMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<AuthorityResource> getAuthority(
-        @PathVariable("id") ID<AuthorityEntity> id) {
+    public ResponseEntity<UserAuthorityResource> getUserAuthority(
+        @PathVariable("id") ID<UserAuthorityEntity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(AuthorityResource.class, id));
+            .orElseThrow(() -> new LcResourceNotFoundException(UserAuthorityResource.class, id));
     }
 
     /**
-     * 権限マスタリソース作成API
+     * ユーザ権限リソース作成API
      *
-     * @param resource 権限マスタリソース
-     * @return 権限マスタリソース作成APIレスポンス
+     * @param resource ユーザ権限リソース
+     * @return ユーザ権限リソース作成APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> createAuthority(
-        @Valid @RequestBody AuthorityResource resource,
+    public ResponseEntity<Void> createUserAuthority(
+        @Valid @RequestBody UserAuthorityResource resource,
         UriComponentsBuilder uriBuilder) {
         var id = service.createResource(resource).getId();
         var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).getAuthority(id))
+            .withMethodCall(on(getClass()).getUserAuthority(id))
             .build()
             .encode()
             .toUri();
@@ -110,32 +110,32 @@ public class AuthorityController
     }
 
     /**
-     * 権限マスタIDを指定して、権限マスタリソース更新API
+     * ユーザ権限IDを指定して、ユーザ権限リソース更新API
      *
-     * @param id 権限マスタID
-     * @param resource 権限マスタリソース更新APIレスポンス
-     * @return 権限マスタリソース更新APIレスポンス
+     * @param id ユーザ権限ID
+     * @param resource ユーザ権限リソース更新APIレスポンス
+     * @return ユーザ権限リソース更新APIレスポンス
      */
     @Validated({
         Default.class
     })
     @PutMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<AuthorityResource> updateAuthority(
-        @PathVariable("id") ID<AuthorityEntity> id,
-        @Valid @RequestBody AuthorityResource resource) {
+    public ResponseEntity<UserAuthorityResource> updateUserAuthority(
+        @PathVariable("id") ID<UserAuthorityEntity> id,
+        @Valid @RequestBody UserAuthorityResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 
     /**
-     * 権限マスタIDを指定して、権限マスタリソース削除API
+     * ユーザ権限IDを指定して、ユーザ権限リソース削除API
      *
-     * @param id 権限マスタID
-     * @return 権限マスタリソース削除APIレスポンス
+     * @param id ユーザ権限ID
+     * @return ユーザ権限リソース削除APIレスポンス
      */
     @DeleteMapping(MEMBER_RESOURCE_URI)
-    public ResponseEntity<Void> deleteAuthority(
-        @PathVariable("id") ID<AuthorityEntity> id) {
+    public ResponseEntity<Void> deleteUserAuthority(
+        @PathVariable("id") ID<UserAuthorityEntity> id) {
         service.deleteResource(id);
         return ResponseEntity.noContent().build();
     }
