@@ -1,0 +1,76 @@
+{
+	"info": {
+		"_postman_id": "2e1a4490-c17f-4b98-b777-623bfd41fbb8",
+		"name": "02.認証",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "5151157-2e1a4490-c17f-4b98-b777-623bfd41fbb8"
+	},
+	"item": [
+		{
+			"name": "ログイン",
+			"id": "2fc1a130-8af9-4b80-8402-9b74b04a7ad8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"yuanmz9432@gmail.com\",\n    \"password\":\"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/{{context-path}}/auth/login",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{context-path}}",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新規登録",
+			"id": "13d23bb7-42c7-4b1d-9a72-48563dc5cdb6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"Yuan-D\",\n    \"gender\":1,\n    \"email\":\"yuanmz9435@gmail.com\",\n    \"password\":\"123456\",\n    \"status\":1,\n    \"type\":1,\n    \"phone\":null,\n    \"url\":null,\n    \"profileImage\":\"\",\n    \"zip\":\"\",\n    \"prefecture\":47,\n    \"municipality\":\"\",\n    \"address1\":\"\",\n    \"address2\":\"\",\n    \"userDepartments\":null,\n    \"authorities\":[\n        \"AUTH_USER\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/{{context-path}}/auth/register",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{context-path}}",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
