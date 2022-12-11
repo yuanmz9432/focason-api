@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.auth.dao;
+package api.lemonico.user.dao;
 
 
 
-import api.lemonico.auth.entity.AuthorityEntity;
-import api.lemonico.auth.repository.AuthorityRepository;
+import api.lemonico.user.entity.AuthorityEntity;
+import api.lemonico.user.repository.AuthorityRepository;
 import api.lemonico.core.attribute.ID;
 import java.util.List;
 import java.util.Optional;

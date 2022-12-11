@@ -1,11 +1,11 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.auth.resource;
+package api.lemonico.user.resource;
 
 
 
-import api.lemonico.auth.entity.AuthorityEntity;
+import api.lemonico.user.entity.AuthorityEntity;
 import api.lemonico.core.attribute.ID;
 import java.time.LocalDateTime;
 import lombok.*;
@@ -27,8 +27,11 @@ public class AuthorityResource
     /** 自動採番ID */
     private final ID<AuthorityEntity> id;
 
+    /** 権限コード */
+    private final String authorityCode;
+
     /** 権限名称 */
-    private final String name;
+    private final String authorityName;
 
     /** 作成者 */
     private final String createdBy;
@@ -52,7 +55,8 @@ public class AuthorityResource
      */
     public AuthorityResource(AuthorityEntity entity) {
         this.id = entity.getId();
-        this.name = entity.getName();
+        this.authorityCode = entity.getAuthorityCode();
+        this.authorityName = entity.getAuthorityName();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
@@ -68,7 +72,8 @@ public class AuthorityResource
     public AuthorityEntity toEntity() {
         return AuthorityEntity.builder()
             .id(id)
-            .name(name)
+            .authorityCode(authorityCode)
+            .authorityName(authorityName)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)

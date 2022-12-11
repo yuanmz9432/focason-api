@@ -1,16 +1,16 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.auth.controller;
+package api.lemonico.user.controller;
 
 
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
-import api.lemonico.auth.entity.AuthorityEntity;
-import api.lemonico.auth.repository.AuthorityRepository;
-import api.lemonico.auth.resource.AuthorityResource;
-import api.lemonico.auth.service.AuthorityService;
+import api.lemonico.user.entity.AuthorityEntity;
+import api.lemonico.user.repository.AuthorityRepository;
+import api.lemonico.user.resource.AuthorityResource;
+import api.lemonico.user.service.AuthorityService;
 import api.lemonico.core.annotation.LcConditionParam;
 import api.lemonico.core.annotation.LcPaginationParam;
 import api.lemonico.core.annotation.LcSortParam;

@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
  */
-package api.lemonico.auth.entity;
+package api.lemonico.user.entity;
 
 
 
@@ -31,9 +31,12 @@ public class AuthorityEntity extends LcEntity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     ID<AuthorityEntity> id;
+    /** 権限コード */
+    @Column(name = "authority_code")
+    String authorityCode;
     /** 権限名称 */
-    @Column(name = "name")
-    String name;
+    @Column(name = "authority_name")
+    String authorityName;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

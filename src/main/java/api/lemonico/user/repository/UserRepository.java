@@ -11,12 +11,11 @@ import api.lemonico.core.attribute.LcResultSet;
 import api.lemonico.core.attribute.LcSort;
 import api.lemonico.core.exception.LcEntityNotFoundException;
 import api.lemonico.user.dao.UserDao;
+import api.lemonico.user.entity.AuthorityEntity;
 import api.lemonico.user.entity.UserEntity;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
 import lombok.*;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;

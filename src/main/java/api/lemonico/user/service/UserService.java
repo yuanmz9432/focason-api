@@ -20,6 +20,7 @@ import api.lemonico.store.resource.StoreResource;
 import api.lemonico.store.service.StoreService;
 import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
+import api.lemonico.user.repository.AuthorityRepository;
 import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
@@ -29,6 +30,8 @@ import api.lemonico.warehouse.service.WarehouseService;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +71,11 @@ public class UserService
      * ストアサービス
      */
     private final StoreService storeService;
+
+    /**
+     * 権限サービス
+     */
+    private final AuthorityService authorityService;
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、ユーザリソースの一覧を取得します。
@@ -269,10 +277,13 @@ public class UserService
      */
     @Transactional(readOnly = true)
     public LoginUser getLoginUserBySubject(String subject) {
-        Pattern pattern = Pattern.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
+        Pattern uuidPattern = Pattern.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
+        Pattern mailPattern = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         UserRepository.Condition condition;
-        if (pattern.matcher(subject).matches()) {
+        if (uuidPattern.matcher(subject).matches()) {
             condition = UserRepository.Condition.builder().uuid(subject).build();
+        } else if (mailPattern.matcher(subject).matches())  {
+            condition = UserRepository.Condition.builder().email(subject).build();
         } else {
             condition = UserRepository.Condition.DEFAULT;
         }

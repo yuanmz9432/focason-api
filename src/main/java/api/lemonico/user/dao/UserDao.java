@@ -6,6 +6,7 @@ package api.lemonico.user.dao;
 
 
 import api.lemonico.core.attribute.ID;
+import api.lemonico.user.entity.AuthorityEntity;
 import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserRepository;
 import java.util.List;
