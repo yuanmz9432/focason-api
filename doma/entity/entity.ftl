@@ -1,32 +1,30 @@
 <#-- このテンプレートに対応するデータモデルのクラスは org.seasar.doma.extension.gen.EntityDesc です -->
 <#import "lib.ftl" as lib>
 /*
-<#if lib.copyright??>
+ <#if lib.copyright??>
  * ${lib.copyright}
-</#if>
+ </#if>
  */
 <#if packageName??>
 package ${packageName};
 </#if>
 
-
-
-import api.lemonico.core.attribute.ID;
-import java.time.LocalDateTime;
-
-import api.lemonico.core.entity.LcEntity;
+import attribute.core.com.lemonico.ID;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
-import org.seasar.doma.*;
+<#list importNames as importName>
+import ${importName};
+</#list>
+
 
 /**
- * ${comment}エンティティ
+ * <#if comment??>${comment}</#if>エンティティ
  *
-<#if lib.since??>
+ <#if lib.since??>
  * @since ${lib.since}
-</#if>
+ </#if>
  */
 @Entity(immutable = true)
 @Value
@@ -34,22 +32,22 @@ import org.seasar.doma.*;
 @Builder(toBuilder = true)
 @With
 @Table(name = "${tableName}")
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LcEntity
+public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if>
 {
 <#list ownEntityPropertyDescs as property>
-  <#if showDbComment && property.comment??>
+    <#if property.comment??>
     /** ${property.comment} */
-  <#else>
+    <#else>
     /** */
-  </#if>
-  <#if property.id>
+    </#if>
+    <#if property.id>
     <#if property.version>
     @Version
     </#if>
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     <#if !useAccessor>public </#if>ID<${simpleName}<#if entitySuffix??>${entitySuffix}</#if>> ${property.name};
-  <#else>
+    <#else>
     <#if property.version>
     @Version
     </#if>
@@ -57,6 +55,6 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     @Column(name = "${property.columnName}")
     </#if>
     <#if !useAccessor>public </#if>${property.propertyClassSimpleName} ${property.name};
-  </#if>
+    </#if>
 </#list>
 }

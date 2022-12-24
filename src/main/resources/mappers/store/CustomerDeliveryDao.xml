@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.store.dao.CustomerDeliveryDao">
+	<resultMap type="com.lemonico.common.bean.Mc200_customer_delivery" id="selectCustomerDelivery">
+		<id column="delivery_id" property="delivery_id" />
+		<id column="client_id" property="client_id" />
+		<result column="name" property="name" />
+		<result column="postcode" property="postcode" />
+		<result column="prefecture" property="prefecture" />
+		<result column="address1" property="address1" />
+		<result column="address2" property="address2" />
+		<result column="company" property="company" />
+		<result column="division" property="division" />
+		<result column="phone" property="phone" />
+		<result column="email" property="email" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="del_flg" property="del_flg" />
+		<result column="form" property="form" />
+	</resultMap>
+
+	<select id="getCustomerDeliveryList" resultType="com.lemonico.common.bean.Mc200_customer_delivery">
+		select *
+		from mc200_customer_delivery
+		where del_flg = 0
+		<if test="delivery_id!=null and delivery_id!=''">
+		    and delivery_id = #{delivery_id}
+		</if>
+		<if test="client_id!=null and client_id!=''">
+			and client_id = #{client_id}
+		</if>
+		<if test="search!=null and search!=''">
+			and name = #{search}
+		</if>
+		order by upd_date desc
+	</select>
+
+	<select id="getCustomerDeliveryCount" resultType="int">
+		select count(delivery_id)
+		from mc200_customer_delivery
+		where del_flg = 0
+		<if test="delivery_id!=null and delivery_id!=''">
+			and delivery_id = #{delivery_id}
+		</if>
+		<if test="client_id!=null and client_id!=''">
+			and client_id = #{client_id}
+		</if>
+		<if test="name!=null and name!=''">
+			and name = #{name}
+		</if>
+	</select>
+
+	<select id="getCompanyCustomerDeliveryCount" resultType="int">
+		select count(delivery_id)
+		from mc200_customer_delivery
+		where del_flg = 0
+		<if test="delivery_id!=null and delivery_id!=''">
+			and delivery_id = #{delivery_id}
+		</if>
+		<if test="client_id!=null and client_id!=''">
+			and client_id = #{client_id}
+		</if>
+		<if test="companyName!=null and companyName!=''">
+			and company = #{companyName}
+		</if>
+	</select>
+
+	<insert id="insertCustomerDelivery">
+        insert into mc200_customer_delivery (client_id, name, postcode, prefecture, address1, address2, company, division, phone, email, ins_usr, ins_date, upd_usr, upd_date, del_flg, form)
+        values (#{jsonParam.client_id}, #{jsonParam.name}, #{jsonParam.postcode}, #{jsonParam.prefecture}, #{jsonParam.address1}, #{jsonParam.address2}, #{jsonParam.company},
+				#{jsonParam.division}, #{jsonParam.phone}, #{jsonParam.email}, #{jsonParam.ins_usr}, #{jsonParam.ins_date}, #{jsonParam.upd_usr}, #{jsonParam.upd_date}, 0, #{jsonParam.form});
+	</insert>
+
+	<update id="updateCustomerDelivery">
+		update mc200_customer_delivery set
+	    name=#{jsonParam.surname}, postcode=#{jsonParam.postcode}, prefecture=#{jsonParam.prefecture}, address1=#{jsonParam.address1}, address2=#{jsonParam.address2},
+		company=#{jsonParam.company}, division=#{jsonParam.division}, phone=#{jsonParam.phone}, email=#{jsonParam.email}, upd_usr=#{jsonParam.upd_usr}, upd_date=#{jsonParam.upd_date}, form=#{jsonParam.form}
+		where client_id = #{jsonParam.client_id} and delivery_id = #{jsonParam.delivery_id}
+	</update>
+</mapper>

@@ -5,6 +5,7 @@
 .idea/
 cloudformation/
 db/
+database/
 
 .DS_Store
 

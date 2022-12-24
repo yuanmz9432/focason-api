@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.common.dao.ApiErrorDao">
+
+    <!-- 修改多个api报错信息次数-->
+    <update id="updateErrorCount">
+        <foreach collection="ms018ApiErrors" item="ms018ApiErrors" separator=";">
+            update ms018_api_error set error_count = #{ms018ApiErrors.error_count}, upd_date =
+            #{ms018ApiErrors.upd_date}
+            where del_flg = 0 and id = #{ms018ApiErrors.id} and order_id = #{ms018ApiErrors.order_id} and client_id =
+            #{ms018ApiErrors.client_id}
+        </foreach>
+    </update>
+
+    <!-- 获取店铺报错次数信息-->
+    <select id="getClientApiError" resultType="com.lemonico.common.bean.Ms018_api_error">
+        select id, order_id, client_id, template, error_count
+        from ms018_api_error
+        where del_flg = 0 and client_id = #{client_id}
+        <if test="error_count != null  and error_count != ''">
+            and error_count >= #{error_count}
+        </if>
+    </select>
+
+    <!-- 获取所有api报错信息-->
+    <select id="getAllApiError" resultType="com.lemonico.common.bean.Ms018_api_error">
+        select id, order_id, client_id, template, error_count
+        from ms018_api_error
+        where del_flg = 0
+    </select>
+
+    <!-- 新规多条api报错信息-->
+    <insert id="insertApiError">
+        <foreach collection="apiError" item="apiError" separator=";">
+            insert into ms018_api_error(order_id, client_id, template, error_count, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+            values (#{apiError.order_id}, #{apiError.client_id}, #{apiError.template}, #{apiError.error_count}, #{apiError.ins_usr}
+            , #{apiError.ins_date}, #{apiError.upd_usr}, #{apiError.upd_date}, #{apiError.del_flg})
+        </foreach>
+    </insert>
+
+    <!-- 修改单个api报错信息次数-->
+    <update id="updateApiErrorCount">
+        update ms018_api_error set error_count = #{jsonObject.count}, upd_usr = #{loginNm}, upd_date = #{date}
+        where del_flg = 0 and client_id = #{jsonObject.client_id} and template = #{jsonObject.template}
+        and order_id = #{jsonObject.order_id}
+    </update>
+
+    <!-- 获取到乐天和雅虎的 api设定信息-->
+    <select id="getApiExpired" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_id, client_url, expire_date
+        from tc203_order_client
+        where client_id = #{client_id} and del_flg = 0
+        <if test="templateList != null and templateList.size != 0">
+            and template in 
+            <foreach collection="templateList" item="templateList" open="(" close=")" separator=",">
+                #{templateList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 根据 api设定id 和 店铺id 获取api报错次数信息-->
+    <select id="getApiErrorInfo" resultType="com.lemonico.common.bean.Ms018_api_error">
+        select id, order_id, client_id, template, error_count
+        from ms018_api_error
+        where del_flg = 0 and order_id = #{order_id} and client_id = #{client_id}
+    </select>
+
+    <!-- 删除对应的api报错信息-->
+    <update id="deleteApiErrorInfo">
+        update ms018_api_error set del_flg = 1
+        where 1 = 1
+        <if test="idList != null and idList.size != 0">
+            and id in
+            <foreach collection="idList" item="idList" open="(" close=")" separator=",">
+                #{idList}
+            </foreach>
+        </if>
+    </update>
+</mapper>

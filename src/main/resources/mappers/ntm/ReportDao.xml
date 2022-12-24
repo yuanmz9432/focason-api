@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.ntm.dao.ReportDao">
+    <resultMap type="com.lemonico.common.bean.Tw200_shipment" id="ntmSelect">
+        <id column="client_id" property="client_id" />
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="shipment_plan_id" property="shipment_plan_id" />
+        <result column="request_date" property="request_date" />
+        <result column="shipment_plan_date" property="shipment_plan_date" />
+        <result column="delivery_plan_date" property="delivery_plan_date" />
+        <result column="postcode" property="postcode" />
+        <result column="surname" property="surname" />
+        <result column="phone" property="phone" />
+        <result column="prefecture" property="prefecture" />
+        <result column="address1" property="address1" />
+        <result column="address2" property="address2" />
+        <result column="company" property="company" />
+        <result column="division" property="division" />
+        <result column="email" property="email" />
+        <result column="shipment_status" property="shipment_status" />
+        <result column="status_message" property="status_message" />
+        <result column="inspection_type" property="inspection_type" />
+        <result column="identifier" property="identifier" />
+        <result column="delivery_tracking_nm" property="delivery_tracking_nm" />
+        <result column="order_no" property="order_no" />
+        <result column="product_kind_plan_cnt" property="product_kind_plan_cnt" />
+        <result column="product_plan_total" property="product_plan_total" />
+        <result column="total_price" property="total_price" />
+        <result column="subtotal_amount" property="subtotal_amount" />
+        <result column="delivery_charge" property="delivery_charge" />
+        <result column="handling_charge" property="handling_charge" />
+        <result column="discount_amount" property="discount_amount" />
+        <result column="total_amount" property="total_amount" />
+        <result column="cushioning_unit" property="cushioning_unit" />
+        <result column="gift_wrapping_unit" property="gift_wrapping_unit" />
+        <result column="gift_sender_name" property="gift_sender_name" />
+        <result column="bundled_items" property="bundled_items" />
+        <result column="shipping_email" property="shipping_email" />
+        <result column="delivery_note_type" property="delivery_note_type" />
+        <result column="price_on_delivery_note" property="price_on_delivery_note" />
+        <result column="message" property="message" />
+        <result column="sponsor_id" property="sponsor_id" />
+        <result column="label_note" property="label_note" />
+        <result column="shipping_date" property="shipping_date" />
+        <result column="tax" property="tax" />
+        <result column="size_cd" property="size_cd" />
+        <result column="total_with_normal_tax" property="total_with_normal_tax" />
+        <result column="total_with_reduced_tax" property="total_with_reduced_tax" />
+        <result column="delivery_carrier" property="delivery_carrier" />
+        <result column="delivery_time_slot" property="delivery_time_slot" />
+        <result column="delivery_date" property="delivery_date" />
+        <result column="cash_on_delivery" property="cash_on_delivery" />
+        <result column="total_for_cash_on_delivery" property="total_for_cash_on_delivery" />
+        <result column="tax_for_cash_on_delivery" property="tax_for_cash_on_delivery" />
+        <result column="delivery_method" property="delivery_method" />
+        <result column="box_delivery" property="box_delivery" />
+        <result column="fragile_item" property="fragile_item" />
+        <result column="invoice_special_notes" property="invoice_special_notes" />
+        <result column="instructions_special_notes" property="instructions_special_notes" />
+        <result column="international" property="international" />
+        <result column="delivery_service" property="delivery_service" />
+        <result column="currency_code" property="currency_code" />
+        <result column="insurance" property="insurance" />
+        <result column="pdf_name" property="pdf_name" />
+        <result column="pdf_confirm_img" property="pdf_confirm_img" />
+        <result column="bikou1" property="bikou1" />
+        <result column="bikou2" property="bikou2" />
+        <result column="bikou3" property="bikou3" />
+        <result column="bikou4" property="bikou4" />
+        <result column="bikou5" property="bikou5" />
+        <result column="bikou6" property="bikou6" />
+        <result column="bikou7" property="bikou7" />
+        <result column="bikou8" property="bikou8" />
+        <result column="bikou9" property="bikou9" />
+        <result column="bikou10" property="bikou10" />
+        <result column="bikou_flg" property="bikou_flg" />
+        <result column="payment_method" property="payment_method" />
+        <result column="boxes" property="boxes" />
+        <result column="file" property="file" />
+        <result column="file2" property="file2" />
+        <result column="file3" property="file3" />
+        <result column="file4" property="file4" />
+        <result column="file5" property="file5" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="form" property="form" />
+        <result column="bill_barcode" property="bill_barcode" />
+        <result column="del_flg" property="del_flg" />
+        <result column="freight" property="freight" />
+        <result column="packing" property="packing" />
+        <result column="order_datetime" property="order_datetime" />
+        <result column="order_mail" property="order_mail" />
+        <result column="order_family_name" property="order_family_name" />
+        <result column="surname" property="surname" />
+        <collection property="tw201_shipment_detail" javaType="java.util.List" ofType="com.lemonico.common.bean.Tw201_shipment_detail">
+            <id column="client_id" property="client_id" />
+            <id column="warehouse_cd" property="warehouse_cd" />
+            <id column="shipment_plan_id" property="shipment_plan_id" />
+            <id column="product_id" property="product_id" />
+            <result column="product_plan_cnt" property="product_plan_cnt" />
+            <result column="is_reduced_tax" property="is_reduced_tax" />
+            <result column="cushioning_type" property="cushioning_type" />
+            <result column="gift_wrapping_type" property="gift_wrapping_type" />
+            <result column="product_plan_cnt" property="product_plan_cnt" />
+            <result column="unit_price" property="unit_price" />
+            <result column="price" property="price" />
+            <result column="set_sub_id" property="set_sub_id" />
+            <result column="reserve_status" property="reserve_status" />
+            <result column="reserve_cnt" property="reserve_cnt" />
+            <result column="tax_flag" property="tax_flag" />
+            <result column="bundled_flg" property="bundled_flg" />
+            <collection property="mc100_product" javaType="java.util.List" ofType="com.lemonico.common.bean.Mc100_product">
+                <id column="client_id" property="client_id" />
+                <id column="product_id" property="product_id" />
+                <id column="warehouse_cd" property="warehouse_cd" />
+                <result column="name" property="name" />
+                <result column="code" property="code" />
+                <result column="set_flg" property="set_flg" />
+                <result column="set_sub_id" property="set_sub_id" />
+                <result column="barcode" property="barcode" />
+                <result column="bundled_flg" property="bundled_flg" />
+                <result column="is_reduced_tax" property="is_reduced_tax" />
+                <result column="tax_flag" property="tax_flag" />
+                <result column="price" property="price" />
+                <result column="identifier" property="identifier" />
+                <result column="description_cd" property="description_cd" />
+                <result column="origin" property="origin" />
+                <result column="size_cd" property="size_cd" />
+                <result column="tags_id" property="tags_id" />
+                <result column="show_flg" property="show_flg" />
+                <result column="product_type" property="product_type" />
+                <result column="product_cd" property="product_cd" />
+                <result column="sort_no" property="sort_no" />
+            </collection>
+        </collection>
+    </resultMap>
+    <!--NTM 法人 获取日次出荷数据   -->
+    <select id="getShipmentList" resultMap="ntmSelect">
+        select tw200.client_id, tw200.warehouse_cd, tw200.shipment_plan_id, tw200.request_date, tw200.shipment_plan_date, tw200.delivery_plan_date,
+        tw200.postcode, tw200.surname, tw200.phone, tw200.prefecture, tw200.address1, tw200.address2, tw200.company, tw200.division, tw200.email, tw200.shipment_status,
+        tw200.status_message, tw200.inspection_type, tw200.identifier, tw200.delivery_tracking_nm, tw200.order_no, tw200.product_kind_plan_cnt, tw200.product_plan_total, tw200.total_price,
+        tw200.subtotal_amount, tw200.delivery_charge, tw200.handling_charge, tw200.discount_amount, tw200.total_amount, tw200.cushioning_unit, tw200.gift_wrapping_unit,
+        tw200.gift_sender_name, tw200.bundled_items, tw200.shipping_email, tw200.delivery_note_type, tw200.price_on_delivery_note, tw200.message,tw200.size_cd,
+        tw200.sponsor_id, tw200.label_note, tw200.shipping_date, tw200.tax, tw200.total_with_normal_tax, tw200.total_with_reduced_tax, tw200.delivery_carrier,
+        tw200.cash_on_delivery, tw200.total_for_cash_on_delivery, tw200.tax_for_cash_on_delivery, tw200.delivery_method,tw200.packing,tw200.freight,
+        tw200.box_delivery, tw200.fragile_item, tw200.international,tw200.form, tw200.delivery_service, tw200.currency_code, tw200.insurance, tw200.instructions_special_notes,
+        tw200.pdf_name, tw200.pdf_confirm_img, tw200.ins_usr, tw200.ins_date, tw200.upd_usr, tw200.upd_date, tw200.bikou1, tw200.bikou2, tw200.bikou3, tw200.file,tw200.file2,tw200.file3,tw200.file4,tw200.file5,
+        tw200.bikou4, tw200.bikou5, tw200.bikou6, tw200.bikou7, tw200.bikou8, tw200.bikou9, tw200.bikou10, tw200.bikou_flg, tw200.invoice_special_notes, tw200.payment_method, tw200.boxes,
+        tw200.del_flg, tw200.bill_barcode, tw200.order_datetime, tw200.delivery_time_slot, tw200.order_mail, tw200.order_family_name, tw200.surname, tw200.delivery_date, tw201.tax_flag,
+        tw201.product_id, tw201.is_reduced_tax, tw201.cushioning_type, tw201.gift_wrapping_type, tw201.product_plan_cnt, tw201.unit_price, tw201.price, tw201.set_sub_id, tw201.bundled_flg, tw201.reserve_cnt, tw201.reserve_status,
+        mc100.product_id, mc100.name, mc100.code, mc100.set_flg, mc100.set_sub_id, mc100.barcode, mc100.bundled_flg, mc100.is_reduced_tax, mc100.tax_flag,
+        mc100.price, mc100.identifier, mc100.description_cd, mc100.origin, mc100.size_cd, mc100.tags_id, mc100.show_flg,mc100.product_type,mc100.product_cd,mc100.sort_no
+        from tw200_shipment as tw200
+        left join tw201_shipment_detail as tw201 on tw200.shipment_plan_id = tw201.shipment_plan_id
+        left join mc100_product         as mc100 on tw201.product_id = mc100.product_id and tw201.client_id = mc100.client_id and mc100.del_flg = 0
+        where tw200.form = #{form}  and tw200.del_flg = 0
+        <if test="form != '' and form == 1">
+            <if test="type !='' and type == 1 and startTime == null and endTime == null">
+                and (tw200.identifier like 'NTMN%' or tw200.identifier like 'NTME%'
+                <if test="identification != '' and identification != null">
+                    or tw200.identifier like '${identification}%'
+                </if>
+                )
+            </if>
+            <if test="type !='' and type == 1 and identification != '' and identification != null and startTime != null and endTime != null">
+                and tw200.identifier like '${identification}%'
+            </if>
+            <if test="type !='' and type == 2 ">
+                and tw200.identifier like 'NTMN%'
+            </if>
+            <if test="type !='' and type == 3 ">
+                and tw200.identifier like 'NTME%'
+            </if>
+        </if>
+        <if test="form !='' and form == 2">
+            and tw200.form = #{form} and tw200.identifier like 'NT-%'
+        </if>
+        <if test="warehouse_cd !='' and warehouse_cd !=null">
+            and tw200.warehouse_cd = #{warehouse_cd}
+        </if>
+        <if test="client_id != '' and client_id != null">
+            and tw200.client_id = #{client_id}
+        </if>
+        <if test="search != '' and search != null and search != 'null'">
+            and (tw200.order_no like '%${search}%' or
+                 tw200.division like '%${search}%' or
+                 tw200.delivery_tracking_nm like '%${search}%')
+        </if>
+        <if test="startTime != null and endTime != null">
+            and (tw200.shipment_plan_date between #{startTime} and #{endTime})
+        </if>
+        and tw200.shipment_status in
+        <foreach collection="shipment_status" item="shipment_status" open="(" separator="," close=")">
+            #{shipment_status}
+        </foreach>
+        order by tw200.upd_date desc
+    </select>
+
+    <!--NTM 法人出荷   -->
+    <select id="getNtmLegalShipmentList" resultMap="ntmSelect">
+        select tw200.client_id, tw200.warehouse_cd, tw200.shipment_plan_id, tw200.request_date, tw200.shipment_plan_date, tw200.delivery_plan_date,
+        tw200.postcode, tw200.surname, tw200.phone, tw200.prefecture, tw200.address1, tw200.address2, tw200.company, tw200.division, tw200.email, tw200.shipment_status,
+        tw200.status_message, tw200.inspection_type, tw200.identifier, tw200.delivery_tracking_nm, tw200.order_no, tw200.product_kind_plan_cnt, tw200.product_plan_total, tw200.total_price,
+        tw200.subtotal_amount, tw200.delivery_charge, tw200.handling_charge, tw200.discount_amount, tw200.total_amount, tw200.cushioning_unit, tw200.gift_wrapping_unit,
+        tw200.gift_sender_name, tw200.bundled_items, tw200.shipping_email, tw200.delivery_note_type, tw200.price_on_delivery_note, tw200.message,tw200.size_cd,
+        tw200.sponsor_id, tw200.label_note, tw200.shipping_date, tw200.tax, tw200.total_with_normal_tax, tw200.total_with_reduced_tax, tw200.delivery_carrier,
+        tw200.cash_on_delivery, tw200.total_for_cash_on_delivery, tw200.tax_for_cash_on_delivery, tw200.delivery_method,tw200.packing,tw200.freight,
+        tw200.box_delivery, tw200.fragile_item, tw200.international,tw200.form, tw200.delivery_service, tw200.currency_code, tw200.insurance, tw200.instructions_special_notes,
+        tw200.pdf_name, tw200.pdf_confirm_img, tw200.ins_usr, tw200.ins_date, tw200.upd_usr, tw200.upd_date, tw200.bikou1, tw200.bikou2, tw200.bikou3, tw200.file,tw200.file2,tw200.file3,tw200.file4,tw200.file5,
+        tw200.bikou4, tw200.bikou5, tw200.bikou6, tw200.bikou7, tw200.bikou8, tw200.bikou9, tw200.bikou10, tw200.bikou_flg, tw200.invoice_special_notes, tw200.payment_method, tw200.boxes,
+        tw200.del_flg, tw200.bill_barcode, tw200.order_datetime, tw200.delivery_time_slot, tw200.order_mail, tw200.order_family_name, tw200.surname, tw200.delivery_date, tw201.tax_flag,
+        tw201.product_id, tw201.is_reduced_tax, tw201.cushioning_type, tw201.gift_wrapping_type, tw201.product_plan_cnt, tw201.unit_price, tw201.price, tw201.set_sub_id, tw201.bundled_flg, tw201.reserve_cnt, tw201.reserve_status,
+        mc100.product_id, mc100.name, mc100.code, mc100.set_flg, mc100.set_sub_id, mc100.barcode, mc100.bundled_flg, mc100.is_reduced_tax, mc100.tax_flag,
+        mc100.price, mc100.identifier, mc100.description_cd, mc100.origin, mc100.size_cd, mc100.tags_id, mc100.show_flg,mc100.product_type,mc100.product_cd,mc100.sort_no
+        from tw200_shipment as tw200
+        left join tw201_shipment_detail as tw201 on tw200.shipment_plan_id = tw201.shipment_plan_id
+        left join mc100_product         as mc100 on tw201.product_id = mc100.product_id and tw201.client_id = mc100.client_id and mc100.del_flg = 0
+        where tw200.form = #{form}  and tw200.del_flg = 0
+        <if test="form != '' and form == 1">
+            <if test="type !='' and type == 1 and identification != '' and identification != null">
+                <if test="identification != '' and identification != null">
+
+
+                    <if test="shipment_status != null and shipment_status.size() > 1">
+                        and (tw200.identifier like '${identification}%')
+                        and ((shipment_status=8 and finish_flg=0) or shipment_status in
+                        <foreach collection="shipment_status" item="shipment_status" open="(" separator="," close=")">
+                            #{shipment_status}
+                        </foreach>
+                        )
+                    </if>
+
+                    <if test="shipment_status.size() == 1">
+                        and (tw200.identifier like '${identification}%' or tw200.identifier like 'NTME%')
+                        and shipment_status=8 and finish_flg=1
+                    </if>
+
+                </if>
+            </if>
+
+            <if test="type !='' and type == 2 ">
+                and tw200.identifier like 'NTMN%'
+            </if>
+
+            <if test="type !='' and type == 3">
+                <if test="identification != '' and identification != null">
+                    and (tw200.identifier like 'NTME%')
+                    and ((shipment_status=8 and finish_flg=0) or shipment_status in
+                    <foreach collection="shipment_status" item="shipment_status" open="(" separator="," close=")">
+                        #{shipment_status}
+                    </foreach>
+                    )
+                </if>
+            </if>
+        </if>
+        <if test="form !='' and form == 2">
+            and tw200.form = #{form} and tw200.identifier like 'NT-%'
+        </if>
+        <if test="warehouse_cd !='' and warehouse_cd !=null">
+            and tw200.warehouse_cd = #{warehouse_cd}
+        </if>
+        <if test="client_id != '' and client_id != null">
+            and tw200.client_id = #{client_id}
+        </if>
+        <if test="search != '' and search != null and search != 'null'">
+            and (tw200.order_no like '%${search}%' or
+            tw200.division like '%${search}%' or
+            tw200.delivery_tracking_nm like '%${search}%')
+        </if>
+        <if test="startTime != null and endTime != null">
+            and (tw200.shipment_plan_date between #{startTime} and #{endTime})
+        </if>
+        <if test= "type != 1">
+            and tw200.shipment_status in
+            <foreach collection="shipment_status" item="shipment_status" open="(" separator="," close=")">
+                #{shipment_status}
+            </foreach>
+        </if>
+        order by tw200.upd_date desc
+    </select>
+
+    <!--出荷确定处理 修改出库出库状态为出荷完了，更新时间和 出庫予定日    -->
+    <update id="updateDeliveryHandle">
+        <foreach collection="checkList" item="item" index="index" open="" close="" separator=";">
+            update tw200_shipment
+            <set>
+                <if test="item.delivery_tracking_nm !=null and item.delivery_tracking_nm !=''">
+                    delivery_tracking_nm = #{item.delivery_tracking_nm},
+                </if>
+                <if test="item.boxes !=null">
+                     boxes = #{item.boxes},
+                </if>
+                <if test="item.freight !=null">
+                     freight = #{item.freight},
+                     delivery_charge = #{item.freight},
+                </if>
+                <if test="item.packing !=null">
+                    packing = #{item.packing},
+                    handling_charge = #{item.packing},
+                </if>
+                <if test="item.freight !=null and item.packing !=null">
+                    total_amount = total_amount + #{item.freight} + #{item.packing},
+                </if>
+                shipment_status = 8, shipment_plan_date = #{upd_date}, upd_date = #{upd_date}, finish_flg = 1
+            </set>
+             where shipment_plan_id = #{item.shipment_plan_id}
+        </foreach>
+    </update>
+
+    <select id="getAvailableCntByCondition" resultType="java.lang.String">
+        select available_cnt from tw300_stock where 1=1
+        <if test="warehouseCd != null">
+            and warehouse_cd = #{warehouseCd}
+        </if>
+        <if test="clientId != null">
+            and client_id = #{clientId}
+        </if>
+        <if test="productId != null">
+            and product_id = #{productId}
+        </if>
+    </select>
+
+    <update id="updateStockAvailableCntAndRequestingCnt">
+        update tw300_stock
+        set available_cnt = available_cnt - #{cnt}, requesting_cnt = requesting_cnt + #{cnt}
+        where client_id = #{clientId} and warehouse_cd = #{warehouseCd} and product_id = #{productId}
+    </update>
+
+    <resultMap id="locationPriorityMap" type="HashMap">
+        <result property="key" column="priority" jdbcType="INTEGER" javaType="java.lang.String"/>
+        <result property="value" column="location_id" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="getLocationPriorityByWarehouseCd" resultMap="locationPriorityMap">
+        select location_id as location_id, priority as priority where warehouse_cd = #{warehouseCd}
+    </select>
+
+    <select id="getBoxesBySealDate" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select delivery_date,delivery_carrier,boxes
+        from tw200_shipment
+        where client_id = #{clientId} and warehouse_cd =#{warehouseCd} and (shipment_plan_date between #{startDate} and #{endDate}) and form = 2 and delivery_carrier=#{deliveryCarrier};
+    </select>
+</mapper>

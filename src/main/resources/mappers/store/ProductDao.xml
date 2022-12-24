@@ -1,0 +1,1127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.store.dao.ProductDao">
+	<resultMap
+		type="com.lemonico.common.bean.Mc100_product"
+		id="selectProduct">
+		<id column="client_id" property="client_id" />
+		<id column="product_id" property="product_id" />
+		<id column="warehouse_cd" property="warehouse_cd" />
+		<result column="name" property="name" />
+		<result column="code" property="code" />
+		<result column="set_flg" property="set_flg" />
+		<result column="set_sub_id" property="set_sub_id" />
+		<result column="barcode" property="barcode" />
+		<result column="bundled_flg" property="bundled_flg" />
+		<result column="is_reduced_tax" property="is_reduced_tax" />
+		<result column="tax_flag" property="tax_flag" />
+		<result column="price" property="price" />
+		<result column="identifier" property="identifier" />
+		<result column="description_cd" property="description_cd" />
+		<result column="origin" property="origin" />
+		<result column="size_cd" property="size_cd" />
+		<result column="tags_id" property="tags_id" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="del_flg" property="del_flg" />
+		<result column="names" property="sizeName" />
+		<result column="type" property="sizeType" />
+		<result column="weight" property="weight" />
+		<result column="show_flg" property="show_flg" />
+		<result column="product_cnt" property="product_cnt" />
+		<result column="url" property="url" />
+		<result column="bikou" property="bikou" />
+		<result column="ntm_price" property="ntm_price"/>
+		<result column="product_type" property="product_type"/>
+		<result column="product_cd" property="product_cd"/>
+		<result column="sort_no" property="sort_no"/>
+		<result column="ntm_memo" property="ntm_memo"/>
+		<result column="kubun" property="kubun" />
+		<result column="serial_flg" property="serial_flg" />
+		<association property="mc101_product_tag"
+			javaType="com.lemonico.common.bean.Mc101_product_tag">
+			<id column="tags_id" property="tags_id" />
+			<result column="tags" property="tags" />
+			<result column="ins_usr" property="ins_usr" />
+			<result column="ins_date" property="ins_date" />
+			<result column="upd_usr" property="upd_usr" />
+			<result column="upd_date" property="upd_date" />
+			<result column="del_flg" property="del_flg" />
+		</association>
+		<association property="tw300_stock"
+			javaType="com.lemonico.common.bean.Tw300_stock">
+			<id column="stock_id" property="stock_id" />
+			<result column="available_cnt" property="available_cnt" />
+			<result column="requesting_cnt" property="requesting_cnt" />
+			<result column="inventory_cnt" property="inventory_cnt" />
+			<result column="not_delivery" property="not_delivery" />
+		</association>
+		<collection property="mc102_product_imgList"
+			javaType="java.util.List"
+			ofType="com.lemonico.common.bean.Mc102_product_img">
+			<id column="client_id" property="client_id" />
+			<id column="product_id" property="product_id" />
+			<id column="img_sub_id" property="img_sub_id" />
+			<result column="product_img" property="product_img" />
+		</collection>
+		<collection property="mc103_product_sets"
+			javaType="java.util.List"
+			ofType="com.lemonico.common.bean.Mc103_product_set">
+			<id column="client_id" property="client_id" />
+			<id column="product_sub_id" property="product_id" />
+			<id column="set_sub_id" property="set_sub_id" />
+			<result column="product_cnt" property="product_cnt" />
+			<result column="del_flg" property="del_flg" />
+			<result column="inventory_cnt" property="inventory_cnt"></result>
+		</collection>
+	</resultMap>
+	<resultMap
+		type="com.lemonico.common.bean.Mc101_product_tag"
+		id="selectTags">
+		<id column="tags_id" property="tags_id" />
+		<result column="tags" property="tags" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="del_flg" property="del_flg" />
+		<association property="mc104_tag"
+			javaType="com.lemonico.common.bean.Mc104_tag">
+			<id column="tags_id" property="tags_id" />
+			<id column="product_id" property="product_id" />
+			<id column="client_id" property="client_id" />
+			<result column="upd_usr" property="upd_usr" />
+			<result column="upd_date" property="upd_date" />
+			<result column="del_flg" property="del_flg" />
+		</association>
+	</resultMap>
+
+	<resultMap type="com.lemonico.common.bean.Mc100_product" id="selectProductInfo">
+		<id column="client_id" property="client_id" />
+		<id column="product_id" property="product_id" />
+		<id column="warehouse_cd" property="warehouse_cd" />
+		<result column="name" property="name" />
+		<result column="code" property="code" />
+		<result column="set_flg" property="set_flg" />
+		<result column="set_sub_id" property="set_sub_id" />
+		<result column="barcode" property="barcode" />
+		<result column="bundled_flg" property="bundled_flg" />
+		<result column="is_reduced_tax" property="is_reduced_tax" />
+		<result column="tax_flag" property="tax_flag" />
+		<result column="cost_price" property="cost_price" />
+		<result column="price" property="price" />
+		<result column="identifier" property="identifier" />
+		<result column="description_cd" property="description_cd" />
+		<result column="origin" property="origin" />
+		<result column="size_cd" property="size_cd" />
+		<result column="tags_id" property="tags_id" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="del_flg" property="del_flg" />
+		<result column="names" property="sizeName" />
+		<result column="type" property="sizeType" />
+		<result column="weight" property="weight" />
+		<result column="show_flg" property="show_flg" />
+		<result column="product_cnt" property="product_cnt" />
+		<result column="url" property="url" />
+		<result column="english_name" property="english_name" />
+		<result column="bikou" property="bikou" />
+		<result column="kubun" property="kubun" />
+		<result column="serial_flg" property="serial_flg" />
+		<association property="tw300_stock" javaType="com.lemonico.common.bean.Tw300_stock">
+			<id column="stock_id" property="stock_id" />
+			<result column="available_cnt" property="available_cnt" />
+			<result column="requesting_cnt" property="requesting_cnt" />
+			<result column="inventory_cnt" property="inventory_cnt" />
+			<result column="not_delivery" property="not_delivery" />
+			<result column="replenish_cnt" property="replenish_cnt" />
+		</association>
+		<association property="tw301_stock_history" javaType="com.lemonico.common.bean.Tw301_stock_history">
+			<id column="history_id" property="history_id" />
+			<result column="plan_id" property="plan_id" />
+			<result column="client_id" property="client_id" />
+			<result column="product_id" property="product_id" />
+			<result column="quantity" property="quantity" />
+		</association>
+	</resultMap>
+
+	<!-- 商品一覽 -->
+	<select id="getProductList" resultMap="selectProduct">
+		select
+		pro.client_id,pro.product_id,pro.name,pro.warehouse_cd,pro.code,pro.price,pro.set_flg,pro.show_flg,pro.set_sub_id,pro.tax_flag, pro.ntm_memo,
+		pro.barcode,pro.bundled_flg,pro.is_reduced_tax,pro.identifier,pro.description_cd,pro.origin,pro.size_cd,pro.weight,pro.url,pro.bikou,
+		pro.serial_flg, pro.ntm_price, pro.product_type, pro.product_cd, pro.sort_no,pro.kubun,
+		coalesce(sto.available_cnt, -1) as available_cnt,
+		coalesce(sto.requesting_cnt, -1) as requesting_cnt,
+		coalesce(sto.inventory_cnt, -1) as inventory_cnt,
+		coalesce(sto.not_delivery, 0) as not_delivery,
+		mc102.img_sub_id, mc102.product_img,
+		mc103.product_id as product_sub_id, mc103.product_cnt, mc103.set_sub_id,
+		ms010.name as names, ms010.type, ms010.weight
+		from Mc100_product pro
+		left join tw300_stock as sto on pro.product_id = sto.product_id and pro.client_id = sto.client_id
+		left join mc102_product_img mc102 on pro.product_id = mc102.product_id and pro.client_id = mc102.client_id and mc102.del_flg = 0
+		left join mc103_product_set mc103 on pro.client_id = mc103.client_id and pro.set_sub_id = mc103.set_sub_id and mc103.del_flg = 0
+		left join ms010_product_size ms010 on pro.size_cd = ms010.size_cd
+		where pro.del_flg = 0
+		<if test="stockShow!='' and stockShow!=null">
+			and (sto.inventory_cnt-sto.requesting_cnt > 0)
+		</if>
+		<if test="client_id!='all'">
+			and pro.client_id = #{client_id}
+		</if>
+		<if test="warehouse_cd!='' and warehouse_cd!=null">
+			and pro.warehouse_cd = #{warehouse_cd}
+		</if>
+		<if test="product_id!=null and product_id.length>0">
+			and pro.product_id in
+			<foreach collection="product_id" item="product_id" open="(" separator="," close=")">
+				#{product_id}
+			</foreach>
+		</if>
+		<if test="search!=null and search!=''">
+			and (pro.name like #{search} or pro.product_id like #{search} or pro.code like #{search} or barcode like #{search})
+		</if>
+		<if test="tags_id!=null and tags_id!=''">
+			and pro.product_id in (select mc104.product_id from mc104_tag as mc104 where mc104.tags_id = #{tags_id})
+		</if>
+		<if test="bundled_flg==0 or bundled_flg==1">
+			and bundled_flg = #{bundled_flg}
+		</if>
+		<if test="stock_flg==1">
+			and coalesce(sto.inventory_cnt, -1) != -1
+			<if test="count_flg==1">
+				and (sto.inventory_cnt - sto.requesting_cnt) > 0
+			</if>
+		</if>
+		<if test="stock_flg != '' and stock_flg != null and stock_flg==6 and count_flg==1">
+			and (coalesce(sto.inventory_cnt, -1) = -1
+			or (sto.inventory_cnt - sto.requesting_cnt) &lt;= 0)
+		</if>
+		<if test="stock_flg == 3">
+			and coalesce(sto.inventory_cnt, -1) != -1
+			and (sto.inventory_cnt - sto.requesting_cnt) &lt; 0
+		</if>
+		<if test="stock_flg == -1">
+			and (coalesce(sto.inventory_cnt, -1) = -1
+			or (sto.inventory_cnt - sto.requesting_cnt) = 0)
+		</if>
+		<if test="stock_flg == 4">
+			and coalesce(sto.inventory_cnt, -1) != -1
+			and (sto.inventory_cnt - sto.requesting_cnt) != 0
+		</if>
+		<if test="stock_flg == 5">
+			and (coalesce(sto.inventory_cnt, -1) = -1
+			or (sto.inventory_cnt - sto.requesting_cnt) >= 0)
+		</if>
+<!--		<if test="stock_flg==1">-->
+<!--			and coalesce(sto.available_cnt, -1) != -1-->
+<!--			<if test="count_flg==1">-->
+<!--			and sto.inventory_cnt - sto.requesting_cnt > 0-->
+<!--			</if>-->
+<!--		</if>-->
+		<if test="set_flg==1">
+			and pro.set_flg = 1 and mc103.del_flg = 0
+		</if>
+		<if test="set_flg==0 or set_flg=='' or set_flg==null">
+			and pro.set_flg = 0
+		</if>
+		<if test="show_flg==0 or show_flg=='' or show_flg==null">
+			and pro.show_flg = 0
+		</if>
+		<if test="show_flg==1">
+			and pro.show_flg = 1
+		</if>
+		<if test="kubun != null and kubun != ''">
+			and pro.kubun in
+			<foreach collection="kubun" item="kubun" open="(" separator="," close=")">
+				#{kubun}
+			</foreach>
+		</if>
+
+		order by pro.client_id desc,pro.product_id desc
+	</select>
+
+	<select id="getProductRecordList" resultMap="selectProductInfo">
+		select pro.client_id, pro.product_id, pro.name, pro.warehouse_cd, pro.code, pro.price, pro.set_flg, pro.show_flg,
+		       pro.set_sub_id, pro.tax_flag, pro.barcode, pro.bundled_flg, pro.is_reduced_tax, pro.identifier, pro.description_cd,
+		       pro.origin, pro.size_cd, pro.weight, pro.url, pro.bikou,pro.cost_price,pro.english_name,pro.serial_flg,
+		coalesce(sto.available_cnt, -1) as available_cnt,
+		coalesce(sto.requesting_cnt, -1) as requesting_cnt,
+		coalesce(sto.inventory_cnt, -1) as inventory_cnt,
+		coalesce(sto.not_delivery, 0) as not_delivery
+		from Mc100_product pro
+		left join tw300_stock as sto on pro.product_id = sto.product_id and pro.client_id = sto.client_id
+		where pro.del_flg = 0 and pro.set_flg = 0 and pro.kubun != 9
+		<if test="client_id!='all'">
+			and pro.client_id = #{client_id}
+		</if>
+		<if test="search!=null and search!=''">
+			and (pro.name ~* replace(#{search},'%','') or pro.product_id like #{search} or pro.code ~* replace(#{search},'%','') or barcode like #{search})
+		</if>
+		<if test="tags_id!=null and tags_id!=''">
+			and pro.product_id in (select mc104.product_id from mc104_tag as mc104 where mc104.tags_id = #{tags_id})
+		</if>
+		<if test="typeList != null and typeList.size != 0">
+			and pro.kubun in
+			<foreach collection="typeList" item="typeList" open="(" separator="," close=")">
+				#{typeList}
+			</foreach>
+		</if>
+		<if test="show_flg==0 or show_flg=='' or show_flg==null">
+			and pro.show_flg = 0
+		</if>
+		<if test="show_flg==1">
+			and pro.show_flg = 1
+		</if>
+		<if test="stock_flg==1">
+			and coalesce(sto.inventory_cnt, -1) != -1
+			<if test="count_flg==1">
+				and sto.available_cnt > 0
+			</if>
+		</if>
+		<if test="stock_flg != '' and stock_flg != null and stock_flg==6 and count_flg==1">
+			and (coalesce(sto.inventory_cnt, -1) = -1
+			    or sto.available_cnt &lt;= 0)
+		</if>
+		<if test="stock_flg == 3">
+			and coalesce(sto.inventory_cnt, -1) != -1
+			and sto.available_cnt &lt; 0
+		</if>
+		<if test="stock_flg == -1">
+			and (coalesce(sto.inventory_cnt, -1) = -1
+			    or sto.available_cnt = 0)
+		</if>
+		<if test="stock_flg == 4">
+			and coalesce(sto.inventory_cnt, -1) != -1
+			and sto.available_cnt != 0
+		</if>
+		<if test="stock_flg == 5">
+			and (coalesce(sto.inventory_cnt, -1) = -1
+			    or sto.available_cnt >= 0)
+		</if>
+		<if test="stockShow!='' and stockShow!=null">
+			and (sto.inventory_cnt-sto.requesting_cnt > 0)
+		</if>
+		order by pro.client_id desc,pro.product_id desc
+	</select>
+
+	<!-- 获取mc102_product_img数据 -->
+	<select id="getProductImgList" resultType="com.lemonico.common.bean.Mc102_product_img">
+		select * from mc102_product_img where del_flg = 0
+		<if test="client_id != null and client_id != ''">
+			and client_id = #{client_id}
+		</if>
+		<if test="product_id_list.size > 0">
+			and product_id in
+			<foreach collection="product_id_list" item="product_id_list" open="(" separator="," close=")">
+				#{product_id_list}
+			</foreach>
+			order by img_sub_id asc
+		</if>
+	</select>
+
+	<!-- 商品一覽count -->
+	<select id="getProductListCount" resultType="java.lang.Long">
+		select
+		count(distinct(pro.client_id,pro.product_id))
+		from Mc100_product pro
+		left join tw300_stock as sto on pro.product_id = sto.product_id and pro.client_id = sto.client_id
+		left join mc102_product_img mc102 on pro.product_id = mc102.product_id and pro.client_id = mc102.client_id and mc102.del_flg = 0
+		left join mc103_product_set mc103 on pro.client_id = mc103.client_id and pro.set_sub_id = mc103.set_sub_id and mc103.del_flg = 0
+		left join ms010_product_size ms010 on pro.size_cd = ms010.size_cd
+		where pro.del_flg = 0
+		<if test="stockShow!='' and stockShow!=null">
+			and (sto.inventory_cnt-sto.requesting_cnt > 0)
+		</if>
+		<if test="client_id!='all'">
+			and pro.client_id = #{client_id}
+		</if>
+		<if test="warehouse_cd!='' and warehouse_cd!=null">
+			and pro.warehouse_cd = #{warehouse_cd}
+		</if>
+		<if test="product_id!=null and product_id.length>0">
+			and pro.product_id in
+			<foreach collection="product_id" item="product_id" open="("
+					 separator="," close=")">
+				#{product_id}
+			</foreach>
+		</if>
+		<if test="search!=null and search!=''">
+			and (pro.name like #{search} or pro.product_id like #{search} or pro.code like #{search} or barcode like #{search})
+		</if>
+		<if test="tags_id!=null and tags_id!=''">
+			and pro.product_id in (select mc104.product_id from mc104_tag as mc104 where mc104.tags_id = #{tags_id})
+		</if>
+		<if test="bundled_flg==0 or bundled_flg==1">
+			and bundled_flg = #{bundled_flg}
+		</if>
+		<if test="stock_flg==1">
+			and coalesce(sto.available_cnt, -1) != -1
+			<if test="count_flg==1">
+				and sto.inventory_cnt - sto.requesting_cnt > 0
+			</if>
+		</if>
+		<if test="set_flg==1">
+			and pro.set_flg = 1 and mc103.del_flg = 0
+		</if>
+		<if test="set_flg==0 or set_flg=='' or set_flg==null">
+			and pro.set_flg = 0
+		</if>
+		<if test="show_flg==0 or show_flg=='' or show_flg==null">
+			and pro.show_flg = 0
+		</if>
+		<if test="show_flg==1">
+			and pro.show_flg = 1
+		</if>
+	</select>
+
+	<!-- aは顧客IDと商品IDからtags_idの値を取得する -->
+	<select id="getClientTags" resultType="com.lemonico.common.bean.Mc101_product_tag">
+		select distinct mc101.tags_id, mc101.tags
+		  from mc104_tag as mc104, mc101_product_tag as mc101
+		 where mc104.tags_id = mc101.tags_id and mc104.client_id = #{client_id} and mc101.tags != ''
+		<if test="product_id!=null and product_id.length>0">
+			and mc104.product_id in
+			<foreach collection="product_id" item="product_id" open="("
+				separator="," close=")">
+				#{product_id}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 获取商品表kubun值 -->
+	<select id="getKubun" resultType="java.lang.Integer">
+		select kubun from mc100_product
+		where client_id = #{client_id} and code = #{code} and del_flg = 0 limit 1
+	</select>
+
+	<!-- a商品登錄 -->
+	<!-- werehouse_cd取得する際、商品登録できない可能性があります。2020/1/20 王-->
+	<!-- del_flg=0 追加 2020/1/20 王-->
+	<insert id="insertProduct">
+		insert into mc100_product
+		(client_id,product_id,warehouse_cd,name,is_reduced_tax,tax_flag,code,set_flg,set_sub_id,description_cd,bundled_flg,
+		barcode,price,ins_usr,ins_date,upd_usr,upd_date, del_flg,url,bikou, ntm_price, product_type, product_cd, sort_no, ntm_memo, kubun, show_flg,size_cd,cost_price,origin,weight,english_name,serial_flg)
+		values
+		(#{client_id},#{product_id},(select warehouse_cd from
+		ms202_customer_wh where client_id = #{client_id} and del_flg = 0),
+		#{name},#{is_reduced_tax},#{tax_flag},#{code},#{set_flg},#{set_sub_id},#{description_cd},#{bundled_flg},
+		#{barcode},#{price},#{ins_usr},#{ins_date},#{upd_usr},#{upd_date}, 0,#{url},#{bikou}, #{ntm_price}, #{product_type}, #{product_cd}, #{sort_no}, #{ntm_memo}, #{kubun}, #{show_flg}, #{size_cd}, #{cost_price}, #{origin}, #{weight}, #{english_name}, #{serial_flg})
+	</insert>
+
+	<!-- a商品登錄(tag) -->
+	<insert id="insertProductTag">
+		insert into mc101_product_tag
+		(tags_id,tags,ins_usr,ins_date,upd_usr,upd_date, del_flg)
+		values
+		(#{tags_id},#{tags},#{ins_usr},#{ins_date},#{upd_usr},#{upd_date}, 0)
+	</insert>
+
+	<!-- a商品登錄tag關係表 -->
+	<insert id="insertProductTagRelationship">
+		insert into Mc104_tag
+		(tags_id,product_id,client_id,upd_usr,upd_date, del_flg)
+		values
+		(#{tags_id},#{product_id},#{client_id},#{upd_usr},#{upd_date}, 0)
+	</insert>
+
+	<!-- a商品登録画像 -->
+	<insert id="insertProductImg">
+		insert into mc102_product_img
+		(client_id, product_id,
+		product_img, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+		values
+		(#{client_id}, #{product_id}, #{product_img}, #{ins_usr}, #{ins_date},
+		#{upd_usr}, #{upd_date}, 0)
+	</insert>
+
+	<select id="getProductImg" resultType="com.lemonico.common.bean.Mc102_product_img">
+		select product_img, img_sub_id
+		  from mc102_product_img
+		 where client_id = #{client_id} and product_id = #{product_id} order by img_sub_id asc
+	</select>
+
+	<delete id="productImgDelete">
+		delete from mc102_product_img where client_id = #{client_id} and product_id = #{product_id}
+	</delete>
+
+	<!-- a判斷tag是否存在 -->
+	<!-- aはtagが存在するかどうかを判断する -->
+	<select id="checkTagExist" resultType="int">
+		select count(*) from mc101_product_tag where tags = #{tags} limit 1
+	</select>
+
+	<!-- a通过tags名字获取tags_id -->
+	<!--aはtags名からtags_idを取得する -->
+	<select id="getTagIdByTagName" resultType="java.lang.String">
+		select tags_id from mc101_product_tag where tags = #{tags}
+	</select>
+
+	<!-- a商品更新 (主表) -->
+	<update id="updateProduct">
+		update mc100_product
+		   set name = #{name},code = #{code}, is_reduced_tax = #{is_reduced_tax},
+		       description_cd = #{description_cd}, bundled_flg = #{bundled_flg},
+		       price = #{price}, barcode = #{barcode}, upd_date = #{upd_date}, upd_usr = #{upd_usr},
+		       tax_flag = #{tax_flag}, url = #{url},bikou = #{bikou},
+		       ntm_price = #{ntm_price}, product_type = #{product_type},
+		       product_cd = #{product_cd}, sort_no = #{sort_no}, ntm_memo = #{ntm_memo}, kubun = #{kubun}, serial_flg = #{serial_flg}
+		 where product_id = #{product_id} and client_id = #{client_id}
+	</update>
+
+	<!-- a商品更新(tag) -->
+	<update id="updateProductTag">
+		update mc101_product_tag
+		   set tags = #{tags}
+		 where product_id = #{product_id} and client_id = #{client_id}
+	</update>
+
+	<!-- a商品更新tag时先删除关系表中相关tag -->
+	<!-- a商品はtagを更新する際に関係テーブルから関連tagを削除する -->
+	<delete id="deleteProductTag">
+		delete from mc104_tag where product_id = #{product_id} and client_id = #{client_id}
+	</delete>
+
+	<!-- a获取商品数据by商品ID -->
+	<!-- aは商品IDから商品データを取得する -->
+	<select id="getProductById" resultType="com.lemonico.common.bean.Mc100_product">
+		select * from mc100_product where product_id = #{product_id} and client_id = #{client_id} and del_flg = 0
+	</select>
+
+	<!-- a商品删除 -->
+	<!-- a商品削除 -->
+	<update id="deleteProduct">
+		update mc100_product
+		   set del_flg = 1, upd_date=#{upd_date},upd_usr=#{upd_usr}
+		 where client_id = #{client_id} and product_id in
+		<foreach collection="product_id" item="product_id" open="(" separator="," close=")">
+			#{product_id}
+		</foreach>
+	</update>
+
+	<!-- 非表示商品設定 -->
+	<update id="showProduct">
+		update mc100_product
+		   set show_flg = #{show_flg}, upd_date=#{upd_date},upd_usr=#{upd_usr}
+		 where client_id = #{client_id} and product_id in
+		<foreach collection="product_id" item="product_id" open="(" separator="," close=")">
+			#{product_id}
+		</foreach>
+	</update>
+
+	<!-- a获取商品的Name和Code -->
+	<!-- a商品のNameとCodeを取得する -->
+	<select id="getNameByProductId" resultType="com.lemonico.common.bean.Mc100_product">
+		select name,code,product_id,barcode,size_cd,bundled_flg,bikou,ntm_memo
+		from mc100_product where client_id = #{client_id} and product_id = #{product_id}
+	</select>
+
+	<!-- a获取当前登录客户商品设定信息 -->
+	<!-- aは現在登録クライアント商品設定情報を取得する -->
+	<select id="getProductSettingByClientId" resultType="com.lemonico.common.bean.Ms204_customer_func">
+		select client_id,function_cd,tax,accordion,price_on_delivery_note
+		  from ms204_customer_func
+		 where client_id = #{client_id} and function_cd = #{function_cd}
+	</select>
+
+	<!-- a商品消費税設定 -->
+	<update id="updateProductTax">
+		update ms204_customer_func set tax = #{tax}
+		<if test="tax==0">
+			,accordion = null
+		</if>
+		<if test="tax==1">
+			,accordion = #{accordion}
+		</if>
+		where client_id = #{client_id} and function_cd = #{function_cd}
+	</update>
+
+	<!-- a金額印字設定 -->
+	<update id="updateProductNote">
+		update ms204_customer_func
+		   set price_on_delivery_note = #{price_on_delivery_note}
+		 where client_id = #{client_id} and function_cd = #{function_cd}
+	</update>
+
+	<!-- a新规登录商品时获取tags options -->
+	<!-- aは新規商品登録時にtags optionsを取得する -->
+	<select id="getTagsOptionsByClientId" resultMap="selectTags">
+		select distinct tag.client_id,ptag.tags
+		  from mc104_tag tag,mc101_product_tag ptag
+		 where tag.tags_id = ptag.tags_id and tag.client_id = #{client_id}
+	</select>
+
+	<!-- a获取当前用户商品ID最大的值 -->
+	<!-- aは現在のユーザ商品IDの最大値を取得する -->
+	<select id="getMaxProductId" resultType="java.lang.String">
+		select product_id from mc100_product where client_id = #{client_id} order by product_id desc limit 1
+	</select>
+
+	<!-- a获取当前tagID最大的值 -->
+	<!-- aは現在のtagIDの最大値を取得する -->
+	<select id="getMaxTagId" resultType="java.lang.String">
+		select max(tags_id) from mc101_product_tag
+	</select>
+
+	<!-- a获取品名数据 -->
+	<!-- a品名データを取得する -->
+	<select id="getItemsList" resultType="com.lemonico.common.bean.Ms008_items">
+		select item_nm, item_nm_kana,item_nm_en
+		  from Ms008_items
+		 where category_cd = #{category_cd} order by item_nm_kana
+	</select>
+
+	<!-- a新规商品时商品名重复验证 -->
+	<!-- aは新規商品の場合は商品名を繰り返し検証する -->
+	<select id="checkNameExist" resultType="java.lang.String">
+		select name from mc100_product where client_id = #{client_id} and name = #{name} and del_flg = 0 limit 1
+	</select>
+
+	<!-- a新规商品时商品code重复验证 -->
+	<!-- aは新規商品の場合、商品コードを繰り返し検証する -->
+	<select id="checkCodeExist" resultType="java.lang.String">
+		select code from mc100_product where client_id = #{client_id} and LOWER(code) = LOWER(#{code}) and del_flg = 0 limit 1
+	</select>
+
+	<!-- 商品假登录查詢 -->
+	<select id="checkFakeLogin" resultType="java.lang.String">
+		select code from mc100_product where client_id = #{client_id} and LOWER(code) = LOWER(#{code}) and del_flg = 0 and kubun = 9 limit 1
+	</select>
+
+	<!-- a新规商品时商品barcode重复验证 -->
+	<!-- aは新規商品の場合、商品barcodeを繰り返し検証する -->
+	<select id="checkBarcodeExist" resultType="java.lang.String">
+		select barcode from mc100_product where client_id = #{client_id} and LOWER(barcode) = LOWER(#{barcode}) and del_flg = 0 limit 1
+	</select>
+
+	<insert id="insertProductSet">
+		insert into mc103_product_set
+		(client_id,product_id,set_sub_id,product_cnt,ins_usr,ins_date,upd_usr,upd_date,del_flg)
+		values
+		(#{client_id},#{product_id},#{set_sub_id},#{product_cnt},#{ins_usr},#{ins_date},#{upd_usr},#{upd_date},0)
+	</insert>
+
+	<!-- 获取最大setId -->
+	<!-- maxのsetIdを取得する -->
+	<select id="getMaxSetSubId" resultType="java.lang.Integer">
+		select max(set_sub_id) from mc103_product_set
+	</select>
+	<!-- 修改商品数量 -->
+	<update id="updateSetProductCnt">
+		update mc103_product_set
+		   set product_cnt = #{jsonObject.product_cnt}
+		 where client_id = #{jsonObject.client_id} and product_id = #{jsonObject.product_id}
+		   and set_sub_id = #{jsonObject.set_sub_id}
+	</update>
+
+	<!-- 查询该商品所指定的セット商品 -->
+	<select id="getSetProductIdList" resultType="com.lemonico.common.bean.Mc103_product_set">
+		select product_id,product_cnt
+		  from mc103_product_set
+		 where set_sub_id = #{set_sub_id} and client_id = #{object.client_id}
+	</select>
+
+    <!-- 查询set商品及关联数据	-->
+	<select id="getSetProductLists" resultMap="selectProduct">
+		select mc103.product_id,mc103.set_sub_id,mc103.product_cnt,pro.client_id,pro.name,pro.name,pro.is_reduced_tax,
+		       sto.available_cnt,sto.inventory_cnt,sto.requesting_cnt
+		from mc100_product pro
+		left join tw300_stock as sto on pro.product_id = sto.product_id and pro.client_id = sto.client_id
+		left join mc103_product_set mc103 on pro.client_id = mc103.client_id and pro.product_id = mc103.product_id and mc103.del_flg = 0
+		where mc103.set_sub_id = #{set_sub_id} and mc103.client_id = #{client_id} and pro.del_flg = 0
+	</select>
+
+	<!-- 循环查询该商品所指定的セット商品 -->
+	<select id="getSetProductList" resultType="com.lemonico.common.bean.Mc103_product_set">
+		select product_id,product_cnt,set_sub_id,client_id
+		from mc103_product_set
+		where client_id = #{client_id} and del_flg = 0
+		<if test="set_sub_id.size > 0">
+			and set_sub_id in
+			<foreach collection="set_sub_id" item="set_sub_id" open="(" separator="," close=")">
+				#{set_sub_id}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getProductSetList" resultMap="selectProduct">
+		select pro.client_id,pro.product_id,pro.name,pro.warehouse_cd,pro.code,pro.price,pro.set_flg,pro.set_sub_id,
+		       pro.barcode,pro.bundled_flg,pro.is_reduced_tax,pro.identifier,pro.description_cd,pro.origin,pro.size_cd,pro.weight,pro.url,
+		       coalesce(sto.available_cnt, -1) as available_cnt,
+		       coalesce(sto.requesting_cnt, -1) as requesting_cnt,
+		       coalesce(sto.inventory_cnt, -1) as inventory_cnt,
+			   coalesce(sto.not_delivery, 0) as not_delivery,
+		       mc102.img_sub_id, mc102.product_img, mc103.product_cnt as product_cnt
+		from Mc100_product pro
+		left join tw300_stock as sto on pro.product_id = sto.product_id and pro.client_id = sto.client_id
+		left join mc102_product_img mc102 on pro.product_id = mc102.product_id and pro.client_id = mc102.client_id and mc102.del_flg = 0
+		left join mc103_product_set mc103 on pro.client_id = mc103.client_id and pro.product_id = mc103.product_id and mc103.del_flg = 0
+		where mc103.set_sub_id = #{set_sub_id} and mc103.client_id = #{client_id} and pro.del_flg = 0
+	</select>
+
+	<!-- 删除セット商品 -->
+	<update id="deleteSetProduct">
+		update mc103_product_set
+		   set del_flg = 1
+		 where set_sub_id = #{set_sub_id} and client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+	<!-- 删除セット商品 -->
+	<update id="recoverSetProduct">
+		update mc103_product_set
+		   set del_flg = 0
+		 where set_sub_id = #{set_sub_id} and client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+	<!-- 修改セット商品个数 -->
+	<update id="updateSetProductNumber">
+		update mc103_product_set
+		   set product_cnt = #{product_cnt}
+		 where product_id = #{product_id} and set_sub_id = #{set_sub_id} and client_id = #{client_id}
+	</update>
+
+	<!-- 根据商品名查询商品信息-->
+	<select id="getProductInfoByName" resultType="com.lemonico.common.bean.Mc100_product">
+		select product_id, name, code, set_flg, set_sub_id, bundled_flg, kubun
+		  from mc100_product
+		 where name = #{name} and client_id = #{client_id} and del_flg = 0
+	</select>
+
+	<!-- 根据barcode获取商品信息-->
+	<select id="getProductInfoByCode" resultType="com.lemonico.common.bean.Mc100_product">
+		select product_id, name, code, set_flg, set_sub_id, bundled_flg, kubun
+		  from mc100_product
+		 where LOWER(code) = LOWER(#{code}) and client_id = #{client_id} and del_flg = 0
+	</select>
+
+	<!-- 根据barcode获取商品信息-->
+	<select id="getProductInfoListByCode" resultType="com.lemonico.common.bean.Mc100_product">
+		select product_id, name, code, set_flg, set_sub_id, kubun, bundled_flg
+		from mc100_product
+		where LOWER(code) = LOWER(#{code}) and client_id = #{client_id} and del_flg = 0
+	</select>
+
+	<!-- 根据barcode获取商品ID-->
+	<select id="getProductIdByCode" resultType="java.lang.String">
+		select product_id
+		  from mc100_product
+		 where LOWER(code) = LOWER(#{code}) and client_id = #{client_id} and del_flg = 0
+	</select>
+
+	<!-- 查询该商品是否为 セット商品 -->
+	<select id="getSetProductInfoList" resultType="com.lemonico.common.bean.Mc103_product_set">
+		select mc103.client_id, mc103.set_sub_id, mc103.product_id, mc103.product_cnt
+		  from mc103_product_set mc103, mc100_product mc100
+		 where mc100.set_sub_id = mc103.set_sub_id and mc100.client_id = mc103.client_id and mc100.product_id = #{jsonObject.product_id}
+		   and mc100.client_id = #{jsonObject.client_id} and mc100.warehouse_cd = #{jsonObject.warehouse_cd}
+		   and mc100.del_flg = 0 and mc103.del_flg = 0
+	</select>
+
+    <!-- 根据項目値获取商品信息-->
+    <select id="getProductCodeByOptions" resultType="com.lemonico.common.bean.Mc110_product_options">
+        select code
+          from mc110_product_options
+         where client_id = #{client_id}
+		<if test="options!='' and options!=null">
+			and options = #{options}
+		</if>
+		<if test="options=='' or options==null">
+			and (options = '' or options is null)
+		</if>
+           and del_flg = 0
+           and (LOWER(shop_code) = LOWER(#{code}) or LOWER(product_code) = LOWER(#{code}))
+    </select>
+
+	<!-- 商品コードによって、商品リストを取得する TODO-->
+	<select id="getMc110ProductByCode" resultType="com.lemonico.common.bean.Mc110_product_options">
+		select code,options,shop_code,product_code,sub_code
+		from mc110_product_options
+		where client_id = #{client_id}
+		and del_flg = 0
+		and (LOWER(shop_code) = LOWER(#{code}) or LOWER(product_code) = LOWER(#{code}))
+	</select>
+
+	<!-- 删除商品的指定图片 -->
+	<delete id="deleteProductImg">
+		delete from mc102_product_img
+		 where client_id = #{client_id} and product_id = #{product_id} and img_sub_id = #{img_sub_id}
+	</delete>
+
+	<!-- 查询该商品是否为セット商品 的子商品 -->
+	<select id="verificationSetProduct" resultType="com.lemonico.common.bean.Mc103_product_set">
+		select client_id, set_sub_id, product_id, product_cnt
+		  from mc103_product_set
+		 where client_id = #{client_id} and product_id = #{product_id} and del_flg = 0
+	</select>
+
+	<!-- 查询出库状态的セット商品  -->
+	<select id="selectShipmentSetProduct" resultType="java.lang.Integer">
+		select count (*)
+          from tw200_shipment tw200 left join tw201_shipment_detail tw201 on tw200.shipment_plan_id = tw201.shipment_plan_id
+          and tw200.client_id = tw201.client_id
+         where tw201.set_sub_id = #{set_sub_id} and tw200.del_flg = 0 and  tw200.client_id = #{client_id}
+	</select>
+
+	<select id="getRenkeiProduct" resultType="java.lang.Integer">
+		select count (*)
+          from mc106_produce_renkei
+         where product_id = #{product_id} and api_id=#{api_id} and del_flg = 0
+		   and client_id = #{client_id}
+	</select>
+
+	<select id="insertRenkeiProduct" resultType="java.lang.Integer">
+		insert into mc106_produce_renkei(product_id,client_id,api_id,renkei_product_id,variant_id,inventory_type,ins_usr,ins_date,biko,del_flg)
+		values(#{product_id},#{client_id},#{api_id},#{renkei_product_id},#{variant_id},#{inventory_type},#{ins_usr},#{ins_date},#{biko},0)
+	</select>
+
+    <update id="setLocationCode">
+		update mc106_produce_renkei
+		   set variant_id = #{variant_id}
+		 where client_id = #{client_id} and renkei_product_id = #{renkei_product_id}
+	</update>
+
+	<select id="selectRenkeiProduct" resultType="com.lemonico.common.bean.Mc106_produce_renkei">
+		select product_id, m.client_id, api_id, renkei_product_id, variant_id
+          from mc106_produce_renkei m
+          join tc203_order_client t on m.client_id=t.client_id and m.api_id = t.id
+         where t.del_flg = 0 and template = #{template}
+	</select>
+
+	<select id="getAllProductDataById" resultType="com.lemonico.common.bean.Mc106_produce_renkei">
+		select product_id, client_id, api_id, renkei_product_id, variant_id
+          from mc106_produce_renkei
+         where del_flg = 0 and client_id = #{client_id} and api_id = #{api_id}
+	</select>
+
+	<!-- 外部API連携(受注連携)(0:連携しない 1:自動連携) -->
+	<select id="getApiData" resultType="com.lemonico.common.bean.Tc203_order_client">
+		select client_id,client_url,api_key,password,template
+          from tc203_order_client
+         where del_flg = 0 and client_id=#{client_id} and id=#{api_id}
+	</select>
+	<!-- 外部API連携(在庫連携)(0:連携しない 1:自動連携) -->
+	<select id="getApiDataStock" resultType="com.lemonico.common.bean.Tc203_order_client">
+		select client_id,client_url,api_key,password,template
+          from tc203_order_client
+         where del_flg = 0 and stock_status = 1
+           and client_id=#{client_id} and id=#{api_id}
+	</select>
+
+	<!-- 外部API連携(送り状連携)(0:連携しない 1:自動連携) -->
+	<select id="getApiDataDelivery" resultType="com.lemonico.common.bean.Tc203_order_client">
+		select client_id,client_url,api_key,password,template
+          from tc203_order_client
+         where del_flg = 0 and delivery_status = 1
+           and client_id=#{client_id} and id=#{api_id}
+	</select>
+
+	<select id="getProductCnt" resultType="com.lemonico.common.bean.Tw300_stock">
+		select available_cnt
+          from tw300_stock
+         where del_flg = 0 and <![CDATA[ available_cnt <> store_cnt ]]> and client_id=#{client_id} and product_id=#{product_id}
+	</select>
+
+	<select id="getSetProduct" resultType="com.lemonico.common.bean.Mc103_product_set">
+        select * from Mc103_product_set where set_sub_id = #{set_sub_id}
+		<if test="client_id != '' and client_id != null">
+			and client_id = #{client_id}
+		</if>
+    </select>
+
+	<select id="getToken" resultType="java.lang.String">
+	    select token
+	      from tc203_order_client
+	     where del_flg = 0 and client_id=#{client_id} and client_url=#{client_url}
+	       and api_key=#{api_key} and password=#{password}
+	</select>
+
+	<update id="setToken">
+		update tc203_order_client
+		   set token = #{token}
+		 where del_flg = 0 and client_id=#{client_id} and client_url=#{client_url}
+	       and api_key=#{api_key} and password=#{password}
+	</update>
+
+	<!--a更新店舗在庫数 -->
+	<update id="updateStockStroeCnt">
+		update tw300_stock
+		   set store_cnt = #{store_cnt}, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+		 where client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+	<!-- 根据商品Id获取商品信息-->
+	<select id="getProductListById" resultType="com.lemonico.common.bean.Mc100_product">
+		select product_id, code, name, price,product_type,product_cd,sort_no, ntm_price, ntm_sale, ntm_memo,bikou,eccube_show_flg from mc100_product where product_id in
+		<foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+			#{productIdList}
+		</foreach>
+		<if test="warehouse_cd != null and warehouse_cd != '' ">
+			and warehouse_cd = #{warehouse_cd}
+		</if>
+		<if test="client_id != null and client_id != '' ">
+			and client_id = #{client_id}
+		</if>
+		and del_flg = 0
+	</select>
+
+	<!-- 根据多个商品code获取多个商品信息-->
+	<select id="getProductInfoByCodeList" resultType="com.lemonico.common.bean.Mc100_product">
+		select product_id, code, name, price, is_reduced_tax, tax_flag from mc100_product where del_flg = 0
+		<if test="productCodeList != null and productCodeList.size > 0">
+			and code in
+			<foreach collection="productCodeList" item="productCodeList" open="(" separator="," close=")">
+				#{productCodeList}
+			</foreach>
+		</if>
+		and client_id = #{client_id}
+	</select>
+
+	<!-- 根据多个set_sub_id获取多个set商品的集合-->
+	<select id="getSetProductBySubIdList" resultType="com.lemonico.common.bean.Mc103_product_set">
+		select set_sub_id, product_id, product_cnt
+		  from mc103_product_set
+		 where del_flg = 0 and client_id = #{client_id} and set_sub_id in
+		<foreach collection="setSubIdList" item="setSubIdList" open="(" separator="," close=")">
+			#{setSubIdList}
+		</foreach>
+	</select>
+	<!-- 根据店铺ID获取商品集合-->
+	<select id="getProductByClientId" resultType="com.lemonico.common.bean.Mc100_product">
+		select product_id, name, code, kubun from mc100_product where client_id = #{client_id} and del_flg = 0
+		<if test="search != '' and search != null">
+			and code like #{search}
+		</if>
+		limit 100
+	</select>
+
+	<!--保存商品对应数据	-->
+	<insert id="setCorrespondingData" parameterType="com.lemonico.common.bean.Mc110_product_options">
+		insert into mc110_product_options
+		(id,client_id,shop_code,product_code,sub_code,code,options,option_name1,option_value1,option_name2,option_value2,option_name3,
+		 option_value3,option_name4,option_value4,ins_date,ins_usr,upd_date,upd_usr,del_flg)
+		values
+		(#{id},#{client_id},#{shop_code},#{product_code},#{sub_code},#{code},#{options},#{option_name1},#{option_value1},#{option_name2},
+		#{option_value2}, #{option_name3},#{option_value3},#{option_name4},#{option_value4},#{ins_date},#{ins_usr},#{ins_date},#{ins_usr},0)
+	</insert>
+
+	<!--更新商品对应数据	-->
+	<update id="updateCorrespondingData" parameterType="com.lemonico.common.bean.Mc110_product_options">
+		update mc110_product_options
+		set shop_code = #{shop_code},product_code = #{product_code}, sub_code = #{sub_code},code = #{code}, options = #{options},
+			option_name1 = #{option_name1}, option_value1 = #{option_value1}, option_name2 = #{option_name2}, option_value2 = #{option_value2},
+			option_name3 = #{option_name3}, option_value3 = #{option_value3}, option_name4 = #{option_name4}, option_value4 = #{option_value4},
+			ins_date = #{ins_date}, ins_usr = #{ins_usr}, upd_date = #{upd_date}, upd_usr = #{upd_usr}
+		where id = #{id} and client_id = #{client_id}
+	</update>
+
+	<!--获取商品对应数据	-->
+	<select id="getCorrespondingList" resultType="com.lemonico.common.bean.Mc110_product_options">
+		select * from mc110_product_options
+		where client_id = #{client_id} and del_flg = 0
+		<if test="search != '' and search != null">
+			and (shop_code like #{search} or product_code like #{search} or sub_code like #{search}
+			or code like #{search} or options like #{search})
+		</if>
+		order by id desc
+	</select>
+
+	<!--删除商品对应数据	-->
+	<update id="delCorresponding">
+		update mc110_product_options  set del_flg = 1
+		where client_id = #{client_id} and id = #{id}
+	</update>
+
+	<!--  商品master修改商品信息时，修改商品对应数据  -->
+	<update id="updateCorrespondence">
+		update mc110_product_options
+		set code = #{code}, upd_date = #{upd_date}, upd_usr = #{upd_usr}
+		where code = #{old_code} and client_id = #{client_id}
+	</update>
+
+	<!--  查询商品是否在商品对应表中存在个数	-->
+	<select id="getCorrespondence" resultType="java.lang.Integer">
+		select count(*) from mc110_product_options where client_id = #{client_id} and code = #{code} and del_flg = 0
+	</select>
+
+	<!-- 修改之前系统不在的商品为普通商品-->
+	<update id="updateProductKubun">
+		update mc100_product set kubun = #{kubun}, show_flg = #{show_flg}, upd_date = #{date}, upd_usr = #{loginNm}
+		where del_flg = 0 and client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+	<!-- 查出满足条件的商品信息-->
+	<select id="getOperatingList" resultMap="selectProductInfo">
+		select mc100.client_id, mc100.product_id, mc100.name, mc100.warehouse_cd, mc100.code, mc100.price, mc100.set_flg, mc100.show_flg,
+		       mc100.set_sub_id, mc100.tax_flag, mc100.barcode, mc100.bundled_flg, mc100.is_reduced_tax, mc100.kubun,mc100.bikou,mc100.description_cd,
+		       mc100.english_name,mc100.origin,mc100.size_cd,mc100.url,mc100.weight,mc100.cost_price,
+		coalesce(tw300.available_cnt, -1) as available_cnt,
+		coalesce(tw300.requesting_cnt, -1) as requesting_cnt,
+		coalesce(tw300.inventory_cnt, -1) as inventory_cnt,
+		coalesce(tw300.not_delivery, 0) as not_delivery,tw300.replenish_cnt
+		from Mc100_product mc100
+		left join tw300_stock tw300 on mc100.product_id = tw300.product_id and mc100.client_id = tw300.client_id and tw300.del_flg = 0
+		where mc100.del_flg = 0
+		<if test="client_id!='all'">
+			and mc100.client_id = #{client_id}
+		</if>
+		<if test="warehouse_cd != null and warehouse_cd != ''">
+			and mc100.warehouse_cd = #{warehouse_cd}
+		</if>
+		<if test="productIdList != null and productIdList.size != 0">
+			and mc100.product_id in
+			<foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+				#{productIdList}
+			</foreach>
+		</if>
+		<if test="typeList != null and typeList.size != 0">
+			and mc100.kubun in
+			<foreach collection="typeList" item="typeList" open="(" separator="," close=")">
+				#{typeList}
+			</foreach>
+		</if>
+		<if test="tags_id != null and tags_id != ''">
+			and mc100.product_id in (select mc104.product_id from mc104_tag as mc104 where mc104.tags_id = #{tags_id})
+		</if>
+		<if test="search!=null and search!=''">
+			and (mc100.name ~* replace(#{search},'%','') or mc100.product_id like #{search} or mc100.code ~* replace(#{search},'%','') or barcode like #{search})
+		</if>
+		<if test="show_flg==0 or show_flg=='' or show_flg==null">
+			and mc100.show_flg = 0
+		</if>
+		<if test="show_flg==1">
+			and mc100.show_flg = 1
+		</if>
+		<if test="stock_flg==1">
+			and ((coalesce(tw300.inventory_cnt, -1) != -1
+			and tw300.available_cnt > 0) or mc100.set_flg = 1)
+		</if>
+		<if test="stock_flg != '' and stock_flg != null and stock_flg==6">
+			and ((coalesce(tw300.inventory_cnt, -1) = -1
+			or tw300.available_cnt &lt;= 0) or mc100.set_flg = 1)
+		</if>
+		<if test="stock_flg == 3">
+			and ((coalesce(tw300.inventory_cnt, -1) != -1
+			and tw300.available_cnt &lt; 0) or mc100.set_flg = 1)
+		</if>
+		<if test="stock_flg == -1">
+			and ((coalesce(tw300.inventory_cnt, -1) = -1
+			or tw300.available_cnt = 0) or mc100.set_flg = 1)
+		</if>
+		<if test="stock_flg == 4">
+			and ((coalesce(tw300.inventory_cnt, -1) != -1
+			and tw300.available_cnt != 0) or mc100.set_flg = 1)
+		</if>
+		<if test="stock_flg == 5">
+			and ((coalesce(tw300.inventory_cnt, -1) = -1
+			or tw300.available_cnt >= 0) or mc100.set_flg = 1)
+		</if>
+		<if test="column == null || sortType == null">
+			ORDER BY mc100.product_id DESC
+		</if>
+		<if test="column != null and column != '' and sortType != null and sortType !='' ">
+			ORDER BY ${column} ${sortType}
+		</if>
+	</select>
+
+	<!-- 获取商品对应表最大ID-->
+	<select id="getCorrespondingMaxId" resultType="java.lang.Integer">
+		select max(id) from mc110_product_options
+	</select>
+
+	<!-- 根据店铺Id 商品Id 获取商品信息-->
+	<select id="getProductInfoList" resultType="com.lemonico.common.bean.Mc100_product">
+		select product_id, name, code, barcode from mc100_product
+		where client_id = #{client_id} and del_flg = 0
+		<if test="productIdList != null and productIdList.size != 0">
+			and product_id in
+			<foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+				#{productIdList}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="getProductAvaCnt" resultType="java.lang.Integer">
+		select (coalesce(sum(inventory_cnt),0) - coalesce(sum(requesting_cnt),0) - coalesce(sum(not_delivery),0)) as ava_cnt
+          from tw300_stock
+         where del_flg = 0 and client_id=#{client_id} and product_id=#{product_id}
+	</select>
+	
+	<select id="getProductYobiCnt" resultType="java.lang.Integer">
+		select coalesce(sum(m4.stock_cnt),0) as yobiCnt
+          from mw405_product_location m4
+          join mw404_location mw using (location_id)
+        where mw.status = 1 and client_id=#{client_id} and product_id=#{product_id} and m4.del_flg = 0
+	</select>
+	
+	<select id="getProductPersonCnt" resultType="java.lang.Integer">
+		select coalesce(sum(reserve_cnt),0)
+        from tw212_shipment_location_detail tw212
+        join tw200_shipment using(client_id,shipment_plan_id)
+        where tw212.del_flg = 0 and client_id=#{client_id} and product_id=#{product_id} and  tw212.ins_date > now() - interval '28 days' and form=2
+	</select>
+
+	<!-- 根据多个商品code获取商品信息-->
+	<select id="getProductListByCodeList" resultType="com.lemonico.common.bean.Mc100_product">
+		select client_id, product_id, name, code, kubun from mc100_product
+		where client_id = #{client_id} and del_flg = 0
+		<if test="codeList != null and codeList.size != 0">
+			and code in
+			<foreach collection="codeList" item="codeList" open="(" separator="," close=")">
+				#{codeList}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 获取入库csv模板数据-->
+	<select id="getWarehouseCsvData" resultType="com.lemonico.common.bean.Mc100_product">
+		select code, name from mc100_product
+		where client_id = #{client_id} and del_flg = 0 and show_flg = 0
+		and kubun in
+		<foreach collection="kubuns" item="kubuns" open="(" close=")" separator=",">
+			#{kubuns}
+		</foreach>
+	</select>
+
+	<!-- 获取set商品的信息 -->
+	<select id="getSetProductInfo" resultType="com.lemonico.common.bean.Mc100_product">
+		select mc100.client_id, mc100.product_id, mc100.name, mc100.warehouse_cd, mc100.code, mc100.price,
+		       mc100.set_flg, mc100.show_flg, mc100.set_sub_id, mc100.tax_flag, mc100.barcode, mc100.bundled_flg,
+		       mc100.is_reduced_tax, mc100.kubun, mc100.bikou, mc100.description_cd,
+			   mc100.english_name, mc100.origin, mc100.size_cd, mc100.url, mc100.weight, mc100.cost_price
+		  from mc100_product mc100
+		 where mc100.set_sub_id = #{set_sub_id} and mc100.client_id = #{client_id} and mc100.del_flg = 0
+	</select>
+
+	<!-- 获取set子商品的详细信息 -->
+	<select id="getSetProductDetail" resultType="com.lemonico.common.bean.Mc103_product_set">
+		select mc103.client_id, mc103.product_id, mc103.product_cnt, mc100.name, mc100.code, mc100.price,
+			   mc103.set_sub_id, mc100.tax_flag, mc100.barcode, mc100.bundled_flg, mc100.is_reduced_tax,
+			   mc100.serial_flg,
+			   coalesce(tw300.available_cnt, -1) as available_cnt,
+			   coalesce(tw300.requesting_cnt, -1) as requesting_cnt,
+			   coalesce(tw300.inventory_cnt, -1) as inventory_cnt,
+			   coalesce(tw300.not_delivery, 0) as not_delivery
+		from mc103_product_set mc103
+		left join mc100_product mc100 on mc100.product_id = mc103.product_id and mc100.client_id = mc103.client_id and mc100.del_flg = 0
+		left join tw300_stock tw300 on tw300.product_id = mc103.product_id and tw300.client_id = mc103.client_id and tw300.del_flg = 0
+		where mc103.set_sub_id = #{set_sub_id} and mc103.client_id = #{client_id} and mc103.del_flg = 0
+	</select>
+
+	<!-- 获取多个set商品信息 -->
+	<select id="getSetProducts" resultType="com.lemonico.common.bean.Mc100_product">
+		select client_id, product_id, name, warehouse_cd, code, set_sub_id
+		from mc100_product
+		where client_id = #{client_id} and del_flg = 0
+		and set_sub_id in
+		<foreach collection="set_sub_id" item="set_sub_id" open="(" close=")" separator=",">
+			#{set_sub_id}
+		</foreach>
+	</select>
+</mapper>

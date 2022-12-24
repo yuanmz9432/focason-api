@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.wms.dao.WarehousingResultDao">
+    <resultMap id="warehouseResult" type="com.lemonico.common.bean.Tw110_warehousing_result">
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="client_id" property="client_id" />
+        <id column="warehousing_plan_id" property="warehousing_plan_id" />
+        <result column="request_date" property="request_date" />
+        <result column="warehousing_plan_date" property="warehousing_plan_date" />
+        <result column="warehousing_type" property="warehousing_type" />
+        <result column="inspection_type" property="inspection_type" />
+        <result column="search_tag" property="search_tag" />
+        <result column="warehousing_status_wh" property="warehousing_status_wh" />
+        <result column="arrived_date" property="arrived_date" />
+        <result column="inspection_date" property="inspection_date" />
+        <result column="warehousing_date" property="warehousing_date" />
+        <result column="payment_type" property="payment_type" />
+        <result column="freight_collect_amount" property="freight_collect_amount" />
+        <result column="unit_number" property="unit_number" />
+        <result column="tracking_no" property="tracking_no" />
+        <result column="product_kind_plan_cnt" property="product_kind_plan_cnt" />
+        <result column="product_plan_total" property="product_plan_total" />
+        <result column="product_kind_cnt" property="product_kind_cnt" />
+        <result column="product_total" property="product_total" />
+        <collection property="tw111_warehousing_result_details" javaType="java.util.List" ofType="com.lemonico.common.bean.Tw111_warehousing_result_detail">
+            <id column="warehouse_cd" property="warehouse_cd" />
+            <id column="client_id" property="client_id" />
+            <id column="warehousing_plan_id" property="warehousing_plan_id" />
+            <id column="product_id" property="product_id" />
+            <result column="product_plan_cnt" property="product_plan_cnt" />
+            <result column="product_cnt" property="product_cnt" />
+            <result column="product_weight" property="product_weight" />
+            <result column="weigth_unit" property="weigth_unit" />
+            <result column="product_size_cd" property="product_size_cd" />
+            <collection property="location_detail" ofType="com.lemonico.common.bean.Tw113_warehousing_location_detail">
+                <id column="warehousing_plan_id" property="warehousing_plan_id" />
+                <id column="location_id" property="location_id" />
+                <result column="lot_no" property="lot_no" />
+            </collection>
+            <collection property="mc100_products" ofType="com.lemonico.common.bean.Mc100_product">
+                <id column="client_id" property="client_id" />
+                <id column="product_id" property="product_id" />
+                <result column="name" property="name" />
+                <result column="code" property="code" />
+                <result column="barcode" property="barcode" />
+                <result column="size_cd" property="size_cd" />
+                <result column="weight" property="weight" />
+                <collection property="mc102_product_imgList" javaType="java.util.List" ofType="com.lemonico.common.bean.Mc102_product_img">
+                    <id column="client_id" property="client_id" />
+                    <id column="product_id" property="product_id" />
+                    <id column="img_sub_id" property="img_sub_id" />
+                    <result column="product_img" property="product_img" />
+                </collection>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!--    将数据插入到 入庫実績テーブル-->
+    <insert id="insertWarehouseResult" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into tw110_warehousing_result(
+        warehouse_cd,client_id,warehousing_plan_id,request_date,warehousing_plan_date,
+        inspection_type,inspection_date,warehousing_date,product_kind_plan_cnt,product_plan_total,
+        product_kind_cnt,product_total,ins_usr, ins_date, upd_usr, upd_date, del_flg
+        ) values (
+        #{jsonObject.warehouse_cd},#{jsonObject.client_id},#{jsonObject.id},#{request_date}
+        ,#{warehousing_plan_date},#{jsonObject.inspection_type},#{inspection_date},#{warehousing_date},
+        #{jsonObject.product_kind_plan_cnt},#{jsonObject.product_plan_total},#{jsonObject.product_kind_cnt},
+        #{jsonObject.product_total},#{loginNm},#{date},#{loginNm},#{date},#{jsonObject.del_flg}
+        )
+    </insert>
+
+    <!--    将数据插入到 入庫実績明細テーブル-->
+    <insert id="insertWarehouseResultDetil">
+        insert into tw111_warehousing_result_detail(
+        warehouse_cd,client_id,warehousing_plan_id,product_id,product_plan_cnt,product_cnt,product_size_cd,
+        product_weight,weigth_unit,ins_usr,ins_date,upd_usr,upd_date,del_flg
+        )values (
+        #{jsonObject.warehouse_cd}, #{jsonObject.client_id},#{jsonObject.id},#{jsonObject.product_id},#{product_plan_cnt},
+        #{product_cnt},#{jsonObject.product_size_cd},#{product_weight},#{jsonObject.weigth_unit},#{loginNm},#{date},#{loginNm},
+        #{date},#{jsonObject.del_flg})
+    </insert>
+
+    <!--    根据店铺Id，入库依赖Id，商品Id查出 入庫実績明細テーブル 的数据-->
+    <select id="getWarehousingInfoById" resultMap="warehouseResult">
+        select tw110.warehouse_cd, tw110.client_id, tw110.warehousing_plan_id, tw110.request_date, tw110.warehousing_plan_date, tw110.warehousing_type,
+               tw110.inspection_type, tw110.search_tag, tw110.warehousing_status_wh, tw110.arrived_date, tw110.inspection_date, tw110.warehousing_date,
+               tw110.payment_type, tw110.freight_collect_amount, tw110.unit_number, tw110.tracking_no, tw110.product_kind_plan_cnt, tw110.product_plan_total,
+               tw110.product_kind_cnt, tw110.product_total,
+               tw111.product_plan_cnt, tw111.product_cnt, tw111.product_weight, tw111.weigth_unit, tw111.product_size_cd, tw111.product_id,
+               tw113.location_id, tw113.lot_no,
+               mc100.product_id, mc100.name, mc100.code, mc100.barcode, mc100.size_cd, mc100.weight, mc102.img_sub_id, mc102.product_img
+          from tw110_warehousing_result tw110
+          left join tw111_warehousing_result_detail as tw111
+            on tw110.client_id = tw111.client_id and tw110.warehousing_plan_id = tw111.warehousing_plan_id and tw111.del_flg = 0
+          left join tw113_warehousing_location_detail as tw113
+            on tw111.client_id = tw113.client_id and tw111.warehousing_plan_id = tw113.warehousing_plan_id
+           and tw111.product_id = tw113.product_id and tw113.del_flg = 0
+          left join mc100_product mc100 on mc100.product_id = tw111.product_id and mc100.del_flg = 0 and mc100.client_id = tw111.client_id
+          left join mc102_product_img mc102 on tw111.product_id = mc102.product_id and tw111.client_id = mc102.client_id
+         where tw110.warehouse_cd = #{warehouse_cd}
+           and tw110.client_id = #{client_id}
+           and tw110.warehousing_plan_id = #{id}
+           and tw110.del_flg = 0
+    </select>
+
+    <!--    修改入库实际商品总数-->
+    <update id="updateProductTotal">
+        update tw110_warehousing_result
+           set product_total = #{product_total}
+         where client_id = #{jsonObject.client_id}
+           and warehousing_plan_id = #{jsonObject.id}
+           and warehouse_cd = #{jsonObject.warehouse_cd}
+    </update>
+
+    <!--    修改入库实际明细 实际入库数-->
+    <update id="updateProductCnt">
+        update tw111_warehousing_result_detail
+           set product_cnt = #{product_cnt}, product_size_cd = #{product_size_cd}, product_weight = #{product_weight}
+         where client_id = #{client_id}
+           and warehousing_plan_id = #{id}
+           and product_id = #{product_id}
+    </update>
+    
+    <!--    修改入库处理结束日 -->
+    <update id="updateWarehousingDate">
+        update tw110_warehousing_result
+           set warehousing_date = #{date}
+         where client_id = #{jsonObject.client_id}
+           and warehousing_plan_id = #{jsonObject.id}
+           and warehouse_cd = #{jsonObject.warehouse_cd}
+    </update>
+
+    <!--    查出该仓库所有的货架-->
+    <select id="getLocationNameByWarehouseId" resultType="java.lang.String">
+        select wh_location_nm
+          from mw404_location
+         where warehouse_cd = #{warehouse_cd}
+           and del_flg = 0
+           <if test="searchName != null and searchName != ''">
+               and wh_location_nm like #{searchName}
+           </if>
+      order by priority limit 100
+    </select>
+
+    <!--    检查货架是否存在-->
+    <select id="locationNameCheck" resultType="java.lang.Integer">
+        select count(*)
+        from mw404_location
+        where warehouse_cd = #{warehouse_cd}
+        and del_flg = 0
+        <if test="name != null and name != ''">
+            and wh_location_nm = #{name}
+        </if>
+    </select>
+
+    <!--    根据入库依赖Id 查询 入庫作業ロケ明細 信息-->
+    <select id="getWarehousingLocationDetail" resultType="com.lemonico.common.bean.Tw113_warehousing_location_detail">
+        select client_id, warehousing_plan_id, product_id, location_id, product_cnt, lot_no
+          from tw113_warehousing_location_detail
+         where client_id = #{client_id} and warehousing_plan_id = #{warehousing_plan_id} and del_flg = 0
+    </select>
+
+    <!--    查询该商品的入庫作業ロケ明細 里所在的货架-->
+    <select id="getLocationNameById" resultType="com.lemonico.common.bean.Mw404_location">
+        select mw404.location_id, mw404.wh_location_nm, mw404.lot_no
+          from tw113_warehousing_location_detail tw113, mw404_location mw404
+         where mw404.location_id = tw113.location_id
+           and tw113.client_id = #{jsonObject.client_id}
+           and tw113.warehousing_plan_id = #{jsonObject.warehousing_plan_id}
+           and tw113.location_id = #{jsonObject.location_id}
+           <if test="jsonObject.warehouse_cd != '' and jsonObject.warehouse_cd != null">
+               and mw404.warehouse_cd = #{jsonObject.warehouse_cd}
+           </if>
+           and tw113.del_flg = 0 order by tw113.ins_date desc limit 1
+    </select>
+
+<!--    根据入库依赖Id查询商品异常的货架信息-->
+    <select id="getLocationException" resultType="com.lemonico.common.bean.Mw405_product_location">
+        select mw405.product_id, mw405.location_id, mw405.stock_cnt, mw405.requesting_cnt, mc100.name, mw404.wh_location_nm
+          from mw405_product_location mw405, mc100_product mc100, mw404_location mw404
+         where mw404.location_id = mw405.location_id and mc100.client_id = mw405.client_id
+           and mw404.warehouse_cd = #{jsonObject.warehouse_id} and mw405.client_id = #{jsonObject.client_id}
+           and (mw405.requesting_cnt + mw405.not_delivery) > mw405.stock_cnt and mw405.product_id = mc100.product_id
+           and mw405.product_id in
+        <foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+            #{productIdList}
+        </foreach>
+           and mw405.del_flg = 0
+    </select>
+
+<!--    查询入庫実績数-->
+    <select id="getWarehouseLocationInfoById" resultType="java.lang.Integer">
+        select product_cnt
+          from tw113_warehousing_location_detail
+         where client_id = #{client_id}
+           and warehousing_plan_id = #{warehousing_plan_id}
+           and product_id = #{product_id}
+           and location_id = #{location_id}
+    </select>
+
+<!--    修改入库作業ロケ明細的入库实际数-->
+    <update id="updateWarehouseLocation">
+        update tw113_warehousing_location_detail
+           set location_id = #{location_id}, product_cnt = #{product_cnt}, lot_no = #{lot_no}
+         where client_id = #{client_id} and warehousing_plan_id = #{warehousing_plan_id}
+           and product_id = #{product_id}
+    </update>
+
+    <!--    入庫ステータス件数-->
+    <select id="getWarehousingStatusCount" resultType="com.lemonico.common.bean.Tc100_warehousing_plan">
+        select status, count(status) as status_count
+          from tc100_warehousing_plan
+         where del_flg = 0
+        <if test="warehouse_cd!=null and warehouse_cd!=''">
+            and warehouse_cd = #{warehouse_cd}
+        </if>
+        <if test="client_id!=null and client_id!=''">
+            and client_id = #{client_id}
+        </if>
+        group by status
+    </select>
+
+    <!-- 修改入库实际的 入庫依頼商品種類数、入庫依頼商品数計、入庫実績商品種類数、入庫実績商品数計-->
+    <update id="updateWarehouseResultCnt">
+        update tw110_warehousing_result set product_total = #{result.product_total}, product_plan_total = #{result.product_plan_total},
+        product_kind_cnt = #{result.product_kind_cnt}, product_kind_plan_cnt = #{result.product_kind_plan_cnt},
+        upd_usr = #{loginNm}, upd_date = #{date}
+        where warehouse_cd = #{result.warehouse_cd} and client_id = #{result.client_id}
+        and warehousing_plan_id = #{result.warehousing_plan_id} and del_flg = 0
+    </update>
+
+    <select id="getWarehouseResultDetails" resultType="com.lemonico.common.bean.Tw111_warehousing_result_detail">
+        select product_plan_cnt, product_cnt, product_size_cd, product_weight
+        from tw111_warehousing_result_detail
+        where warehouse_cd = #{warehouse_cd} and client_id = #{client_id} and warehousing_plan_id = #{warehousing_plan_id}
+        and product_id = #{product_id} and del_flg = 0
+    </select>
+
+    <update id="updateResultDetails">
+        update tw111_warehousing_result_detail set product_cnt = #{product_cnt}, product_size_cd = #{product_size_cd},
+        product_weight = #{product_weight}, upd_usr = #{loginNm}, upd_date = #{date}
+        where warehouse_cd = #{warehouse_cd} and client_id = #{client_id} and warehousing_plan_id = #{warehousing_plan_id}
+        and product_id = #{product_id} and del_flg = 0
+    </update>
+</mapper>

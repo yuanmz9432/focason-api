@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.store.dao.SponsorDao">
+	<resultMap type="com.lemonico.common.bean.Ms012_sponsor_master" id="selectSponsor">
+		<id column="sponsor_id" property="sponsor_id" />
+		<id column="client_id" property="client_id" />
+		<result column="utilize" property="utilize" />
+		<result column="name" property="name" />
+		<result column="name_kana" property="name_kana" />
+		<result column="company" property="company" />
+		<result column="division" property="division" />
+		<result column="postcode" property="postcode" />
+		<result column="prefecture" property="prefecture" />
+		<result column="address1" property="address1" />
+		<result column="address2" property="address2" />
+		<result column="phone" property="phone" />
+		<result column="fax" property="fax" />
+		<result column="email" property="email" />
+		<result column="contact" property="contact" />
+		<result column="contact_url" property="contact_url" />
+		<result column="detail_logo" property="detail_logo" />
+		<result column="detail_message" property="detail_message" />
+		<result column="send_message" property="send_message" />
+		<result column="sponsor_default" property="sponsor_default" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="del_flg" property="del_flg" />
+		<result column="label_note" property="label_note" />
+		<result column="delivery_note_type" property="delivery_note_type" />
+		<result column="price_on_delivery_note" property="price_on_delivery_note" />
+		<result column="description_setting" property="description_setting" />
+	</resultMap>
+
+	<!-- 商品一覽 -->
+	<select id="getSponsorList" resultMap="selectSponsor">
+		select ms012.sponsor_id, ms012.client_id, ms012.utilize, ms012.name, ms012.name_kana, ms012.company, ms012.division,
+		ms012.postcode, ms012.prefecture, ms012.address1, ms012.address2, ms012.phone, ms012.fax, ms012.email, ms012.contact,
+		ms012.contact_url, ms012.detail_logo, ms012.detail_message, ms012.send_message, ms012.sponsor_default, ms012.label_note,
+		ms012.delivery_note_type, ms012.price_on_delivery_note, ms201.description_setting
+		from ms012_sponsor_master ms012
+		left join ms201_client as ms201 on ms012.client_id = ms201.client_id
+		where ms012.del_flg = 0
+		<if test="client_id!=null and client_id!=''">
+			and ms012.client_id = #{client_id}
+		</if>
+		<if test="sponsor_default==true">
+			and ms012.sponsor_default = 1
+		</if>
+		<if test="sponsor_id!=null and sponsor_id!=''">
+			and ms012.sponsor_id = #{sponsor_id}
+		</if>
+		order by ms012.sponsor_default desc
+	</select>
+
+	<!-- 根据依赖主id获取依赖主信息-->
+	<select id="getSponsorListById" resultMap="selectSponsor">
+		select sponsor_id, client_id, utilize, name, name_kana, company, division, postcode, prefecture, address1, address2,
+		phone, fax, email, contact, contact_url, detail_logo, detail_message, send_message, sponsor_default, label_note,
+		delivery_note_type, price_on_delivery_note
+		from ms012_sponsor_master where del_flg = 0
+		<if test="sponsorIds != null and sponsorIds.size != 0">
+			and sponsor_id in
+			<foreach collection="sponsorIds" item="sponsorIds" open="(" close=")" separator=",">
+				#{sponsorIds}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 获取店铺的所有依赖主信息-->
+	<select id="getClientSponsorList" resultMap="selectSponsor">
+		select sponsor_id, client_id, utilize, name, name_kana, company, division, postcode, prefecture, address1,
+		       address2, phone, email, contact, contact_url, detail_logo, detail_message, send_message, sponsor_default
+		from ms012_sponsor_master where del_flg = 0
+		<if test="client_id != null and client_id.size != 0">
+			and client_id in
+			<foreach collection="client_id" item="client_id" open="(" close=")" separator=",">
+				#{client_id}
+			</foreach>
+		</if>
+	</select>
+</mapper>

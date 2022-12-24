@@ -1,0 +1,1032 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.wms.dao.ShipmentDao">
+    <resultMap type="com.lemonico.common.bean.Tw200_shipment" id="selectShipment">
+        <id column="client_id" property="client_id" />
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="shipment_plan_id" property="shipment_plan_id" />
+        <result column="request_date" property="request_date" />
+        <result column="shipment_plan_date" property="shipment_plan_date" />
+        <result column="delivery_plan_date" property="delivery_plan_date" />
+        <result column="postcode" property="postcode" />
+        <result column="surname" property="surname" />
+        <result column="surname_kana" property="surname_kana" />
+        <result column="phone" property="phone" />
+        <result column="prefecture" property="prefecture" />
+        <result column="address1" property="address1" />
+        <result column="address2" property="address2" />
+        <result column="company" property="company" />
+        <result column="division" property="division" />
+        <result column="email" property="email" />
+        <result column="shipment_status" property="shipment_status" />
+        <result column="status_message" property="status_message" />
+        <result column="status_count" property="status_count" />
+        <result column="inspection_type" property="inspection_type" />
+        <result column="identifier" property="identifier" />
+        <result column="delivery_tracking_nm" property="delivery_tracking_nm" />
+        <result column="order_no" property="order_no" />
+        <result column="product_kind_plan_cnt" property="product_kind_plan_cnt" />
+        <result column="product_plan_total" property="product_plan_total" />
+        <result column="total_price" property="total_price" />
+        <result column="subtotal_amount" property="subtotal_amount" />
+        <result column="delivery_charge" property="delivery_charge" />
+        <result column="handling_charge" property="handling_charge" />
+        <result column="discount_amount" property="discount_amount" />
+        <result column="total_amount" property="total_amount" />
+        <result column="cushioning_unit" property="cushioning_unit" />
+        <result column="gift_wrapping_unit" property="gift_wrapping_unit" />
+        <result column="gift_sender_name" property="gift_sender_name" />
+        <result column="bundled_items" property="bundled_items" />
+        <result column="shipping_email" property="shipping_email" />
+        <result column="delivery_note_type" property="delivery_note_type" />
+        <result column="price_on_delivery_note" property="price_on_delivery_note" />
+        <result column="message" property="message" />
+        <result column="sponsor_id" property="sponsor_id" />
+        <result column="label_note" property="label_note" />
+        <result column="shipping_date" property="shipping_date" />
+        <result column="tax" property="tax" />
+        <result column="boxes" property="boxes" />
+        <result column="total_with_normal_tax" property="total_with_normal_tax" />
+        <result column="total_with_reduced_tax" property="total_with_reduced_tax" />
+        <result column="delivery_carrier" property="delivery_carrier" />
+        <result column="delivery_time_slot" property="delivery_time_slot" />
+        <result column="delivery_date" property="delivery_date" />
+        <result column="cash_on_delivery" property="cash_on_delivery" />
+        <result column="total_for_cash_on_delivery" property="total_for_cash_on_delivery" />
+        <result column="tax_for_cash_on_delivery" property="tax_for_cash_on_delivery" />
+        <result column="delivery_method" property="delivery_method" />
+        <result column="box_delivery" property="box_delivery" />
+        <result column="fragile_item" property="fragile_item" />
+        <result column="invoice_special_notes" property="invoice_special_notes" />
+        <result column="instructions_special_notes" property="instructions_special_notes" />
+        <result column="international" property="international" />
+        <result column="delivery_service" property="delivery_service" />
+        <result column="currency_code" property="currency_code" />
+        <result column="insurance" property="insurance" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="client_nm" property="client_nm" />
+        <result column="customer_code" property="customer_code" />
+        <result column="tnnm" property="tnnm" />
+        <result column="bill_customer_cd" property="bill_customer_cd" />
+        <result column="yamato_manage_code" property="yamato_manage_code" />
+        <result column="fare_manage_cd" property="fare_manage_cd" />
+        <result column="sagawa_nisugata_code" property="sagawa_nisugata_code" />
+        <result column="pdf_confirm_img" property="pdf_confirm_img" />
+        <result column="pdf_name" property="pdf_name" />
+        <result column="size_cd" property="size_cd" />
+        <result column="delivery_code" property="delivery_code" />
+        <result column="seino_delivery_code" property="seino_delivery_code" />
+        <result column="bikou1" property="bikou1" />
+        <result column="bikou2" property="bikou2"/>
+        <result column="bikou3" property="bikou3" />
+        <result column="bikou4" property="bikou4" />
+        <result column="bikou5" property="bikou5" />
+        <result column="bikou6" property="bikou6" />
+        <result column="bikou7" property="bikou7" />
+        <result column="bikou8" property="bikou8" />
+        <result column="bikou9" property="bikou9" />
+        <result column="bikou10" property="bikou10" />
+        <result column="bikou_flg" property="bikou_flg" />
+        <result column="payment_method" property="payment_method" />
+        <result column="file" property="file" />
+        <result column="file2" property="file2" />
+        <result column="file3" property="file3" />
+        <result column="file4" property="file4" />
+        <result column="file5" property="file5" />
+        <result column="photography_flg" property="photography_flg" />
+        <result column="delivery_time_name" property="delivery_time_name" />
+        <result column="bill_barcode" property="bill_barcode" />
+        <result column="payment_id" property="payment_id" />
+        <result column="order_datetime" property="order_datetime" />
+        <result column="buy_id" property="buy_id" />
+        <result column="buy_cnt" property="buy_cnt" />
+        <result column="next_delivery_date" property="next_delivery_date" />
+        <result column="memo" property="memo" />
+
+        <result column="order_company" property="order_company" />
+        <result column="order_division" property="order_division" />
+        <result column="order_zip_code1" property="order_zip_code1" />
+        <result column="order_zip_code2" property="order_zip_code2" />
+        <result column="order_todoufuken" property="order_todoufuken" />
+        <result column="order_address1" property="order_address1" />
+        <result column="order_address2" property="order_address2" />
+        <result column="order_family_name" property="order_family_name" />
+        <result column="order_first_name" property="order_first_name" />
+        <result column="order_family_kana" property="order_family_kana" />
+        <result column="order_first_kana" property="order_first_kana" />
+        <result column="order_phone_number1" property="order_phone_number1" />
+        <result column="order_phone_number2" property="order_phone_number2" />
+        <result column="order_phone_number3" property="order_phone_number3" />
+        <result column="order_mail" property="order_mail" />
+        <result column="order_gender" property="order_gender" />
+        <result column="delivery_url" property="delivery_url" />
+        <result column="receipt_url" property="receipt_url" />
+        <collection property="ms012_sponsor_master"
+            javaType="com.lemonico.common.bean.Ms012_sponsor_master">
+            <id column="sponsor_id2" property="sponsor_id" />
+            <result column="client_id2" property="client_id" />
+            <result column="utilize2" property="utilize" />
+            <result column="name2" property="name" />
+            <result column="name_kana2" property="name_kana" />
+            <result column="company2" property="company" />
+            <result column="division2" property="division" />
+            <result column="postcode2" property="postcode" />
+            <result column="prefecture2" property="prefecture" />
+            <result column="address12" property="address1" />
+            <result column="address22" property="address2" />
+            <result column="phone2" property="phone" />
+            <result column="email2" property="email" />
+            <result column="contact2" property="contact" />
+            <result column="contact_url2" property="contact_url" />
+            <result column="detail_logo2" property="detail_logo" />
+            <result column="detail_message2" property="detail_message" />
+            <result column="send_message2" property="send_message" />
+            <result column="sponsor_default2" property="sponsor_default" />
+        </collection>
+        <collection property="tw201_shipment_detail" javaType="java.util.List" ofType="com.lemonico.common.bean.Tw201_shipment_detail">
+            <id column="id" property="id" />
+            <id column="client_id" property="client_id" />
+            <id column="warehouse_cd" property="warehouse_cd" />
+            <id column="shipment_plan_id" property="shipment_plan_id" />
+            <id column="product_id" property="product_id" />
+            <id column="set_sub_id" property="set_sub_id" />
+            <result column="product_plan_cnt" property="product_plan_cnt" />
+            <result column="is_reduced_tax" property="is_reduced_tax" />
+            <result column="cushioning_type" property="cushioning_type" />
+            <result column="gift_wrapping_type" property="gift_wrapping_type" />
+            <result column="product_plan_cnt" property="product_plan_cnt" />
+            <result column="unit_price" property="unit_price" />
+            <result column="tax_flag" property="tax_flag"/>
+            <result column="price" property="price" />
+            <result column="set_cnt" property="set_cnt" />
+            <result column="reserve_status" property="reserve_status" />
+            <result column="reserve_cnt" property="reserve_cnt" />
+            <result column="code" property="code" />
+            <result column="name" property="name" />
+            <result column="barcode" property="barcode" />
+            <result column="options" property="options" />
+            <result column="kubun" property="kubun" />
+            <result column="serial_no" property="serial_no" />
+            <result column="option_price" property="option_price" />
+            <collection property="mc100_product" javaType="java.util.List" ofType="com.lemonico.common.bean.Mc100_product">
+                <id column="client_id" property="client_id" />
+                <id column="product_id" property="product_id" />
+                <id column="warehouse_cd" property="warehouse_cd" />
+                <result column="name" property="name" />
+                <result column="code" property="code" />
+                <result column="set_flg" property="set_flg" />
+                <result column="barcode" property="barcode" />
+                <result column="bundled_flg" property="bundled_flg" />
+                <result column="is_reduced_tax" property="is_reduced_tax" />
+                <result column="price" property="price" />
+                <result column="identifier" property="identifier" />
+                <result column="description_cd" property="description_cd" />
+                <result column="origin" property="origin" />
+                <result column="size_cd" property="size_cd" />
+                <result column="tags_id" property="tags_id" />
+                <result column="show_flg" property="show_flg" />
+                <result column="url" property="url" />
+                <result column="serial_flg" property="serial_flg" />
+                <collection property="mc102_product_imgList" javaType="java.util.List" ofType="com.lemonico.common.bean.Mc102_product_img">
+                    <id column="client_id" property="client_id" />
+                    <id column="product_id" property="product_id" />
+                    <id column="img_sub_id" property="img_sub_id" />
+                    <result column="product_img" property="product_img" />
+                </collection>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!--店铺侧出库一览-->
+    <sql id="shipmentsWhere">
+        and tw200.warehouse_cd = #{jsonObject.warehouse_cd}
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size()!=0 ">
+            <if test="jsonObject.statusList.get(0) == '999'">
+                and tw200.shipment_status = '999'
+            </if>
+            <if test="jsonObject.statusList.get(0) != '999'">
+                and tw200.del_flg = 0
+            </if>
+        </if>
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size() == 0">
+            and tw200.del_flg = 0
+        </if>
+        <if test="jsonObject.client_id != null and jsonObject.client_id !='' and jsonObject.client_id != 'all'">
+            and tw200.client_id = #{jsonObject.client_id}
+        </if>
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size > 0">
+            and tw200.shipment_status in
+            <foreach collection="jsonObject.statusList" item="status" open="(" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+        <if test="jsonObject.shipment_plan_id != null and jsonObject.shipment_plan_id != ''">
+            and tw200.shipment_plan_id in (#{jsonObject.shipment_plan_id})
+        </if>
+        <if test="jsonObject.keyword!=null and jsonObject.keyword!=''">
+            and (tw200.shipment_plan_id in (
+            select shipment_plan_id from tw201_shipment_detail where product_id in
+            (select product_id from mc100_product where (product_id like #{jsonObject.keyword} or name ~* replace(#{jsonObject.keyword},'%','') or code ~* replace(#{jsonObject.keyword},'%','')
+            or barcode like #{jsonObject.keyword}) and warehouse_cd=#{jsonObject.warehouse_cd} and del_flg=0
+            <if test="jsonObject.client_id != null and jsonObject.client_id !=''">
+                and client_id = #{jsonObject.client_id}
+            </if>
+            ) and del_flg = 0
+            ) or tw200.shipment_plan_id in (
+              select shipment_plan_id from tw201_shipment_detail where set_sub_id in
+              (select set_sub_id from mc100_product where (product_id like #{jsonObject.keyword} or name ~* replace(#{jsonObject.keyword},'%','') or code ~* replace(#{jsonObject.keyword},'%','')
+              or barcode like #{jsonObject.keyword}) and warehouse_cd=#{jsonObject.warehouse_cd} and del_flg=0
+              <if test="jsonObject.client_id != null and jsonObject.client_id !=''">
+                  and client_id = #{jsonObject.client_id}
+              </if>
+            ) and del_flg = 0
+            )
+            or tw200.shipment_plan_id like #{jsonObject.keyword}
+            or tw200.order_no like #{jsonObject.keyword}
+	        or tw200.surname like #{jsonObject.keyword}
+	        or tw200.address1 like #{jsonObject.keyword}
+	        or tw200.address2 like #{jsonObject.keyword}
+	        or tw200.delivery_tracking_nm like #{jsonObject.keyword}
+            or tw200.memo like #{jsonObject.keyword})
+        </if>
+        <if test="jsonObject.delivery_carrier!=null and jsonObject.delivery_carrier!='' and jsonObject.delivery_carrier!='日本郵便(ポスト便)'">
+            and tw200.delivery_carrier = #{jsonObject.delivery_carrier} and tw200.delivery_method != 'ポスト便（宅配便スピード）'
+        </if>
+        <if test="jsonObject.delivery_carrier=='日本郵便(ポスト便)'">
+            and tw200.delivery_method = 'ポスト便（宅配便スピード）'
+        </if>
+        <if test="jsonObject.cash_on_delivery==0 or jsonObject.cash_on_delivery==1">
+            and tw200.cash_on_delivery = #{jsonObject.cash_on_delivery}
+        </if>
+        <if test="jsonObject.shipment_plan_date_start!=null and jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status==8">
+            and tw200.shipment_plan_date &gt;= #{jsonObject.shipment_plan_date_start}
+        </if>
+        <if test="jsonObject.shipment_plan_date_end!=null and jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status==8">
+            and tw200.shipment_plan_date &lt;= #{jsonObject.shipment_plan_date_end}
+        </if>
+        <if test="jsonObject.upd_date_start!=null and jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status==999">
+            and tw200.upd_date &gt;= #{jsonObject.upd_date_start}
+        </if>
+        <if test="jsonObject.upd_date_end!=null and jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status==999">
+            and tw200.upd_date &lt;= #{jsonObject.upd_date_end}
+        </if>
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status==999">
+            and tw200.upd_date > (SELECT current_timestamp - interval '4 month')
+        </if>
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status==8">
+            and tw200.shipment_plan_date > (SELECT current_timestamp - interval '4 month')
+        </if>
+        <if test="jsonObject.shipping_start_date!=null and jsonObject.statusList != null and jsonObject.statusList.size > 1">
+            and tw200.shipping_date &gt;= #{jsonObject.shipping_start_date}
+        </if>
+        <if test="jsonObject.shipping_end_date!=null and jsonObject.statusList != null and jsonObject.statusList.size > 1">
+            and tw200.shipping_date &lt;= #{jsonObject.shipping_end_date}
+        </if>
+        <if test="jsonObject.shipping_start_date!=null and jsonObject.statusList != null and jsonObject.statusList.size == 1">
+            and tw200.shipping_date &gt;= #{jsonObject.shipping_start_date}
+        </if>
+        <if test="jsonObject.shipping_end_date!=null and jsonObject.statusList != null and jsonObject.statusList.size == 1">
+            and tw200.shipping_date &lt;= #{jsonObject.shipping_end_date}
+        </if>
+        <!-- 注文日時検索 -->
+        <if test="jsonObject.order_datetime_start != null">
+            and tw200.order_datetime &gt;= #{jsonObject.order_datetime_start}
+        </if>
+        <if test="jsonObject.order_datetime_end != null">
+            and tw200.order_datetime &lt;= #{jsonObject.order_datetime_end}
+        </if>
+        <if test="jsonObject.shipmentIdList != null and jsonObject.shipmentIdList.size > 0 ">
+            and tw200.shipment_plan_id in
+            <foreach collection="jsonObject.shipmentIdList" item="shipmentIdList" open="(" separator="," close=")">
+                 #{shipmentIdList}
+            </foreach>
+        </if>
+        <if test="jsonObject.payment_method != null and jsonObject.payment_method != '' ">
+            and tw200.payment_method = #{jsonObject.payment_method}
+        </if>
+        <!-- 出庫依頼日検索 -->
+        <if test="jsonObject.request_date_start != null">
+            and tw200.request_date &gt;= #{jsonObject.request_date_start}
+        </if>
+        <if test="jsonObject.request_date_end != null">
+            and tw200.request_date &lt;= #{jsonObject.request_date_end}
+        </if>
+        <!-- 出荷予定日検索 -->
+<!--        <if test="shipment_plan_date_start != null">-->
+<!--            and tw200.shipment_plan_date &gt;= #{shipment_plan_date_start}-->
+<!--        </if>-->
+<!--        <if test="shipment_plan_date_end != null">-->
+<!--            and tw200.shipment_plan_date &lt;= #{shipment_plan_date_end}-->
+<!--        </if>-->
+        <!-- お届け指定日 -->
+        <if test="jsonObject.delivery_date_start != null">
+            and tw200.delivery_date &gt;= #{jsonObject.delivery_date_start}
+        </if>
+        <if test="jsonObject.delivery_date_end != null">
+            and tw200.delivery_date &lt;= #{jsonObject.delivery_date_end}
+        </if>
+        <!-- 識別番号 -->
+        <if test="jsonObject.identifier != null">
+            and tw200.identifier like #{jsonObject.identifier}
+        </if>
+        <!-- 注文電話番号 -->
+        <if test="jsonObject.order_phone_number != null">
+            and concat(tw200.order_phone_number1,tw200.order_phone_number2,tw200.order_phone_number3) like #{jsonObject.order_phone_number}
+        </if>
+        <!-- 定期購入ID -->
+        <if test="jsonObject.buy_id != null">
+            and tw200.buy_id like #{jsonObject.buy_id}
+        </if>
+        <!-- 注文名 -->
+        <if test="jsonObject.order_first_name != null">
+            and concat(tw200.order_family_name,tw200.order_first_name) like #{jsonObject.order_first_name}
+        </if>
+        <!-- メールアドレス -->
+        <if test="jsonObject.email != null">
+            and concat(tw200.email,tw200.order_mail) ~* replace(#{jsonObject.email},'%','')
+        </if>
+        <!-- 定期購入回数 -->
+        <if test="jsonObject.buy_cnt != null">
+            and tw200.buy_cnt = #{jsonObject.buy_cnt}
+        </if>
+        <!-- 会社名 -->
+        <if test="jsonObject.company != null">
+            and tw200.company like #{jsonObject.company}
+        </if>
+        <!-- 出荷指示特記事項 -->
+        <if test="jsonObject.instructions_special_notes != null">
+            and concat(tw200.instructions_special_notes,tw200.bikou1,tw200.bikou2,tw200.bikou3,tw200.bikou4,tw200.bikou5,tw200.bikou6,tw200.bikou7,tw200.bikou8)
+            like #{jsonObject.instructions_special_notes}
+        </if>
+        <!-- 確認メッセージ -->
+        <if test="jsonObject.status_message != null">
+            and tw200.status_message like #{jsonObject.status_message}
+            and tw200.shipment_status in (1,6,11)
+        </if>
+        <!-- 店舗区分 -->
+<!--        <if test="jsonObject.orderType != null and jsonObject.orderType == 'RK%'">-->
+<!--            and tw200.identifier like 'RK-%'-->
+<!--        </if>-->
+<!--        <if test="jsonObject.orderType != null and jsonObject.orderType == 'RT%'">-->
+<!--            and (tw200.identifier like 'RT%' or tw200.identifier like 'RK%')-->
+<!--            and tw200.identifier not like 'RK-%'-->
+<!--        </if>-->
+<!--        <if test="jsonObject.orderType != null and jsonObject.orderType != 'RT%' and jsonObject.orderType != 'RK%'">-->
+<!--            and tw200.identifier like #{jsonObject.orderType}-->
+<!--        </if>-->
+        <if test="jsonObject.orderType != null and jsonObject.orderType != ''">
+            and tw200.identifier like #{jsonObject.orderType}
+        </if>
+        <!-- 依頼主 -->
+        <if test="jsonObject.sponsor_id != null">
+            and tw200.sponsor_id in
+            <foreach collection="jsonObject.sponsor_id" item="sponsor_id" open="(" separator="," close=")">
+                #{sponsor_id}
+            </foreach>
+        </if>
+        <!-- 注文金額 -->
+        <if test="jsonObject.min_total_price != null">
+            and tw200.total_amount &gt;= #{jsonObject.min_total_price}
+        </if>
+        <if test="jsonObject.max_total_price != null">
+            and tw200.total_amount &lt;= #{jsonObject.max_total_price}
+        </if>
+        <!-- 商品数量 -->
+        <if test="jsonObject.min_product_plan_total != null">
+            and tw200.product_plan_total &gt;= #{jsonObject.min_product_plan_total}
+        </if>
+        <if test="jsonObject.max_product_plan_total != null">
+            and tw200.product_plan_total &lt;= #{jsonObject.max_product_plan_total}
+        </if>
+        <!-- お届け時間帯 -->
+        <if test="jsonObject.delivery_time_slot != null">
+            and tw200.delivery_time_slot = #{jsonObject.delivery_time_slot}
+        </if>
+        <!-- 金額印字 -->
+        <if test="jsonObject.price_on_delivery_note != null">
+            and tw200.price_on_delivery_note in
+            <foreach collection="jsonObject.price_on_delivery_note" item="price_on_delivery_note" open="(" separator="," close=")">
+                #{price_on_delivery_note}
+            </foreach>
+        </if>
+        <!-- 事業区分 -->
+        <if test="jsonObject.form != null">
+            and tw200.form in
+            <foreach collection="jsonObject.form" item="form" open="(" separator="," close=")">
+                #{form}
+            </foreach>
+        </if>
+        <!-- シリアル番号 -->
+        <if test="jsonObject.serial_no!= null and jsonObject.serial_no!= '' ">
+            and (tw200.shipment_plan_id in (
+            select shipment_plan_id from tw201_shipment_detail where serial_no  ~* replace(#{jsonObject.serial_no},'%','')))
+        </if>
+        <!-- 添付資料 -->
+        <if test="jsonObject.file_flg != null and jsonObject.file_flg == 1">
+            and tw200.file IS NOT NULL
+        </if>
+        <if test="jsonObject.file_flg != null and jsonObject.file_flg == 0">
+            and tw200.file IS NULL
+        </if>
+        <if test="jsonObject.kubun != null and jsonObject.kubun == 1">
+            and (select count (*) from tw201_shipment_detail as tw201
+            where tw200.shipment_plan_id = tw201.shipment_plan_id and tw201.kubun = 1
+            and tw201.warehouse_cd= tw200.warehouse_cd and tw201.client_id= tw200.client_id  and tw201.del_flg = 0)  > 0
+        </if>
+        <if test="jsonObject.kubun != null and jsonObject.kubun != 1">
+            and (select count (*) from tw201_shipment_detail as tw201
+            where tw200.shipment_plan_id = tw201.shipment_plan_id and tw201.kubun = 1
+            and tw201.warehouse_cd= tw200.warehouse_cd and tw201.client_id= tw200.client_id  and tw201.del_flg = 0) = 0
+        </if>
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size > 1 and jsonObject.min_delivery_date != null">
+            and (tw200.shipment_plan_date is null or tw200.shipment_plan_date &gt;= #{jsonObject.min_delivery_date})
+        </if>
+        <!--排序对出库引当判断有影响，需要修改时请注意：setShipmentStatus-->
+        <!--排序对出库引当判断有影响，可能影响画面：wms/shipment/preparation-->
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status==8">
+            order by tw200.shipment_plan_date desc,tw200.shipment_plan_id desc
+        </if>
+        <if test="jsonObject.statusList != null and jsonObject.statusList.size == 1 and jsonObject.shipment_status!=8">
+            order by tw200.request_date desc,tw200.shipment_plan_id desc
+        </if>
+        <if test="jsonObject.statusList == null or jsonObject.statusList.size == 0 or jsonObject.statusList.size > 1">
+            order by tw200.request_date desc,tw200.shipment_plan_id desc
+        </if>
+    </sql>
+
+    <!--店舗側出庫一覧-->
+    <select id="getShipmentsLists" resultType="com.lemonico.wms.bean.ShimentListBean">
+        select tw200.client_id, tw200.warehouse_cd, tw200.shipment_plan_id, tw200.request_date, tw200.shipment_plan_date, tw200.delivery_plan_date, tw200.form,
+        tw200.postcode, tw200.surname, tw200.phone, tw200.prefecture, tw200.address1, tw200.address2, tw200.company, tw200.division, tw200.email, tw200.shipment_status,
+        tw200.status_message, tw200.inspection_type, tw200.identifier, tw200.delivery_tracking_nm, tw200.order_no, tw200.product_kind_plan_cnt, tw200.product_plan_total,
+        tw200.total_price, tw200.subtotal_amount, tw200.delivery_charge, tw200.handling_charge, tw200.discount_amount, tw200.total_amount, tw200.cushioning_unit,
+        tw200.gift_wrapping_unit, tw200.gift_sender_name, tw200.bundled_items, tw200.shipping_email, tw200.delivery_note_type, tw200.price_on_delivery_note, tw200.message,
+        tw200.sponsor_id, tw200.label_note, tw200.shipping_date, tw200.tax, tw200.boxes, tw200.total_with_normal_tax, tw200.total_with_reduced_tax, tw200.delivery_carrier, tw200.bill_barcode,tw200.upd_date,
+        CASE tw200.delivery_method WHEN '1' THEN '' ELSE tw200.delivery_time_slot END AS delivery_time_slot,
+        CASE tw200.delivery_method WHEN '1' THEN NULL ELSE tw200.delivery_date END AS delivery_date,
+        tw200.cash_on_delivery, tw200.total_for_cash_on_delivery, tw200.tax_for_cash_on_delivery, tw200.delivery_method,
+        tw200.box_delivery, tw200.fragile_item, tw200.invoice_special_notes, tw200.instructions_special_notes, tw200.pdf_confirm_img,tw200.size_cd, tw200.payment_method,
+        tw200.international, tw200.delivery_service, tw200.currency_code, tw200.insurance, tw200.ins_usr, tw200.ins_date, tw200.upd_usr, tw200.upd_date, tw200.pdf_name,
+        tw200.bikou1, tw200.bikou2, tw200.bikou3, tw200.bikou4, tw200.bikou5, tw200.bikou6, tw200.bikou7, tw200.bikou8, tw200.bikou9, tw200.bikou10, tw200.bikou_flg,
+        tw200.photography_flg, tw200.payment_id, tw200.order_datetime, tw200.file,tw200.file2,tw200.file3,tw200.file4,tw200.file5,
+        tw200.buy_id, tw200.buy_cnt, tw200.next_delivery_date, tw200.memo,
+        tw200.order_company,tw200.order_division,tw200.order_zip_code1,tw200.order_zip_code2,tw200.order_todoufuken,tw200.order_address1,tw200.order_address2,
+        tw200.order_family_name,tw200.order_first_name,tw200.order_family_kana,tw200.order_first_kana,tw200.order_phone_number1,tw200.order_phone_number2,
+        tw200.order_phone_number3,tw200.order_mail, tw200.order_gender,tw200.delivery_url, tw200.receipt_url
+        from tw200_shipment as tw200
+        <where><include refid="shipmentsWhere"></include></where>
+    </select>
+
+    <!--店舗側出庫详细-->
+    <select id="getShipmentsDetail" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select tw200.client_id, tw200.warehouse_cd, tw200.shipment_plan_id, tw200.request_date, tw200.shipment_plan_date, tw200.delivery_plan_date,
+        tw200.postcode, tw200.surname, tw200.surname_kana, tw200.phone, tw200.prefecture, tw200.address1, tw200.address2, tw200.company, tw200.division, tw200.email, tw200.shipment_status,
+        tw200.status_message, tw200.inspection_type, tw200.identifier, tw200.delivery_tracking_nm, tw200.order_no, tw200.product_kind_plan_cnt, tw200.product_plan_total,
+        tw200.total_price, tw200.subtotal_amount, tw200.delivery_charge, tw200.handling_charge, tw200.discount_amount, tw200.total_amount, tw200.cushioning_unit,
+        tw200.gift_wrapping_unit, tw200.gift_sender_name, tw200.bundled_items, tw200.shipping_email, tw200.delivery_note_type, tw200.price_on_delivery_note, tw200.message,
+        tw200.sponsor_id, tw200.label_note, tw200.shipping_date, tw200.tax, tw200.boxes, tw200.total_with_normal_tax, tw200.total_with_reduced_tax, tw200.delivery_carrier, tw200.bill_barcode,
+        CASE tw200.delivery_method WHEN '1' THEN '' ELSE tw200.delivery_time_slot END AS delivery_time_slot,
+        CASE tw200.delivery_method WHEN '1' THEN NULL ELSE tw200.delivery_date END AS delivery_date,
+        tw200.cash_on_delivery, tw200.total_for_cash_on_delivery, tw200.tax_for_cash_on_delivery, tw200.delivery_method,
+        tw200.box_delivery, tw200.fragile_item, tw200.invoice_special_notes, tw200.instructions_special_notes, tw200.pdf_confirm_img,tw200.size_cd, tw200.payment_method,
+        tw200.international, tw200.delivery_service, tw200.currency_code, tw200.insurance, tw200.ins_usr, tw200.ins_date, tw200.upd_usr, tw200.upd_date, tw200.pdf_name,
+        tw200.bikou1, tw200.bikou2, tw200.bikou3, tw200.bikou4, tw200.bikou5, tw200.bikou6, tw200.bikou7, tw200.bikou8, tw200.bikou8, tw200.bikou9, tw200.bikou10, tw200.bikou_flg,
+        tw200.photography_flg, tw200.payment_id, tw200.order_datetime, tw200.buy_id, tw200.buy_cnt, tw200.next_delivery_date, tw200.memo,tw200.file,tw200.file2,tw200.file3,tw200.file4,tw200.file5,
+        tw200.order_company,tw200.order_division,tw200.order_zip_code1,tw200.order_zip_code2,tw200.order_todoufuken,tw200.order_address1,tw200.order_address2,
+        tw200.order_family_name,tw200.order_first_name,tw200.order_family_kana,tw200.order_first_kana,tw200.order_phone_number1,tw200.order_phone_number2,
+        tw200.order_phone_number3,tw200.order_mail, tw200.order_gender, tw200.delivery_url, tw200.receipt_url, tw200.del_flg
+        from tw200_shipment as tw200
+        where tw200.warehouse_cd = #{warehouse_cd} and tw200.shipment_plan_id = #{shipment_plan_id}
+    </select>
+
+    <!--店舗側出庫一覧-->
+    <select id="getShipmentsList" resultMap="selectShipment">
+        select tw200.client_id, tw200.warehouse_cd, tw200.shipment_plan_id, tw200.request_date, tw200.shipment_plan_date, tw200.delivery_plan_date,
+        tw200.postcode, tw200.surname, tw200.surname_kana, tw200.phone, tw200.prefecture, tw200.address1, tw200.address2, tw200.company, tw200.division, tw200.email, tw200.shipment_status,
+        tw200.status_message, tw200.inspection_type, tw200.identifier, tw200.delivery_tracking_nm, tw200.order_no, tw200.product_kind_plan_cnt, tw200.product_plan_total,
+        tw200.total_price, tw200.subtotal_amount, tw200.delivery_charge, tw200.handling_charge, tw200.discount_amount, tw200.total_amount, tw200.cushioning_unit,
+        tw200.gift_wrapping_unit, tw200.gift_sender_name, tw200.bundled_items, tw200.shipping_email, tw200.delivery_note_type, tw200.price_on_delivery_note, tw200.message,
+        tw200.sponsor_id, tw200.label_note, tw200.shipping_date, tw200.tax, tw200.boxes, tw200.total_with_normal_tax, tw200.total_with_reduced_tax, tw200.delivery_carrier, tw200.bill_barcode,
+        CASE tw200.delivery_method WHEN '1' THEN '' ELSE tw200.delivery_time_slot END AS delivery_time_slot,
+        CASE tw200.delivery_method WHEN '1' THEN NULL ELSE tw200.delivery_date END AS delivery_date,
+        tw200.cash_on_delivery, tw200.total_for_cash_on_delivery, tw200.tax_for_cash_on_delivery, tw200.delivery_method,
+        tw200.box_delivery, tw200.fragile_item, tw200.invoice_special_notes, tw200.instructions_special_notes, tw200.pdf_confirm_img,tw200.size_cd, tw200.payment_method,
+        tw200.international, tw200.delivery_service, tw200.currency_code, tw200.insurance, tw200.ins_usr, tw200.ins_date, tw200.upd_usr, tw200.upd_date, tw200.pdf_name,
+        tw200.bikou1, tw200.bikou2, tw200.bikou3, tw200.bikou4, tw200.bikou5, tw200.bikou6, tw200.bikou7, tw200.bikou8, tw200.bikou8, tw200.bikou9, tw200.bikou10, tw200.bikou_flg,
+        tw200.photography_flg, tw200.payment_id, tw200.order_datetime, tw200.buy_id, tw200.buy_cnt, tw200.next_delivery_date, tw200.memo,tw201.option_price,tw201.options,
+        tw201.id, tw201.product_id, tw201.is_reduced_tax, tw201.cushioning_type, tw201.gift_wrapping_type, tw201.product_plan_cnt, tw201.unit_price, tw201.name, tw201.code,
+        tw201.price, tw201.set_sub_id, tw201.set_cnt, tw201.kubun, tw201.tax_flag, tw201.reserve_status, tw201.reserve_cnt, tw200.file,tw200.file2,tw200.file3,tw200.file4,tw200.file5, tw201.serial_no,
+        tw200.order_company,tw200.order_division,tw200.order_zip_code1,tw200.order_zip_code2,tw200.order_todoufuken,tw200.order_address1,tw200.order_address2,
+        tw200.order_family_name,tw200.order_first_name,tw200.order_family_kana,tw200.order_first_kana,tw200.order_phone_number1,tw200.order_phone_number2,
+        tw200.order_phone_number3,tw200.order_mail, tw200.order_gender, tw200.delivery_url, tw200.receipt_url,
+        mc100.product_id, mc100.name, mc100.code, mc100.set_flg, mc100.barcode, mc100.bundled_flg, mc100.is_reduced_tax, mc100.price, mc100.identifier, mc100.serial_flg,
+        mc100.description_cd, mc100.origin, mc100.size_cd,mc100.url, mc100.tags_id, mc100.show_flg
+        from tw200_shipment as tw200
+        left join tw201_shipment_detail as tw201 on tw200.shipment_plan_id = tw201.shipment_plan_id and tw200.client_id = tw201.client_id and tw201.del_flg = 0
+        left join mc100_product         as mc100 on tw201.product_id       = mc100.product_id and tw201.client_id = mc100.client_id and mc100.del_flg = 0
+        <where><include refid="shipmentsWhere"></include></where>
+    </select>
+
+    <!--根据出库id获取出库数据-->
+    <select id="getShipmentsListByPlanIds" resultMap="selectShipment">
+        select * from tw200_shipment as tw200 where tw200.del_flg = 0 and tw200.shipment_plan_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--更改ntm配送方式-->
+    <update id="changeNtmShipmentDeliveryMethod">
+        update tw200_shipment
+        set delivery_method = '2', delivery_carrier = '6'
+        where del_flg = 0 and shipment_plan_id = #{shipmentPlanId} and warehouse_cd = #{warehouseCd}
+    </update>
+
+    <!--更改出库状态及Message-->
+    <update id="changeNtmEccubeStatusMessage">
+        update tw200_shipment
+        set shipment_status = #{shimentStatus}, status_message = #{statusMessage}
+        where del_flg = 0 and shipment_plan_id = #{shipmentPlantId}
+    </update>
+
+    <!--更新传票番号-->
+    <update id="updateDeliveryTrackingNm">
+        update tw200_shipment
+        set delivery_tracking_nm = #{num}
+        where del_flg = 0 and shipment_plan_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--获取出库状态及数据个数-->
+    <select id="getShipmentStatusCount" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select shipment_status, count(shipment_status) as status_count
+        from tw200_shipment
+        where del_flg = 0
+        <if test="jsonObject.warehouse_cd!=null and jsonObject.warehouse_cd!=''">
+            and warehouse_cd = #{jsonObject.warehouse_cd}
+        </if>
+        <if test="jsonObject.client_id!=null and jsonObject.client_id!=''">
+            and client_id = #{jsonObject.client_id}
+        </if>
+        <if test="jsonObject.startDate!=null and jsonObject.startDate!='' and jsonObject.endDate!=null and jsonObject.endDate!=''">
+            and shipment_plan_date between #{jsonObject.startDate} and #{jsonObject.endDate}
+        </if>
+        group by shipment_status
+    </select>
+
+    <select id="getAllShipmentStatusCount" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select client_id,shipment_status, count(shipment_status) as status_count
+        from tw200_shipment
+        where del_flg = 0
+        <if test="jsonObject.warehouse_cd!=null and jsonObject.warehouse_cd!=''">
+            and warehouse_cd = #{jsonObject.warehouse_cd}
+        </if>
+        <if test="jsonObject.client_id!=null and jsonObject.client_id!=''">
+            and client_id = #{jsonObject.client_id}
+        </if>
+        <if test="jsonObject.startDate!=null and jsonObject.startDate!='' and jsonObject.endDate!=null and jsonObject.endDate!=''">
+            and shipment_plan_date between #{jsonObject.startDate} and #{jsonObject.endDate}
+        </if>
+        group by shipment_status,client_id
+    </select>
+
+    <update id="updateShipmentsDelivery">
+        update tw200_shipment
+           set shipping_date = #{jsonObject.shipping_date}, delivery_date = #{jsonObject.delivery_date},
+               delivery_time_slot = #{jsonObject.delivery_time_slot}, box_delivery = #{jsonObject.box_delivery},
+               fragile_item = #{jsonObject.fragile_item},
+        <if test="jsonObject.total_for_cash_on_delivery!='' and jsonObject.total_for_cash_on_delivery>=0">
+            total_for_cash_on_delivery = #{jsonObject.total_for_cash_on_delivery},
+        </if>
+        <if test="jsonObject.delivery_method!='' and jsonObject.delivery_carrier!=''">
+            delivery_method = #{jsonObject.delivery_method}, delivery_carrier = #{jsonObject.delivery_carrier},
+        </if>
+               delivery_tracking_nm = #{jsonObject.delivery_tracking_nm}, upd_usr = #{jsonObject.upd_usr}, upd_date = #{jsonObject.upd_date}
+         where warehouse_cd = #{jsonObject.warehouse_cd} and shipment_plan_id = #{jsonObject.shipment_plan_id}
+    </update>
+
+    <update id="updateShipmentsSpecialNotes">
+        update tw200_shipment
+           set invoice_special_notes = #{jsonObject.invoice_special_notes}, instructions_special_notes = #{jsonObject.instructions_special_notes},
+               bikou_flg = #{jsonObject.bikou_flg}, bikou1 = #{jsonObject.bikou1}, bikou2 = #{jsonObject.bikou2}, bikou3 = #{jsonObject.bikou3}, bikou4 = #{jsonObject.bikou4},
+               bikou5 = #{jsonObject.bikou5}, bikou6 = #{jsonObject.bikou6}, bikou7 = #{jsonObject.bikou7}, upd_usr = #{jsonObject.upd_usr}, upd_date = #{jsonObject.upd_date}
+         where warehouse_cd = #{jsonObject.warehouse_cd} and shipment_plan_id = #{jsonObject.shipment_plan_id}
+    </update>
+
+    <update id="updateShipmentsArrival">
+        update tw200_shipment
+           set postcode = #{jsonObject.postcode}, surname = #{jsonObject.surname}, phone = #{jsonObject.phone},
+               prefecture = #{jsonObject.prefecture}, address1 = #{jsonObject.address1}, address2 = #{jsonObject.address2},
+               company = #{jsonObject.company}, division = #{jsonObject.division}, email = #{jsonObject.email},
+               upd_usr = #{jsonObject.upd_usr}, upd_date = #{jsonObject.upd_date}
+         where warehouse_cd = #{jsonObject.warehouse_cd} and shipment_plan_id = #{jsonObject.shipment_plan_id}
+    </update>
+
+    <update id="updateBoxes">
+        update tw200_shipment
+           set boxes = #{boxes}, freight = #{freight}, packing = #{packing}
+         where warehouse_cd = #{warehouse_cd} and shipment_plan_id = #{shipment_plan_id}
+    </update>
+
+    <!--更新运费及捆包数-->
+    <update id="updateFreight">
+       update tw200_shipment
+           set freight = #{freight}, packing = #{packing}
+         where warehouse_cd = #{warehouse_cd} and shipment_plan_id = #{shipment_plan_id}
+    </update>
+
+    <update id="setShipmentStatus">
+        update tw200_shipment
+           set shipment_status = #{shipment_status}, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+        <if test="size_cd != null">
+            ,size_cd = #{size_cd}
+        </if>
+        <if test="size_cd == null and shipment_status == 1">
+            ,size_cd = null
+        </if>
+        <if test="status_message != null and status_message != ''">
+            ,status_message = #{status_message}
+        </if>
+        <if test="boxes != null and boxes != ''">
+            ,boxes = #{boxes}
+        </if>
+        <if test="shipment_status == 8">
+            ,shipment_plan_date = #{upd_date}
+        </if>
+        <if test="shipment_status != 8">
+            ,shipment_plan_date = null
+        </if>
+        where warehouse_cd = #{warehouse_cd} and del_flg = 0
+          and shipment_plan_id in
+        <foreach collection="shipment_plan_id" item="shipment_plan_id" open="(" separator="," close=")">
+            #{shipment_plan_id}
+        </foreach>
+    </update>
+
+    <update id="setDeliveryTrackingNm" parameterType="java.util.Map">
+        <foreach item="value" index="key" collection="trackMap.entrySet()" separator=";">
+            update tw200_shipment
+            set
+            <if test="value != null">
+                delivery_tracking_nm = #{value}
+            </if>
+        where  shipment_plan_id = #{key}
+        </foreach>
+    </update>
+
+    <!--    判断出荷是否存在-->
+    <select id="getShipmentExist" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select shipment_plan_id, client_id, warehouse_cd, delivery_tracking_nm, shipment_status
+          from tw200_shipment
+         where warehouse_cd = #{warehouse_cd} and shipment_plan_id = #{shipment_plan_id} and del_flg = 0
+         <if test="delivery_carrier!=null">
+             and delivery_carrier = #{delivery_carrier}
+         </if>
+    </select>
+
+    <!--根据守住番号查询出库数据-->
+    <select id="getShipmentPlanIdByOrderNo" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select shipment_plan_id
+        from tw200_shipment
+        where warehouse_cd = #{warehouse_cd} and order_no = #{order_no} and del_flg = 0
+        limit 1
+    </select>
+
+    <!--    判断出荷状态是否可以改变-->
+    <select id="getShipmentListByStatus" resultType="java.lang.Integer">
+        select count(*)
+          from tw200_shipment tw200
+          left join tw201_shipment_detail as tw201 on tw200.shipment_plan_id = tw201.shipment_plan_id
+         where tw200.warehouse_cd = #{warehouse_cd} and tw200.del_flg = 0
+           <if test="shipment_status==457">
+               and tw200.shipment_status in (4, 5, 7, 41, 42)
+           </if>
+           <if test="shipment_status!=457">
+               and tw200.shipment_status = #{shipment_status}
+           </if>
+           and tw200.shipment_plan_id in
+           <foreach collection="shipment_plan_id" item="shipment_plan_id" open="(" separator="," close=")">
+               #{shipment_plan_id}
+           </foreach>
+    </select>
+
+    <!--    梱包作業画像を添付上传-->
+    <update id="setConfirmImg">
+        update tw200_shipment set pdf_confirm_img = #{pdf_confirm_img} where del_flg = 0 and shipment_plan_id in
+        <foreach collection="shipment_plan_id" item="shipment_plan_id" open="(" separator="," close=")">
+            #{shipment_plan_id}
+        </foreach>
+    </update>
+
+    <!--a根据size_cd 获取 尺寸信息 -->
+    <select id="getSizeName" resultType="java.lang.String">
+		select name from ms010_product_size where size_cd = #{size_cd}
+	</select>
+
+	<!-- 根据ShipmentId获取DeliveryCarrier -->
+	<select id="getDeliveryCarrierByShipmentId" resultType="java.lang.String">
+        select delivery_carrier from tw200_shipment where del_flg = 0 and shipment_plan_id = #{shipment_plan_id}
+    </select>
+
+    <!--    获取到受注キャンセルあり各个出库状态下的件数-->
+    <select id="getShipmentCancelCount" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select tw200.shipment_status, count(tc208.shipment_plan_id) as status_count
+        from tw200_shipment tw200
+		left join tc208_order_cancel tc208 on tw200.shipment_plan_id = tc208.shipment_plan_id and tc208.del_flg = 0
+        where tw200.del_flg = 0
+        <if test="warehouse_cd != null and warehouse_cd != ''">
+            and tw200.warehouse_cd = #{warehouse_cd}
+        </if>
+        <if test="client_id != null and client_id != ''">
+            and tw200.client_id = #{client_id}
+        </if>
+        group by tw200.shipment_status
+    </select>
+
+    <select id="getAllShipmentCancelCount" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select tw200.client_id,tw200.shipment_status, count(tc208.shipment_plan_id) as status_count
+        from tw200_shipment tw200
+        left join tc208_order_cancel tc208 on tw200.shipment_plan_id = tc208.shipment_plan_id and tc208.del_flg = 0
+        where tw200.del_flg = 0
+        <if test="warehouse_cd != null and warehouse_cd != ''">
+            and tw200.warehouse_cd = #{warehouse_cd}
+        </if>
+        <if test="client_id != null and client_id != ''">
+            and tw200.client_id = #{client_id}
+        </if>
+        group by tw200.shipment_status,tw200.client_id
+    </select>
+
+    <!--    更改撮影状态-->
+    <update id="updatePhotography">
+        update tw200_shipment
+           set photography_flg = #{photography_flg}
+         where del_flg = 0 and shipment_plan_id = #{shipment_plan_id} and warehouse_cd = #{warehouse_cd}
+    </update>
+
+    <resultMap id="ntmTopEnterpriseCntResultMap" type="HashMap">
+        <result property="newReceptionCnt" column="new_reception_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="packingCnt" column="packing_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="shipmentCnt" column="shipment_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <!--NTM获取法人数据-->
+    <select id="getNtmTopEnterpriseCntByStatus" resultMap="ntmTopEnterpriseCntResultMap">
+        select tmp_new_reception_table.new_reception_cnt, tmp_packing_table.packing_cnt, tmp_shipment_table.shipment_cnt from
+        (
+            select count(*) as new_reception_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="newReceptionStatus != null">
+                and tw200.shipment_status in
+                <foreach collection="newReceptionStatus" item="item" index="index" open="(" close=")" separator=",">
+                    #{item,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        ) as tmp_new_reception_table,
+        (
+            select count(*) as packing_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="packingStatus != null">
+                and tw200.shipment_status in
+                <foreach collection="packingStatus" item="item" index="index" open="(" close=")" separator=",">
+                    #{item,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        ) as tmp_packing_table,
+        (
+            select count(*) as shipment_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="shipmentStatus != null">
+                and tw200.shipment_status in
+                <foreach collection="shipmentStatus" item="item" index="index" open="(" close=")" separator=",">
+                    #{item,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        ) as tmp_shipment_table;
+    </select>
+
+    <resultMap id="ntmTopPersonCntMap" type="HashMap">
+        <result property="todayTotalCnt" column="today_total_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="todayCnt" column="today_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="tomorrowTotalCnt" column="tomorrow_total_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="tomorrowCnt" column="tomorrow_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <!--获取个人数据-->
+    <select id="getNtmTopPersonCntByStatus" resultMap="ntmTopPersonCntMap">
+        select today_total_table.today_total_cnt, today_table.today_cnt, tomorrow_total_table.tomorrow_total_cnt, tomorrow_table.tomorrow_cnt from
+        (
+            select count(*) as today_total_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="todayStartDate!=null and todayStartDate!='' and todayEndDate!=null and todayEndDate!=''">
+                and tw200.shipping_date > #{todayStartDate} and tw200.shipping_date &lt; #{todayEndDate}
+            </if>
+        ) as today_total_table,
+        (
+            select count(*) as today_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0  and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="todayStartDate!=null and todayStartDate!='' and todayEndDate!=null and todayEndDate!=''">
+                and tw200.shipping_date > #{todayStartDate} and tw200.shipping_date &lt; #{todayEndDate}
+            </if>
+            <if test="statusList != null">
+                and tw200.shipment_status in
+                <foreach collection="statusList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        ) as today_table,
+        (
+            select count(*) as tomorrow_total_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="tomorrowStartDate!=null and tomorrowStartDate!='' and tomorrowEndDate!=null and tomorrowEndDate!=''">
+                and tw200.shipping_date > #{tomorrowStartDate} and tw200.shipping_date &lt; #{tomorrowEndDate}
+            </if>
+        ) as tomorrow_total_table,
+        (
+            select count(*) as tomorrow_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="tomorrowStartDate!=null and tomorrowStartDate!='' and tomorrowEndDate!=null and tomorrowEndDate!=''">
+                and tw200.shipping_date > #{tomorrowStartDate} and tw200.shipping_date &lt; #{tomorrowEndDate}
+            </if>
+            <if test="statusList != null">
+                and tw200.shipment_status in
+                <foreach collection="statusList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        ) as tomorrow_table;
+    </select>
+
+    <!-- 个口数变更时获取配送会社和都道府県 -->
+    <select id="getShipmentCarrier" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select ms004.delivery_nm || ms004.delivery_method_name as delivery_carrier, tw200.prefecture, tw200.shipment_plan_id, ms010.name as size_cd
+          from tw200_shipment tw200
+          left join ms004_delivery ms004 on tw200.delivery_carrier = ms004.delivery_cd
+          left join ms010_product_size ms010 on tw200.size_cd = ms010.size_cd
+        where tw200.del_flg = 0 and tw200.warehouse_cd = #{warehouse_cd}
+          and tw200.shipment_plan_id in
+        <foreach collection="shipment_plan_id" item="shipment_plan_id" index="index" open="(" close=")" separator=",">
+            #{shipment_plan_id}
+        </foreach>
+    </select>
+
+    <!-- 根据外部受注番号获取配送会社和都道府県 -->
+    <select id="getShipmentCarrierByIdentifier" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select ms004.delivery_nm || ms004.delivery_method_name as delivery_carrier, tw200.prefecture, tw200.shipment_plan_id, ms010.name as size_cd, boxes
+        from tw200_shipment tw200
+        left join ms004_delivery ms004 on tw200.delivery_carrier = ms004.delivery_cd
+        left join ms010_product_size ms010 on tw200.size_cd = ms010.size_cd
+        where tw200.del_flg = 0 and tw200.warehouse_cd = #{warehouse_cd}
+        and tw200.identifier in
+        <foreach collection="orderNo" item="orderNo" index="index" open="(" close=")" separator=",">
+            #{orderNo}
+        </foreach>
+    </select>
+
+    <!--a根据size_cd 获取 尺寸信息 -->
+    <select id="getAllSizeName" resultType="com.lemonico.common.bean.Ms010_product_size">
+        select size_cd, name, type, height, length, weight, biko, ins_usr, ins_date, upd_usr, upd_date, del_flg
+          from ms010_product_size
+         where del_flg =0
+    </select>
+
+    <!-- 获取配送价格表 -->
+    <select id="getDeliveryFare" resultType="com.lemonico.common.bean.Tw216_delivery_fare">
+        select fare_id, agent_id, method, region, actual_price, original_price
+          from tw216_delivery_fare
+         where actual_price > 0 and del_flg = 0
+    </select>
+
+    <!-- 更新出荷サイズ -->
+    <update id="updateSize" parameterType="com.lemonico.common.bean.Tw200_shipment">
+        update tw200_shipment set size_cd = #{size_cd}
+        where del_flg = 0 and warehouse_cd = #{warehouse_cd}
+        and shipment_plan_id = #{shipment_plan_id}
+    </update>
+
+    <!-- 根据店铺ID 获取特殊的出库依赖信息-->
+    <select id="getSpecificShipment" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select client_id, shipment_plan_id, warehouse_cd, shipment_status, surname, order_no, order_family_name, order_first_name,
+        shipment_plan_date, delivery_url, receipt_url, total_with_normal_tax, total_with_reduced_tax, total_price, company, order_company,
+        order_datetime
+        from tw200_shipment
+        where shipment_status in (4, 5, 7, 41, 42, 8) and del_flg = 0
+        and upd_date > (SELECT current_timestamp - interval '1 day')
+        <if test="clientIdList.size != 0">
+            and client_id in
+            <foreach collection="clientIdList" item="clientIdList" open="(" separator="," close=")">
+                #{clientIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getDeleteShipmentCount" resultType="java.lang.Integer">
+        select count(0) from tw200_shipment
+        where shipment_status='999'
+        <if test="jsonObject.warehouse_cd!=null and jsonObject.warehouse_cd!=''">
+            and warehouse_cd = #{jsonObject.warehouse_cd}
+        </if>
+        <if test="jsonObject.client_id!=null and jsonObject.client_id!=''">
+            and client_id = #{jsonObject.client_id}
+        </if>
+        <if test="jsonObject.updStartDate!=null and jsonObject.updStartDate!='' and jsonObject.updEndDate!=null and jsonObject.updEndDate!=''">
+            and upd_date between #{jsonObject.updStartDate} and #{jsonObject.updEndDate}
+        </if>
+    </select>
+
+    <!-- 批量更新出库依赖中的纳品书URL和领取书URL-->
+    <update id="updateDeliveryUrl">
+        <foreach collection="shipments" item="shipments" separator=";">
+            update tw200_shipment set delivery_url = #{shipments.delivery_url}, receipt_url = #{shipments.receipt_url}
+            where shipment_plan_id = #{shipments.shipment_plan_id} and client_id = #{shipments.client_id}
+            and warehouse_cd = #{shipments.warehouse_cd} and del_flg = 0
+        </foreach>
+    </update>
+
+    <!-- 出庫検品更新シリアル番号 -->
+    <update id="updateSerialNo">
+        update tw201_shipment_detail set serial_no = #{jsonObject.serial_no}
+        where warehouse_cd = #{jsonObject.warehouse_cd} and shipment_plan_id = #{jsonObject.shipment_plan_id} and product_id = #{jsonObject.product_id}
+        <if test="jsonObject.set_sub_id == ''">
+            and set_sub_id is null
+        </if>
+        <if test="jsonObject.set_sub_id != ''">
+            and set_sub_id = #{jsonObject.set_sub_id}
+        </if>
+    </update>
+
+    <!-- 获取之前存在的シリアル番号-->
+    <select id="getProductSerialNo" resultType="java.lang.String">
+        select serial_no from tw201_shipment_detail
+        where warehouse_cd = #{jsonObject.warehouse_cd} and shipment_plan_id = #{jsonObject.shipment_plan_id}
+        and product_id = #{jsonObject.product_id}
+        <if test="jsonObject.set_sub_id == ''">
+            and set_sub_id is null
+        </if>
+        <if test="jsonObject.set_sub_id != ''">
+            and set_sub_id = #{jsonObject.set_sub_id}
+        </if>
+    </select>
+
+    <!-- 出庫検品法人个人统计 -->
+    <select id="incidentsCount" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select form, shipment_status, count(*) as status_count
+        from tw200_shipment
+        where warehouse_cd = #{warehouse_cd} and del_flg = 0 and form is not null
+        group by shipment_status, form;
+    </select>
+
+    <select id="getCheckShipmentCondition" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select client_id, shipment_plan_id, warehouse_cd, del_flg
+        from tw200_shipment
+        where warehouse_cd = #{warehouse_cd}
+        and shipment_plan_id in
+        <foreach collection="plan_id" item="plan_id" open="(" close=")" separator=",">
+            #{plan_id}
+        </foreach>
+    </select>
+
+    <select id="getShipmentStatusById" resultType="java.lang.String">
+        select shipment_status
+        from tw200_shipment
+        where warehouse_cd = #{warehouse_cd}
+        and shipment_plan_id = #{shipment_plan_id}
+    </select>
+
+</mapper>

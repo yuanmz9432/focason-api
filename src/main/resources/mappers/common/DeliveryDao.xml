@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.common.dao.DeliveryDao">
+
+	<!-- 更改delivery_code -->
+	<update id="updateDCByDcode">
+		update ms004_delivery set delivery_code =
+		#{jsonObject.delivery_code} where
+		delivery_cd =
+		#{jsonObject.delivery_cd} and del_flg = 0
+	</update>
+
+	<!-- 運送業者マスタ -->
+	<select id="getDeliveryInfo"
+		resultType="com.lemonico.common.bean.Ms004_delivery">
+		select delivery_cd, delivery_method, delivery_nm,
+		delivery_method_name, delivery_method_csv,
+		sort_no, delivery_code from
+		ms004_delivery where del_flg = 0
+		<if test="delivery_method!=null and delivery_method!=''">
+			and delivery_method = #{delivery_method}
+		</if>
+		order by sort_no asc
+	</select>
+
+	<!-- 根据配送業者CD获取運送業者信息 -->
+	<select id="getDeliveryById"
+		resultType="com.lemonico.common.bean.Ms004_delivery">
+		select delivery_cd, delivery_method, delivery_nm,delivery_method_name,delivery_method_csv, delivery_code, default_size_cd
+		from ms004_delivery
+		where del_flg = 0 and delivery_cd = #{delivery_cd} order by sort_no asc
+	</select>
+
+	<!-- 根据配送業者名称获取運送会社时间带 -->
+	<select id="getDeliveryTime"
+		resultType="com.lemonico.common.bean.Ms006_delivery_time">
+		select delivery_time_id, kubu, delivery_nm, delivery_time_name,
+		delivery_time_csv, sort_no from ms006_delivery_time
+		where del_flg = 0
+		<if test="delivery_nm!=null and delivery_nm!=''">
+			and delivery_nm = #{delivery_nm}
+		</if>
+		<if test="delivery_time_id!=null and delivery_time_id!='' ">
+			and delivery_time_id = #{delivery_time_id}
+		</if>
+		<if test="delivery_time_name!=null and delivery_time_name!='' ">
+            and delivery_time_name = #{delivery_time_name}
+        </if>
+		<if test="kubu!=null and kubu!='' ">
+			and kubu = #{kubu}
+		</if>
+		order by sort_no asc
+	</select>
+
+	<!-- 配送業者名称数量获取 -->
+	<select id="getDeliveryType" resultType="java.lang.String">
+		select delivery_nm
+		  from ms004_delivery
+		 where del_flg = 0 group by delivery_nm
+	</select>
+
+	<!-- 获取 変換後管理ID -->
+	<select id="getConverted_id" resultType="java.lang.String">
+		select converted_id
+		  from ms007_setting
+		 where client_id = #{client_id} and kubun = #{kubun}
+		   and mapping_value = #{mapping_value} and del_flg = 0
+	</select>
+
+	<!-- a数据更新前删除该店铺所有数据再新规Ms007_setting -->
+	<delete id="delConvertedData">
+		delete from ms007_setting where client_id = #{client_id} and del_flg = 0
+	</delete>
+
+	<!-- a查询Ms007_setting表客户取入连携设定数据 -->
+	<select id="getConvertedDataAll" resultType="com.lemonico.common.bean.Ms007_setting">
+		select id, client_id, kubun, mapping_value, converted_value, converted_id
+		  from ms007_setting
+		 where del_flg = 0 and client_id = #{client_id} and converted_value is not null and converted_value != ''
+		<if test="kubun!='' and kubun!=null">
+			and kubun = #{kubun}
+		</if>
+	</select>
+
+	<!-- a新规Ms007_setting客户取入连携设定数据 -->
+	<insert id="insertConvertedData">
+		insert into ms007_setting (client_id, kubun,
+		mapping_value, converted_id, converted_value,
+		del_flg, upd_usr, ins_usr, upd_date,
+		ins_date) VALUES (#{client_id}, #{kubun},
+		#{mapping_value},
+		#{converted_id}, #{converted_value}, 0, #{upd_usr}, #{ins_usr}, #{upd_date}, #{ins_date})
+	</insert>
+
+	<!-- 获取所有的配送者信息 -->
+	<select id="getDeliveryAll"
+		resultType="com.lemonico.common.bean.Ms004_delivery">
+		select delivery_cd, delivery_nm, delivery_method_name, delivery_code from
+		Ms004_delivery
+		where del_flg = 0
+	</select>
+
+	<!-- 获取所有的配送者时间带信息 -->
+	<select id="getDeliveryTimeAll"
+		resultType="com.lemonico.common.bean.Ms006_delivery_time">
+		select
+		  delivery_time_id, delivery_nm, delivery_time_name
+		from
+		  Ms006_delivery_time
+		where
+		  del_flg = 0 and kubu = 1
+	</select>
+
+	<!-- 获取所有的支付方法信息 -->
+    <select id="getDeliveryPaymentAll"
+        resultType="com.lemonico.common.bean.Ms014_payment">
+        select
+		  kubu, payment_id, payment_name, sort_no, payment_csv
+        from
+          Ms014_payment
+		where del_flg = 0
+          <if test="kubu != '' and kubu != null">
+		  and kubu = #{kubu}
+		  </if>
+    </select>
+
+	<!-- 根据支付方法id获取名称 -->
+	<select id="getPayById" resultType="java.lang.String">
+		select payment_name
+		from Ms014_payment
+		where payment_id = #{payment_id}
+	</select>
+
+    <!-- 获取的配送者时间带信息 -->
+    <select id="getDeliveryTimeById" resultType="com.lemonico.common.bean.Ms006_delivery_time">
+        select * from Ms006_delivery_time where delivery_time_id = #{delivery_time_id} and del_flg = 0
+    </select>
+
+    <!-- 获取所有的支付方法信息 -->
+    <select id="getDeliveryPaymentName"
+        resultType="com.lemonico.common.bean.Ms014_payment">
+        select
+          payment_id, payment_name, sort_no, payment_csv
+        from
+          Ms014_payment
+        where
+          del_flg = 0 and payment_name = #{payment_name}
+    </select>
+
+    <!-- 获取所有的支付方法信息 -->
+    <select id="getDeliveryPaymentAllList"
+        resultType="com.lemonico.common.bean.Ms014_payment">
+        select
+          payment_id, payment_name, sort_no, payment_csv
+        from
+          Ms014_payment
+        where
+          del_flg = 0
+    </select>
+
+    <!-- 获取所有的配送者时间带信息 -->
+    <select id="getDeliveryTimeName"
+        resultType="com.lemonico.common.bean.Ms006_delivery_time">
+        select
+          delivery_time_id, delivery_nm, delivery_time_name
+        from
+          Ms006_delivery_time
+        where
+          delivery_time_name = #{delivery_time_name} and delivery_nm = #{delivery_nm} and del_flg = 0
+    </select>
+
+    <!-- 获取所有的配送者时间带信息 -->
+    <select id="getDeliveryTimeAllList"
+        resultType="com.lemonico.common.bean.Ms006_delivery_time">
+        select
+          delivery_time_id, delivery_nm, delivery_time_name
+        from
+          Ms006_delivery_time
+        where
+          del_flg = 0
+    </select>
+
+    <!-- a新规Ms014_payment客户取入连携设定数据 -->
+    <insert id="insertMs014Payment">
+        insert into Ms014_payment
+         (kubu,payment_name, payment_csv, sort_no,ins_usr,ins_date,del_flg)
+        VALUES
+         (#{kubu},#{payment_name},#{payment_csv}, #{sort_no}, #{ins_usr}, now(),0)
+    </insert>
+
+    <!-- a新规Ms006_delivery_time客户取入连携设定数据 -->
+    <insert id="insertMs006DeliveryTime">
+        insert into Ms006_delivery_time
+         (kubu, delivery_nm, delivery_time_name, sort_no, ins_usr, ins_date, del_flg)
+        VALUES
+         (#{kubu}, #{delivery_nm}, #{delivery_time_name}, #{sort_no}, #{ins_usr}, now(), 0)
+    </insert>
+	<!-- 获取 変換後的值 -->
+	<select id="getConvertedValue" resultType="java.lang.String">
+		select converted_value
+		from ms007_setting
+		where client_id = #{client_id}
+		and kubun = #{kubun}
+		and mapping_value = #{mapping_value}
+		and del_flg = 0
+	</select>
+
+	<select id="findDeliveryByName" resultType="com.lemonico.common.bean.Ms004_delivery">
+		select delivery_cd, delivery_method, delivery_nm, delivery_method_name
+		from ms004_delivery
+		where del_flg = 0
+		<if test="delivery_nm != null and delivery_nm != ''">
+			and delivery_nm like '%'||#{delivery_nm}||'%'
+		</if>
+		<if test="delivery_method_name != null and delivery_method_name != ''">
+			and delivery_method_name like '%'||#{delivery_method_name}||'%'
+		</if>
+		limit 1
+	</select>
+</mapper>

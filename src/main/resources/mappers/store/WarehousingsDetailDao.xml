@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.WarehousingsDetailDao">
+    <resultMap id="detailResult" type="com.lemonico.common.bean.Tc101_warehousing_plan_detail">
+        <id column="client_id" property="client_id"></id>
+        <id column="warehouse_cd" property="warehouse_cd"></id>
+        <id column="id" property="id"></id>
+        <id column="product_id" property="product_id"></id>
+        <result column="quantity" property="quantity"></result>
+        <result column="status" property="status"></result>
+        <result column="del_flg" property="del_flg"></result>
+        <result column="lot_no" property="lot_no"></result>
+        <result column="bestbefore_date" property="bestbefore_date"></result>
+        <result column="shipping_flag" property="shipping_flag"></result>
+        <collection property="mc100_productList" ofType="com.lemonico.common.bean.Mc100_product">
+            <id column="client_id" property="client_id"></id>
+            <id column="product_id" property="product_id"></id>
+            <result column="name" property="name"></result>
+            <result column="code" property="code"></result>
+            <result column="barcode" property="barcode"></result>
+            <result column="del_flg" property="del_flg"></result>
+            <collection property="mc102_product_imgList" javaType="java.util.List"  ofType="com.lemonico.common.bean.Mc102_product_img">
+                <id column="client_id" property="client_id"></id>
+                <id column="product_id" property="product_id"></id>
+                <result column="product_img" property="product_img"></result>
+                <result column="del_flg" property="del_flg"></result>
+            </collection>
+        </collection>
+        <collection property="tw111_warehousing_result_detail" ofType="com.lemonico.common.bean.Tw111_warehousing_result_detail">
+            <id column="warehouse_cd" property="warehouse_cd"></id>
+            <id column="client_id" property="client_id"></id>
+            <id column="product_id" property="product_id"></id>
+            <result column="product_plan_cnt" property="product_plan_cnt"></result>
+            <result column="product_cnt" property="product_cnt"></result>
+            <result column="del_flg" property="del_flg"></result>
+        </collection>
+    </resultMap>
+
+    <!-- 入库依赖明细作成-->
+    <!-- 入庫依頼明細作成-->
+    <insert id="insertWarehousingsDetailList">
+        insert into tc101_warehousing_plan_detail
+        (client_id, warehouse_cd, id, product_id, quantity, status, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+        values
+        (#{jsonObject.client_id},#{jsonObject.warehouse_cd},#{jsonObject.id},#{jsonObject.product_id}
+        ,#{quantity},#{jsonObject.detail_status},#{loginNm},#{date},#{loginNm},#{date}, 0)
+    </insert>
+
+    <!-- 入库依赖明细删除-->
+    <!-- 入庫依頼明細削除-->
+    <update id="deleteWarehousingsDetailList">
+        update tc101_warehousing_plan_detail
+        set del_flg = 1, upd_usr = #{loginNm}, upd_date = #{date}
+        where
+        client_id = #{client_id}
+        and
+        id = #{id}
+    </update>
+
+    <!-- 获取最大商品Id-->
+    <!-- max商品のIDを取得する-->
+    <select id="getMaxProductId" resultType="int">
+        select max(product_id) from tc101_warehousing_plan_detail
+    </select>
+
+    <!-- 获取入库依赖明细以及商品-->
+    <!-- 入庫依頼明細と商品を取得する-->
+    <select id="getProductId" resultMap="detailResult">
+        select tc101.product_id,tc101.quantity,tc101.status,mc100.name,mc100.code,mc100.barcode,mc102.product_img,
+        	tw111.product_plan_cnt,tw111.product_cnt, tc101.lot_no, tc101.bestbefore_date,tc101.shipping_flag
+        from tc101_warehousing_plan_detail tc101
+        left join  mc100_product mc100
+        on tc101.product_id = mc100.product_id and tc101.client_id = mc100.client_id
+        and mc100.del_flg = 0
+		left join mc102_product_img mc102
+		on tc101.product_id = mc102.product_id and tc101.client_id = mc102.client_id
+		and mc102.del_flg = 0
+		left join tw111_warehousing_result_detail tw111
+		on tc101.client_id = tw111.client_id and tc101.warehouse_cd = tw111.warehouse_cd
+		and tc101.product_id = tw111.product_id and tw111.del_flg = 0 and tc101.id = tw111.warehousing_plan_id
+        where  tc101.id = #{jsonObject.id} and tc101.del_flg = 0
+    </select>
+
+    <!-- 获得入庫実績明細テーブル 实际数-->
+    <select id="getWarehousingResultDetail" resultType="java.lang.Integer">
+        select product_cnt from tw111_warehousing_result_detail where warehouse_cd = #{warehouse_cd} and
+        client_id = #{client_id} and warehousing_plan_id = #{warehousing_plan_id} and product_id = #{product_id} and del_flg = 0
+    </select>
+
+    <!-- 获取该入库依赖下的所有明细信息-->
+    <select id="getWarehousingDetailList" resultType="com.lemonico.common.bean.Tc101_warehousing_plan_detail">
+        select product_id, quantity, status, del_flg, lot_no, bestbefore_date, shipping_flag from tc101_warehousing_plan_detail
+        where del_flg= 0 and client_id = #{client_id} and id = #{id}
+        <if test="warehouse_cd != null and warehouse_cd != ''">
+            and warehouse_cd = #{warehouse_cd}
+        </if>
+    </select>
+
+    <!-- 修改入库明细的入库状态-->
+    <update id="updateWarehouseDetailStatus">
+        update tc101_warehousing_plan_detail set status = #{status}, upd_usr = #{loginNm}, upd_date = #{date}
+        where warehouse_cd = #{warehouse_cd} and client_id = #{client_id} and id = #{id}
+        <if test="productIdList != null and productIdList.size != 0">
+            and product_id in
+            <foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+                #{productIdList}
+            </foreach>
+        </if>
+    </update>
+
+    <!-- 获取相应入库状态的入库件数-->
+    <select id="getWarehousingByStatus" resultType="java.lang.Integer">
+        select count(*) from tc101_warehousing_plan_detail
+        where warehouse_cd = #{warehouse_cd} and client_id = #{client_id} and id = #{id} and status = #{status} and del_flg = 0
+    </select>
+
+    <!-- 根据入库明细的入库状态删除入库明细信息-->
+    <update id="deleteWarehouseDetailByStatus">
+        update tc101_warehousing_plan_detail set del_flg = 1
+        where client_id = #{client_id} and id = #{id} and status = #{status}
+        <if test="warehouse_cd != null and warehouse_cd != ''">
+            and warehouse_cd = #{warehouse_cd}
+        </if>
+    </update>
+
+    <!-- 查询商品是否入库依赖中或者依赖过，无需验证del_flg -->
+    <select id="getWarehouseDetailByProductId" resultType="com.lemonico.common.bean.Tc101_warehousing_plan_detail">
+        select product_id, quantity, status, del_flg
+        from tc101_warehousing_plan_detail
+        where client_id = #{client_id} and del_flg = 0
+        <if test="productIdList != null and productIdList.size != 0">
+            and product_id in
+            <foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+                #{productIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 批量插入入库明细信息-->
+    <insert id="insertListDetail">
+        <foreach collection="details" item="details" separator=";">
+            insert into tc101_warehousing_plan_detail
+            (client_id, warehouse_cd, id, product_id, quantity, status, ins_usr, ins_date, upd_usr, upd_date, del_flg, lot_no,
+            bestbefore_date, shipping_flag)
+            values
+            (#{details.client_id},#{details.warehouse_cd},#{details.id},#{details.product_id},
+            #{details.quantity},#{details.status},#{details.ins_usr},#{details.ins_date},#{details.upd_usr},#{details.upd_date},
+            #{details.del_flg}, #{details.lot_no}, #{details.bestbefore_date}, #{details.shipping_flag})
+        </foreach>
+    </insert>
+
+    <!-- 批量更改入库明细信息-->
+    <update id="updateListDetail">
+        <foreach collection="details" item="details" separator=";">
+            update tc101_warehousing_plan_detail
+            set quantity =#{details.quantity}, upd_usr = #{details.upd_usr}, upd_date = #{details.upd_date},
+            lot_no = #{details.lot_no}, bestbefore_date = #{details.bestbefore_date}, shipping_flag = #{details.shipping_flag}
+            where client_id = #{details.client_id} and warehouse_cd = #{details.warehouse_cd}
+            and id = #{details.id} and product_id = #{details.product_id}
+            and del_flg = 0
+        </foreach>
+    </update>
+
+    <update id="updateWarehouseDetailLotNo">
+        update tc101_warehousing_plan_detail set lot_no = #{lot_no}, bestbefore_date = #{bestbefore_date},
+        upd_usr = #{upd_usr}, upd_date = #{upd_date}, shipping_flag = #{shipping_flag}
+        where id = #{id} and client_id = #{client_id} and warehouse_cd = #{warehouse_cd} and product_id = #{product_id}
+        and del_flg = 0
+    </update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.common.dao.ProductSettingDao">
+
+	<!-- 获取当前登录客户商品设定信息 -->
+	<!-- 現在登録している顧客商品設定情報を取得する -->
+	<select id="getProductSetting" resultType="com.lemonico.common.bean.Mc105_product_setting">
+		select client_id,set_cd,tax,accordion,price_on_delivery_note,delivery_note_type,version
+		from Mc105_product_setting
+		where client_id = #{client_id}
+		<if test="set_cd!=null and set_cd!=''">
+			and set_cd = #{set_cd}
+		</if>
+	</select>
+
+	<!-- 商品消費税設定 -->
+	<update id="updateProductTax">
+		update Mc105_product_setting set
+				accordion = #{accordion}, tax = #{tax}
+		 where client_id = #{client_id}
+	</update>
+
+	<!-- 金額印字設定 -->
+	<update id="updateProductNote">
+		update Mc105_product_setting
+		set price_on_delivery_note = #{price_on_delivery_note}, delivery_note_type =#{delivery_note_type}
+		where client_id = #{client_id}
+	</update>
+
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.batch.dao.CheckDataDao">
+
+    <!-- 在库表和货架表在库数不一致数据获取 -->
+    <select id="getTw300Mw405InconsistentInventory"
+            resultType="com.lemonico.batch.bean.Tw300Mw405InconsistentInventory">
+        select * from (select tw300.client_id,tw300.product_id,tw300.inventory_cnt, mw405_stock_cnt, tw300.warehouse_cd,
+        tw300.ins_usr, tw300.ins_date, tw300.upd_usr, tw300.upd_date
+        from tw300_stock tw300
+        left join (select client_id,product_id,sum(stock_cnt) as mw405_stock_cnt
+        from mw405_product_location where del_flg=0 group by client_id,product_id)
+        mw405 on tw300.client_id = mw405.client_id and tw300.product_id = mw405.product_id) tmp
+        where inventory_cnt != mw405_stock_cnt and client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+        order by client_id,product_id;
+    </select>
+
+    <!-- 在库表的实际在库，理论在库，依赖中，不可配送在库数对不上 -->
+    <select id="getWrongNumberInStock" resultType="com.lemonico.common.bean.Tw300_stock">
+        select client_id, product_id, inventory_cnt, available_cnt, requesting_cnt, not_delivery
+        from tw300_stock
+        where del_flg = 0 and (available_cnt+requesting_cnt+not_delivery) != inventory_cnt
+        and client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+    </select>
+
+    <!-- 实际在库，依赖中，不可配送在库数出现负数 -->
+    <select id="getInventoryTable" resultType="com.lemonico.common.bean.Tw300_stock">
+        select client_id, product_id, inventory_cnt, available_cnt, requesting_cnt, not_delivery
+        from tw300_stock
+        where del_flg = 0 and (requesting_cnt &lt; 0 or not_delivery &lt; 0 or inventory_cnt &lt; 0)
+        and client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+    </select>
+
+    <!-- 没有出荷作业开始，但是tw212状态为出荷作业中的数据-->
+    <select id="getNoWorkStarted" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select shipment_plan_id,client_id,request_date,shipment_plan_date,shipment_status from tw200_shipment
+        where shipment_plan_id in (select distinct shipment_plan_id from tw212_shipment_location_detail where status = 0 and del_flg = 0)
+        and shipment_status not in (4,41,42,5,7) and del_flg = 0
+        and client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+    </select>
+
+    <!-- 出荷作业中，货架履历表没有数据 -->
+    <select id="getNoDataInTheJob" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select shipment_plan_id,client_id,request_date,shipment_plan_date,shipment_status from tw200_shipment
+        where shipment_plan_id not in (select distinct shipment_plan_id from tw212_shipment_location_detail where status = 0 and del_flg = 0)
+        and shipment_status in (4,41,42,5,7) and del_flg = 0
+        and client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+    </select>
+
+    <!-- 出库货架详细表里面的引当数总和和相对应的货架上面的依赖数不一致 -->
+    <select id="getMw405ErrorDataList" resultType="com.lemonico.batch.bean.Mw405ErrorData">
+        select mw405.location_id,mw405.client_id,mw405.product_id,mw405.stock_cnt,mw405.requesting_cnt,tmp.reserve_cnt,mw405.not_delivery
+        from mw405_product_location mw405
+        left join (select tw212.location_id,tw212.client_id,tw212.product_id,sum(tw212.reserve_cnt) as reserve_cnt
+        from tw212_shipment_location_detail tw212
+        left join tw200_shipment tw200 on tw200.shipment_plan_id = tw212.shipment_plan_id
+        where tw212.status = 0 and tw212.del_flg = 0 and tw200.shipment_status !=8
+        group by tw212.location_id,tw212.client_id,tw212.product_id) tmp
+        on mw405.location_id = tmp.location_id and mw405.client_id = tmp.client_id and mw405.product_id = tmp.product_id
+        where mw405.del_flg = 0 and tmp.reserve_cnt != mw405.requesting_cnt
+        and mw405.client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+    </select>
+
+    <!-- 还在出库的商品被删除 -->
+    <select id="getAbnormalProducts" resultType="com.lemonico.batch.bean.AbnormalProducts">
+        select mc100.client_id,mc100.product_id, tw201.shipment_plan_id, tw200.shipment_status, mc100.del_flg as mc100_del,
+        tw201.del_flg as tw201_del
+        from mc100_product mc100
+        right join tw201_shipment_detail tw201 on tw201.client_id = mc100.client_id and tw201.product_id = mc100.product_id and tw201.del_flg = 0
+        right join tw200_shipment tw200 on tw201.shipment_plan_id = tw200.shipment_plan_id and tw200.shipment_status != 8
+        where mc100.del_flg = 1 and mc100.client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+    </select>
+
+    <!-- 出库依赖和出库依赖明细的删除状态不一致 -->
+    <select id="getTw200Tw201DifferentDelFlgs" resultType="com.lemonico.batch.bean.Tw200Tw201DifferentDelFlg">
+        select tw200.shipment_plan_id,tw200.shipment_status,tw200.del_flg, tw201.client_id,tw201.product_id,
+        tw201.product_plan_cnt,tw201.del_flg as tw201_del_flg
+        from tw201_shipment_detail tw201 left join tw200_shipment tw200
+        on tw200.shipment_plan_id = tw201.shipment_plan_id
+        where tw201.del_flg = 0 and tw200.del_flg = 1
+        and tw201.client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+    </select>
+
+    <!-- 在库表依赖中数和出库详细表统计出来的依赖数不一致 -->
+    <select id="getErrorRequestCnts" resultType="com.lemonico.batch.bean.Tw300ErrorRequestCnt">
+        select tw300.client_id,tw300.product_id,tw300.inventory_cnt,tw300.requesting_cnt,tmp.product_plan_cnt
+        from tw300_stock tw300
+        left join (select tw201.client_id, tw201.product_id,sum(tw201.product_plan_cnt) as product_plan_cnt
+        from tw201_shipment_detail tw201
+        left join tw200_shipment tw200 on tw201.shipment_plan_id = tw200.shipment_plan_id and tw201.del_flg = tw200.del_flg
+        where tw201.del_flg = 0 and tw200.shipment_status not in (8,999)
+        group by tw201.client_id, tw201.product_id) tmp on tw300.client_id = tmp.client_id and tw300.product_id = tmp.product_id
+        where tw300.del_flg = 0 and (tw300.requesting_cnt != tmp.product_plan_cnt or (tw300.requesting_cnt>0 and tmp.product_plan_cnt is null))
+        and tw300.client_id not in ('SD003', 'SU019', 'RD002', 'SM001', 'RS006')
+        order by tw300.client_id,tw300.product_id;
+    </select>
+
+    <!-- 获取前一天的在库履历数据 -->
+    <select id="getStockHistories" resultType="com.lemonico.common.bean.Tw301_stock_history">
+        select history_id, plan_id, client_id, type, quantity, before_num, after_num, ins_user, ins_date, product_id
+        from tw301_stock_history where del_flg = 0 and ins_date > (SELECT current_timestamp - interval '1 day')
+    </select>
+</mapper>

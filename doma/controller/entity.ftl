@@ -13,20 +13,21 @@ package ${packageName};
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
-import api.lemonico.core.annotation.LcConditionParam;
-import api.lemonico.core.annotation.LcPaginationParam;
-import api.lemonico.core.annotation.LcSortParam;
-import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcPagination;
-import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.attribute.LcSort;
-import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.entity.${simpleName}Entity;
-import api.lemonico.repository.${simpleName}Repository;
-import api.lemonico.resource.${simpleName}Resource;
-import api.lemonico.service.${simpleName}Service;
+import java.net.URI;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
+import annotation.core.com.lemonico.PlConditionParam;
+import annotation.core.com.lemonico.PlPaginationParam;
+import annotation.core.com.lemonico.PlSortParam;
+import attribute.core.com.lemonico.ID;
+import attribute.core.com.lemonico.PlPagination;
+import attribute.core.com.lemonico.PlResultSet;
+import attribute.core.com.lemonico.PlSort;
+import exception.core.com.lemonico.PlResourceNotFoundException;
+import entity.com.lemonico.Mg003StoreEntity;
+import repository.temporary.com.lemonico.Mg003StoreRepository;
+import resource.temporary.com.lemonico.Mg003StoreResource;
+import service.temporary.com.lemonico.Mg003StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -70,14 +71,14 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      * @return ${comment}リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
-        @LcConditionParam ${simpleName}Repository.Condition condition,
-        @LcPaginationParam LcPagination pagination,
-        @LcSortParam(allowedValues = {}) LcSort lcSort) {
+    public ResponseEntity<PlResultSet<${simpleName}Resource>> get${simpleName}List(
+        @PlConditionParam ${simpleName}Repository.Condition condition,
+        @PlPaginationParam PlPagination pagination,
+        @PlSortParam(allowedValues = {}) PlSort lcSort) {
         if (condition == null) {
             condition = ${simpleName}Repository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(lcSort);
+        ${simpleName}Repository.Sort sort = ${simpleName}Repository.Sort.fromPlSort(lcSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
@@ -92,7 +93,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
         @PathVariable("id") ID<${simpleName}Entity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(${simpleName}Resource.class, id));
+            .orElseThrow(() -> new PlResourceNotFoundException(${simpleName}Resource.class, id));
     }
 
     /**
@@ -108,8 +109,8 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     public ResponseEntity<Void> create${simpleName}(
         @Valid @RequestBody ${simpleName}Resource resource,
         UriComponentsBuilder uriBuilder) {
-        var id = service.createResource(resource).getId();
-        var uri = relativeTo(uriBuilder)
+        ID<${simpleName}Entity> id = service.createResource(resource).getId();
+        URI uri = relativeTo(uriBuilder)
             .withMethodCall(on(getClass()).get${simpleName}(id))
             .build()
             .encode()
@@ -131,7 +132,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
     public ResponseEntity<${simpleName}Resource> update${simpleName}(
         @PathVariable("id") ID<${simpleName}Entity> id,
         @Valid @RequestBody ${simpleName}Resource resource) {
-        var updatedResource = service.updateResource(id, resource);
+        ${simpleName}Resource updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }
 

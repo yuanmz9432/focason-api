@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.ntm.dao.DeliveryFareDao">
+
+    <!--清空配送運賃表-->
+    <update id="truncateDeliveryFare">
+        truncate table tw216_delivery_fare;
+    </update>
+
+    <!--一括挿入配送運賃-->
+    <insert id="insertDeliveryFareBatch">
+        insert into tw216_delivery_fare (agent_id, method, region, actual_price, original_price, ins_date, del_flg)
+        values
+        <foreach collection="deliveryFareList" item="bean" separator=",">
+            (#{bean.agent_id}, #{bean.method}, #{bean.region}, #{bean.actual_price}, #{bean.original_price}, #{bean.ins_date}, #{bean.del_flg})
+        </foreach>
+    </insert>
+</mapper>

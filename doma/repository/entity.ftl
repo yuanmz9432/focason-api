@@ -9,22 +9,23 @@
 package ${packageName};
 </#if>
 
-import static java.util.stream.Collectors.toList;
+import attribute.core.com.lemonico.ID;
+import attribute.core.com.lemonico.PlPagination;
+import attribute.core.com.lemonico.PlResultSet;
+import attribute.core.com.lemonico.PlSort;
+import exception.core.com.lemonico.PlEntityNotFoundException;
+import entity.com.lemonico.Mg003StoreEntity;
+import dao.temporary.com.lemonico.Mg003StoreDao;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcPagination;
-import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.attribute.LcSort;
-import api.lemonico.core.exception.LcEntityNotFoundException;
-import api.lemonico.dao.${simpleName}Dao;
-import api.lemonico.entity.${simpleName}Entity;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * ${comment}リポジトリ
@@ -48,10 +49,10 @@ public class ${simpleName}${entitySuffix}
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<${simpleName}Entity> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public PlResultSet<${simpleName}Entity> findAll(Condition condition, PlPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
-        return new LcResultSet<>(entities, options.getCount());
+        return new PlResultSet<>(entities, options.getCount());
     }
 
     /**
@@ -90,7 +91,7 @@ public class ${simpleName}${entitySuffix}
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, entity.getId());
+            throw new PlEntityNotFoundException(${simpleName}Entity.class, entity.getId());
         }
     }
 
@@ -102,7 +103,7 @@ public class ${simpleName}${entitySuffix}
     public void deleteById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
+            throw new PlEntityNotFoundException(${simpleName}Entity.class, id);
         }
     }
 
@@ -114,7 +115,7 @@ public class ${simpleName}${entitySuffix}
     public void deleteLogicById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
+            throw new PlEntityNotFoundException(${simpleName}Entity.class, id);
         }
     }
 
@@ -161,7 +162,7 @@ public class ${simpleName}${entitySuffix}
         /**
          * デフォルトの検索条件
          */
-        public static final Sort DEFAULT = new Sort(SortColumn.ID, LcSort.Direction.ASC);
+        public static final Sort DEFAULT = new Sort(SortColumn.ID, PlSort.Direction.ASC);
 
         /**
          * ソート列
@@ -171,7 +172,7 @@ public class ${simpleName}${entitySuffix}
         /**
          * ソート順序
          */
-        LcSort.Direction direction;
+        PlSort.Direction direction;
 
         /**
          * このソートパラメータをSQLステートメント形式に変換して返します。
@@ -183,12 +184,12 @@ public class ${simpleName}${entitySuffix}
         }
 
         /**
-         * {@link LcSort} から新規ソートパラメータを生成します。
+         * {@link PlSort} から新規ソートパラメータを生成します。
          *
-         * @param sort {@link LcSort}
+         * @param sort {@link PlSort}
          * @return ソートパラメータ
          */
-        public static Sort fromLcSort(LcSort sort) {
+        public static Sort fromPlSort(PlSort sort) {
             return new Sort(SortColumn.fromPropertyName(sort.getProperty()), sort.getDirection());
         }
     }

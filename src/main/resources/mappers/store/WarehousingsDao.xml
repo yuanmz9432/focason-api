@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.WarehousingsDao">
+    <resultMap id="warehosingsResult" type="com.lemonico.common.bean.Tc100_warehousing_plan">
+        <id column="client_id" property="client_id"></id>
+        <id column="warehouse_cd" property="warehouse_cd"></id>
+        <id column="id" property="id"></id>
+        <id column="inspection_type" property="inspection_type"></id>
+        <result column="request_date" property="request_date"></result>
+        <result column="arrival_date" property="arrival_date"></result>
+        <result column="status" property="status"></result>
+        <result column="identifier" property="identifier"></result>
+        <result column="product_kind_plan_cnt" property="product_kind_plan_cnt"></result>
+        <result column="tc100Quantity" property="quantity"></result>
+        <result column="shipment_return" property="shipment_return"></result>
+        <result column="tracking_codes_1" property="tracking_codes_1"></result>
+        <result column="tracking_codes_2" property="tracking_codes_2"></result>
+        <result column="tracking_codes_3" property="tracking_codes_3"></result>
+        <result column="tracking_codes_4" property="tracking_codes_4"></result>
+        <result column="tracking_codes_5" property="tracking_codes_5"></result>
+        <result column="client_nm" property="client_nm"></result>
+        <result column="ins_usr" property="ins_usr"></result>
+        <result column="ins_date" property="ins_date"></result>
+        <result column="upd_usr" property="upd_usr"></result>
+        <result column="upd_date" property="upd_date"></result>
+        <result column="del_flg" property="del_flg"></result>
+        <result column="warehousing_date" property="warehousing_date"></result>
+        <collection property="tc101_warehousing_plan_details" javaType="java.util.List"
+                    ofType="com.lemonico.common.bean.Tc101_warehousing_plan_detail">
+            <id column="warehouse_cd" property="warehouse_cd"></id>
+            <id column="client_id" property="client_id"></id>
+            <id column="id" property="id"></id>
+            <id column="product_id" property="product_id"></id>
+            <result column="quantity" property="quantity"></result>
+            <result column="status" property="status"></result>
+            <result column="ins_usr" property="ins_usr"></result>
+            <result column="ins_date" property="ins_date"></result>
+            <result column="upd_usr" property="upd_usr"></result>
+            <result column="upd_date" property="upd_date"></result>
+            <result column="del_flg" property="del_flg"></result>
+            <result column="bestbefore_date" property="bestbefore_date"></result>
+            <result column="lot_no" property="lot_no"></result>
+            <result column="shipping_flag" property="shipping_flag"></result>
+            <collection property="mc100_productList" ofType="com.lemonico.common.bean.Mc100_product">
+                <id column="client_id" property="client_id"></id>
+                <id column="product_id" property="product_id"></id>
+                <result column="name" property="name"></result>
+                <result column="code" property="code"></result>
+                <result column="barcode" property="barcode"></result>
+                <result column="size_cd" property="size_cd"></result>
+                <result column="weight" property="weight"></result>
+                <collection property="mc102_product_imgList" javaType="java.util.List" ofType="com.lemonico.common.bean.Mc102_product_img">
+                    <id column="client_id" property="client_id" />
+                    <id column="product_id" property="product_id" />
+                    <id column="img_sub_id" property="img_sub_id" />
+                    <result column="product_img" property="product_img" />
+                </collection>
+            </collection>
+            <collection property="tw111_warehousing_result_detail" ofType="com.lemonico.common.bean.Tw111_warehousing_result_detail">
+                <id column="warehouse_cd" property="warehouse_cd"></id>
+                <id column="client_id" property="client_id"></id>
+                <id column="product_id" property="product_id"></id>
+                <result column="product_plan_cnt" property="product_plan_cnt"></result>
+                <result column="product_cnt" property="product_cnt"></result>
+                <result column="del_flg" property="del_flg"></result>
+            </collection>
+        </collection>
+        <collection property="tw110_warehousing_results"
+                    ofType="com.lemonico.common.bean.Tw110_warehousing_result">
+            <id column="warehouse_cd" property="warehouse_cd"></id>
+            <id column="client_id" property="client_id"></id>
+            <result column="warehousing_plan_id" property="warehousing_plan_id"></result>
+            <result column="product_plan_total" property="product_plan_total"></result>
+            <result column="product_total" property="product_total"></result>
+            <result column="product_kind_plan_cnt" property="product_kind_plan_cnt"></result>
+            <result column="warehousing_date" property="warehousing_date"></result>
+        </collection>
+    </resultMap>
+
+    <!--    入库依赖一览-->
+    <!--   入庫依頼一覧-->
+    <select id="getWarehousingsList" resultMap="warehosingsResult">
+        select
+        wp.client_id,wp.warehouse_cd,wp.id,wp.request_date,wp.warehousing_date,wp.arrival_date,wp.status,wp.inspection_type,
+        wp.identifier,wp.product_kind_plan_cnt,wp.quantity as tc100Quantity,wp.shipment_return,wp.tracking_codes_1,wp.tracking_codes_2,
+        wp.tracking_codes_3,wp.tracking_codes_4,wp.tracking_codes_5,wp.ins_usr,wp.ins_date,wp.upd_usr,wp.upd_date,
+        wpd.warehouse_cd,wpd.client_id,wpd.id,wpd.product_id,wpd.quantity,wpd.ins_usr,wpd.ins_date,wpd.upd_usr,
+        wpd.upd_date,twr.product_plan_total,twr.product_total,twr.product_kind_plan_cnt,twr.warehousing_date,mp.name,
+        mp.code, ms201.client_nm,tw111.product_cnt, wpd.bestbefore_date, wpd.lot_no, wpd.shipping_flag
+        from tc100_warehousing_plan wp
+        left join tc101_warehousing_plan_detail wpd on wp.client_id = wpd.client_id and wp.warehouse_cd = wpd.warehouse_cd and wp.id = wpd.id and wpd.del_flg = 0
+        left join tw110_warehousing_result twr on wp.client_id = twr.client_id and wp.id = twr.warehousing_plan_id and wp.warehouse_cd = twr.warehouse_cd and twr.del_flg = 0
+        left join tw111_warehousing_result_detail tw111 on wp.client_id = tw111.client_id and wp.warehouse_cd = tw111.warehouse_cd
+        and wpd.product_id = tw111.product_id and tw111.del_flg = 0 and wpd.id = tw111.warehousing_plan_id
+        left join mc100_product mp on wp.client_id = mp.client_id and wpd.product_id = mp.product_id and mp.del_flg = 0
+        left join ms201_client ms201 on wp.client_id = ms201.client_id
+        where wp.del_flg = 0
+        <if test="jsonObject.warehouse_cd != '' and jsonObject.warehouse_cd != null">
+            and wp.warehouse_cd = #{jsonObject.warehouse_cd}
+        </if>
+        <if test="jsonObject.client_id != 'all' ">
+            and wp.client_id = #{jsonObject.client_id}
+        </if>
+        <if test="jsonObject.id != null and jsonObject.id != ''">
+            and wp.id = #{jsonObject.id}
+        </if>
+
+        <if test="status == 0 ">
+            and wp.status in (1,2,3)
+        </if>
+
+        <if test="status!=null and status!='' and status != 0">
+            and wp.status = #{status}
+        </if>
+
+        <if test="status == 4 and startTime == null and endTime == null ">
+            <!--  and wp.request_date > (SELECT current_timestamp - interval '1 month')-->
+            and wp.status = 4
+        </if>
+
+        <if test="search != null and search != '' ">
+            and (wp.id like #{search} or mp.name ~* replace(#{search},'%','') or wp.inspection_type like #{search} or mp.code ~* replace(#{search},'%','') or mp.barcode like #{search})
+        </if>
+
+        <if test="startTime != null and endTime == null ">
+            <!--and (wp.request_date = #{startTime} or wp.arrival_date = #{startTime})-->
+            and wp.request_date >= #{startTime}
+        </if>
+
+        <if test="endTime != null and startTime == null ">
+            <!--and (wp.request_date = #{endTime} or wp.arrival_date = #{endTime})-->
+            and wp.request_date &lt;= #{endTime}
+        </if>
+
+        <if test="startTime != null and endTime != null ">
+            <!--and (wp.request_date between #{startTime} and #{endTime}
+            or wp.arrival_date between #{startTime} and #{endTime})-->
+            and wp.request_date between #{startTime} and #{endTime}
+        </if>
+
+        <if test="tags_id != null and tags_id != '' ">
+            and (wp.id in (
+            select id from tc101_warehousing_plan_detail where product_id in
+            (select product_id from mc100_product where product_id in (
+            select product_id from mc104_tag where tags_id = #{tags_id} and client_id=#{jsonObject.client_id} ) and
+            del_flg=0)
+            ))
+        </if>
+        order by wp.request_date desc
+    </select>
+
+    <select id="getWarehousingCsvsList" resultMap="warehosingsResult">
+        select
+        wp.client_id,wp.warehouse_cd,wp.id,wp.request_date,wp.warehousing_date,wp.arrival_date,wp.status,wp.inspection_type,
+        wp.identifier,wp.product_kind_plan_cnt,wp.quantity as tc100Quantity,wp.shipment_return,wp.tracking_codes_1,wp.tracking_codes_2,
+        wp.tracking_codes_3,wp.tracking_codes_4,wp.tracking_codes_5,wp.ins_usr,wp.ins_date,wp.upd_usr,wp.upd_date,
+        wpd.warehouse_cd,wpd.client_id,wpd.id,wpd.product_id,wpd.quantity,wpd.ins_usr,wpd.ins_date,wpd.upd_usr,
+        wpd.upd_date,twr.product_plan_total,twr.product_total,twr.product_kind_plan_cnt,twr.warehousing_date,mp.name,
+        ms201.client_nm
+        from tc100_warehousing_plan wp
+        left join tc101_warehousing_plan_detail wpd on wp.client_id = wpd.client_id and wp.warehouse_cd = wpd.warehouse_cd and wp.id = wpd.id and wpd.del_flg = 0
+        left join tw110_warehousing_result twr on wp.client_id = twr.client_id and wp.id = twr.warehousing_plan_id and wp.warehouse_cd = twr.warehouse_cd and twr.del_flg = 0
+        left join mc100_product mp on wp.client_id = mp.client_id and wpd.product_id = mp.product_id and mp.del_flg = 0
+        left join ms201_client ms201 on wp.client_id = ms201.client_id
+        where wp.del_flg = 0
+        <if test="jsonObject.warehouse_cd != '' and jsonObject.warehouse_cd != null">
+            and wp.warehouse_cd = #{jsonObject.warehouse_cd}
+        </if>
+        <if test="jsonObject.client_id != 'all' ">
+            and wp.client_id = #{jsonObject.client_id}
+        </if>
+        <if test="jsonObject.id != null and jsonObject.id != ''">
+            and wp.id = #{jsonObject.id}
+        </if>
+
+        <if test="status == 0 ">
+            and wp.status in (1,2,3)
+        </if>
+
+        <if test="status!=null and status!='' and status != 0">
+            and wp.status = #{status}
+        </if>
+
+        <if test="status == 4 and startTime == null and endTime == null ">
+            <!--  and wp.request_date > (SELECT current_timestamp - interval '1 month')-->
+            and wp.status = 4
+        </if>
+
+        <if test="search != null and search != '' ">
+            and (wp.id like #{search} or mp.name ~* replace(#{search},'%','') or wp.inspection_type like #{search} or mp.code ~* replace(#{search},'%','') or mp.barcode like #{search})
+        </if>
+
+        <if test="startTime != null and endTime == null ">
+            <!--and (wp.request_date = #{startTime} or wp.arrival_date = #{startTime})-->
+            and wp.request_date >= #{startTime}
+        </if>
+
+        <if test="endTime != null and startTime == null ">
+            <!--and (wp.request_date = #{endTime} or wp.arrival_date = #{endTime})-->
+            and wp.request_date &lt;= #{endTime}
+        </if>
+
+        <if test="startTime != null and endTime != null ">
+            <!--and (wp.request_date between #{startTime} and #{endTime}
+            or wp.arrival_date between #{startTime} and #{endTime})-->
+            and wp.request_date between #{startTime} and #{endTime}
+        </if>
+
+        <if test="tags_id != null and tags_id != '' ">
+            and (wp.id in (
+            select id from tc101_warehousing_plan_detail where product_id in
+            (select product_id from mc100_product where product_id in (
+            select product_id from mc104_tag where tags_id = #{tags_id} and client_id=#{jsonObject.client_id} ) and
+            del_flg=0)
+            ))
+        </if>
+        <if test="column == null || sortType == null">
+            order by wp.id desc
+        </if>
+        <if test="column != null and column != '' and sortType != null and sortType !='' ">
+            ORDER BY #{column} ${sortType}
+        </if>
+    </select>
+    <!--    入库依赖作成-->
+    <!--    入庫依赖作成-->
+    <insert id="insertWarehousingsList" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into tc100_warehousing_plan
+        values
+        (#{jsonObject.client_id},#{jsonObject.warehouse_cd},#{jsonObject.id},#{request_date},#{arrival_date},
+        #{status},#{jsonObject.inspection_type},#{jsonObject.identifier},#{jsonObject.product_kind_plan_cnt},
+        #{jsonObject.quantity}
+        , 0,#{jsonObject.tracking_codes_1},#{jsonObject.tracking_codes_2},#{jsonObject.tracking_codes_3}
+        ,#{jsonObject.tracking_codes_4},#{jsonObject.tracking_codes_5}
+        ,#{loginNm},#{date},#{loginNm},#{date}, 0)
+    </insert>
+
+    <!--    入库依赖删除-->
+    <!--    入庫依頼削除-->
+    <update id="deleteWarehousingsList">
+       update tc100_warehousing_plan set
+       del_flg = 1, upd_usr = #{loginNm}, upd_date = #{date} where client_id = #{client_id}
+       and id = #{id}
+    </update>
+
+    <!--    入库依赖更新-->
+    <!--    入庫依赖更新-->
+    <update id="updateWarehousings">
+        update tc100_warehousing_plan set
+        arrival_date = #{arrival_date},
+        identifier = #{jsonObject.identifier},
+        inspection_type = #{jsonObject.inspection_type},
+        quantity = #{quantity},
+        tracking_codes_1 = #{jsonObject.tracking_codes_1},
+        tracking_codes_2 = #{jsonObject.tracking_codes_2},
+        tracking_codes_3 = #{jsonObject.tracking_codes_3},
+        tracking_codes_4 = #{jsonObject.tracking_codes_4},
+        tracking_codes_5 = #{jsonObject.tracking_codes_5},
+        upd_usr = #{loginNm}, upd_date = #{date}
+        where client_id = #{jsonObject.client_id} and id = #{jsonObject.id}
+          and warehouse_cd = #{jsonObject.warehouse_cd} and del_flg = 0
+    </update>
+
+    <!--    查询入库依赖管理信息-->
+    <!--   入庫依頼管理情報を調べる-->
+    <select id="getInfoById" resultMap="warehosingsResult">
+        select request_date,arrival_date,inspection_type,id,identifier,
+        warehouse_cd,status,tracking_codes_1,tracking_codes_2,tracking_codes_3,tracking_codes_4
+        ,tracking_codes_5,product_kind_plan_cnt,quantity as tc100Quantity,warehousing_date
+        from tc100_warehousing_plan
+        where client_id = #{jsonObject.client_id} and id = #{jsonObject.id}
+    </select>
+
+    <!--    查询 入庫実績テーブル 信息-->
+    <!--    入庫実績テーブル情報を調べる-->
+    <select id="getProductInfoById" resultType="com.lemonico.common.bean.Tw110_warehousing_result">
+        select product_kind_plan_cnt,product_plan_total,product_kind_cnt,product_total,warehousing_date
+        from tw110_warehousing_result
+        where client_id = #{jsonObject.client_id} and warehousing_plan_id = #{jsonObject.id}
+    </select>
+
+    <!--    查询max入库依赖ID-->
+    <!--   max入庫依頼IDを調べる-->
+    <select id="getLastId" resultType="String">
+        select id
+        from tc100_warehousing_plan
+        order by id desc limit 1
+    </select>
+
+    <!--    根据入库依赖Id查询商品-->
+    <!--    入庫依頼IDによって商品を調べる-->
+    <select id="getWarehouseInfoById" resultMap="warehosingsResult">
+        select tc100.client_id,tc100.inspection_type,tc100.warehouse_cd,tc100.request_date,tc100.client_id,tc100.arrival_date,tc100.upd_date
+        ,tc100.warehousing_date, mc100.product_id,mc100.name,mc100.code,mc100.barcode,tc101.quantity,mc100.size_cd,mc100.weight,mc102.img_sub_id, mc102.product_img, tc101.status, tc101.lot_no, tc101.bestbefore_date, tc101.shipping_flag
+        from tc100_warehousing_plan tc100
+        left join tc101_warehousing_plan_detail tc101 on tc101.client_id = tc100.client_id and tc100.id = tc101.id and tc101.del_flg = 0
+		left join mc100_product mc100 on mc100.product_id = tc101.product_id and mc100.del_flg = 0 and mc100.client_id = tc101.client_id
+		left join mc102_product_img mc102 on tc101.product_id = mc102.product_id and tc100.client_id = mc102.client_id
+        where tc100.client_id = #{client_id} and tc100.id = #{id} and tc100.del_flg = 0
+        <if test="warehouse_cd != '' and warehouse_cd != null">
+            and tc100.warehouse_cd = #{warehouse_cd}
+        </if>
+        order by mc100.product_id desc
+    </select>
+
+    <!-- 查询状态下数据是否存在 -->
+    <select id="selectStatusCount" resultType="java.lang.Integer">
+        select count(*) from tc100_warehousing_plan where client_id = #{client_id} and id = #{id} and status = #{status} and del_flg = 0
+    </select>
+
+    <!--    修改检品状态-->
+    <update id="updateStatusById">
+        update tc100_warehousing_plan
+           set status = #{jsonObject.status}, warehousing_date = #{jsonObject.warehousing_date}
+         where client_id = #{jsonObject.client_id} and id = #{jsonObject.id} and del_flg = 0
+    </update>
+    
+     <!--    修改入库处理结束日 -->
+    <update id="updateWarehousingDate">
+        update tw110_warehousing_result set warehousing_date = #{date} where
+        client_id = #{jsonObject.client_id} and warehousing_plan_id = #{jsonObject.id}
+        and warehouse_cd = #{jsonObject.warehouse_cd}
+    </update>
+
+    <!-- a获取商品入库依赖明细 -->
+    <select id="getWarehousingDetail" resultType="com.lemonico.common.bean.Tc101_warehousing_plan_detail">
+		select client_id,warehouse_cd,id,product_id,quantity
+		from tc101_warehousing_plan_detail
+		where client_id = #{client_id} and del_flg = 0
+        <if test="product_id!='' and product_id!=null">
+            and product_id = #{product_id}
+        </if>
+	</select>
+
+    <!-- 修改入库的状态-->
+    <update id="updateStatus">
+        update tc100_warehousing_plan
+        set status = #{status}, warehousing_date = #{warehousing_date}, upd_usr = #{loginNm}, upd_date = #{date}
+        where client_id = #{client_id} and id = #{id} and del_flg = 0 and warehouse_cd = #{warehouse_cd}
+    </update>
+
+    <!-- 修改入库商品数量信息-->
+    <update id="updateWarehouseInfo">
+        update tc100_warehousing_plan
+        set product_kind_plan_cnt = #{product_kind_plan_cnt}, quantity = #{quantity}, status = #{status},
+        upd_usr = #{loginNm}, upd_date = #{date}
+        where client_id = #{client_id} and id = #{id} and del_flg = 0
+        <if test="warehouse_cd != null and warehouse_cd != ''">
+            and warehouse_cd = #{warehouse_cd}
+        </if>
+    </update>
+</mapper>

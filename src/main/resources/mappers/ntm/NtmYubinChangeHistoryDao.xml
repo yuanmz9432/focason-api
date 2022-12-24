@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.ntm.dao.NtmYubinChangeHistoryDao">
+
+    <select id="getAllYubinChangeHistory" resultType="com.lemonico.common.bean.Mc109_ntm_yubin_change_history">
+        select before, after
+        from mc109_ntm_yubin_change_history mc109
+    </select>
+
+</mapper>

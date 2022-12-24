@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.wms.dao.StocksResultDao">
+    <resultMap type="com.lemonico.common.bean.Mw404_location" id="locationResult">
+        <id column="location_id" property="location_id"/>
+        <id column="warehouse_cd" property="warehouse_cd"/>
+        <result column="wh_location_cd" property="wh_location_cd"/>
+        <result column="wh_location_nm" property="wh_location_nm"/>
+        <result column="priority" property="priority"/>
+        <result column="lot_no" property="lot_no"/>
+        <result column="info" property="info"/>
+        <result column="parent_location" property="parent_location"/>
+        <collection property="mw405_product_location"
+                    javaType="com.lemonico.common.bean.Mw405_product_location">
+            <id column="location_id" property="location_id"/>
+            <id column="client_id" property="client_id"/>
+            <id column="product_id" property="product_id"/>
+            <result column="stock_cnt" property="stock_cnt"/>
+            <result column="not_delivery" property="not_delivery"/>
+            <result column="requesting_cnt" property="requesting_cnt"/>
+            <result column="lot_no" property="lot_no"/>
+            <collection property="mc100_product" javaType="com.lemonico.common.bean.Mc100_product">
+                <id column="name" property="name"/>
+                <id column="product_id" property="product_id"/>
+                <result column="code" property="code"/>
+                <result column="barcode" property="barcode"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <resultMap type="com.lemonico.common.bean.Mw405_product_location" id="locationDetailMap">
+        <id column="location_id" property="location_id"/>
+        <id column="client_id" property="client_id"/>
+        <id column="product_id" property="product_id"/>
+        <result column="stock_cnt" property="stock_cnt"/>
+        <result column="not_delivery" property="not_delivery"/>
+        <result column="requesting_cnt" property="requesting_cnt"/>
+        <result column="bestbefore_date" property="bestbefore_date" />
+        <result column="status" property="status" />
+        <collection property="mc100_product" javaType="com.lemonico.common.bean.Mc100_product">
+            <id column="name" property="name"/>
+            <id column="product_id" property="product_id"/>
+            <result column="code" property="code"/>
+            <result column="barcode" property="barcode"/>
+            <result column="kubun" property="kubun" />
+        </collection>
+        <collection property="mw404_location" javaType="com.lemonico.common.bean.Mw404_location">
+            <id column="location_id" property="location_id"/>
+            <id column="warehouse_cd" property="warehouse_cd"/>
+            <result column="wh_location_cd" property="wh_location_cd"/>
+            <result column="wh_location_nm" property="wh_location_nm"/>
+            <result column="priority" property="priority"/>
+            <result column="lot_no" property="lot_no"/>
+            <result column="info" property="info"/>
+            <result column="parent_location" property="parent_location"/>
+        </collection>
+    </resultMap>
+    <resultMap type="com.lemonico.common.bean.Tw300_stock" id="stockMap">
+        <id property="stock_id" column="stock_id" />
+        <result column="warehouse_cd" property="warehouse_cd" />
+        <result column="client_id" property="client_id" />
+        <result column="product_id" property="product_id" />
+        <result column="available_cnt" property="available_cnt" />
+        <result column="requesting_cnt" property="requesting_cnt" />
+        <result column="inventory_cnt" property="inventory_cnt"/>
+        <result column="not_delivery" property="not_delivery" />
+        <result column="del_flg" property="del_flg" />
+        <collection property="mc100_product" javaType="com.lemonico.common.bean.Mc100_product">
+            <id column="name" property="name"/>
+            <id column="product_id" property="product_id"/>
+            <result column="code" property="code"/>
+            <result column="barcode" property="barcode"/>
+            <result column="kubun" property="kubun" />
+        </collection>
+    </resultMap>
+    <!-- a获取货架location信息 -->
+    <select id="getLocationList" resultType="com.lemonico.common.bean.Mw404_location">
+		select location_id, warehouse_cd, wh_location_cd, wh_location_nm, info, priority, lot_no
+		from mw404_location
+		where warehouse_cd = #{warehouse_cd} order by priority
+	</select>
+
+    <!-- a货架info设定 -->
+    <update id="setLocationInfo">
+		update mw404_location set info = #{info} where warehouse_cd = #{warehouse_cd} and location_id = #{location_id}
+	</update>
+
+    <!-- a获取单个货架中的商品信息 -->
+    <select id="getLocationProduct" resultMap="locationDetailMap">
+        select
+        mw405.client_id, mw405.product_id, mw405.stock_cnt, mw405.requesting_cnt, mw405.not_delivery, mw405.bestbefore_date,
+        mw405.status, mw404.wh_location_nm, mw404.lot_no, mw404.info, mw404.priority, mc100.product_id, mc100.code,
+        mc100.barcode, mc100.name, mc100.kubun
+        from mw405_product_location mw405
+        left join mw404_location mw404 on mw404.location_id = mw405.location_id and mw404.del_flg = 0
+        left join mc100_product mc100 on mw405.product_id = mc100.product_id and mw405.client_id = mc100.client_id and mc100.del_flg = 0
+        where mw405.location_id = mw404.location_id and mw404.warehouse_cd = #{warehouse_cd}
+        and mw404.warehouse_cd = mc100.warehouse_cd
+        and mw405.del_flg = 0
+        <if test="location_id != null and location_id != ''">
+            and mw404.location_id = #{location_id}
+        </if>
+        <if test="client_id != null and client_id != '' and client_id != 'all'">
+            and mw405.client_id = #{client_id}
+        </if>
+        and mw405.product_id = mc100.product_id and mw405.client_id = mc100.client_id
+        <if test="product_id != null and product_id != ''">
+            and mw405.product_id = #{product_id}
+        </if>
+        <if test="sortType == null || column == null">
+            order by mw405.product_id asc
+        </if>
+        <if test="column != null and column != '' and sortType != null and sortType != '' ">
+            order by ${column} ${sortType}
+        </if>
+    </select>
+
+    <select id="getLocationInfo" resultMap="locationDetailMap">
+		select mw405.location_id, mw405.client_id, mw405.product_id, mw405.stock_cnt, mw405.status,
+		       mw405.bestbefore_date, mw405.requesting_cnt, mw405.not_delivery, mw404.wh_location_nm,
+		       mw404.priority, mw404.lot_no
+		  from mw405_product_location mw405, mw404_location mw404
+		 where mw405.location_id = mw404.location_id and mw405.client_id = #{client_id} and mw405.product_id = #{product_id}
+		   and mw405.del_flg = 0
+		 order by priority asc
+	</select>
+
+    <!-- a盘点开始时新规登录盘点表 -->
+    <insert id="createProductCheck">
+		insert into tw302_stock_management
+		(manage_id,warehouse_cd,client_id,product_cnt,state,check_date,user_id,start_date,end_date,update_date)
+		values
+		(#{manage_id},#{warehouse_cd},#{client_id},#{product_cnt},#{state},#{check_date},#{user_id},#{start_date},#{end_date},#{update_date})
+	</insert>
+
+    <!-- a盘点开始时新规登录盘点明细表 -->
+    <insert id="createProductCheckDetail">
+		insert into tw303_stock_detail
+		(manage_id,product_id,stock_count,count,update_date,user_id)
+		values
+		(#{manage_id},#{product_id},#{stock_count},#{count},#{update_date},#{user_id})
+	</insert>
+
+    <!-- a获取最大的manage_id -->
+    <select id="getMaxMid" resultType="int">
+		select max(manage_id) from tw302_stock_management
+	</select>
+
+    <!-- a获取盘点明细表数据 -->
+    <select id="getStockDetail" resultType="com.lemonico.common.bean.Tw303_stock_detail">
+		select tw302.client_id, tw302.check_date, ms201.client_nm, tw303.product_id,
+		       tw303.manage_id, tw303.stock_count, tw303.count, tw303.update_date, mc100.name
+		  from tw302_stock_management tw302, tw303_stock_detail tw303, mc100_product mc100, ms201_client ms201
+		 where tw302.manage_id = tw303.manage_id and tw302.client_id = mc100.client_id and tw303.product_id = mc100.product_id
+		   and ms201.client_id = tw302.client_id and tw302.client_id = #{client_id} and tw303.manage_id = #{manage_id}
+	</select>
+
+    <!--a更新盘点在库实际数(tw303_stock_detail) -->
+    <update id="updateStockDetailCount">
+		update tw303_stock_detail set count = #{count} where product_id = #{product_id}
+	</update>
+
+    <!--a变更盘点状态 -->
+    <update id="changeStockCheckState">
+		update tw302_stock_management set state = #{state} where manage_id = #{manage_id}
+	</update>
+
+    <!--a获取盘点管理信息 -->
+    <select id="getStockCheckManageInfo" resultType="com.lemonico.common.bean.Tw302_stock_management">
+        select tw302.client_id, tw302.manage_id, tw302.state,
+        tw302.start_date, tw302.end_date, tw302.update_date,
+        tw302.check_date, tw302.product_cnt, ms201.client_nm
+        from tw302_stock_management tw302, ms201_client ms201
+        where tw302.client_id = ms201.client_id
+        <if test="state == 3">
+            and tw302.state = #{state}
+        </if>
+        <if test="state != 3">
+            and tw302.state != 3
+        </if>
+    </select>
+
+    <!--a变更盘点结束时间 -->
+    <update id="updateStockCheckEndDate">
+		update tw302_stock_management set end_date = #{end_date} where manage_id = #{manage_id}
+	</update>
+
+    <!-- a盘点结束后更新理论在库数和実在庫数 -->
+    <update id="updateStockCount">
+		update tw300_stock set available_cnt = #{available_cnt},inventory_cnt=#{inventory_cnt}
+		 where client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+    <!-- a检测是否有盘点未完成 -->
+    <select id="stockCheckExist" resultType="java.lang.String">
+		select client_id from tw302_stock_management where client_id = #{client_id} and state != 3
+	</select>
+
+    <!--a统计作业中数 -->
+    <select id="getCheckingCount" resultType="int">
+		select count(*) from tw302_stock_management where state != 3 and warehouse_cd = #{warehouse_cd}
+	</select>
+
+    <!--a新规货架 -->
+    <insert id="createNewLocation">
+		insert into mw404_location
+		(location_id,warehouse_cd,wh_location_cd,wh_location_nm,info,priority,del_flg, lot_no)
+		values
+		(#{location_id},#{warehouse_cd},#{wh_location_cd},#{wh_location_nm},#{info},#{priority},0, #{lot_no})
+	</insert>
+
+    <!--a获取当前仓库最大货架ID -->
+    <select id="getMaxLocationId" resultType="java.lang.String">
+		select location_id from mw404_location
+	</select>
+
+    <!--a统计作业中数 -->
+    <select id="checkLocationNameExists" resultType="java.lang.String">
+		select wh_location_nm from mw404_location
+		 where wh_location_nm = #{wh_location_nm} and warehouse_cd = #{warehouse_cd}
+        <if test="lot_no != null and lot_no != ''">
+            and lot_no = #{lot_no}
+        </if>
+        <if test="lot_no == null or lot_no == ''">
+            and (lot_no is null or lot_no = '')
+        </if>
+	</select>
+
+    <!--a根据货架Id 获取货架名称 -->
+    <select id="getLocationName" resultType="com.lemonico.common.bean.Mw404_location">
+		select wh_location_nm, priority, lot_no, info
+		  from mw404_location
+		 where location_id = #{location_id} and warehouse_cd = #{warehouse_cd}
+	</select>
+
+    <!--a根据size_cd 获取 尺寸信息 -->
+    <select id="getSizeType" resultType="java.lang.String">
+		select type from ms010_product_size where size_cd = #{size_cd}
+	</select>
+
+    <!--a货架信息修改 -->
+    <update id="updateLocationInfo">
+		update mw404_location
+		set wh_location_nm = #{wh_location_nm}, info = #{info}, priority = #{priority},
+		lot_no = #{lot_no}, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+		where location_id = #{location_id} and warehouse_cd = #{warehouse_cd}
+	</update>
+
+    <!-- a获取该商品在该货架上面的信息 -->
+    <select id="getLocationById" resultType="com.lemonico.common.bean.Mw405_product_location">
+		select location_id, client_id, product_id, stock_cnt, reserve_cnt, requesting_cnt, bestbefore_date, status, not_delivery,
+        ins_usr, ins_date, upd_usr, upd_date, del_flg
+		  from mw405_product_location
+		 where location_id = #{location_id} and client_id = #{client_id} and product_id = #{product_id}
+           and del_flg = 0
+	</select>
+
+    <!--a 更改货架上固定商品的在库数 引当数 -->
+    <update id="updateLocationCnt">
+		update mw405_product_location
+		set stock_cnt = #{stock_cnt}, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+        <if test="requesting_cnt != -1">
+            , requesting_cnt = #{requesting_cnt}
+        </if>
+        <if test="not_delivery != -1">
+            , not_delivery = #{not_delivery}
+        </if>
+		where location_id = #{location_id} and client_id = #{client_id} and product_id = #{product_id}
+		<if test="del_flg = 0">
+            and del_flg = 0
+        </if>
+	</update>
+
+    <!-- a获取到该商品在该货架上面的信息 -->
+    <select id="getMaxPriority" resultType="int">
+		select MAX(priority)
+		  from mw404_location
+		 where warehouse_cd = #{ warehouse_cd}
+	</select>
+
+    <!-- a检验仓库货架优先顺序是否重复 -->
+    <select id="checkLocationPriorityExists" resultType="int">
+        select priority
+          from mw404_location
+         where warehouse_cd = #{ warehouse_cd} and priority = #{priority}
+    </select>
+
+    <!--	获取店铺优先顺位-->
+    <select id="getLocationPriority" resultType="int">
+		select priority from mw404_location where warehouse_cd = #{warehouse_cd} and wh_location_nm = #{wh_location_nm} and del_flg = 0
+	</select>
+
+    <!-- 获取货架location信息 -->
+    <select id="getProductLocationList" resultType="com.lemonico.common.bean.Mw404_location">
+        select location_id, lot_no, wh_location_nm, priority, info, warehouse_cd
+        from mw404_location
+        where del_flg = 0 and warehouse_cd = #{warehouse_cd}
+        <if test="location_id != '' and location_id != null">
+            and location_id = #{location_id}
+        </if>
+        <if test="search != '' and search != null">
+            and (wh_location_nm like #{search}
+            or lot_no like #{search}
+            or info like #{search})
+        </if>
+        <if test="sortType == null || column == null">
+            order by priority desc
+        </if>
+        <if test="column != null and column != '' and sortType != null and sortType != '' ">
+            order by ${column} ${sortType}
+        </if>
+    </select>
+
+    <select id="getLocationInfoById" resultType="com.lemonico.common.bean.Mw404_location">
+        select location_id ,warehouse_cd, wh_location_cd, wh_location_nm, info, priority, del_flg, lot_no,
+        bestbefore_date, status
+        from mw404_location where del_flg = 0 and warehouse_cd = #{warehouse_cd}
+        <if test="locationIdList != null and locationIdList.size != 0">
+            and location_id in
+            <foreach collection="locationIdList" item="locationIdList" open="(" separator="," close=")">
+                #{locationIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 根据商品Id获取货架信息-->
+    <select id="getLocationProductById" resultType="com.lemonico.common.bean.Mw405_product_location">
+        select location_id, product_id, stock_cnt, requesting_cnt
+        from mw405_product_location where del_flg = 0
+        <if test="productIdList != null and productIdList.size != 0">
+            and product_id in
+            <foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+                #{productIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!--获取在库一览-->
+    <select id="getStockList" resultMap="locationDetailMap">
+        select mw405.client_id, mw405.product_id, mw405.product_id, mw405.stock_cnt, mw405.requesting_cnt, mw405.bestbefore_date, mw405.status,
+        mw404.location_id, mw404.wh_location_nm, mw404.lot_no, mw404.priority, mc100.product_id, mc100.code, mc100.barcode,
+        mc100.name
+        from mw405_product_location mw405
+        left join mw404_location mw404 on mw404.location_id = mw405.location_id and mw404.del_flg = 0
+        left join tw300_stock tw300  on tw300.client_id = mw405.client_id and tw300.product_id = mw405.product_id and tw300.del_flg = 0
+        left join mc100_product mc100 on mw405.product_id = mc100.product_id and mw405.client_id = mc100.client_id and mc100.del_flg = 0
+        where mw404.del_flg = mw405.del_flg
+        and mw404.warehouse_cd = #{warehouse_cd} and mw404.warehouse_cd = mc100.warehouse_cd
+        <if test="stock_flg==1">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &gt; 0
+        </if>
+        <if test="stock_flg != '' and stock_flg != null and stock_flg == 6">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &lt;= 0
+        </if>
+        <if test="stock_flg == 3">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &lt; 0
+        </if>
+        <if test="stock_flg == -1">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) = 0
+        </if>
+        <if test="stock_flg == 4">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) != 0
+        </if>
+        <if test="stock_flg == 5">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &gt;= 0
+        </if>
+        <if test="client_id != '' and client_id != null and client_id != 'all'">
+            and mw405.client_id = #{client_id}
+        </if>
+        <if test="search != null and search != '' ">
+            and (mc100.name ~* replace(#{search},'%','') or mc100.product_id like #{search}
+            or mc100.barcode like #{search}
+            or mw404.wh_location_nm like #{search}
+            or mw404.lot_no like #{search}
+            or mc100.code ~* replace(#{search},'%',''))
+        </if>
+        <if test="column == null || column == ''">
+            order by mc100.code asc, mw404.location_id asc
+        </if>
+        <if test="column != null and column != '' and sortType != null and sortType != ''">
+            order by ${column} ${sortType}
+        </if>
+    </select>
+
+    <!-- 新规在库履历 -->
+    <insert id="insertStockHistory">
+		insert into tw301_stock_history
+		(history_id, plan_id, client_id, product_id, type, quantity, ins_user, ins_date, upd_user, upd_date, del_flg, info, before_num,
+		 after_num)
+		values
+		(#{history_id}, #{plan_id}, #{client_id}, #{product_id}, #{type}, #{quantity}, #{ins_usr}, #{ins_date}, #{upd_usr}, #{upd_date}, 0
+		, #{info}, #{before_num}, #{after_num})
+	</insert>
+
+    <!-- 根据货架名称 和 ロット番号 获取货架信息-->
+    <select id="getLocationByName" resultMap="locationResult">
+		select location_id,wh_location_nm, lot_no, priority, info, warehouse_cd, wh_location_cd
+		from mw404_location
+		where wh_location_nm = #{wh_location_nm} and del_flg = 0
+		<if test="lot_no != null">
+            and lot_no = #{lot_no}
+        </if>
+        <if test="warehouse_cd != null and warehouse_cd != ''">
+            and warehouse_cd = #{warehouse_cd}
+        </if>
+	</select>
+
+    <!-- 新规商品货架信息-->
+    <insert id="createProductLocation">
+		insert into mw405_product_location
+		(location_id, client_id, product_id, stock_cnt, requesting_cnt, ins_usr, ins_date, upd_usr, upd_date, del_flg, not_delivery,
+		bestbefore_date, status)
+		values
+		(#{location_id}, #{client_id}, #{product_id}, #{stock_cnt}, #{requesting_cnt}, #{ins_usr}, #{ins_date}, #{upd_usr}, #{upd_date}
+		, 0, #{not_delivery}, #{bestbefore_date}, #{status})
+	</insert>
+
+    <!-- 查询可以出库的货架信息-->
+    <select id="getLocationOrder" resultMap="locationResult">
+		select mw404.location_id, mw404.wh_location_nm, mw404.lot_no,mw404.priority, mw405.client_id, mw405.product_id,
+		       mw405.stock_cnt, mw405.requesting_cnt, mw405.location_id, mw405.not_delivery, mw405.bestbefore_date, mw405.status
+		  from mw404_location mw404,mw405_product_location mw405
+		 where mw404.location_id = mw405.location_id and mw404.del_flg = mw405.del_flg and (mw405.status != 1 or mw405.status is null)
+		   and mw404.del_flg = 0 and mw405.client_id = #{client_id} and mw405.product_id = #{product_id}
+		   and (mw405.stock_cnt - mw405.requesting_cnt - mw405.not_delivery) > 0
+		   and (mw405.bestbefore_date > #{date} or mw405.bestbefore_date is null)
+		 order by mw405.bestbefore_date asc, mw404.priority asc
+	</select>
+
+    <!--更改货架的出库依赖数 -->
+    <update id="updateLocationRequestingCnt">
+		update mw405_product_location
+		   set requesting_cnt = #{json.requesting_cnt}, upd_usr = #{json.upd_usr}, upd_date = #{json.upd_date}
+		 where location_id = #{json.location_id}
+		   and client_id = #{json.client_id} and product_id = #{json.product_id} and del_flg = 0
+	</update>
+
+    <!-- 查询到货架上面存放的商品信息-->
+    <select id="getLocationDetail" resultType="com.lemonico.common.bean.Mw405_product_location">
+        select location_id, client_id, product_id, stock_cnt, requesting_cnt, ins_usr, ins_date,
+               upd_usr, upd_date, del_flg, not_delivery, status, bestbefore_date
+          from mw405_product_location where del_flg = 0
+           and location_id in
+        <foreach collection="locationIdList" item="locationIdList" open="(" separator="," close=")">
+            #{locationIdList}
+        </foreach>
+    </select>
+
+    <!-- 更改货架上面的不可配送数-->
+    <update id="updateLocationNotDelivery">
+        update mw405_product_location
+        set not_delivery = #{not_delivery}, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+        where del_flg =0
+        <if test="client_id != null and client_id != ''">
+            and client_id = #{client_id}
+        </if>
+        <if test="product_id != null and product_id != ''">
+            and product_id = #{product_id}
+        </if>
+        and location_id in
+        <foreach collection="location_id" item="location_id" open="(" separator="," close=")">
+            #{location_id}
+        </foreach>
+    </update>
+
+    <!--获取商品在库一览-->
+    <select id="getProductStockList" resultMap="stockMap">
+        select tw300.stock_id, tw300.warehouse_cd, tw300.client_id, tw300.product_id, tw300.available_cnt, tw300.requesting_cnt,
+        tw300.inventory_cnt, tw300.not_delivery, mc100.name, mc100.code, mc100.barcode, mc100.kubun
+        from tw300_stock tw300
+        left join mc100_product mc100 on tw300.client_id = mc100.client_id and tw300.product_id = mc100.product_id and mc100.del_flg = 0
+        where tw300.warehouse_cd = #{warehouse_cd} and tw300.del_flg = 0
+        <if test="client_id != '' and client_id != 'all'">
+            and tw300.client_id = #{client_id}
+        </if>
+        <if test="stockFlg==1">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &gt; 0
+        </if>
+        <if test="stockFlg != '' and stockFlg != null and stockFlg == 6">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &lt;= 0
+        </if>
+        <if test="stockFlg == 3">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &lt; 0
+        </if>
+        <if test="stockFlg == -1">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) = 0
+        </if>
+        <if test="stockFlg == 4">
+            and (tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) != 0
+        </if>
+        <if test="stockFlg == 5">
+            and ((tw300.inventory_cnt - tw300.requesting_cnt - tw300.not_delivery) &gt;= 0
+        </if>
+        <if test="search != null and search != '' ">
+            and (mc100.name ~* replace(#{search},'%','') or mc100.product_id like #{search}
+            or mc100.barcode like #{search}
+            or mc100.code ~* replace(#{search},'%',''))
+        </if>
+        <if test="column != null and column != ''">
+            order by ${column} ${sortType}
+        </if>
+        <if test="column == null or column == ''">
+            order by tw300.product_id desc
+        </if>
+    </select>
+
+    <!--根据商品Id 获取货架上面该商品的信息 -->
+    <select id="getLocationByProductId" resultMap="locationDetailMap">
+        select mw405.location_id,
+               mw405.client_id,
+               mw405.product_id,
+               mw405.stock_cnt,
+               mw405.requesting_cnt,
+               mw405.not_delivery,
+               mw405.bestbefore_date,
+               mw405.status,
+               mw404.priority,
+               mw404.wh_location_nm,
+               mw404.lot_no
+        from
+             mw405_product_location mw405
+        left join
+                 mw404_location mw404
+        on
+            mw405.location_id = mw404.location_id
+        where
+              mw405.del_flg = 0 and mw404.warehouse_cd = #{warehouse_cd}
+        <if test="productIdList != null and productIdList.size != 0">
+            and mw405.product_id in
+            <foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+                #{productIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 根据或货架名称获取货架信息-->
+    <select id="getLocationInfoByName" resultType="com.lemonico.common.bean.Mw404_location">
+        select location_id, warehouse_cd, wh_location_cd, wh_location_nm
+        from mw404_location
+        where warehouse_cd = #{warehouse_cd} and del_flg = 0 and wh_location_nm like #{wh_location_nm}
+    </select>
+
+    <!-- 更改货架明细中指定商品的过期时间和出荷不可-->
+    <update id="updateLocationDetail">
+        update mw405_product_location set bestbefore_date = #{bestbefore_date}, status = #{status}, upd_usr = #{upd_usr},
+        upd_date = #{upd_date}
+        where location_id = #{location_id} and product_id = #{product_id}
+    </update>
+
+    <!-- 根据货架ID 店铺Id 获取商品在货架上面的详细信息-->
+    <select id="getLocationDetailById" resultType="com.lemonico.common.bean.Mw405_product_location">
+        select location_id, client_id, product_id, stock_cnt, requesting_cnt, ins_usr, ins_date,
+        upd_usr, upd_date, del_flg, not_delivery, bestbefore_date, status
+        from mw405_product_location where del_flg = 0
+        and location_id in
+        <foreach collection="locationIdList" item="locationIdList" open="(" separator="," close=")">
+            #{locationIdList}
+        </foreach>
+        <if test="client_id != null and client_id != ''">
+            and client_id = #{client_id}
+        </if>
+        <if test="product_id != null and product_id != ''">
+            and product_id = #{product_id}
+        </if>
+    </select>
+
+    <!-- 修改货架的不可配送数为默认值-->
+    <update id="updateNotDeliveryDefault">
+        update mw405_product_location set not_delivery = stock_cnt, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+        where del_flg = 0
+        and location_id in
+        <foreach collection="locationIdList" item="locationIdList" open="(" separator="," close=")">
+            #{locationIdList}
+        </foreach>
+    </update>
+
+    <!-- 修改商品货架详细的数量（实际在库数、依赖中数、不可配送数）-->
+    <update id="updateLocationDetailCnt">
+        update mw405_product_location set stock_cnt = #{stock_cnt}, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+        <if test="requesting_cnt != -1">
+            , requesting_cnt = #{requesting_cnt}
+        </if>
+        <if test="not_delivery != -1">
+            , not_delivery = #{not_delivery}
+        </if>
+        where client_id = #{client_id} and product_id = #{product_id} and location_id = #{location_id} and del_flg = 0
+    </update>
+
+    <!-- 根据 ロケーション名称 和 ロット番号 获取货架信息 -->
+    <select id="getLocationByLotNo" resultType="com.lemonico.common.bean.Mw404_location">
+        select location_id, warehouse_cd, wh_location_cd, wh_location_nm, lot_no
+        from mw404_location
+        where warehouse_cd = #{warehouse_cd} and lot_no = #{lot_no} and wh_location_nm = #{wh_location_nm} and del_flg =0
+    </select>
+
+    <!-- 更改商品货架的信息-->
+    <update id="updateProductLocation">
+        update mw405_product_location set stock_cnt = #{stock_cnt}, bestbefore_date = #{bestbefore_date},
+        status = #{status}, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+        <if test="not_delivery != -1">
+            ,not_delivery = #{not_delivery}
+        </if>
+        where location_id = #{location_id} and product_id = #{product_id} and client_id = #{client_id} and del_flg = 0
+    </update>
+
+    <!-- 获取到过期的商品货架信息-->
+    <select id="getUnavailableProductLocation" resultType="com.lemonico.common.bean.Mw405_product_location">
+         select location_id, client_id, product_id, stock_cnt, requesting_cnt, ins_usr, ins_date,
+        upd_usr, upd_date, del_flg, not_delivery, bestbefore_date, status
+        from mw405_product_location
+        where del_flg = 0 and bestbefore_date &lt;= #{bestbefore_date} and status = 0
+    </select>
+
+    <!-- 修改货架的出荷状态为不可出库并修改不可配送数-->
+    <update id="updateLocationStatus">
+        <foreach collection="productLocations" item="productLocations" separator=";">
+            update mw405_product_location set status = 1, not_delivery = stock_cnt, upd_date = #{upd_date}, upd_usr = #{upd_usr}
+            where location_id = #{productLocations.location_id} and client_id = #{productLocations.client_id}
+            and product_id = #{productLocations.product_id} and del_flg = 0
+        </foreach>
+    </update>
+
+    <!-- 获取到所有不可用的商品货架信息-->
+    <select id="getAllCannotProductLocation" resultType="com.lemonico.common.bean.Mw405_product_location">
+        select location_id, client_id, product_id, stock_cnt, requesting_cnt, not_delivery, bestbefore_date, status
+        from mw405_product_location
+        where status = 1 and del_flg = 0
+    </select>
+
+    <!-- 獲取在庫履歷的信息-->
+    <select id="getShipmentNumSum" resultType="com.lemonico.common.bean.Tw301_stock_history">
+        select client_id, product_id, quantity from tw301_stock_history
+        where client_id = #{client_id} and del_flg = 0
+        and type = #{type} and ins_date  >= #{startDate} and ins_date &lt;= #{endDate}
+        and product_id in
+        <foreach collection="product_id" item="product_id" open="(" separator="," close=")">
+            #{product_id}
+        </foreach>
+    </select>
+
+    <!-- 判断该货架之前是否存在 -->
+    <select id="getLocationCount" resultType="java.lang.Integer">
+		select count(location_id)
+		from mw404_location
+		where warehouse_cd = #{warehouse_cd} and wh_location_nm = #{wh_location_nm} and del_flg = 0 and lot_no = #{lot_no}
+	</select>
+</mapper>

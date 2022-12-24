@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.OrderDetailDao">
+    <!--     <resultMap type="Tw201_shipment_detail" id="orderDetailResultMap"> -->
+    <resultMap type="com.lemonico.common.bean.Tc201_order_detail" id="orderDetailResultMap">
+        <id column="order_detail_no" property="order_detail_no"/>
+        <id column="purchase_order_no" property="purchase_order_no"/>
+        <result column="product_id" property="product_id"/>
+        <result column="product_code" property="product_code"/>
+        <result column="product_name" property="product_name"/>
+        <result column="unit_price" property="unit_price"/>
+        <result column="number" property="number"/>
+        <result column="product_total_price" property="product_total_price"/>
+        <result column="product_option" property="product_option"/>
+        <result column="wrapping_title1" property="wrapping_title1"/>
+        <result column="wrapping_name1" property="wrapping_name1"/>
+        <result column="wrapping_price1" property="wrapping_price1"/>
+        <result column="wrapping_tax1" property="wrapping_tax1"/>
+        <result column="wrapping_type1" property="wrapping_type1"/>
+        <result column="wrapping_title2" property="wrapping_title2"/>
+        <result column="wrapping_name2" property="wrapping_name2"/>
+        <result column="wrapping_price2" property="wrapping_price2"/>
+        <result column="wrapping_tax2" property="wrapping_tax2"/>
+        <result column="wrapping_type2" property="wrapping_type2"/>
+        <result column="bundled_flg" property="bundled_flg"/>
+        <result column="tax_flag" property="tax_flag"/>
+        <result column="ins_usr" property="ins_usr"/>
+        <result column="ins_date" property="ins_date"/>
+        <result column="upd_usr" property="upd_usr"/>
+        <result column="upd_date" property="upd_date"/>
+        <result column="del_flg" property="del_flg"/>
+        <result column="option_price" property="option_price"/>
+    </resultMap>
+
+    <!-- 最新受注明細番号を取得 -->
+    <select id="getLastOrderDetailNo" resultType="java.lang.String">
+        select
+            order_detail_no
+        from
+            tc201_order_detail
+        where
+            order_detail_no = (select max(order_detail_no) from tc201_order_detail);
+    </select>
+
+    <select id="getOrderDetail" resultType="com.lemonico.common.bean.Tc201_order_detail">
+        SELECT
+            *
+        FROM
+            tc201_order_detail
+        WHERE
+            order_detail_no = #{order_detail_no}
+            AND del_flg = 0;
+    </select>
+
+    <select id="getOrderHistoryDetail" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            tc200.outer_order_no AS outer_order_no,
+            '成功' AS result,
+            tc200.shipment_plan_id AS shipment_plan_id,
+            tc201.bikou1 AS biko
+        FROM
+            tc201_order_detail AS tc201
+            INNER JOIN tc200_order AS tc200 ON tc200.order_detail_no = tc201.order_detail_no
+        WHERE
+            tc200.history_id = #{history_id}
+            AND tc200.del_flg = 0
+    </select>
+
+    <!-- 新規受注を登録 -->
+    <insert id="insertOrderDetail" parameterType="com.lemonico.common.bean.Tc201_order_detail">
+        insert into tc201_order_detail
+        (order_detail_no,purchase_order_no,product_id,product_code,product_barcode,product_name,unit_price,number,product_total_price,product_option,
+        is_reduced_tax,wrapping_title1,wrapping_name1,wrapping_price1,wrapping_tax1,wrapping_type1,wrapping_title2,wrapping_name2,
+        wrapping_price2,wrapping_tax2,wrapping_type2,bikou1,bikou2,bikou3,bikou4,bikou5,bikou6,bikou7,bikou8,bikou9,
+        bikou10,ins_usr,ins_date,upd_usr,upd_date,del_flg,set_sub_id,bundled_flg,tax_flag,product_kubun,option_price)
+        values(#{order_detail_no},#{purchase_order_no},#{product_id},#{product_code},#{product_barcode},#{product_name},#{unit_price},#{number},#{product_total_price},
+        #{product_option},#{is_reduced_tax},#{wrapping_title1},#{wrapping_name1},#{wrapping_price1},#{wrapping_tax1},#{wrapping_type1},
+        #{wrapping_title2},#{wrapping_name2},#{wrapping_price2},#{wrapping_tax2},#{wrapping_type2},#{bikou1},#{bikou2},
+        #{bikou3},#{bikou4},#{bikou5},#{bikou6},#{bikou7},#{bikou8},#{bikou9},#{bikou10},#{ins_usr},#{ins_date},
+        #{upd_usr},#{upd_date},0,#{set_sub_id},#{bundled_flg},#{tax_flag},#{product_kubun},#{option_price});
+    </insert>
+
+    <!--    查询 受注明細テーブル 的商品名称-->
+    <select id="getOrderDetailListByPurchaseOrderNo" resultType="java.lang.String">
+        select tc201.product_name
+          from tc201_order_detail tc201
+          left join tc200_order tc200 on tc200.purchase_order_no = tc201.purchase_order_no
+         where tc201.purchase_order_no = #{purchase_order_no}
+    </select>
+
+    <!--    查询 受注明細テーブル 的商品名称-->
+    <select id="getOrderDetailEntityListByPurchaseOrderNo" resultType="com.lemonico.common.bean.Tc201_order_detail">
+        select DISTINCT tc201.product_name, tc201.number
+          from tc201_order_detail tc201
+          left join tc200_order tc200 on tc200.purchase_order_no = tc201.purchase_order_no and tc200.del_flg = #{del_flg}
+         where tc201.purchase_order_no = #{purchase_order_no} and tc201.del_flg = #{del_flg}
+    </select>
+
+    <!-- 受注明細レコードを削除する -->
+    <update id="orderDetailDelete">
+        update Tc201_order_detail set del_flg = 1 where purchase_order_no = #{purchase_order_no}
+    </update>
+
+    <!-- 批量插入受注明细数据 -->
+    <insert id="bulkInsertOrderDetail">
+        insert into tc201_order_detail
+        (order_detail_no,purchase_order_no,product_id,product_code,product_name,unit_price,number,product_total_price,product_option,
+        is_reduced_tax,wrapping_title1,wrapping_name1,wrapping_price1,wrapping_tax1,wrapping_type1,wrapping_title2,wrapping_name2,
+        wrapping_price2,wrapping_tax2,wrapping_type2,bikou1,bikou2,bikou3,bikou4,bikou5,bikou6,bikou7,bikou8,bikou9,
+        bikou10,ins_usr,ins_date,upd_usr,upd_date,del_flg,set_sub_id,bundled_flg,tax_flag) values
+        <foreach collection="orderDetails" item="detail"  separator=",">
+            (#{detail.order_detail_no},#{detail.purchase_order_no},#{detail.product_id},#{detail.product_code},#{detail.product_name},
+            #{detail.unit_price},#{detail.number}, #{detail.product_total_price},#{detail.product_option},#{detail.is_reduced_tax},
+            #{detail.wrapping_title1},#{detail.wrapping_name1},#{detail.wrapping_price1},#{detail.wrapping_tax1},#{detail.wrapping_type1},
+            #{detail.wrapping_title2},#{detail.wrapping_name2},#{detail.wrapping_price2},#{detail.wrapping_tax2},
+            #{detail.wrapping_type2},#{detail.bikou1},#{detail.bikou2},#{detail.bikou3},#{detail.bikou4},#{detail.bikou5},#{detail.bikou6},
+            #{detail.bikou7},#{detail.bikou8},#{detail.bikou9},#{detail.bikou10},#{detail.ins_usr},#{detail.ins_date},#{detail.upd_usr},
+            #{detail.upd_date},#{detail.del_flg},#{detail.set_sub_id},#{detail.bundled_flg},#{detail.tax_flag})
+        </foreach>
+    </insert>
+
+    <!-- 修改店铺 受注详细的商品区分-->
+    <update id="updateProductKubunByProductId">
+        update tc201_order_detail set product_kubun = #{product_kubun}, upd_date = #{date}, upd_usr = #{loginNm}
+        where del_flg = 0 and product_id = #{product_id}
+        and purchase_order_no in (select purchase_order_no from tc200_order where client_id = #{client_id} and del_flg = 0)
+    </update>
+
+</mapper>

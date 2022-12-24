@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.ntm.dao.NtmProductMasterDao">
+
+    <select id="getNtmProductMasterListByName" resultType="com.lemonico.common.bean.Mc107_ntm_product_master">
+        select * from mc107_ntm_product_master mc107
+        where 1=1
+        <if test="nameList != null">
+            and mc107.name in
+            <foreach collection="nameList" item="item" index="index" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="date != null and date != ''">
+            and start_date &lt; #{date}
+        </if>
+
+    </select>
+
+</mapper>

@@ -11,14 +11,18 @@ package ${packageName};
 
 
 
-import api.lemonico.core.attribute.ID;
-<#--import api.lemonico.entity.${simpleName}Entity;-->
-import java.time.LocalDateTime;
+import attribute.core.com.lemonico.ID;
+import jp.co.tfg.prologi.entity.${simpleName}Entity;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
+<#if comment??>
  * ${comment}リソース
+</#if>
  *
 <#if lib.since??>
  * @since ${lib.since}

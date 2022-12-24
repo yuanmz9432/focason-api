@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.ShipmentDetailDao">
+    <resultMap type="com.lemonico.common.bean.Tw201_shipment_detail" id="shipmentDetail">
+        <id column="id" property="id" />
+        <id column="client_id" property="client_id" />
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="shipment_plan_id" property="shipment_plan_id" />
+        <id column="product_id" property="product_id" />
+        <id column="product_sub_id" property="product_sub_id" />
+        <id column="set_sub_id" property="set_sub_id" />
+        <result column="product_plan_cnt" property="product_plan_cnt" />
+        <result column="is_reduced_tax" property="is_reduced_tax" />
+        <result column="cushioning_type" property="cushioning_type" />
+        <result column="gift_wrapping_type" property="gift_wrapping_type" />
+        <result column="product_plan_cnt" property="product_plan_cnt" />
+        <result column="unit_price" property="unit_price" />
+        <result column="price" property="price" />
+        <result column="set_cnt" property="set_cnt" />
+        <result column="reserve_status" property="reserve_status" />
+        <result column="reserve_cnt" property="reserve_cnt" />
+        <result column="tax_flag" property="tax_flag" />
+        <result column="code" property="code" />
+        <result column="name" property="name" />
+        <result column="barcode" property="barcode" />
+        <result column="options" property="options" />
+        <result column="kubun" property="kubun" />
+        <result column="option_price" property="option_price" />
+        <collection property="mc100_product" javaType="java.util.List" ofType="com.lemonico.common.bean.Mc100_product">
+            <id column="client_id" property="client_id" />
+            <id column="product_id" property="product_id" />
+            <id column="warehouse_cd" property="warehouse_cd" />
+            <result column="name" property="name" />
+            <result column="code" property="code" />
+            <result column="set_flg" property="set_flg" />
+            <result column="set_sub_id" property="set_sub_id" />
+            <result column="barcode" property="barcode" />
+            <result column="bundled_flg" property="bundled_flg" />
+            <result column="is_reduced_tax" property="is_reduced_tax" />
+            <result column="tax_flag" property="tax_flag" />
+            <result column="price" property="price" />
+            <result column="identifier" property="identifier" />
+            <result column="description_cd" property="description_cd" />
+            <result column="origin" property="origin" />
+            <result column="size_cd" property="size_cd" />
+            <result column="tags_id" property="tags_id" />
+            <result column="show_flg" property="show_flg" />
+        </collection>
+    </resultMap>
+
+    <select id="getShipmentDetailList" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select client_id, warehouse_cd, shipment_plan_id, product_id, is_reduced_tax, cushioning_type, gift_wrapping_type,
+               product_plan_cnt, set_sub_id, set_cnt, unit_price, price, reserve_cnt, reserve_status, tax_flag, kubun, serial_no
+          from tw201_shipment_detail
+         where shipment_plan_id = #{shipment_plan_id}
+        <if test="client_id != '' and client_id != null ">
+            and client_id = #{client_id}
+        </if>
+        <if test="!cancel">
+            and del_flg = 0
+        </if>
+    </select>
+
+    <select id="getShipmentProductList" resultMap="shipmentDetail">
+        select tw201.warehouse_cd, tw201.client_id, tw201.shipment_plan_id, tw201.product_id, tw201.is_reduced_tax, tw201.cushioning_type,
+               tw201.gift_wrapping_type, tw201.product_plan_cnt, tw201.set_sub_id, tw201.set_cnt, tw201.unit_price, tw201.price,
+               tw201.reserve_cnt, tw201.reserve_status, tw201.tax_flag, tw201.kubun, tw201.product_sub_id, tw201.option_price,tw201.options,
+               mc100.name, mc100.code, mc100.barcode, mc100.set_flg, mc100.set_sub_id, mc100.bundled_flg, mc100.is_reduced_tax, mc100.tax_flag,
+               mc100.price, mc100.identifier, mc100.description_cd, mc100.origin, mc100.size_cd, mc100.tags_id, mc100.show_flg
+        from tw201_shipment_detail tw201
+        left join mc100_product as mc100 on tw201.product_id = mc100.product_id and tw201.client_id = mc100.client_id and mc100.del_flg = 0
+        where tw201.shipment_plan_id in
+        <foreach collection="shipmentIdList" item="shipmentIdList" open="(" close=")" separator=",">
+            #{shipmentIdList}
+        </foreach>
+        <if test="client_id != null and client_id != ''">
+            and tw201.client_id = #{client_id}
+        </if>
+        <if test="!cancel">
+            and tw201.del_flg = 0
+        </if>
+    </select>
+
+    <!--店铺侧出库一览-->
+    <!--店舗側出庫一覧-->
+    <insert id="insertShipmentDetail" parameterType="com.lemonico.common.bean.Tw201_shipment_detail">
+        insert into tw201_shipment_detail
+        (id, client_id, warehouse_cd, shipment_plan_id, product_id, is_reduced_tax, cushioning_type, gift_wrapping_type, product_plan_cnt, unit_price,
+         price, ins_usr, ins_date, upd_usr, upd_date, set_sub_id, set_cnt, gift_wrapping_note, tax_flag, reserve_status, reserve_cnt, product_sub_id,code,name,barcode,options, kubun,option_price)
+        values(#{detailJson.shipment_guid}, #{detailJson.client_id}, #{detailJson.warehouse_cd}, #{detailJson.shipment_plan_id}, #{detailJson.product_id}, #{detailJson.is_reduced_tax}, #{detailJson.cushioning_type},
+        #{detailJson.gift_wrapping_type}, #{detailJson.product_plan_cnt}, #{detailJson.unit_price}, #{detailJson.price}, #{detailJson.ins_usr},
+        #{detailJson.ins_date}, #{detailJson.upd_usr}, #{detailJson.upd_date}, #{detailJson.set_sub_id}, #{detailJson.set_cnt}, #{detailJson.gift_wrapping_note}, #{detailJson.tax_flag},
+        #{detailJson.reserve_status}, #{detailJson.reserve_cnt}, #{detailJson.product_sub_id},#{detailJson.code},#{detailJson.name},#{detailJson.barcode},#{detailJson.options},#{detailJson.kubun},#{detailJson.option_price})
+    </insert>
+
+    <update id="updateShipmentDetail">
+        update tw201_shipment_detail set
+        is_reduced_tax=#{detailJson.is_reduced_tax}, cushioning_type=#{detailJson.cushioning_type}, gift_wrapping_type=#{detailJson.gift_wrapping_type},
+        product_plan_cnt=#{detailJson.product_plan_cnt}, unit_price=#{detailJson.unit_price}, price=#{detailJson.price}, upd_usr=#{detailJson.upd_usr},
+        upd_date=#{detailJson.upd_date}, tax_flag = #{detailJson.tax_flag}, reserve_status = #{detailJson.reserve_status}, reserve_cnt = #{detailJson.reserve_cnt},
+        code=#{detailJson.code}, name=#{detailJson.name}, barcode=#{detailJson.barcode}, set_cnt = #{detailJson.set_cnt}
+        where client_id = #{detailJson.client_id} and shipment_plan_id = #{detailJson.shipment_plan_id} and product_id = #{detailJson.product_id}
+        <if test="detailJson.set_sub_id != null and detailJson.set_sub_id != ''">
+            and set_sub_id = #{detailJson.set_sub_id}
+        </if>
+        <if test="detailJson.set_sub_id == null or detailJson.set_sub_id == ''">
+            and set_sub_id is null
+        </if>
+    </update>
+
+    <update id="deleteShipmentDetail">
+        update Tw201_shipment_detail set del_flg = 1, upd_usr = #{upd_usr}, upd_date = #{upd_date} where client_id = #{client_id} and shipment_plan_id in (#{shipment_plan_id})
+    </update>
+
+    <!-- 出库依赖编辑时删除商品-->
+    <delete id="deleteShipmentProduct">
+        update Tw201_shipment_detail set del_flg = 1, upd_usr = #{upd_usr}, upd_date = #{upd_date}
+         where client_id = #{client_id} and shipment_plan_id = #{shipment_plan_id} and product_id = #{product_id}
+         <if test="set_sub_id != null and set_sub_id != ''">
+             and set_sub_id = #{set_sub_id}
+         </if>
+         <if test="set_sub_id == null or set_sub_id == ''">
+             and set_sub_id is null
+         </if>
+
+    </delete>
+
+<!--    查询出庫明細テーブル-->
+    <select id="getShipmentDetailById" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select warehouse_cd, client_id, product_id, product_plan_cnt, shipment_plan_id, set_sub_id, reserve_cnt,
+        unit_price, tax_flag, is_reduced_tax
+          from tw201_shipment_detail
+         where warehouse_cd = #{warehouse_cd} and shipment_plan_id = #{shipment_plan_id}
+        <if test="product_id!=null and product_id.length!=''">
+            and product_id = #{product_id}
+        </if>
+        <if test="!cancel">
+            and del_flg = 0
+        </if>
+    </select>
+    
+<!-- a查询商品出庫明細-->
+    <select id="getShipmentDetail" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select client_id,warehouse_cd,shipment_plan_id,product_id,is_reduced_tax,cushioning_type,
+               gift_wrapping_type,product_plan_cnt,unit_price,price,set_sub_id,reserve_cnt,kubun
+          from tw201_shipment_detail
+         where client_id = #{client_id} and del_flg = 0
+         <if test="product_id!='' and product_id!=null">
+             and product_id = #{product_id}
+         </if>
+    </select>
+
+<!--    根据商品Id获取该出库依赖的引当数-->
+    <select id="getShipmentReserveCnt" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select shipment_plan_id,reserve_cnt, product_plan_cnt, client_id, ins_date
+          from tw201_shipment_detail
+         where del_flg = 0 and reserve_status = #{reserve_status} and product_id = #{product_id} and client_id = #{client_id}
+         order by ins_date asc
+    </select>
+
+<!--    修改商品的引当数和引当状态-->
+    <update id="updateReserveStatus">
+        update tw201_shipment_detail
+           set reserve_cnt = #{reserve_cnt}, reserve_status = #{reserve_status}
+         where del_flg = 0 and client_id = #{client_id} and shipment_plan_id = #{shipment_plan_id} and product_id = #{product_id}
+        <if test="set_sub_id == '' or set_sub_id == null or set_sub_id == 0">
+            and (set_sub_id is null or set_sub_id = 0)
+        </if>
+        <if test="set_sub_id != '' and set_sub_id != null">
+            and set_sub_id = #{set_sub_id}
+        </if>
+    </update>
+
+<!--    判断出库依赖状态是否可以改变-->
+    <update id="updateShipmentStatus">
+        update tw200_shipment
+           set shipment_status = 3
+         where del_flg = 0 and (
+                               select count(*)
+                                 from tw201_shipment_detail
+                                where reserve_status = 0 and del_flg = 0 and shipment_plan_id = #{shipment_plan_id}) = 0
+        and shipment_plan_id = #{shipment_plan_id} and shipment_status = 2 and del_flg = 0
+    </update>
+
+<!--    获取该店铺不同引当状态的数据-->
+    <select id="getReserveStatusList" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select warehouse_cd, client_id, product_id, shipment_plan_id,reserve_cnt, product_plan_cnt, client_id, ins_date, set_sub_id
+          from tw201_shipment_detail
+         where del_flg = 0 and reserve_status = #{reserve_status} and warehouse_cd = #{warehouse_cd} and client_id = #{client_id} and product_id = #{product_id}
+         order by ins_date asc
+    </select>
+
+    <select id="getProductReserveList" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select tw201.product_id, tw201.shipment_plan_id, tw201.reserve_cnt, tw201.set_sub_id
+          from tw201_shipment_detail tw201 left join tw200_shipment tw200
+            on tw201.shipment_plan_id = tw200.shipment_plan_id and tw200.shipment_status != 8 and tw200.del_flg = 0
+         where tw201.del_flg = 0 and tw200.client_id = #{client_id} and tw201.product_id = #{product_id}
+    </select>
+
+    <!-- 根据出库依赖查询出库依赖明细的所有数据-->
+    <select id="getShipmentDetails" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select warehouse_cd, client_id, product_id, shipment_plan_id, reserve_cnt,product_plan_cnt, set_sub_id,
+               unit_price, tax_flag, is_reduced_tax, ins_date
+        from tw201_shipment_detail
+        where del_flg = 0 and warehouse_cd = #{warehouse_cd}
+        <if test="client_id != null and client_id != ''">
+          and client_id = #{client_id}
+        </if>
+        <if test="shipmentPlanList != null and shipmentPlanList.size > 0">
+            and shipment_plan_id in
+            <foreach collection="shipmentPlanList" item="shipmentPlanList" open="(" separator="," close=")">
+                #{shipmentPlanList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 修改出库管理明细表的出库依赖Id -->
+    <update id="updateShipmentId">
+        update tw201_shipment_detail set shipment_plan_id = #{newShipmentId}, ins_date = #{date}, upd_date = #{date},
+        ins_usr = #{name}, upd_usr = #{name}
+        where client_id = #{client_id} and shipment_plan_id = #{shipment_plan_id}
+        <if test="idList.size != 0 ">
+            and id in
+            <foreach collection="idList" item="idList" open="(" separator="," close=")">
+                #{idList}
+            </foreach>
+        </if>
+    </update>
+
+    <select id="getShipmentDetailKubun" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select shipment_plan_id, kubun, product_plan_cnt
+        from tw201_shipment_detail
+        where del_flg = 0
+        <if test="shipmentIdList != null and shipmentIdList.size != 0">
+            and shipment_plan_id in
+            <foreach collection="shipmentIdList" item="shipmentIdList" open="(" separator="," close=")">
+                #{shipmentIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 更改出库依赖明细中的 kubun 为普通商品-->
+    <update id="updateShipmentDetailKubun">
+        update tw201_shipment_detail set kubun = #{kubun}, upd_date = #{date}, upd_usr = #{loginNm}
+        where client_id = #{client_id} and product_id = #{product_id} and del_flg =0
+        <if test="shipmentIds != null and shipmentIds.size != 0">
+            and shipment_plan_id in
+            <foreach collection="shipmentIds" item="shipmentIds" open="(" close=")" separator=",">
+                #{shipmentIds}
+            </foreach>
+        </if>
+    </update>
+
+    <!-- 查询商品是否出库依赖中或者依赖过，无需验证del_flg -->
+    <select id="getShipmentDetailByProductId" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select warehouse_cd, client_id, product_id, shipment_plan_id,reserve_cnt, product_plan_cnt, client_id, ins_date, set_sub_id
+        from tw201_shipment_detail
+        where client_id = #{client_id}
+        <if test="productIdList != null and productIdList.size != 0">
+            and product_id in
+            <foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+                #{productIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 删除恢复时del_flg修改  -->
+    <update id="recoverShipments">
+        update tw201_shipment_detail
+        set del_flg = 0
+        where client_id = #{client_id} and shipment_plan_id = #{shipment_plan_id}
+    </update>
+
+    <!-- 清空シリアル番号-->
+    <update id="emptySerialNo">
+        update tw201_shipment_detail set serial_no = ''
+        where shipment_plan_id = #{shipment_plan_id} and warehouse_cd = #{warehouse_cd}
+    </update>
+
+    <!-- 获取出库详细信息 -->
+    <select id="getShipmentDetailsById" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select warehouse_cd, client_id, product_id, shipment_plan_id,reserve_cnt, product_plan_cnt, client_id, ins_date, set_sub_id
+        from tw201_shipment_detail
+        where shipment_plan_id = #{shipment_plan_id} and client_id = #{client_id} and product_id = #{product_id} and del_flg = 0
+    </select>
+
+</mapper>

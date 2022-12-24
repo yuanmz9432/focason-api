@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.common.dao.ShipmentLocationDetailHistoryDao">
+
+    <insert id="insertShipmentLocationDetailHistory">
+        insert into tw213_shipment_location_detail_history
+        (warehouse_cd, client_id, shipment_plan_id, product_id, location_id, status, product_plan_cnt,
+        inventory_cnt, reserve_cnt, biko, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+        values
+        (#{warehouse_cd},#{client_id},#{shipment_plan_id},#{product_id},#{location_id},#{status},
+        #{product_plan_cnt},#{inventory_cnt},#{reserve_cnt},#{biko},#{ins_usr},#{ins_date},#{upd_usr},#{upd_date},0)
+    </insert>
+
+</mapper>

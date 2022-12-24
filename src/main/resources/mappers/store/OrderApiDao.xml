@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.OrderApiDao">
+
+	<!-- API自動連携(全部) -->
+    <select id="getAllData" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_id, client_url, api_name, api_key, password, token, template,
+               identification, hostname, shipment_status,order_status, delivery_status,
+               stock_status, bikou1, bikou2, bikou3, access_token, refresh_token, sponsor_id
+          from tc203_order_client
+         where del_flg = 0 and template = #{template}
+         order by client_id
+    </select>
+
+    <!--  外部API連携(受注連携)(0:連携しない 1:自動連携) -->
+    <select id="getAllDataOrder" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_id, client_url, api_name, api_key, password, token, template,
+               identification, hostname, shipment_status, order_status, delivery_status,
+               stock_status, bikou1, bikou2, bikou3, sponsor_id, access_token, refresh_token
+          from tc203_order_client
+         where del_flg = 0 and order_status = 1 and template = #{template}
+         order by client_id
+    </select>
+    <!-- 外部API連携(伝票連携)(0:連携しない 1:自動連携) -->
+    <select id="getAllDataDelivery" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_id, client_url, api_name, api_key, password, token, template,
+               identification, hostname, shipment_status, order_status, delivery_status,
+               stock_status, bikou1, bikou2, bikou3, sponsor_id,access_token, refresh_token
+          from tc203_order_client
+         where delivery_status =1 and del_flg = 0 and template=#{template}
+         order by client_id
+    </select>
+
+    <!-- 外部API連携(在庫連携)(0:連携しない 1:自動連携) -->
+    <select id="getAllDataStock" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_id, client_url, api_name, api_key, password, token, template,
+               identification, hostname, shipment_status, order_status, delivery_status,
+               stock_status, bikou1, bikou2, bikou3, sponsor_id,access_token
+          from tc203_order_client
+         where stock_status = 1 and del_flg = 0 and template=#{template}
+         order by client_id
+    </select>
+
+<!--    根据api_name 和 client_id 和 template 查询以前是否存在-->
+    <select id="getOrderClientInfoById" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_id, api_name, client_url, api_key, password, token, template,
+               identification, hostname, shipment_status, order_status, delivery_status,
+               stock_status, bikou1, bikou2, bikou3, sponsor_id
+          from tc203_order_client
+         where api_name = #{api_name} and client_id = #{client_id} and del_flg = 0
+        <if test="api_key != '' and api_key != null">
+            and api_key = #{api_key}
+        </if>
+    </select>
+
+<!--    新规店铺受注关系数据-->
+    <insert id="insertOrderClient">
+        insert into tc203_order_client
+        (id, client_id, api_name, client_url, api_key, password, template, identification,
+         shipment_status, order_status, delivery_status, del_flg, stock_status, sponsor_id, expire_date)
+        values
+         (#{jsonObject.id}, #{jsonObject.client_id}, #{jsonObject.api_name},
+         #{jsonObject.client_url}, #{jsonObject.api_key}, #{jsonObject.password}, #{jsonObject.template},
+         #{jsonObject.identification}, #{jsonObject.shipment_status}, #{jsonObject.order_status}, #{jsonObject.delivery_status},
+         0, #{jsonObject.stock_status}, #{jsonObject.sponsor_id}, #{jsonObject.expireDate})
+    </insert>
+
+<!-- 修改店铺受注关系数据-->
+    <update id="updateOrderClient">
+        update tc203_order_client
+           set client_url = #{jsonObject.client_url}, api_key = #{jsonObject.api_key},
+               password = #{jsonObject.password}, api_name = #{jsonObject.api_name},
+               shipment_status = #{jsonObject.shipment_status}, order_status = #{jsonObject.order_status},
+               delivery_status = #{jsonObject.delivery_status}, stock_status = #{jsonObject.stock_status},
+               sponsor_id = #{jsonObject.sponsor_id}, expire_date = #{jsonObject.expireDate}
+         where client_id = #{jsonObject.client_id} and id = #{jsonObject.id} and del_flg = 0 and template = #{jsonObject.template}
+    </update>
+
+<!--    根据模板,apiName查询店铺受注关系表-->
+    <select id="getOrderClientInfo" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_url, api_name, api_key, password,token, template,
+               identification, shipment_status, order_status,
+               delivery_status, stock_status, sponsor_id, bikou1, bikou2, bikou3, expire_date
+          from tc203_order_client
+         where client_id = #{client_id} and template = #{template}
+        <if test="api_name!=null and api_name!=''">
+            and api_name = #{api_name}
+        </if>
+         and del_flg = 0
+    </select>
+
+<!--    查询店铺受注关系表-->
+    <select id="getOrderClientList" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, api_name, template, shipment_status, order_status, delivery_status, sponsor_id, stock_status, expire_date
+        from tc203_order_client where client_id = #{client_id} and del_flg = 0
+    </select>
+
+<!--    获取最大Id-->
+    <select id="getMaxId" resultType="java.lang.Integer">
+        select max(id) from tc203_order_client where client_id = #{client_id}
+    </select>
+
+<!--    删除Api设定数据-->
+    <update id="deleteApiSet">
+        update tc203_order_client set del_flg = 1 where id = #{jsonObject.id} and client_id = #{jsonObject.client_id}
+    </update>
+
+<!--    根据get_send_flag 和 client_id 查询以前是否存在-->
+    <select id="getFtpClientInfoById" resultType="com.lemonico.common.bean.Tc206_order_ftp">
+        select id, client_id
+          from tc206_order_ftp
+         where client_id = #{client_id} and get_send_flag=#{get_send_flg}
+    </select>
+
+<!--    新规店铺受注关系数据-->
+    <insert id="insertFtpClient">
+        insert into tc206_order_ftp(client_id, ftp_host, ftp_user, ftp_passwd, ftp_path, ftp_file, template, warehouses ,get_send_flag)
+        values (#{jsonObject.client_id}, #{jsonObject.ftp_host,},
+        #{jsonObject.ftp_user}, #{jsonObject.ftp_passwd}, #{jsonObject.ftp_path}, #{jsonObject.ftp_file},
+        #{jsonObject.template},#{jsonObject.warehouses},#{jsonObject.get_send_flg})
+    </insert>
+
+<!--    修改店铺受注关系数据-->
+    <update id="updateFtpClient">
+        update tc206_order_ftp
+           set ftp_user = #{jsonObject.ftp_user}, ftp_host = #{jsonObject.ftp_host},
+               ftp_passwd = #{jsonObject.ftp_passwd}, template = #{jsonObject.template},
+               ftp_path = #{jsonObject.ftp_path}, ftp_file = #{jsonObject.ftp_file},
+               warehouses = #{jsonObject.warehouses}
+         where client_id = #{jsonObject.client_id} and get_send_flag=#{jsonObject.get_send_flg}
+    </update>
+
+<!--    根据店舗ID查询店铺FTP情報-->
+    <select id="getFtpClientInfo" resultType="com.lemonico.common.bean.Tc206_order_ftp">
+        select ftp_host, ftp_user, ftp_passwd, ftp_path, ftp_file, tc206_order_ftp.template, warehouses, template_nm,warehouse_nm
+          from tc206_order_ftp
+          left join Tc204_order_template on to_number(tc206_order_ftp.template,'99999') = Tc204_order_template.template_cd
+          left join mw400_warehouse on tc206_order_ftp.warehouses = mw400_warehouse.warehouse_cd
+         where tc206_order_ftp.client_id=#{client_id} and get_send_flag=#{get_send_flg}
+    </select>
+
+<!--    修改模板的token-->
+    <update id="updateToken">
+        update tc203_order_client
+           set access_token = #{access_token}, refresh_token = #{refresh_token}
+         where id = #{id} and client_id = #{client_id}
+    </update>
+
+<!--    更改BASE模板的信息-->
+    <update id="updateOrderBase">
+        update tc203_order_client
+           set client_url = #{jsonObject.client_url}, api_key = #{jsonObject.api_key},
+               password = #{jsonObject.password}, template = #{jsonObject.template},
+               shipment_status = #{jsonObject.shipment_status}, order_status = #{jsonObject.order_status},
+               delivery_status = #{jsonObject.delivery_status}, stock_status = #{jsonObject.stock_status},
+               access_token = #{jsonObject.access_token}, refresh_token = #{jsonObject.refresh_token},
+               sponsor_id = #{jsonObject.sponsor_id},api_name = #{jsonObject.api_name}
+         where client_id = #{jsonObject.client_id} and api_name = #{jsonObject.old_api_name} and del_flg = 0 and template = #{jsonObject.template}
+    </update>
+
+<!--    新规BASE模板的信息-->
+    <insert id="insertOrderBase">
+        insert into tc203_order_client
+        (id, client_id, api_name, client_url, api_key, password, template, identification,
+         shipment_status, order_status, delivery_status, del_flg, stock_status, access_token, refresh_token, sponsor_id)
+        values
+         (#{jsonObject.id}, #{jsonObject.client_id}, #{jsonObject.api_name},
+         #{jsonObject.client_url}, #{jsonObject.api_key}, #{jsonObject.password}, #{jsonObject.template},
+         #{jsonObject.identification}, #{jsonObject.shipment_status},
+         #{jsonObject.order_status}, #{jsonObject.delivery_status},0, #{jsonObject.stock_status}, #{jsonObject.access_token},
+         #{jsonObject.refresh_token}, #{jsonObject.sponsor_id})
+    </insert>
+
+	<!-- 新规BASE模板的信息 -->
+    <insert id="insertOrderColorMe">
+        insert into tc203_order_client
+        (id, client_id, api_name, client_url, api_key, password, template, identification,
+         shipment_status, order_status, delivery_status, del_flg, stock_status, access_token, refresh_token, sponsor_id)
+        values
+         (#{jsonObject.id}, #{jsonObject.client_id}, #{jsonObject.api_name},
+         #{jsonObject.client_url}, #{jsonObject.api_key}, #{jsonObject.password}, #{jsonObject.template},
+         #{jsonObject.identification}, #{jsonObject.shipment_status},
+         #{jsonObject.order_status}, #{jsonObject.delivery_status},0, #{jsonObject.stock_status}, #{jsonObject.access_token},
+         #{jsonObject.refresh_token}, #{jsonObject.sponsor_id})
+    </insert>
+
+	<!--更改Color Me模板的信息-->
+    <update id="updateOrderColorMe">
+        update tc203_order_client
+        set client_url = #{jsonObject.client_url}, api_key = #{jsonObject.api_key},
+            password = #{jsonObject.password}, template = #{jsonObject.template},
+            shipment_status = #{jsonObject.shipment_status}, order_status = #{jsonObject.order_status},
+            delivery_status = #{jsonObject.delivery_status}, stock_status = #{jsonObject.stock_status},
+            sponsor_id = #{jsonObject.sponsor_id}, bikou1= #{jsonObject.bikou1}, bikou2= #{jsonObject.bikou2},
+            api_name = #{jsonObject.api_name}
+        where client_id = #{jsonObject.client_id} and api_name = #{jsonObject.old_api_name} and del_flg = 0 and template = #{jsonObject.template}
+    </update>
+
+	<!-- MakeShopのAPI情報を更新する -->
+    <update id="updateMakeShopAPIInfo">
+        update tc203_order_client
+           set client_url = #{jsonObject.client_url}, api_key = #{jsonObject.api_key}, api_name = #{jsonObject.api_name},
+               password = #{jsonObject.password}, template = #{jsonObject.template},
+               shipment_status = #{jsonObject.shipment_status}, order_status = #{jsonObject.order_status},
+               delivery_status = #{jsonObject.delivery_status}, stock_status = #{jsonObject.stock_status},
+               sponsor_id = #{jsonObject.sponsor_id}, bikou1= #{jsonObject.bikou1}, bikou2= #{jsonObject.bikou2}
+         where client_id = #{jsonObject.client_id} and api_name = #{jsonObject.api_name} and del_flg = 0 and template = #{jsonObject.template}
+    </update>
+
+	<!-- MakeShopのAPI情報を新規する -->
+    <insert id="insertMakeShopAPIInfo">
+        insert into tc203_order_client
+        (id, client_id, api_name, client_url, api_key, password, template, identification,
+         shipment_status, order_status, delivery_status, del_flg, stock_status, bikou1, bikou2, sponsor_id)
+        values
+         (#{jsonObject.id}, #{jsonObject.client_id}, #{jsonObject.api_name},
+         #{jsonObject.client_url}, #{jsonObject.api_key}, #{jsonObject.password}, #{jsonObject.template},
+         #{jsonObject.identification}, #{jsonObject.shipment_status},
+         #{jsonObject.order_status}, #{jsonObject.delivery_status},0, #{jsonObject.stock_status},
+         #{jsonObject.bikou1}, #{jsonObject.bikou2}, #{jsonObject.sponsor_id})
+    </insert>
+
+    <!-- YAHOOのAPI情報を更新する -->
+    <update id="updateYahooApi">
+        update tc203_order_client
+           set client_url = #{jsonObject.client_url}, api_key = #{jsonObject.api_key},
+               password = #{jsonObject.password}, template = #{jsonObject.template},
+               shipment_status = #{jsonObject.shipment_status}, order_status = #{jsonObject.order_status},
+               delivery_status = #{jsonObject.delivery_status}, stock_status = #{jsonObject.stock_status},
+               sponsor_id = #{jsonObject.sponsor_id}, expire_date = #{jsonObject.expireDate}
+         where client_id = #{jsonObject.client_id} and api_name = #{jsonObject.api_name} and del_flg = 0 and template = #{jsonObject.template}
+    </update>
+
+	<!-- YAHOOのAPI情報を新規する -->
+    <insert id="insertYahooApi">
+        insert into tc203_order_client
+        (id, client_id, api_name, client_url, api_key, password, template, identification,
+         shipment_status, order_status, delivery_status, del_flg, stock_status, sponsor_id, expire_date)
+        values
+         (#{jsonObject.id}, #{jsonObject.client_id}, #{jsonObject.api_name},
+         #{jsonObject.client_url}, #{jsonObject.api_key}, #{jsonObject.password}, #{jsonObject.template},
+         #{jsonObject.identification}, #{jsonObject.shipment_status},
+         #{jsonObject.order_status}, #{jsonObject.delivery_status},0, #{jsonObject.stock_status},
+         #{jsonObject.sponsor_id}, #{jsonObject.expireDate})
+    </insert>
+
+    <!-- NextEngineのAPI情報を更新する -->
+    <update id="updateNextEngineApi">
+        update tc203_order_client
+        set client_url = #{jsonObject.client_url}, api_key = #{jsonObject.api_key},
+            password = #{jsonObject.password}, template = #{jsonObject.template},
+            shipment_status = #{jsonObject.shipment_status}, order_status = #{jsonObject.order_status},
+            delivery_status = #{jsonObject.delivery_status}, stock_status = #{jsonObject.stock_status},
+            sponsor_id = #{jsonObject.sponsor_id}
+        where client_id = #{jsonObject.client_id} and api_name = #{jsonObject.api_name} and del_flg = 0
+    </update>
+
+    <!-- NextEngineのAPI情報を新規する -->
+    <insert id="insertNextEngineApi">
+        insert into tc203_order_client
+        (id, client_id, api_name, client_url, api_key, password, template, identification,
+         shipment_status, order_status, delivery_status, del_flg, stock_status, sponsor_id)
+        values
+        (#{jsonObject.id}, #{jsonObject.client_id}, #{jsonObject.api_name},
+         #{jsonObject.client_url}, #{jsonObject.api_key}, #{jsonObject.password}, #{jsonObject.template},
+         #{jsonObject.identification}, #{jsonObject.shipment_status},
+         #{jsonObject.order_status}, #{jsonObject.delivery_status},0, #{jsonObject.stock_status},
+         #{jsonObject.sponsor_id})
+    </insert>
+
+    <!-- 受注管理レコードを論理削除 -->
+    <update id="deleteTc200OrderByOuterOrderNo">
+        UPDATE tc200_order SET del_flg = 1 WHERE client_id = #{client_id} and outer_order_no = #{outer_order_no}
+    </update>
+
+    <!-- 根据店铺识别子 获取店铺api设定信息-->
+    <select id="getClientApiByIdentifier" resultType="com.lemonico.common.bean.Tc203_order_client">
+        select id, client_id, api_name, client_url, bikou1, bikou2, bikou3
+        from tc203_order_client
+        where client_id = #{client_id} and identification = #{identification} and del_flg = 0
+    </select>
+</mapper>

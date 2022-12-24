@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<!--    Print to console -->
+	<appender name="consoleApp" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>
+				%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n
+			</pattern>
+		</layout>
+	</appender>
+
+	<!--   Print to file -->
+	<appender name="fileInfoApp" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>DENY</onMatch>
+			<onMismatch>ACCEPT</onMismatch>
+		</filter>
+		<encoder>
+			<pattern>
+				%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n
+			</pattern>
+		</encoder>
+		<!-- The rolling strategy -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- The path -->
+			<fileNamePattern>app_log/log/app.info.%d.log</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+
+	<!--  Print to file -->
+	<appender name="fileErrorApp" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<encoder>
+			<pattern>
+				%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n
+			</pattern>
+		</encoder>
+
+		<!-- Set the scrolling policy -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+			<fileNamePattern>app_log/log/app.err.%d.log</fileNamePattern>
+
+
+			<MaxHistory>30</MaxHistory>
+
+			<!--   Keep the 30-day history record to a maximum of 10MB total size -->
+			<totalSizeCap>10MB</totalSizeCap>
+
+		</rollingPolicy>
+	</appender>
+
+
+	<root level="INFO">
+		<appender-ref ref="consoleApp"/>
+		<appender-ref ref="fileInfoApp"/>
+		<appender-ref ref="fileErrorApp"/>
+	</root>
+</configuration>

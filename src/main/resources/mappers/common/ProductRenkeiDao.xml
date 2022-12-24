@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.common.dao.ProductRenkeiDao">
+<!--    他店舗商品ID管理 存新数据-->
+    <insert id="insertData">
+        insert into mc106_produce_renkei (product_id, client_id, api_id, renkei_product_id, inventory_type, ins_date, del_flg)
+        values (#{product_id}, #{client_id}, #{api_id}, #{renkei_product_id}, #{inventory_type}, #{ins_date}, 0)
+    </insert>
+
+<!--    根据商品Id， 店铺识别code， 店铺Id 获取他店舗商品ID管理表-->
+    <select id="getDataById" resultType="com.lemonico.common.bean.Mc106_produce_renkei">
+        select product_id, client_id, api_id, renkei_product_id, ins_date from mc106_produce_renkei where
+        product_id = #{product_id} and api_id = #{api_id} and client_id = #{client_id} and del_flg = 0
+    </select>
+
+<!--    根据商品Id， 店铺识别code， 店铺Id 获取他店舗商品ID管理表-->
+    <select id="getDataByRenkeiId" resultType="com.lemonico.common.bean.Mc106_produce_renkei">
+        select product_id, client_id, api_id, renkei_product_id, ins_date from mc106_produce_renkei where
+        renkei_product_id = #{renkei_product_id} and variant_id = #{variant_id} and client_id = #{client_id} and del_flg = 0
+    </select>
+
+<!--    根据api_id 获取到mc106的集合-->
+    <select id="getDataByApiId" resultType="com.lemonico.common.bean.Mc106_produce_renkei">
+        select mc106.product_id, mc106.client_id, mc106.renkei_product_id, tc203.access_token, tc203.refresh_token, tc203.client_url
+        from mc106_produce_renkei mc106
+        left join tc203_order_client tc203 on mc106.api_id = tc203.id
+        where mc106.del_flg = 0 and mc106.api_id in
+        <foreach collection="list" item="list" open="(" separator="," close=")">
+            #{list}
+        </foreach>
+    </select>
+
+    <!--    根据api_id 获取到mc106的集合-->
+    <select id="getByApiId" resultType="com.lemonico.common.bean.Mc106_produce_renkei">
+        select mc106.renkei_product_id
+        from mc106_produce_renkei mc106
+        where mc106.del_flg = 0 and mc106.api_id = #{apiId}
+    </select>
+
+    <!-- 店舗IDとAPI番号でMc106_product_renkeiのリスト取得 -->
+    <select id="getDataByClientIdAndApiId" resultType="com.lemonico.common.bean.Mc106_produce_renkei">
+        select mc106.product_id, mc106.client_id, mc106.api_id, mc106.inventory_type, mc106.variant_id, mc106.renkei_product_id, mc106.biko
+        from mc106_produce_renkei mc106
+        where mc106.del_flg = 0 and mc106.client_id = #{client_id} and mc106.api_id = #{api_id}
+    </select>
+</mapper>

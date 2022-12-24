@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.wms.dao.ProductResultDao">
+	<!-- a设定仓库侧商品size -->
+	<update id="setProductSize">
+		update mc100_product
+		   set size_cd = #{size_cd}, weight = #{weight}
+		 where warehouse_cd = #{warehouse_cd} and client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+	<!-- a获取商品货架信息 -->
+	<select id="getProductLocation" resultType="com.lemonico.common.bean.Mw405_product_location">
+		select mw405.location_id, mw405.stock_cnt, mw405.requesting_cnt, mw405.not_delivery, mw404.wh_location_nm, mw404.priority,
+		mw405.bestbefore_date, mw405.status, mw404.lot_no
+		from mw405_product_location mw405
+		left join mw404_location mw404 on mw405.location_id = mw404.location_id and mw404.warehouse_cd = #{warehouse_cd}
+		where mw405.client_id = #{client_id} and mw405.product_id = #{product_id}
+		and mw405.del_flg = 0
+		order by mw404.priority
+	</select>
+
+	<!-- a移动商品所在货架 -->
+	<update id="moveProductLocation">
+		update mw405_product_location
+		   set stock_cnt = ( select stock_cnt
+		                       from mw405_product_location
+		                      where client_id = #{client_id} and product_id = #{product_id} and location_id = #{location_id} and del_flg = 0
+		                   ) + #{stock_cnt}
+		 where client_id = #{client_id} and product_id = #{product_id} and location_id = #{location_id} and del_flg = 0
+	</update>
+
+	<select id="getSizeIdByName" resultType="String">
+		select size_cd
+		  from ms010_product_size
+		 where name = #{sizeName}
+	</select>
+
+	<!-- 获取locationID -->
+	<select id="getLocationId" resultType="String">
+		select location_id
+		  from mw404_location
+		 where warehouse_cd = #{warehouse_cd} and wh_location_nm = #{wh_location_nm} and del_flg = 0
+		   and lot_no = #{lot_no}
+	</select>
+
+	<!-- 将商品存放到货架上面 -->
+	<insert id="insertProductLocation">
+		insert into
+		mw405_product_location(location_id, client_id, product_id, stock_cnt, requesting_cnt, ins_usr, ins_date, upd_usr, upd_date, del_flg,
+		not_delivery, status, bestbefore_date)
+		values
+		(#{location_id}, #{client_id}, #{product_id}, #{productTotal}, 0, #{loginNm}, #{date}, #{loginNm}, #{date}, 0, #{not_delivery},
+		#{status}, #{bestbefore_date})
+	</insert>
+
+	<!-- 查询该货架是否有商品 -->
+	<select id="getProductLocationInfo" resultType="com.lemonico.common.bean.Mw405_product_location">
+		select location_id,client_id,product_id,stock_cnt,requesting_cnt,not_delivery, bestbefore_date, status
+		  from mw405_product_location
+		 where location_id = #{locationId} and client_id = #{client_id} and product_id = #{productId} and del_flg = 0
+	</select>
+
+	<!-- 货架移动新规数据 -->
+	<insert id="createLocationProduct">
+		insert into mw405_product_location
+		(location_id,client_id,product_id,stock_cnt,reserve_cnt,del_flg)
+		values
+		(#{location_id},#{client_id},#{product_id},#{stock_cnt},0,0)
+	</insert>
+
+	<!-- 根据Id修改该货架的引当数和实际在库数 -->
+	<update id="updateReserveCntById">
+		update mw405_product_location
+		   set stock_cnt = #{stock_cnt}, not_delivery = #{not_delivery}, upd_usr = #{loginNm}, upd_date = #{date}
+		 where location_id = #{location_id} and client_id = #{client_id}
+		   and product_id = #{product_id} and del_flg = 0
+	</update>
+
+	<!-- 获取引当数大于在库数的货架Id -->
+	<select id="getLocationExceptionInfo" resultType="com.lemonico.common.bean.Mw405_product_location">
+		select stock_cnt,requesting_cnt,location_id, not_delivery
+		  from mw405_product_location
+		 where (requesting_cnt + not_delivery) > stock_cnt and client_id = #{client_id} and product_id = #{product_id}
+		   and del_flg = 0
+		<if test="location_id != null and location_id != ''">
+			and location_id = #{location_id}
+		</if>
+	</select>
+
+<!--	更改商品表的重量和size-->
+	<update id="updateWeightSizeByProductId">
+		update mc100_product
+		   set size_cd = #{size_cd}, weight = #{weight}
+		 where product_id = #{product_id} and client_id = #{client_id} and del_flg = 0
+	</update>
+
+<!--	获取所有sizeName-->
+	<select id="getSizeNameList" resultType="com.lemonico.common.bean.Ms010_product_size">
+		select size_cd, name from ms010_product_size where del_flg = 0
+	</select>
+	
+	<!--   获取商品图片路径-->
+    <select id="getImagePath" resultType="com.lemonico.common.bean.Mc102_product_img">
+        select product_id, client_id, product_img from mc102_product_img where del_flg = 0
+        and client_id = #{client_id} and product_id = #{product_id}
+    </select>
+</mapper>

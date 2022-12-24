@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.wms.dao.ShipmentResultDao">
+    <resultMap type="com.lemonico.common.bean.Tw210_shipment_result" id="selectShipment">
+        <id column="work_id" property="work_id" />
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <result column="work_name" property="work_name" />
+        <result column="shipment_status" property="shipment_status" />
+        <result column="total_cnt" property="total_cnt" />
+        <result column="yobi" property="yobi" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="del_flg" property="del_flg" />
+    </resultMap>
+
+<!--    <resultMap id="shipmentLocation" type="Tw212_shipment_location_detail">-->
+<!--        <id column="id" property="id"></id>-->
+<!--        <id column="warehouse_cd" property="warehouse_cd"></id>-->
+<!--        <id column="client_id" property="client_id"></id>-->
+<!--        <id column="shipment_plan_id" property="shipment_plan_id"></id>-->
+<!--        <id column="product_id" property="product_id"></id>-->
+<!--        <result column="location_id" property="location_id"></result>-->
+<!--        <result column="status" property="status"></result>-->
+<!--        <result column="product_plan_cnt" property="product_plan_cnt"></result>-->
+<!--        <result column="total_picking_status" property="total_picking_status"></result>-->
+<!--        <result column="del_flg" property="del_flg"></result>-->
+<!--        <collection property="mc100_product" ofType="Mc100_product">-->
+<!--            <id column="product_id" property="product_id"></id>-->
+<!--            <id column="client_id" property="client_id"></id>-->
+<!--            <result column="code" property="code"></result>-->
+<!--            <result column="name" property="name"></result>-->
+<!--            <result column="barcode" property="barcode"></result>-->
+<!--            <result column="del_flg" property="del_flg"></result>-->
+<!--        </collection>-->
+<!--        <collection property="Mw404_location" ofType="Mw404_location">-->
+<!--            <id column="location_id" property="location_id"></id>-->
+<!--            <id column="warehouse_cd" property="warehouse_cd"></id>-->
+<!--            <result column="wh_location_nm" property="wh_location_nm"></result>-->
+<!--            <result column="del_flg" property="del_flg"></result>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+
+    <insert id="insertShipmentResult">
+        insert into tw210_shipment_result
+        (work_id, warehouse_cd, work_name, shipment_status, total_cnt, yobi, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+        values
+        (#{jsonObject.work_id}, #{jsonObject.warehouse_cd}, #{jsonObject.work_name}, #{jsonObject.shipment_status}, #{jsonObject.total_cnt},
+         #{jsonObject.yobi}, #{jsonObject.ins_usr}, #{jsonObject.ins_date}, #{jsonObject.upd_usr}, #{jsonObject.upd_date}, 0)
+    </insert>
+
+    <select id="getWorkId" resultType="java.lang.Integer">
+        select max(work_id) from tw210_shipment_result;
+    </select>
+
+    <select id="getWorkNameList" resultType="com.lemonico.common.bean.Tw210_shipment_result">
+        select tw210.work_name, tw210.ins_date
+        from tw210_shipment_result tw210
+        left join tw211_shipment_result_detail tw211 on tw210.work_id = tw211.work_id
+        where tw210.warehouse_cd = #{warehouse_cd} and tw210.shipment_status = '1' and tw210.del_flg = 0
+        and (select count(*) from tw200_shipment tw200 where tw200.shipment_plan_id = tw211.shipment_plan_id and tw200.del_flg = 0 and tw200.warehouse_cd = #{warehouse_cd}
+            <if test="client_id != 'all'">
+                and tw200.client_id = #{client_id}
+            </if>
+        ) > 0
+        <if test="client_id != 'all'">
+            and tw211.client_id = #{client_id}
+        </if>
+        order by tw210.ins_date desc
+    </select>
+
+<!--    查询 出庫作業ロケ明細-->
+    <select id="getShipmentLocationDetail" resultType="com.lemonico.common.bean.Tw212_shipment_location_detail">
+        select id, warehouse_cd, client_id, shipment_plan_id, product_id, location_id, product_plan_cnt, status, inventory_cnt, reserve_cnt
+          from tw212_shipment_location_detail
+         where warehouse_cd = #{warehouse_cd}
+           and shipment_plan_id in
+           <foreach collection="shipmentPlanId" item="shipment_plan_id" open="(" separator="," close=")">
+               #{shipment_plan_id}
+           </foreach>
+           <if test="product_id!=null and product_id!=''">
+               and product_id = #{product_id}
+           </if>
+           and del_flg = 0
+    </select>
+
+<!--    根据多个出库依赖Id查找货架信息-->
+    <select id="getLocationDetailList" resultType="com.lemonico.common.bean.Tw212_shipment_location_detail">
+        select id, warehouse_cd, client_id, shipment_plan_id, product_id, location_id, lot_no,
+        product_plan_cnt, status, inventory_cnt, reserve_cnt
+        from tw212_shipment_location_detail
+        where warehouse_cd = #{warehouse_cd} and del_flg = 0
+        <if test="client_id != null and client_id != ''">
+            and client_id = #{client_id}
+        </if>
+        and shipment_plan_id in
+        <foreach collection="shipmentPlanList" item="shipmentPlanList" open="(" separator="," close=")">
+            #{shipmentPlanList}
+        </foreach>
+    </select>
+
+    <!--    查询 出庫作業中ロケ明細-->
+    <!--    status:0 出庫作業中, 1:出庫作業済み-->
+    <select id="getShipmentWorkLocation" resultType="com.lemonico.common.bean.Tw212_shipment_location_detail">
+        select product_id, location_id, sum(reserve_cnt) as reserve_cnt
+          from tw212_shipment_location_detail
+         where warehouse_cd = #{warehouse_cd} and client_id = #{client_id}
+           and product_id = #{product_id} and status = 0 and del_flg = 0
+         group by location_id, product_id
+    </select>
+
+    <update id="updateLocationStatus">
+        update tw212_shipment_location_detail set status = 1
+         where warehouse_cd = #{warehouse_cd} and shipment_plan_id = #{shipment_plan_id}
+           and id = #{id}
+           and status = 0 and del_flg = 0
+    </update>
+
+<!--    根据作业name获取作业者Id-->
+    <select id="getWorkIdByName" resultType="java.lang.Integer">
+        select tw210.work_id
+          from tw210_shipment_result tw210
+          left join tw211_shipment_result_detail tw211 on tw210.work_id = tw211.work_id
+         where tw210.warehouse_cd = #{warehouse_cd} and tw210.work_name = #{work_name} and tw210.shipment_status = #{shipment_status}
+        <if test="client_id != 'all'">
+            and tw211.client_id = #{client_id}
+        </if>
+    </select>
+
+<!--    根据workId 改修 処理ステータス-->
+    <update id="updateShipmentResultStatusByWorkId">
+        update tw210_shipment_result
+           set shipment_status = '2'
+         where warehouse_cd = #{warehouse_cd} and work_id = #{work_id}
+    </update>
+<!--    删除出庫作業管理テーブル-->
+    <update id="deleteShipmentResultInfo">
+        update tw210_shipment_result
+           set del_flg = 1
+         where warehouse_cd = #{warehouse_cd} and work_id = #{work_id}
+    </update>
+
+<!--    删除出庫作業明細的数据-->
+    <update id="deleteShipmentResultDetailInfo">
+        update tw211_shipment_result_detail
+          set del_flg = 1
+        where warehouse_cd = #{warehouse_cd} and work_id = #{work_id}
+          and shipment_plan_id = #{shipment_plan_id}
+    </update>
+
+    <!--    查询以商品Id为单位的 出库依赖集合-->
+    <select id="getPickingList" resultType="com.lemonico.common.bean.Tw212_shipment_location_detail">
+        select tw212.id, tw212.client_id, tw212.shipment_plan_id, tw212.product_id, tw212.location_id, tw212.product_plan_cnt,
+        tw212.total_picking_status,tw212.reserve_cnt,mc100.name, mc100.code, mc100.barcode, mw404.wh_location_nm
+        from tw212_shipment_location_detail tw212
+        left join mc100_product mc100 on tw212.product_id = mc100.product_id and mc100.del_flg = 0 and mc100.client_id = tw212.client_id
+        left join mw404_location mw404 on tw212.location_id = mw404.location_id and mw404.del_flg = 0
+        where tw212.del_flg = 0 and tw212.warehouse_cd = #{warehouse_cd} and tw212.status = 0 and tw212.total_picking_status = 0
+        <if test="shipmentIdList != null and shipmentIdList.size > 0">
+            and tw212.shipment_plan_id in
+            <foreach collection="shipmentIdList" item="shipmentIdList" open="(" separator="," close=")">
+                #{shipmentIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!--    修改 トータルピッキング确认状态-->
+    <update id="updatePinkingStatus">
+        update tw212_shipment_location_detail set total_picking_status = 1 where id in
+        <foreach collection="idList" item="idList" open="(" separator="," close=")">
+            #{idList}
+        </foreach>
+    </update>
+
+    <!--    根据出庫作業ロケ明細 Id 获取以商品id为单位的出库依赖信息-->
+    <select id="getPickingListById" resultType="com.lemonico.common.bean.Tw212_shipment_location_detail">
+        select tw212.id, tw212.warehouse_cd, tw212.client_id, tw212.shipment_plan_id, tw212.product_id, tw212.location_id, tw212.product_plan_cnt,
+        tw212.total_picking_status,mc100.name, mc100.code, mc100.barcode, mw404.wh_location_nm
+        from tw212_shipment_location_detail tw212
+        left join mc100_product mc100 on tw212.product_id = mc100.product_id and mc100.del_flg = 0 and mc100.client_id = tw212.client_id
+        left join mw404_location mw404 on tw212.location_id = mw404.location_id and mw404.del_flg = 0
+        where tw212.del_flg = 0 and tw212.id in
+        <foreach collection="idList" item="idList" open="(" separator="," close=")">
+            #{idList}
+        </foreach>
+    </select>
+
+    <!--    新规 トータルピッキング-->
+    <insert id="insertTotalPicking">
+        insert into tw214_total_picking(warehouse_cd, user_id, start_date, end_date, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+        values (#{json.warehouse_cd}, #{json.user_id}, #{json.start_date}, #{json.end_date}, #{json.loginNm}, #{json.end_date},
+        #{json.loginNm}, #{json.end_date}, 0)
+    </insert>
+
+    <!--    新规 トータルピッキング詳細-->
+    <insert id="insertTotalPickingDetail">
+        insert into tw215_total_picking_detail(warehouse_cd, client_id, shipment_plan_id, product_id, product_plan_cnt, ins_usr,
+        ins_date, upd_usr, upd_date, del_flg)
+        values (#{json.warehouse_cd},#{json.client_id},#{json.shipment_plan_id},#{json.product_id},#{json.product_plan_cnt},#{json.loginNm},
+        #{json.end_date},#{json.loginNm},#{json.end_date}, 0)
+    </insert>
+
+    <!--    根据仓库Id获取到出库货架明细的出库依赖Id-->
+    <select id="getShipmentId" resultType="java.lang.String">
+        select shipment_plan_id from tw212_shipment_location_detail where del_flg = 0 and total_picking_status = 0 and
+        warehouse_cd = #{warehouse_cd} and status = 0
+    </select>
+
+    <!--    根据出库依赖Id 获取到作业者信息-->
+    <select id="getWorkInfo" resultType="com.lemonico.common.bean.Tw210_shipment_result">
+        select tw210.work_id, tw210.work_name from tw210_shipment_result tw210
+        left join tw211_shipment_result_detail tw211 on tw211.work_id = tw210.work_id and tw211.del_flg = 0
+        where tw210.del_flg = 0 and tw211.warehouse_cd = #{warehouse_cd} and tw211.shipment_plan_id in
+        <foreach collection="shipmentId" item="shipmentId" open="(" separator="," close=")">
+            #{shipmentId}
+        </foreach>
+    </select>
+
+    <!--    出庫依頼ごとトータルピッキングレポート-->
+    <select id="getTotalPickingList" resultType="com.lemonico.common.bean.Tw214_total_picking">
+        select tw214.total_picking_id, tw214.warehouse_cd, tw214.ins_usr, tw214.start_date, tw214.end_date, tw215.client_id, tw215.shipment_plan_id, tw215.product_id, tw215.product_plan_cnt, mc100.name, mc100.code
+        from tw214_total_picking tw214
+        left join tw215_total_picking_detail tw215 on tw214.total_picking_id = tw215.total_picking_id and tw215.del_flg = 0
+        left join mc100_product mc100 on tw215.product_id = mc100.product_id and mc100.del_flg = 0
+        where tw214.warehouse_cd = #{warehouse_cd} and tw214.del_flg = 0
+        <if test="start != null">
+            and tw214.start_date &gt;= #{start}
+        </if>
+        <if test="end != null">
+            and tw214.end_date &lt;= #{end}
+        </if>
+    </select>
+
+    <select id="getPickingInsUser" resultType="com.lemonico.common.bean.Tw214_total_picking">
+        select total_picking_id,ins_usr, start_date, end_date from tw214_total_picking where del_flg = 0
+        <if test="start != null">
+            and start_date &gt;= #{start}
+        </if>
+        <if test="end != null">
+            and end_date &lt;= #{end}
+        </if>
+    </select>
+
+    <select id="getPickingDetail" resultType="com.lemonico.common.bean.Tw215_total_picking_detail">
+        select total_picking_id, warehouse_cd, client_id, shipment_plan_id, product_id, product_plan_cnt
+        from tw215_total_picking_detail where del_flg = 0 and ins_usr = #{ins_usr} and total_picking_id in
+        <foreach collection="total_picking_id" item="total_picking_id" open="(" close=")" separator=",">
+            #{total_picking_id}
+        </foreach>
+    </select>
+
+</mapper>

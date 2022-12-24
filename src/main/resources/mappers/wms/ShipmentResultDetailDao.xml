@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.wms.dao.ShipmentResultDetailDao">
+    <resultMap type="com.lemonico.common.bean.Tw211_shipment_result_detail" id="selectShipment">
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="client_id" property="client_id" />
+        <id column="work_id" property="work_id" />
+        <id column="shipment_plan_id" property="shipment_plan_id" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="del_flg" property="del_flg" />
+    </resultMap>
+
+    <insert id="insertShipmentResultDetail">
+        insert into tw211_shipment_result_detail
+        (warehouse_cd, client_id, work_id, shipment_plan_id, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+        values
+        (#{jsonObject.warehouse_cd}, #{jsonObject.client_id}, #{jsonObject.work_id}, #{jsonObject.shipment_plan_id},
+         #{jsonObject.ins_usr}, #{jsonObject.ins_date}, #{jsonObject.upd_usr}, #{jsonObject.upd_date}, 0)
+    </insert>
+
+<!--    获取作業管理ID-->
+    <select id="getWorkId" resultType="java.lang.Integer">
+        select work_id
+          from tw211_shipment_result_detail
+         where warehouse_cd = #{warehouse_cd}
+           and shipment_plan_id = #{shipmentPlanId} order by upd_date desc limit 1
+    </select>
+
+    <select id="getShipmentIdListByWorkId" resultType="java.lang.String">
+        select shipment_plan_id
+          from tw211_shipment_result_detail
+         where del_flg = 0 and work_id in
+        <foreach collection="work_id" item="work_id" open="(" separator="," close=")">
+            #{work_id}
+        </foreach>
+    </select>
+
+<!--    获取出库作业name-->
+    <select id="getWorkName" resultType="java.lang.String">
+        select tw210.work_name from tw210_shipment_result tw210
+        left join tw211_shipment_result_detail tw211 on tw210.work_id = tw211.work_id and tw210.warehouse_cd = tw211.warehouse_cd and tw211.del_flg = 0
+        where tw211.warehouse_cd = #{warehouse_cd} and tw211.shipment_plan_id in
+        <foreach collection="shipmentList" item="shipmentList" open="(" separator="," close=")">
+            #{shipmentList}
+        </foreach>
+    </select>
+
+    <!--    根据作业者ID获取作业信息-->
+    <select id="getWorkInfoById" resultType="com.lemonico.common.bean.Tw211_shipment_result_detail">
+        select warehouse_cd, client_id, shipment_plan_id, del_flg from tw211_shipment_result_detail where
+        work_id = #{work_id}
+    </select>
+</mapper>

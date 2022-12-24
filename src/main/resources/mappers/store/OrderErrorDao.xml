@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.OrderErrorDao">
+    <resultMap type="com.lemonico.common.bean.Tc207_order_error" id="orderErrorResultMap">
+        <id column="order_error_no" property="order_error_no" />
+        <id column="client_id" property="client_id" />
+        <result column="outer_order_no" property="outer_order_no" />
+        <result column="history_id" property="history_id" />
+        <result column="status" property="status" />
+        <result column="error_msg" property="error_msg" />
+        <result column="bikou1" property="bikou1" />
+        <result column="bikou2" property="bikou2" />
+        <result column="bikou3" property="bikou3" />
+        <result column="ins_usr" property="ins_usr"/>
+        <result column="ins_date" property="ins_date"/>
+        <result column="upd_usr" property="upd_usr"/>
+        <result column="upd_date" property="upd_date"/>
+        <result column="del_flg" property="del_flg"/>
+    </resultMap>
+
+    <!-- 最新受注明細番号を取得 -->
+    <select id="getLastOrderErrorNo" resultType="java.lang.String">
+        select
+            order_error_no
+        from
+            tc207_order_error
+        where
+            order_error_no = (select max(order_error_no) from tc207_order_error);
+    </select>
+
+    <select id="getOrderErrorList" resultType="com.lemonico.common.bean.Tc207_order_error">
+        SELECT
+            *
+        FROM
+            tc207_order_error
+        WHERE
+            client_id = #{client_id}
+            AND history_id = #{history_id}
+            AND status = #{status}
+            AND del_flg = 0;
+    </select>
+
+    <select id="getOrderError"  resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            tc207_order_error
+        WHERE
+            client_id = #{client_id}
+            AND outer_order_no = #{outer_order_no}
+            AND del_flg = 0;
+    </select>
+
+    <!-- 新規受注を登録 -->
+    <insert id="insertOrderError" parameterType="com.lemonico.common.bean.Tc207_order_error">
+        insert into tc207_order_error
+        (client_id,outer_order_no,history_id,status,error_msg,bikou1,bikou2,bikou3,ins_usr,ins_date,upd_usr,upd_date,del_flg)
+        values(#{client_id},#{outer_order_no}
+        ,#{history_id},#{status},#{error_msg},#{bikou1},#{bikou2},#{bikou3}
+        ,#{ins_usr},#{ins_date},#{upd_usr},#{upd_date},0);
+    </insert>
+
+    <!-- 新規受注を更新 -->
+    <insert id="updateOrderError" parameterType="com.lemonico.common.bean.Tc207_order_error">
+        update tc207_order_error
+         set error_msg = #{error_msg}
+         ,status=#{status}
+         ,history_id=#{history_id}
+         ,upd_usr=#{upd_usr}
+         ,upd_date=#{upd_date}
+        WHERE
+         client_id = #{client_id}
+         AND outer_order_no = #{outer_order_no}
+         AND del_flg = 0;
+    </insert>
+
+<!--    根据履历Id 获取售出失败信息-->
+    <select id="getErrorInfoByHistoryId" resultType="com.lemonico.common.bean.Tc207_order_error">
+        select order_error_no, client_id, outer_order_no, history_id, error_msg from tc207_order_error
+        where del_flg = 0 and history_id = #{history_id} and client_id = #{client_id}
+    </select>
+</mapper>

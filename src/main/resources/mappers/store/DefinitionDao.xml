@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.store.dao.DefinitionDao">
+	<resultMap type="com.lemonico.common.bean.Ms009_definition" id="selectDefinition">
+		<id column="sys_kind" property="sys_kind" />
+		<id column="sys_cd" property="sys_cd" />
+		<id column="warehouse_cd" property="warehouse_cd" />
+		<result column="sys_name" property="sys_name" />
+		<result column="info" property="info" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="del_flg" property="del_flg" />
+	</resultMap>
+
+	<select id="getDefinitionList" resultMap="selectDefinition">
+		select
+		sys_kind, sys_cd, warehouse_cd, sys_name, info
+		from ms009_definition
+		where del_flg = 0
+		<if test="sys_kind!=null and sys_kind.length>0">
+			and sys_kind in
+			<foreach collection="sys_kind" item="sys_kind" open="(" separator="," close=")">
+				#{sys_kind}
+			</foreach>
+		</if>
+		<if test="sys_cd!=null and sys_cd!=''">
+			and sys_cd = #{sys_cd}
+		</if>
+		<if test="warehouse_cd!=null and warehouse_cd!=''">
+			and warehouse_cd = #{warehouse_cd}
+		</if>
+	</select>
+</mapper>

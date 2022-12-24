@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.MacroSettingDao">
+
+    <select id="getMacroList" resultType="com.lemonico.common.bean.Ms016_macro">
+        select * from ms016_macro
+        where client_id = #{client_id} and del_flg = 0 order by priority desc
+    </select>
+
+    <select id="getMacroInfoById" resultType="com.lemonico.common.bean.Ms016_macro">
+        select * from ms016_macro where id = #{id}
+    </select>
+
+    <insert id="insertMacroData" parameterType="com.lemonico.common.bean.Ms016_macro">
+        insert into ms016_macro
+            (client_id,macro_name,event_name,conditions_kube,
+            conditions_item01,conditions01,conditions_flg01,
+            conditions_item02,conditions02,conditions_flg02,
+            conditions_item03,conditions03,conditions_flg03,
+            conditions_item04,conditions04,conditions_flg04,
+            conditions_item05,conditions05,conditions_flg05,
+            conditions_item06,conditions06,conditions_flg06,
+            conditions_item07,conditions07,conditions_flg07,
+            conditions_item08,conditions08,conditions_flg08,
+            conditions_item09,conditions09,conditions_flg09,
+            conditions_item10,conditions10,conditions_flg10,
+            conditions_item11,conditions11,conditions_flg11,
+            conditions_item12,conditions12,conditions_flg12,
+            conditions_item13,conditions13,conditions_flg13,
+            conditions_item14,conditions14,conditions_flg14,
+            conditions_item15,conditions15,conditions_flg15,
+            conditions_item16,conditions16,conditions_flg16,
+            conditions_item17,conditions17,conditions_flg17,
+            conditions_item18,conditions18,conditions_flg18,
+            action_code,action_content,macro_status,ins_usr,
+            ins_date,del_flg,priority,start_time,end_time)
+         values (
+            #{client_id},#{macro_name},#{event_name},#{conditions_kube},
+            #{conditions_item01},#{conditions01},#{conditions_flg01},
+            #{conditions_item02},#{conditions02},#{conditions_flg02},
+            #{conditions_item03},#{conditions03},#{conditions_flg03},
+            #{conditions_item04},#{conditions04},#{conditions_flg04},
+            #{conditions_item05},#{conditions05},#{conditions_flg05},
+            #{conditions_item06},#{conditions06},#{conditions_flg06},
+            #{conditions_item07},#{conditions07},#{conditions_flg07},
+            #{conditions_item08},#{conditions08},#{conditions_flg08},
+            #{conditions_item09},#{conditions09},#{conditions_flg09},
+            #{conditions_item10},#{conditions10},#{conditions_flg10},
+            #{conditions_item11},#{conditions11},#{conditions_flg11},
+            #{conditions_item12},#{conditions12},#{conditions_flg12},
+            #{conditions_item13},#{conditions13},#{conditions_flg13},
+            #{conditions_item14},#{conditions14},#{conditions_flg14},
+            #{conditions_item15},#{conditions15},#{conditions_flg15},
+            #{conditions_item16},#{conditions16},#{conditions_flg16},
+            #{conditions_item17},#{conditions17},#{conditions_flg17},
+            #{conditions_item18},#{conditions18},#{conditions_flg18},
+            #{action_code},#{action_content},#{macro_status},#{ins_usr},
+            #{ins_date},0,#{priority},#{start_time},#{end_time})
+    </insert>
+
+    <update id="updateMacroById" parameterType="com.lemonico.common.bean.Ms016_macro">
+       update ms016_macro set macro_name=#{macro_name},event_name=#{event_name},conditions_kube=#{conditions_kube},
+           conditions_item01=#{conditions_item01},conditions01=#{conditions01},conditions_flg01=#{conditions_flg01},
+           conditions_item02=#{conditions_item02},conditions02=#{conditions02},conditions_flg02=#{conditions_flg02},
+           conditions_item03=#{conditions_item03},conditions03=#{conditions03},conditions_flg03=#{conditions_flg03},
+           conditions_item04=#{conditions_item04},conditions04=#{conditions04},conditions_flg04=#{conditions_flg04},
+           conditions_item05=#{conditions_item05},conditions05=#{conditions05},conditions_flg05=#{conditions_flg05},
+           conditions_item06=#{conditions_item06},conditions06=#{conditions06},conditions_flg06=#{conditions_flg06},
+           conditions_item07=#{conditions_item07},conditions07=#{conditions07},conditions_flg07=#{conditions_flg07},
+           conditions_item08=#{conditions_item08},conditions08=#{conditions08},conditions_flg08=#{conditions_flg08},
+           conditions_item09=#{conditions_item09},conditions09=#{conditions09},conditions_flg09=#{conditions_flg09},
+           conditions_item10=#{conditions_item10},conditions10=#{conditions10},conditions_flg10=#{conditions_flg10},
+           conditions_item11=#{conditions_item11},conditions11=#{conditions11},conditions_flg11=#{conditions_flg11},
+           conditions_item12=#{conditions_item12},conditions12=#{conditions12},conditions_flg12=#{conditions_flg12},
+           conditions_item13=#{conditions_item13},conditions13=#{conditions13},conditions_flg13=#{conditions_flg13},
+           conditions_item14=#{conditions_item14},conditions14=#{conditions14},conditions_flg14=#{conditions_flg14},
+           conditions_item15=#{conditions_item15},conditions15=#{conditions15},conditions_flg15=#{conditions_flg15},
+           conditions_item16=#{conditions_item16},conditions16=#{conditions16},conditions_flg16=#{conditions_flg16},
+           conditions_item17=#{conditions_item17},conditions17=#{conditions17},conditions_flg17=#{conditions_flg17},
+           conditions_item18=#{conditions_item18},conditions18=#{conditions18},conditions_flg18=#{conditions_flg18},
+           action_code=#{action_code},action_content=#{action_content},macro_status=#{macro_status},
+           start_time=#{start_time},end_time=#{end_time}
+           where id = #{id} and client_id=#{client_id}
+    </update>
+
+    <!--批量删除macro设定    -->
+    <update id="delMacro">
+        update ms016_macro
+           set del_flg = 1
+         where client_id = #{client_id} and id in
+        <foreach collection="list" item="list" open="(" separator="," close=")">
+            #{list}
+        </foreach>
+    </update>
+
+    <!-- 检验macro优先顺序是否重复 -->
+    <select id="checkMacroPriorityExists" resultType="int">
+        select priority
+          from ms016_macro
+         where client_id = #{client_id} and priority = #{priority} and del_flg = 0
+    </select>
+
+    <update id="updateMacroInfo" >
+        update ms016_macro
+           set priority = #{priority}, macro_status = #{macro_status}
+         where id = #{id} and client_id = #{client_id}
+    </update>
+    <!-- macro优先顺序是否重复替换 -->
+    <update id="updateRepeatMacroInfo" >
+        update ms016_macro
+           set priority = #{old_priority}
+         where id = #{repeat_id} and client_id = #{client_id}
+    </update>
+
+    <!--获取最大优先级    -->
+    <select id="getMaxPriority" resultType="java.lang.Integer">
+        select MAX(priority) from ms016_macro where client_id=#{client_id}
+    </select>
+
+    <!-- 检验macro名称是否重复 -->
+    <select id="nameCheck" resultType="int">
+        select count(macro_name)
+          from ms016_macro
+         where client_id = #{client_id} and macro_name = #{macro_name} and del_flg = 0
+    </select>
+</mapper>

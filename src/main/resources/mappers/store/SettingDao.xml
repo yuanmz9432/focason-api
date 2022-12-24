@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.SettingDao">
+    <resultMap type="com.lemonico.common.bean.Ms200_customer" id="StoreListResult">
+        <id column="user_id" property="user_id"/>
+        <result column="login_pw" property="login_pw"></result>
+        <result column="customer_cd" property="customer_cd"></result>
+        <result column="login_nm" property="login_nm"></result>
+        <result column="login_id" property="login_id"></result>
+        <result column="yoto" property="yoto"></result>
+        <result column="encode_key" property="encode_key"></result>
+    </resultMap>
+
+    <resultMap type="com.lemonico.common.bean.Ms012_sponsor_master" id="DeliveryListResult">
+        <id column="client_id" property="client_id"></id>
+        <result column="sponsor_id" property="sponsor_id"></result>
+        <result column="utilize" property="utilize"></result>
+        <result column="name" property="name"></result>
+        <result column="name_kana" property="name_kana"></result>
+        <result column="company" property="company"></result>
+        <result column="division" property="division"></result>
+        <result column="postcode" property="postcode"></result>
+        <result column="prefecture" property="prefecture"></result>
+        <result column="address1" property="address1"></result>
+        <result column="address2" property="address2"></result>
+        <result column="phone" property="phone"></result>
+        <result column="email" property="email"></result>
+        <result column="contact" property="contact"></result>
+        <result column="contact_url" property="contact_url"></result>
+        <result column="detail_logo" property="detail_logo"></result>
+        <result column="detail_message" property="detail_message"></result>
+        <result column="send_message" property="send_message"></result>
+        <result column="sponsor_default" property="sponsor_default"></result>
+        <result column="label_note" property="label_note"></result>
+        <result column="delivery_note_type" property="delivery_note_type"></result>
+        <result column="price_on_delivery_note" property="price_on_delivery_note"></result>
+    </resultMap>
+
+    <resultMap type="com.lemonico.common.bean.Mc200_customer_delivery" id="CustomerDeliveryListResult">
+        <id column="client_id" property="client_id"></id>
+        <id column="delivery_id" property="delivery_id"></id>
+        <result column="name" property="name"></result>
+        <result column="postcode" property="postcode"></result>
+        <result column="prefecture" property="prefecture"></result>
+        <result column="address1" property="address1"></result>
+        <result column="address2" property="address2"></result>
+        <result column="company" property="company"></result>
+        <result column="division" property="division"></result>
+        <result column="phone" property="phone"></result>
+        <result column="email" property="email"></result>
+        <result column="del_flg" property="del_flg"></result>
+        <result column="form" property="form"></result>
+    </resultMap>
+
+    <resultMap type="com.lemonico.common.bean.Ms201_client" id="ClientListResult">
+        <result column="customer_cd" property="customer_cd"></result>
+        <result column="customer_rk" property="customer_rk"></result>
+        <result column="validity_str_date" property="validity_str_date"></result>
+        <result column="validity_end_date" property="validity_end_date"></result>
+        <result column="corporation_flg" property="corporation_flg"></result>
+        <result column="corporation_number" property="corporation_number"></result>
+        <result column="department" property="department"></result>
+        <result column="main_office_flg" property="main_office_flg"></result>
+        <result column="birthday" property="birthday"></result>
+        <result column="shop_nm" property="shop_nm"></result>
+        <result column="country_region" property="country_region"></result>
+        <result column="tel" property="tel"></result>
+        <result column="fax" property="fax"></result>
+        <result column="zip" property="zip"></result>
+        <result column="tdfk" property="tdfk"></result>
+        <result column="add1" property="add1"></result>
+        <result column="add2" property="add2"></result>
+        <result column="tnnm" property="tnnm"></result>
+        <result column="tnbs" property="tnbs"></result>
+        <result column="mail" property="mail"></result>
+        <result column="contact_time" property="contact_time"></result>
+        <result column="color" property="color"></result>
+        <result column="biko" property="biko"></result>
+        <result column="ins_usr" property="ins_usr"></result>
+        <result column="ins_date" property="ins_date"></result>
+        <result column="upd_usr" property="upd_usr"></result>
+        <result column="upd_date" property="upd_date"></result>
+    </resultMap>
+
+    <!-- 店舗情報一覧(リスト)-->
+    <select id="getStoreList" resultMap="StoreListResult">
+        select *
+          from ms200_customer
+         where user_id = #{user_id} and del_flg = 0;
+    </select>
+
+    <!-- 店舗情報一覧(リスト)-->
+    <select id="checkStoreList" resultMap="StoreListResult">
+        select *
+          from ms200_customer
+         where login_id = #{login_id} and del_flg = 0;
+    </select>
+    <!-- 店舗情報一覧(リスト)-->
+    <select id="getStoreClientId" resultType="com.lemonico.common.bean.Ms200_customer">
+        select *
+          from ms200_customer
+         where user_id = #{user_id} and del_flg = 0;
+    </select>
+    <!-- 店舗情報のメール更新-->
+    <update id="updateMail">
+        update ms200_customer
+           set login_id=#{login_id}, old_login_id=#{old_login_id}
+         where user_id=#{user_id} and del_flg = 0;
+    </update>
+
+    <!-- 店舗情報のPASS更新-->
+    <update id="updatePass">
+        update ms200_customer
+           set login_pw=#{login_pw}, encode_key=#{encode_key}
+         where user_id=#{user_id} and del_flg = 0;
+    </update>
+
+    <!-- 店舗情報のユーザ更新-->
+    <update id="updateUser" parameterType="com.lemonico.common.bean.Ms200_customer">
+        update ms200_customer
+           set login_nm=#{login_nm}, biko1=#{biko1}
+         where user_id=#{user_id} and del_flg = 0;
+    </update>
+
+    <!-- 依頼先情報の取得-->
+    <select id="getDeliveryListAll" resultMap="DeliveryListResult">
+        select *
+        from ms012_sponsor_master
+        where client_id = #{client_id} and del_flg = 0 and (utilize != '99999' or utilize is null)
+        order by ins_date desc
+    </select>
+
+    <!-- 依頼先情報の取得-->
+    <select id="getDeliveryListOne" resultMap="DeliveryListResult">
+        select *
+          from ms012_sponsor_master
+         where client_id = #{client_id} and sponsor_id = #{sponsor_id} and del_flg = 0;
+    </select>
+
+    <!-- 依頼先情報の取得-->
+    <select id="getMaxSponsorId" resultType="java.lang.Integer">
+		select max(to_number(sponsor_id, '9999999999')) from  ms012_sponsor_master;
+    </select>
+
+    <!-- 依頼先情報の更新-->
+    <update id="updateDeliveryList" parameterType="com.lemonico.common.bean.Ms012_sponsor_master">
+        update ms012_sponsor_master
+        set
+            name = #{name}
+            , name_kana = #{name_kana}
+            , company = #{company}
+            , division = #{division}
+            , postcode = #{postcode}
+            , prefecture = #{prefecture}
+            , address1 = #{address1}
+            , address2 = #{address2}
+            , phone = #{phone}
+            , fax = #{fax}
+            , email = #{email}
+            , contact = #{contact}
+            , contact_url = #{contact_url}
+            , detail_logo = #{detail_logo}
+            , detail_message = #{detail_message}
+            , send_message = #{send_message}
+            , sponsor_default = #{sponsor_default}
+            , label_note = #{label_note}
+            , delivery_note_type = #{delivery_note_type}
+            , price_on_delivery_note = #{price_on_delivery_note}
+            , upd_usr =#{upd_usr}, upd_date = #{upd_date}
+        where
+            client_id = #{client_id} and sponsor_id = #{sponsor_id} and del_flg = 0;
+    </update>
+
+    <!-- 依頼先情報のデフォルトを0に更新-->
+    <update id="updateDeliveryDefault">
+        update ms012_sponsor_master
+           set sponsor_default = 0
+         where client_id = #{client_id} and sponsor_id != #{sponsor_id} and del_flg = 0;
+    </update>
+
+    <update id="deleteCustomerDelivery">
+        update mc200_customer_delivery set del_flg = 1
+         where delivery_id in
+        <foreach collection="delivery_id" item="delivery_id" open="(" separator="," close=")">
+            #{delivery_id}
+        </foreach>
+    </update>
+
+    <!-- a依頼先情報の新規登録-->
+    <insert id="createDeliveryList" parameterType="com.lemonico.common.bean.Ms012_sponsor_master">
+        insert into ms012_sponsor_master
+        (sponsor_id,client_id,utilize,name,name_kana,company,division,postcode,prefecture,address1,address2,phone,email,
+        contact,contact_url,detail_logo,detail_message,send_message,sponsor_default, ins_usr, ins_date, upd_usr,
+        upd_date, del_flg, fax, label_note, delivery_note_type, price_on_delivery_note)
+        values
+        (#{sponsor_id},#{client_id},#{utilize},#{name},#{name_kana},#{company},#{division},#{postcode},#{prefecture},#{address1},
+        #{address2},#{phone},#{email},#{contact},#{contact_url},#{detail_logo},#{detail_message},#{send_message},#{sponsor_default},
+        #{ins_usr}, #{ins_date}, #{upd_usr}, #{upd_date}, 0, #{fax}, #{label_note}, #{delivery_note_type}, #{price_on_delivery_note})
+    </insert>
+
+    <!-- 品名設定 -->
+    <update id="descriptionSetting" parameterType="java.lang.String">
+        update ms201_client
+        set description_setting = #{description_setting}
+        where client_id = #{client_id}
+    </update>
+
+    <!-- アカウント情報の取得 -->
+    <select id="getClient" resultType="com.lemonico.common.bean.Ms201_client">
+		select *
+		  from ms201_client
+		 where client_id = #{client_id} limit 1
+    </select>
+    <!-- アカウント情報の更新 -->
+    <update id="updateClient" parameterType="com.lemonico.common.bean.Ms201_client">
+        update ms201_client
+        set
+        validity_str_date = #{validity_str_date}
+        , validity_end_date = #{validity_end_date}
+        , corporation_flg = #{corporation_flg}
+        , corporation_number = #{corporation_number}
+        , department = #{department}
+        , main_office_flg = #{main_office_flg}
+        , birthday = #{birthday}
+        , shop_nm = #{shop_nm}
+        , country_region = #{country_region}
+        , tel = #{tel}
+        , fax = #{fax}
+        , zip = #{zip}
+        , tdfk = #{tdfk}
+        , add1 = #{add1}
+        , add2 = #{add2}
+        , tnnm = #{tnnm}
+        , tnbs = #{tnbs}
+        , contact_time = #{contact_time}
+        , biko = #{biko}
+        , ins_usr = #{ins_usr}
+        , ins_date = #{ins_date}
+        , upd_usr = #{upd_usr}
+        , upd_date = #{upd_date}
+        , url = #{url}
+        , permonth = #{permonth}
+        , color = #{color}
+        , mail = #{mail}
+        where
+        client_id = #{client_id}
+        <!-- AND del_flag = 0; -->
+    </update>
+
+    <!-- 配送先マスタの取得-->
+    <select id="getCustomerDelivery" resultMap="CustomerDeliveryListResult">
+        select *
+          from mc200_customer_delivery
+         where client_id = #{client_id} and del_flg = 0
+         <if test="delivery_id!='' and delivery_id!=null">
+             and delivery_id = #{delivery_id}
+         </if>
+        <if test="keyword!='' and keyword!=null">
+            and (name like concat('%', '${keyword}', '%') or postcode like concat('%', '${keyword}', '%') or prefecture like concat('%', '${keyword}', '%')
+                 or address1 like concat('%', '${keyword}', '%') or address2 like concat('%', '${keyword}', '%'))
+        </if>
+        order by delivery_id
+    </select>
+
+    <!-- 配送先マスタの取得-->
+    <select id="getMaxDliveryId" resultType="java.lang.Integer">
+		select max(delivery_id) from mc200_customer_delivery;
+    </select>
+
+    <!-- 配送先マスタの更新-->
+    <update id="updateCustomerDeliveryList" parameterType="com.lemonico.common.bean.Mc200_customer_delivery">
+        update mc200_customer_delivery
+        set
+            name = #{name}
+            , company = #{company}
+            , division = #{division}
+            , postcode = #{postcode}
+            , prefecture = #{prefecture}
+            , address1 = #{address1}
+            , address2 = #{address2}
+            , phone = #{phone}
+            , email = #{email}
+            , del_flg = #{del_flg}
+            , form = #{form}
+            , delivery_method = #{delivery_method}
+            , delivery_carrier = #{delivery_carrier}
+            , delivery_date = #{delivery_date}
+            , delivery_time_slot = #{delivery_time_slot}
+            , box_delivery = #{box_delivery}
+            , fragile_item = #{fragile_item}
+            , cushioning_unit = #{cushioning_unit}
+            , cushioning_type = #{cushioning_type}
+            , gift_wrapping_unit = #{gift_wrapping_unit}
+            , gift_wrapping_type = #{gift_wrapping_type}
+            , delivery_note_type = #{delivery_note_type}
+            , price_on_delivery_note = #{price_on_delivery_note}
+            , invoice_special_notes = #{invoice_special_notes}
+            , bikou1 = #{bikou1}
+            , bikou2 = #{bikou2}
+            , bikou3 = #{bikou3}
+            , bikou4 = #{bikou4}
+            , bikou5 = #{bikou5}
+            , bikou6 = #{bikou6}
+            , bikou7 = #{bikou7}
+        where
+            client_id = #{client_id}
+            and delivery_id = ${delivery_id}
+            and del_flg = 0;
+    </update>
+
+    <!-- 配送先マスタの新規登録-->
+    <insert id="createCustomerDeliveryList" parameterType="com.lemonico.common.bean.Mc200_customer_delivery">
+        insert into mc200_customer_delivery
+        (client_id,name,company,division,postcode,prefecture,address1,address2,phone,email,del_flg,form,delivery_method,delivery_carrier,delivery_date,delivery_time_slot,box_delivery,fragile_item,cushioning_unit,cushioning_type,gift_wrapping_unit,gift_wrapping_type,delivery_note_type,price_on_delivery_note,invoice_special_notes,bikou1,bikou2,bikou3,bikou4,bikou5,bikou6,bikou7)
+        values
+        (#{client_id},#{name},#{company},#{division},#{postcode},#{prefecture},#{address1},#{address2},#{phone},#{email},#{del_flg},#{form},#{delivery_method},#{delivery_carrier},#{delivery_date},#{delivery_time_slot},#{box_delivery},#{fragile_item},#{cushioning_unit},#{cushioning_type},#{gift_wrapping_unit},#{gift_wrapping_type},#{delivery_note_type},#{price_on_delivery_note},#{invoice_special_notes},#{bikou1},#{bikou2},#{bikou3},#{bikou4},#{bikou5},#{bikou6},#{bikou7})
+    </insert>
+
+    <!--    查询有没有sponsor_default为1 的数据-->
+    <select id="getSponsorDefaultInfo" resultType="com.lemonico.common.bean.Ms012_sponsor_master">
+        select *
+          from Ms012_sponsor_master
+         where client_id = #{client_id} and sponsor_default = #{sponsor_default} and del_flg = 0
+    </select>
+
+    <!-- 根据依赖主名获取依赖主信息 --> <!-- 可以合并成一個sql進行查詢  -->
+    <select id="getSponsorByName" resultType="com.lemonico.common.bean.Ms012_sponsor_master">
+        select *
+          from Ms012_sponsor_master
+         where client_id = #{client_id} and name = #{name} and del_flg = 0
+         limit 1
+    </select>
+
+    <!-- 根据个人/法人类型获取依赖主信息 -->
+    <select id="getSponsorByForm" resultType="com.lemonico.common.bean.Ms012_sponsor_master">
+        select *
+          from Ms012_sponsor_master
+         where client_id = #{client_id} and form = #{form} and del_flg = 0
+         limit 1
+    </select>
+
+    <!--    修改依頼主マスタ デフォルト-->
+    <update id="updateSponsorMasterSponsorDefault">
+        update Ms012_sponsor_master set sponsor_default = 1
+         where sponsor_id = #{sponsor_id} and client_id = #{client_id}
+    </update>
+
+<!--    获取最新的依赖主Id-->
+    <select id="getLastSponsorIdByClientId" resultType="java.lang.String">
+        select max(to_number(sponsor_id, '9999999999')) from Ms012_sponsor_master
+         where client_id = #{client_id} and del_flg = 0 limit 1
+    </select>
+
+<!--    更改master logo-->
+    <update id="updateMasterLogo">
+        update Ms012_sponsor_master set detail_logo = #{detail_logo}
+         where sponsor_id = #{sponsor_id} and client_id = #{client_id} and del_flg = 0
+    </update>
+
+<!--    根据店铺Id 获取所有员工ID-->
+    <select id="getUserIdListByClientId" resultType="java.lang.String">
+        select user_id from ms206_client_customer where client_id = #{client_id} and del_flg = 0
+    </select>
+
+    <!-- a验证csv读取依赖主信息是否存在-->
+    <select id="checkSponsorExist" resultMap="DeliveryListResult">
+        select * from ms012_sponsor_master where client_id = #{client_id}
+        and postcode = #{postcode}
+        and prefecture = #{prefecture}
+        and address1 = #{address1}
+        and name = #{name}
+        and company = #{company}
+        and division = #{division}
+        and contact = #{contact}
+        and phone = #{phone}
+    </select>
+
+    <!--  csv导出模板信息-->
+    <select id="getSetTemplate" resultType="com.lemonico.common.bean.Tc209_setting_template">
+        select template_cd, warehouse_cd, client_id, template_nm, yoto_id, encoding, constant, data
+        from Tc209_setting_template
+        where del_flg = 0
+        <if test="warehouse_cd!='' and warehouse_cd!=null">
+            and warehouse_cd = #{warehouse_cd}
+        </if>
+        <if test="client_id!='' and client_id!=null">
+            and client_id = #{client_id}
+        </if>
+        <if test="template_cd!='' and template_cd!=null">
+            and template_cd = #{template_cd}
+        </if>
+        <if test="yoto_id!='' and yoto_id!=null">
+            and yoto_id = #{yoto_id}
+        </if>
+    </select>
+
+    <!--  获取不同csv模板title-->
+    <select id="getTemplateTitle" resultType="com.lemonico.common.bean.Tc210_setting_yoto">
+        select yoto_id, name, template from Tc210_setting_yoto where del_flg = 0
+        <if test="yoto_id!=null and yoto_id!=''">
+            and yoto_id = #{yoto_id}
+        </if>
+        order by yoto_id asc
+    </select>
+
+    <!--  添加客户自定义csv数据模板-->
+    <insert id="insertCsvCustom" parameterType="com.lemonico.common.bean.Tc209_setting_template">
+        insert into Tc209_setting_template
+        (warehouse_cd, client_id, template_nm, yoto_id, encoding, constant, data, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+        values
+        (#{warehouse_cd}, #{client_id}, #{template_nm}, #{yoto_id}, #{encoding}, #{constant}, #{data}, #{ins_usr}, #{ins_date}, #{upd_usr}, #{upd_date}, 0)
+    </insert>
+
+    <!--删除店铺自定义csv模板信息-->
+    <update id="deleteCustomTemplate">
+        update Tc209_setting_template set del_flg = 1 where template_cd = #{template_cd}
+    </update>
+
+    <!--更新店铺自定义csv模板信息-->
+    <update id="updateCsvCustom" parameterType="com.lemonico.common.bean.Tc209_setting_template">
+        update Tc209_setting_template
+        set template_nm = #{template_nm}, data = #{data}, constant = #{constant}, encoding = #{encoding}
+        where template_cd = #{template_cd} and client_id = #{client_id}
+    </update>
+
+    <!--根据依赖主ID 删除依赖主master    -->
+    <update id="deleteSponsor">
+        update ms012_sponsor_master set del_flg = 1 where client_id = #{client_id} and sponsor_id = #{sponsor_id}
+    </update>
+
+    <!-- 获取csv受注类型-->
+    <select id="getCsvTmp" resultType="com.lemonico.common.bean.Ms017_csv_template">
+        select id, template, identification from ms017_csv_template where del_flg = 0
+    </select>
+
+    <!-- 获取多个依赖主信息 -->
+    <select id="getDeliveryListMore" resultMap="DeliveryListResult">
+        select sponsor_id, client_id, utilize, name, name_kana, company, division, postcode, prefecture, address1, address2,
+        phone, email, contact, contact_url, detail_logo, detail_message, send_message, sponsor_default, label_note, fax, delivery_note_type
+        from ms012_sponsor_master where client_id = #{client_id} and del_flg = 0
+        and sponsor_id in
+        <foreach collection="sponsorIds" item="sponsorIds" open="(" separator="," close=")">
+            #{sponsorIds}
+        </foreach>
+    </select>
+</mapper>

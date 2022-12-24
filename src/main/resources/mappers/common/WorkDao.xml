@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.common.dao.WorkDao">
+    <resultMap type="com.lemonico.common.bean.Ms003_work" id="selectWork">
+        <id column="operation_cd" property="operation_cd" />
+        <result column="operation_nm" property="operation_nm" />
+        <result column="biko" property="biko" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="del_flg" property="del_flg" />
+    </resultMap>
+
+    <select id="getWorkList" resultType="com.lemonico.common.bean.Ms003_work">
+        select operation_nm from ms003_work where del_flg = 0 and operation_cd = #{operation_cd}
+    </select>
+
+</mapper>

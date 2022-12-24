@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.common.dao.CustomerHistoryDao">
+    <resultMap type="com.lemonico.common.bean.Ms205_customer_history" id="selectCustomerHistory">
+        <id column="operation_id" property="operation_id" />
+        <id column="plan_id" property="plan_id" />
+        <result column="user_id" property="user_id" />
+        <result column="operation_date" property="operation_date" />
+        <result column="operation_cd" property="operation_cd" />
+        <result column="api_url" property="api_url" />
+        <result column="biko" property="biko" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="del_flg" property="del_flg" />
+    </resultMap>
+
+    <select id="getCustomerHistory" resultType="com.lemonico.common.bean.Ms205_customer_history">
+        select ms205.operation_date, ms003.operation_nm, ms200.login_nm, ms205.operation_cd, ms205.ins_usr
+        from ms205_customer_history as ms205, ms003_work as ms003, ms200_customer as ms200
+        where ms205.operation_cd = ms003.operation_cd and ms200.user_id = ms205.user_id
+        and ms205.plan_id = #{plan_id}
+        order by ms205.operation_date asc
+    </select>
+
+    <insert id="insertCustomerHistory">
+        insert into ms205_customer_history (
+        operation_id, user_id, plan_id, operation_date, operation_cd, api_url, biko, ins_usr, ins_date, upd_usr, upd_date, del_flg)
+        values (
+        #{jsonObject.operation_id}, #{jsonObject.user_id}, #{jsonObject.plan_id}, #{jsonObject.operation_date}, #{jsonObject.operation_cd}, #{jsonObject.api_url},
+        #{jsonObject.biko}, #{jsonObject.ins_usr}, #{jsonObject.ins_date}, #{jsonObject.upd_usr}, #{jsonObject.upd_date}, 0)
+    </insert>
+
+    <!-- 查询最新一条操作履历 -->
+    <select id="getCustomerInfo" resultType="com.lemonico.common.bean.Ms205_customer_history">
+        select operation_cd from ms205_customer_history where plan_id = #{plan_id} order by operation_date desc limit 1
+    </select>
+
+</mapper>

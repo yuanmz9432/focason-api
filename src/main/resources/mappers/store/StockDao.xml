@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.store.dao.StockDao">
+	<resultMap type="com.lemonico.common.bean.Mc100_product" id="selectProduct">
+		<id column="client_id" property="client_id" />
+		<id column="product_id" property="product_id" />
+		<id column="warehouse_cd" property="warehouse_cd" />
+		<result column="name" property="name" />
+		<result column="code" property="code" />
+		<result column="set_flg" property="set_flg" />
+		<result column="barcode" property="barcode" />
+		<result column="bundled_flg" property="bundled_flg" />
+		<result column="is_reduced_tax" property="is_reduced_tax" />
+		<result column="price" property="price" />
+		<result column="identifier" property="identifier" />
+		<result column="description_cd" property="description_cd" />
+		<result column="origin" property="origin" />
+		<result column="size_cd" property="size_cd" />
+		<result column="weight" property="weight" />
+		<result column="tags_id" property="tags_id" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="kubun" property="kubun" />
+		<result column="del_flg" property="del_flg" />
+		<association property="tw300_stock" javaType="com.lemonico.common.bean.Tw300_stock">
+			<id column="stock_id" property="stock_id" />
+			<result column="warehouse_cd" property="warehouse_cd" />
+			<result column="client_id" property="client_id" />
+			<result column="product_id" property="product_id" />
+			<result column="available_cnt" property="available_cnt" />
+			<result column="requesting_cnt" property="requesting_cnt" />
+			<result column="inventory_cnt" property="inventory_cnt" />
+			<result column="not_delivery" property="not_delivery" />
+			<result column="replenish_cnt" property="replenish_cnt" />
+			<result column="product_size_cd" property="product_size_cd" />
+			<result column="product_weight" property="product_weight" />
+			<result column="weigth_unit" property="weigth_unit" />
+			<result column="store_cnt" property="store_cnt" />
+			<result column="info" property="info" />
+			<result column="bikou1" property="bikou1" />
+			<result column="bikou2" property="bikou2" />
+			<result column="bikou3" property="bikou3" />
+			<result column="ins_date" property="ins_date" />
+			<result column="upd_usr" property="upd_usr" />
+			<result column="upd_date" property="upd_date" />
+			<result column="del_flg" property="del_flg" />
+		</association>
+	</resultMap>
+	<resultMap type="com.lemonico.common.bean.Mc101_product_tag" id="selectTags">
+		<id column="tags_id" property="tags_id" />
+		<result column="tags" property="tags" />
+		<result column="ins_usr" property="ins_usr" />
+		<result column="ins_date" property="ins_date" />
+		<result column="upd_usr" property="upd_usr" />
+		<result column="upd_date" property="upd_date" />
+		<result column="del_flg" property="del_flg" />
+		<association property="mc104_tag" javaType="com.lemonico.common.bean.Mc104_tag">
+			<id column="tags_id" property="tags_id" />
+			<id column="product_id" property="product_id" />
+			<id column="client_id" property="client_id" />
+			<result column="upd_usr" property="upd_usr" />
+			<result column="upd_date" property="upd_date" />
+			<result column="del_flg" property="del_flg" />
+		</association>
+	</resultMap>
+
+	<!-- a在庫一覽 -->
+	<select id="getStockList" resultMap="selectProduct">
+		select pro.client_id, pro.product_id, pro.name, pro.code, pro.barcode, pro.warehouse_cd, pro.price, pro.tax_flag,
+		       sto.product_size_cd, sto.available_cnt, sto.inventory_cnt,sto.warehouse_cd,sto.replenish_cnt,
+		       sto.requesting_cnt,sto.not_delivery, pro.bundled_flg, pro.set_flg, pro.size_cd, pro.weight,pro.kubun
+		from mc100_product pro,tw300_stock sto
+		where pro.del_flg = 0 and pro.show_flg = 0 and pro.client_id = sto.client_id and pro.product_id = sto.product_id
+		and pro.client_id = #{client_id} and sto.del_flg = 0
+		<if test="product_id!=null and product_id.length>0">
+			and pro.product_id in
+			<foreach collection="product_id" item="product_id" open="(" separator="," close=")">
+				#{product_id}
+			</foreach>
+		</if>
+		<if test="search!=null and search!=''">
+			and (pro.name ~* replace(#{search},'%','') or pro.product_id like #{search} or pro.code ~* replace(#{search},'%','') or pro.barcode like #{search})
+		</if>
+		<if test="tags_id!=null and tags_id!=''">
+			and pro.product_id in (select mc104.product_id from mc104_tag as mc104 where mc104.tags_id = #{tags_id})
+		</if>
+		<!-- 1個以上 -->
+		<if test="stock_search != null and stock_search == 1">
+			and sto.available_cnt &gt;= 1
+		</if>
+		<!-- 0個未満 -->
+		<if test="stock_search != null and stock_search == 0">
+			and sto.available_cnt &lt;= 0
+		</if>
+		order by sto.upd_date desc
+	</select>
+
+	<!-- a在库补充设定 -->
+	<!-- a在庫補充設定 -->
+	<update id="updateReplenishCount">
+		update tw300_stock set replenish_cnt = #{replenish_cnt}
+		where client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+	<!-- a在库履历 -->
+	<!-- a在庫履歴 -->
+	<select id="getStockHistoryList" resultType="com.lemonico.common.bean.Tw301_stock_history">
+		select tw301.plan_id,tw301.client_id,tw301.product_id,tw301.type,tw301.quantity,tw301.ins_date,tw301.upd_date,tw301.info,
+		       mc100.code,mc100.name, mc100.barcode
+		from tw301_stock_history tw301
+		left join mc100_product mc100 on mc100.client_id = tw301.client_id and mc100.product_id = tw301.product_id
+		where tw301.del_flg = 0
+		<if test="client_id!='all'">
+			and tw301.client_id = #{client_id}
+		</if>
+		<if test="warehouse_cd!='' and warehouse_cd!=null">
+			and mc100.warehouse_cd = #{warehouse_cd}
+		</if>
+		<if test="proudct_id!=null and proudct_id!=''">
+			and tw301.product_id = #{proudct_id}
+		</if>
+		<if test="startTime != null ">
+			and tw301.upd_date &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			and tw301.upd_date &lt;= #{endTime}
+		</if>
+		<if test="search!=null and search!=''">
+			and (mc100.name ~* replace(#{search},'%','') or mc100.product_id like #{search} or mc100.code ~* replace(#{search},'%','') or
+				 mc100.barcode like #{search} or tw301.plan_id like #{search} or tw301.client_id like #{search})
+		</if>
+		<if test="tags_id!=null and tags_id!=''">
+			and mc100.product_id in (select mc104.product_id from mc104_tag as mc104 where mc104.tags_id = #{tags_id})
+		</if>
+		<if test="type != null and type != '' ">
+			<if test="type == 1">
+				and tw301.type in (1, 11)
+			</if>
+			<if test="type == 2">
+				and tw301.type in (2, 22)
+			</if>
+		</if>
+			order by tw301.upd_date desc
+	</select>
+
+	<!-- a新规登录商品时获取tags options -->
+	<!-- a商品新規登録する時に、tags optionsを取得する -->
+	<select id="getStockTags" resultMap="selectTags">
+		select distinct ptag.tags_id, ptag.tags
+		from mc104_tag tag, mc101_product_tag ptag, tw300_stock sto
+		where tag.client_id = sto.client_id and tag.product_id = sto.product_id
+		and tag.tags_id = ptag.tags_id and tag.client_id = #{client_id}
+	</select>
+
+	<!-- a获取最大在库ID -->
+	<select id="getMaxStockId" resultType="String">
+		select stock_id from tw300_stock order by stock_id desc limit 1
+	</select>
+
+	<!-- a查询在库数据 -->
+	<select id="getStockInfoById" resultType="com.lemonico.common.bean.Tw300_stock">
+		select stock_id,available_cnt,requesting_cnt,inventory_cnt,product_size_cd,not_delivery
+		 from tw300_stock
+		where warehouse_cd = #{jsonObject.warehouse_cd}
+		  and client_id = #{jsonObject.client_id}
+		  and product_id = #{jsonObject.product_id}
+          and del_flg = 0
+	</select>
+
+    <!-- 更改在库数据-->
+	<update id="updateStockInfo">
+		update tw300_stock set available_cnt = #{available_cnt}, inventory_cnt =#{inventory_cnt}, not_delivery = #{not_delivery},
+		product_size_cd = #{product_size_cd}, product_weight = #{product_weight}, upd_usr = #{loginNm}, upd_date = #{date}
+		where
+		warehouse_cd = #{jsonObject.warehouse_cd} and client_id = #{jsonObject.client_id} and product_id = #{product_id}
+	</update>
+
+<!--	添加在库数据-->
+	<insert id="insertStockInfo">
+		insert into tw300_stock(stock_id, warehouse_cd,
+		client_id, product_id, available_cnt, requesting_cnt, inventory_cnt, product_size_cd,
+		product_weight,ins_usr, ins_date, upd_usr, upd_date, del_flg, not_delivery) values
+		(#{jsonObject.stock_id}, #{jsonObject.warehouse_cd}, #{jsonObject.client_id},
+		#{product_id}, #{available_cnt}, #{requesting_cnt}, #{inventory_cnt},
+		#{product_size_cd}, #{product_weight}, #{loginNm}, #{date}, #{loginNm},
+		#{date}, 0, #{not_delivery})
+	</insert>
+
+	<!--a更新出庫依頼中数 -->
+	<update id="updateStockRequestingCnt">
+		update tw300_stock
+		   set requesting_cnt = #{requesting_cnt}, available_cnt = #{available_cnt}, ins_usr = #{ins_usr}, ins_date = #{ins_date}
+		 where client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+	<!-- a获取最大在庫履歴ID -->
+	<select id="getMaxStockHistoryId" resultType="String">
+		select history_id from tw301_stock_history order by history_id desc limit 1
+	</select>
+
+	<!-- 添加在庫履歴 -->
+	<insert id="insertStockHistory">
+		insert into tw301_stock_history
+		(history_id, plan_id, client_id, product_id, type, quantity, ins_user, ins_date, upd_user, upd_date, del_flg, info)
+		values
+		(#{history_id}, #{plan_id}, #{client_id}, #{product_id}, #{type}, #{quantity}, #{loginNm}, #{date}, #{loginNm}, #{date}, 0, #{info})
+	</insert>
+
+	<!-- 将入库信息存到入庫作業ロケ明細表里面 -->
+	<insert id="insertWarehouseLocationDetail">
+		insert into tw113_warehousing_location_detail
+		(client_id, warehousing_plan_id, product_id, location_id, product_cnt, lot_no, ins_usr, ins_date, upd_usr, upd_date, del_flg,
+		bestbefore_date, shipping_flag)
+		values
+		(#{client_id}, #{id}, #{product_id},#{locationId}, #{product_cnt},  #{lot_no}, #{loginNm}, #{date}, #{loginNm}, #{date}, 0,
+		 #{bestBeforeDate}, #{shipping_flag})
+	</insert>
+
+	<!-- 出库后更改在库数 -->
+	<update id="updateStockNum">
+		update tw300_stock
+	 	set requesting_cnt = #{requesting_cnt}, inventory_cnt = #{inventory_cnt}, available_cnt = #{available_cnt}, upd_date = #{upd_date},
+		upd_usr = #{upd_usr}, not_delivery = #{not_delivery}
+		where warehouse_cd = #{warehouse_cd} and client_id = #{client_id} and product_id = #{product_id}
+	</update>
+
+    <!-- 更新入庫作業ロケ明細的入庫実績数-->
+	<update id="updateWarehouseLocationDetail">
+		update tw113_warehousing_location_detail set product_cnt = #{productTotal},  location_id = #{location_id}
+		where client_id = #{client_id} and warehousing_plan_id = #{id}
+		  and product_id = #{product_id}
+	</update>
+
+    <!-- 根据商品Id获取到在库数据  @add wang 2021/3/25 利用不可 ※廃止予定 -->
+	<select id="getAllAvailableCnt" resultType="com.lemonico.common.bean.Tw300_stock">
+		select client_id,stock_id,warehouse_cd,available_cnt,requesting_cnt,inventory_cnt,product_size_cd, product_id, replenish_cnt, product_weight, weigth_unit, ins_usr, ins_date,
+		upd_usr, upd_date
+		from tw300_stock where del_flg = 0
+	</select>
+
+	<!-- 获取当天没有同步到tw304中的在库数据 -->
+	<select id="getTodayAvailableData" resultType="com.lemonico.common.bean.Tw300_stock">
+		select client_id,stock_id,warehouse_cd,available_cnt,requesting_cnt,inventory_cnt,product_size_cd, product_id, replenish_cnt, product_weight, weigth_unit, ins_usr, ins_date,
+		upd_usr, upd_date
+		from tw300_stock where del_flg = 0 and stock_id not in (select stock_id from tw304_stock_day where stock_date = #{stockDate} and del_flg = 0)
+	</select>
+
+    <!-- 获取商品在库数-->
+	<select id="getStockCntByProductList" resultType="com.lemonico.common.bean.Tw300_stock">
+		select client_id,stock_id,warehouse_cd,available_cnt,product_id,not_delivery
+		from tw300_stock
+		where del_flg = 0
+		<if test="clientId != null and clientId != '' ">
+			and client_id = #{clientId}
+		</if>
+		<if test="warehouseCd != null and warehouseCd != '' ">
+			and warehouse_cd = #{warehouseCd}
+		</if>
+		<if test="productIdList.size != 0">
+			and product_id in
+			<foreach collection="productIdList" item="productIdList" open="(" separator="," close=")">
+				#{productIdList}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 获取固定时间内的在库履历信息-->
+	<select id="getHistoryList" resultType="com.lemonico.common.bean.Tw301_stock_history">
+		select product_id, quantity, type from tw301_stock_history where del_flg = 0
+		<if test="client_id != null and client_id != '' ">
+			and client_id = #{client_id}
+		</if>
+		and ins_date between #{startDate} and #{endDate}
+	</select>
+
+	<!-- 根据商品Id获取到在库数据-->
+    <select id="getAllAvailableCntNew" resultType="com.lemonico.common.bean.Tw300_stock">
+        select client_id,stock_id,available_cnt,requesting_cnt,store_cnt,inventory_cnt,product_size_cd, product_id
+        from tw300_stock where del_flg = 0 and <![CDATA[ available_cnt <> store_cnt ]]> and client_id=#{client_id}
+    </select>
+
+	<!-- 根据client_id,plan_id删除在库履历tw301-->
+	<update id="deleteStockHistory">
+	   update tw301_stock_history set del_flg = 1
+	   where client_id = #{client_id} and plan_id = #{plan_id} and del_flg = 0
+	</update>
+
+	<!-- 获取多个商品的在库信息 -->
+	<select id="getStockListByLocation" resultType="com.lemonico.common.bean.Tw300_stock">
+		select client_id,stock_id,available_cnt,requesting_cnt,inventory_cnt,product_size_cd, product_id, not_delivery
+		from tw300_stock where del_flg = 0 and
+		<foreach collection="locationDetail" item="locationDetail" open="(" close=")" separator="or">
+			(client_id = #{locationDetail.client_id} and product_id = #{locationDetail.product_id})
+		</foreach>
+	</select>
+
+	<!-- 更改多条在库信息的不可配送数和理论在库数-->
+	<update id="updateNotDelivery">
+		<foreach collection="stockList" item="stockList" separator=";">
+			update tw300_stock set available_cnt = #{stockList.available_cnt}, not_delivery = #{stockList.not_delivery},
+			upd_usr = #{stockList.upd_usr}, upd_date = #{stockList.upd_date}
+			where stock_id = #{stockList.stock_id}
+		</foreach>
+	</update>
+
+	<!-- 根据多个商品Id查询对应的在库信息-->
+	<select id="getStocksByProductIds" resultType="com.lemonico.common.bean.Tw300_stock">
+		select client_id,stock_id,available_cnt,requesting_cnt,inventory_cnt,product_size_cd, product_id, not_delivery
+		from tw300_stock where del_flg = 0 and warehouse_cd = #{warehouse_cd} and client_id = #{client_id}
+		<if test="productIds.size != 0">
+			and product_id in
+			<foreach collection="productIds" item="productIds" open="(" separator="," close=")">
+				#{productIds}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 根据货架Id 获取相应的货架信息-->
+	<select id="getLocationInfoByIdList" resultType="com.lemonico.common.bean.Mw404_location">
+		select location_id, warehouse_cd, wh_location_nm, lot_no from mw404_location
+		where del_flg = 0 and warehouse_cd = #{warehouse_cd}
+		<if test="locationIdList.size != 0">
+			and location_id in
+			<foreach collection="locationIdList" item="locationIdList" open="(" separator="," close=")">
+				#{locationIdList}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 获取出入实际的货架信息 -->
+	<select id="getWarehouseLocationInfo" resultType="com.lemonico.common.bean.Tw113_warehousing_location_detail">
+		select product_id, location_id, product_cnt from tw113_warehousing_location_detail
+		where client_id = #{client_id} and warehousing_plan_id = #{warehousing_plan_id} and product_id = #{product_id}
+		and del_flg = 0
+	</select>
+
+	<!-- 根据client_id-->
+	<select id="getShipmentHistory" resultType="com.lemonico.common.bean.Tw301_stock_history">
+		select plan_id,client_id,product_id,quantity,ins_user,ins_date,upd_user, upd_date
+		from tw301_stock_history as tw301
+		where client_id = #{client_id}
+		<if test="productIdList!=null and productIdList.size>0">
+			and tw301.product_id in
+			<foreach collection="productIdList" item="product_id" open="(" separator="," close=")">
+				#{product_id}
+			</foreach>
+		</if>
+		and type = #{shipment_type} and del_flg = 0
+	</select>
+
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.common.dao.CommonFunctionDao">
+	<!-- a获取仓库店铺的相关信息 -->
+	<!-- a倉庫や店舗に関する情報を取得する -->
+	<select id="getClientInfo" resultType="com.lemonico.common.bean.Ms200_customer">
+		select login_id,login_nm from ms200_customer where 1=1
+		<if test="user_id!=null and user_id!=''">
+			and user_id = #{user_id}
+		</if>
+		<if test="login_nm!=null and login_nm!=''">
+			and (login_nm like concat('%', #{login_nm}, '%'))
+		</if>
+	</select>
+
+	<!-- a倉庫と店舗に関する情報を取得する new! -->
+	<select id="getClientInfomation" resultType="com.lemonico.common.bean.Ms201_client">
+		select ms201.client_id, ms201.client_nm, ms201.shop_nm, ms201.color, ms201.ip_address
+		  from ms201_client as ms201
+		  left join ms202_customer_wh as ms202 on ms201.client_id = ms202.client_id
+		 where ms202.warehouse_cd = #{warehouse_cd}
+         order by ms201.client_id asc
+	</select>
+
+	<!-- a根据店铺ID获取仓库ID -->
+	<select id="getWarehouseIdByClientId" resultType="java.lang.String">
+		select warehouse_cd from ms202_customer_wh where client_id = #{client_id} and del_flg = 0
+	</select>
+
+	<!-- a根据店铺ID获取仓库ID -->
+	<select id="getProductShipmentCount" resultType="int">
+		select sum(tw201.product_plan_cnt)
+		  from tw201_shipment_detail tw201, tw200_shipment tw200
+		 where tw201.client_id = #{client_id}
+		   and tw201.product_id = #{product_id}
+		   and tw200.shipment_plan_id = tw201.shipment_plan_id
+		   and tw200.shipment_status != 7
+		   and tw200.shipment_status != 90
+	</select>
+
+	<select id="getProductSize" resultType="com.lemonico.common.bean.Ms010_product_size">
+		select size_cd, name, type, length, weight
+		  from ms010_product_size
+		 where del_flg = 0
+		 order by to_number(size_cd, '99999') asc
+	</select>
+	
+	<!-- a获取用户功能权限 -->
+    <select id="getUserFunction" resultType="com.lemonico.common.bean.Ms204_customer_func">
+        select user_id, function_cd, function_kb, biko
+        from ms204_customer_func
+        where user_id = #{user_id}
+        and function_cd = #{function_cd}
+        and del_flg = 0 and function_kb = '1'
+    </select>
+    
+    <!-- a获取客户制定的csv出力模板数据 -->
+    <select id="getClientCsvTemplate" resultType="com.lemonico.common.bean.Tc209_setting_template">
+        select *
+        from Tc209_setting_template
+        where yoto_id = #{yoto_id}
+        <if test="template_nm!='' and template_nm!=null">
+            and template_nm = #{template_nm}
+        </if>
+        <if test="warehouse_cd!='' and warehouse_cd!=null">
+            and warehouse_cd = #{warehouse_cd}
+        </if>
+        <if test="client_id!='' and client_id!=null">
+            and client_id = #{client_id}
+        </if>
+        and del_flg = 0
+    </select>
+</mapper>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.ntm.dao.NtmShipmentDao">
+    <resultMap type="com.lemonico.common.bean.Tw200_shipment" id="selectShipment">
+        <id column="client_id" property="client_id" />
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="shipment_plan_id" property="shipment_plan_id" />
+        <result column="request_date" property="request_date" />
+        <result column="shipment_plan_date" property="shipment_plan_date" />
+        <result column="delivery_plan_date" property="delivery_plan_date" />
+        <result column="postcode" property="postcode" />
+        <result column="surname" property="surname" />
+        <result column="phone" property="phone" />
+        <result column="prefecture" property="prefecture" />
+        <result column="address1" property="address1" />
+        <result column="address2" property="address2" />
+        <result column="company" property="company" />
+        <result column="division" property="division" />
+        <result column="email" property="email" />
+        <result column="shipment_status" property="shipment_status" />
+        <result column="status_message" property="status_message" />
+        <result column="status_count" property="status_count" />
+        <result column="inspection_type" property="inspection_type" />
+        <result column="identifier" property="identifier" />
+        <result column="delivery_tracking_nm" property="delivery_tracking_nm" />
+        <result column="order_no" property="order_no" />
+        <result column="product_kind_plan_cnt" property="product_kind_plan_cnt" />
+        <result column="product_plan_total" property="product_plan_total" />
+        <result column="total_price" property="total_price" />
+        <result column="subtotal_amount" property="subtotal_amount" />
+        <result column="delivery_charge" property="delivery_charge" />
+        <result column="handling_charge" property="handling_charge" />
+        <result column="discount_amount" property="discount_amount" />
+        <result column="total_amount" property="total_amount" />
+        <result column="cushioning_unit" property="cushioning_unit" />
+        <result column="gift_wrapping_unit" property="gift_wrapping_unit" />
+        <result column="gift_sender_name" property="gift_sender_name" />
+        <result column="bundled_items" property="bundled_items" />
+        <result column="shipping_email" property="shipping_email" />
+        <result column="delivery_note_type" property="delivery_note_type" />
+        <result column="price_on_delivery_note" property="price_on_delivery_note" />
+        <result column="message" property="message" />
+        <result column="sponsor_id" property="sponsor_id" />
+        <result column="label_note" property="label_note" />
+        <result column="shipping_date" property="shipping_date" />
+        <result column="tax" property="tax" />
+        <result column="boxes" property="boxes" />
+        <result column="total_with_normal_tax" property="total_with_normal_tax" />
+        <result column="total_with_reduced_tax" property="total_with_reduced_tax" />
+        <result column="delivery_carrier" property="delivery_carrier" />
+        <result column="delivery_time_slot" property="delivery_time_slot" />
+        <result column="delivery_date" property="delivery_date" />
+        <result column="cash_on_delivery" property="cash_on_delivery" />
+        <result column="total_for_cash_on_delivery" property="total_for_cash_on_delivery" />
+        <result column="tax_for_cash_on_delivery" property="tax_for_cash_on_delivery" />
+        <result column="delivery_method" property="delivery_method" />
+        <result column="box_delivery" property="box_delivery" />
+        <result column="fragile_item" property="fragile_item" />
+        <result column="invoice_special_notes" property="invoice_special_notes" />
+        <result column="instructions_special_notes" property="instructions_special_notes" />
+        <result column="international" property="international" />
+        <result column="delivery_service" property="delivery_service" />
+        <result column="currency_code" property="currency_code" />
+        <result column="insurance" property="insurance" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="client_nm" property="client_nm" />
+        <result column="customer_code" property="customer_code" />
+        <result column="tnnm" property="tnnm" />
+        <result column="bill_customer_cd" property="bill_customer_cd" />
+        <result column="yamato_manage_code" property="yamato_manage_code" />
+        <result column="fare_manage_cd" property="fare_manage_cd" />
+        <result column="sagawa_nisugata_code" property="sagawa_nisugata_code" />
+        <result column="pdf_confirm_img" property="pdf_confirm_img" />
+        <result column="pdf_name" property="pdf_name" />
+        <result column="size_cd" property="size_cd" />
+        <result column="delivery_code" property="delivery_code" />
+        <result column="bikou1" property="bikou1" />
+        <result column="bikou2" property="bikou2"/>
+        <result column="bikou3" property="bikou3" />
+        <result column="bikou4" property="bikou4" />
+        <result column="bikou5" property="bikou5" />
+        <result column="bikou6" property="bikou6" />
+        <result column="bikou7" property="bikou7" />
+        <result column="bikou8" property="bikou8" />
+        <result column="bikou9" property="bikou9" />
+        <result column="bikou10" property="bikou10" />
+        <result column="bikou_flg" property="bikou_flg" />
+        <result column="payment_method" property="payment_method" />
+        <result column="file" property="file" />
+        <result column="file2" property="file2" />
+        <result column="file3" property="file3" />
+        <result column="file4" property="file4" />
+        <result column="file5" property="file5" />
+        <result column="photography_flg" property="photography_flg" />
+        <result column="delivery_time_name" property="delivery_time_name" />
+        <result column="bill_barcode" property="bill_barcode" />
+        <result column="payment_id" property="payment_id" />
+    </resultMap>
+
+    <resultMap id="ntmTopEnterpriseCntResultMap" type="HashMap">
+        <result property="pendingVerificationCnt" column="pending_verification_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="waitingForAllocationCnt" column="waiting_for_allocation_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="waitingForShippingCnt" column="waiting_for_shipping_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="shipmentPendingCnt" column="shipment_pending_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="duringShipmentWorkCnt" column="during_shipment_work_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="shippedCnt" column="shipped_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <!--NTM获取法人数据-->
+    <select id="getNtmTopEnterpriseCntByStatus" resultMap="ntmTopEnterpriseCntResultMap">
+        select
+            tmp_pending_verification_table.pending_verification_cnt,
+            tmp_waiting_for_allocation_table.waiting_for_allocation_cnt,
+            tmp_waiting_for_shipping_table.waiting_for_shipping_cnt,
+            tmp_shipment_pending_table.shipment_pending_cnt,
+            tmp_during_shipment_work_table.during_shipment_work_cnt,
+            tmp_shipped_table.shipped_cnt
+        from
+        (
+            select count(*) as pending_verification_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="pendingVerification != null">
+                and tw200.shipment_status = #{pendingVerification}
+            </if>
+        ) as tmp_pending_verification_table,
+        (
+            select count(*) as waiting_for_allocation_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="waitingForAllocation != null">
+                and tw200.shipment_status = #{waitingForAllocation}
+            </if>
+        ) as tmp_waiting_for_allocation_table,
+        (
+            select count(*) as waiting_for_shipping_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="waitingForShipping != null">
+                and tw200.shipment_status = #{waitingForShipping}
+            </if>
+        ) as tmp_waiting_for_shipping_table,
+        (
+            select count(*) as shipment_pending_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="shipmentPending != null">
+                and tw200.shipment_status = #{shipmentPending}
+            </if>
+        ) as tmp_shipment_pending_table,
+        (
+            select count(*) as during_shipment_work_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="duringShipmentWork != null">
+                and tw200.shipment_status = #{duringShipmentWork}
+            </if>
+        ) as tmp_during_shipment_work_table,
+        (
+            select count(*) as shipped_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 1
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="shipped != null">
+                and tw200.shipment_status = #{shipped}
+            </if>
+        ) as tmp_shipped_table;
+    </select>
+
+    <resultMap id="ntmTopPersonCntMap" type="HashMap">
+        <result property="todayTotalCnt" column="today_total_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="todayCnt" column="today_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="tomorrowTotalCnt" column="tomorrow_total_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="tomorrowCnt" column="tomorrow_cnt" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <!--获取个人数据-->
+    <select id="getNtmTopPersonCntByStatus" resultMap="ntmTopPersonCntMap">
+        select today_total_table.today_total_cnt, today_table.today_cnt, tomorrow_total_table.tomorrow_total_cnt, tomorrow_table.tomorrow_cnt from
+        (
+            select count(*) as today_total_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="todayStartDate!=null and todayStartDate!='' and todayEndDate!=null and todayEndDate!=''">
+                and tw200.shipping_date > #{todayStartDate} and tw200.shipping_date &lt; #{todayEndDate}
+            </if>
+        ) as today_total_table,
+        (
+            select count(*) as today_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0  and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="todayStartDate!=null and todayStartDate!='' and todayEndDate!=null and todayEndDate!=''">
+                and tw200.shipping_date > #{todayStartDate} and tw200.shipping_date &lt; #{todayEndDate}
+            </if>
+            <if test="statusList != null">
+                and tw200.shipment_status in
+                <foreach collection="statusList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        ) as today_table,
+        (
+            select count(*) as tomorrow_total_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="tomorrowStartDate!=null and tomorrowStartDate!='' and tomorrowEndDate!=null and tomorrowEndDate!=''">
+                and tw200.shipping_date > #{tomorrowStartDate} and tw200.shipping_date &lt; #{tomorrowEndDate}
+            </if>
+        ) as tomorrow_total_table,
+        (
+            select count(*) as tomorrow_cnt
+            from tw200_shipment tw200
+            where tw200.del_flg = 0 and form = 2
+            <if test="clientId!=''">
+                and tw200.client_id = #{clientId}
+            </if>
+            <if test="tomorrowStartDate!=null and tomorrowStartDate!='' and tomorrowEndDate!=null and tomorrowEndDate!=''">
+                and tw200.shipping_date > #{tomorrowStartDate} and tw200.shipping_date &lt; #{tomorrowEndDate}
+            </if>
+            <if test="statusList != null">
+                and tw200.shipment_status in
+                <foreach collection="statusList" item="item" index="index" open="(" close=")" separator=",">
+                    #{item,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        ) as tomorrow_table;
+    </select>
+
+    <!--a根据size_cd 获取 尺寸信息 -->
+    <select id="getAllSizeName" resultType="com.lemonico.common.bean.Ms010_product_size">
+        select size_cd, name, type, height, length, weight, biko, ins_usr, ins_date, upd_usr, upd_date, del_flg
+          from ms010_product_size
+         where del_flg =0
+    </select>
+
+</mapper>

@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.OrderDao">
+    <resultMap type="com.lemonico.common.bean.Tc200_order" id="orderResultMap">
+        <id column="purchase_order_no" property="purchase_order_no" />
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="client_id" property="client_id" />
+        <result column="outer_order_no" property="outer_order_no" />
+        <result column="outer_order_status" property="outer_order_status" />
+        <result column="order_datetime" property="order_datetime" />
+        <result column="payment_method" property="payment_method" />
+        <result column="order_type" property="order_type" />
+        <result column="member_info" property="member_info" />
+        <result column="product_price_excluding_tax" property="product_price_excluding_tax" />
+        <result column="tax_total" property="tax_total" />
+        <result column="cash_on_delivery_fee" property="cash_on_delivery_fee" />
+        <result column="other_fee" property="other_fee" />
+        <result column="delivery_total" property="delivery_total" />
+        <result column="billing_total" property="billing_total" />
+        <result column="order_company" property="order_company" />
+        <result column="order_division" property="order_division" />
+        <result column="order_zip_code1" property="order_zip_code1" />
+        <result column="order_zip_code2" property="order_zip_code2" />
+        <result column="order_todoufuken" property="order_todoufuken" />
+        <result column="order_address1" property="order_address1" />
+        <result column="order_address2" property="order_address2" />
+        <result column="order_family_name" property="order_family_name" />
+        <result column="order_first_name" property="order_first_name" />
+        <result column="order_family_kana" property="order_family_kana" />
+        <result column="order_first_kana" property="order_first_kana" />
+        <result column="order_phone_number1" property="order_phone_number1" />
+        <result column="order_phone_number2" property="order_phone_number2" />
+        <result column="order_phone_number3" property="order_phone_number3" />
+        <result column="order_mail" property="order_mail" />
+        <result column="order_gender" property="order_gender" />
+        <result column="receiver_zip_code1" property="receiver_zip_code1" />
+        <result column="receiver_zip_code2" property="receiver_zip_code2" />
+        <result column="receiver_todoufuken" property="receiver_todoufuken" />
+        <result column="receiver_address1" property="receiver_address1" />
+        <result column="receiver_address2" property="receiver_address2" />
+        <result column="receiver_family_name" property="receiver_family_name" />
+        <result column="receiver_first_name" property="receiver_first_name" />
+        <result column="receiver_family_kana" property="receiver_family_kana" />
+        <result column="receiver_first_kana" property="receiver_first_kana" />
+        <result column="receiver_phone_number1" property="receiver_phone_number1" />
+        <result column="receiver_phone_number2" property="receiver_phone_number2" />
+        <result column="receiver_phone_number3" property="receiver_phone_number3" />
+        <result column="receiver_mail" property="receiver_mail" />
+        <result column="receiver_gender" property="receiver_gender" />
+        <result column="receiver_company" property="receiver_company" />
+        <result column="receiver_division" property="receiver_division" />
+        <result column="deliveryman" property="deliveryman" />
+        <result column="delivery_time_slot" property="delivery_time_slot" />
+        <result column="delivery_date" property="delivery_date" />
+        <result column="shipment_plan_id" property="shipment_plan_id" />
+        <result column="import_datetime" property="import_datetime" />
+        <result column="shipping_request_datetime" property="shipping_request_datetime" />
+        <result column="shipment_wish_date" property="shipment_wish_date" />
+        <result column="shipment_plan_date" property="shipment_plan_date" />
+        <result column="delivery_type" property="delivery_type" />
+        <result column="delivery_method" property="delivery_method" />
+        <result column="delivery_company" property="delivery_company" />
+        <result column="receiver_wish_method" property="receiver_wish_method" />
+        <result column="gift_wish" property="gift_wish" />
+        <result column="detail_bundled" property="detail_bundled" />
+        <result column="detail_price_print" property="detail_price_print" />
+        <result column="detail_message" property="detail_message" />
+        <result column="bill_barcode" property="bill_barcode" />
+         <!-- @Add 2021/04/16 wang edit start -->
+        <result column="payment_id" property="payment_id" />
+         <!-- @Add 2021/04/16 wang edit end -->
+        <result column="total_with_reduced_tax" property="total_with_reduced_tax" />
+        <result column="total_with_normal_tax" property="total_with_normal_tax" />
+        <result column="bikou1" property="bikou1" />
+        <result column="bikou2" property="bikou2" />
+        <result column="bikou3" property="bikou3" />
+        <result column="bikou4" property="bikou4" />
+        <result column="bikou5" property="bikou5" />
+        <result column="bikou6" property="bikou6" />
+        <result column="bikou7" property="bikou7" />
+        <result column="bikou8" property="bikou8" />
+        <result column="bikou9" property="bikou9" />
+        <result column="bikou10" property="bikou10" />
+        <result column="bikou_flg" property="bikou_flg"/>
+        <result column="handling_charge" property="handling_charge"/>
+        <result column="sponsor_id" property="sponsor_id"/>
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="del_flg" property="del_flg" />
+        <result column="order_flag" property="order_flag" />
+        <result column="label_note" property="label_note" />
+        <result column="box_delivery" property="box_delivery" />
+        <result column="fragile_item" property="fragile_item" />
+        <result column="buy_id" property="buy_id" />
+        <result column="buy_cnt" property="buy_cnt" />
+        <result column="next_delivery_date" property="next_delivery_date" />
+        <result column="memo" property="memo" />
+        <result column="form" property="form" />
+        <result column="boxes" property="boxes" />
+        <result column="invoice_special_notes" property="invoice_special_notes" />
+        <result column="related_order_no" property="related_order_no" />
+        <collection property="tc201_order_detail_list" javaType="java.util.List" ofType="com.lemonico.common.bean.Tc201_order_detail">
+            <id column="order_detail_no" property="order_detail_no" />
+            <result column="purchase_order_no" property="purchase_order_no"></result>
+            <result column="product_id" property="product_id" />
+            <result column="product_code" property="product_code" />
+            <result column="product_name" property="product_name" />
+            <result column="unit_price" property="unit_price" />
+            <result column="number" property="number" />
+            <result column="product_total_price" property="product_total_price" />
+            <result column="product_option" property="product_option" />
+            <result column="product_kubun" property="product_kubun" />
+            <result column="is_reduced_tax" property="is_reduced_tax" />
+            <result column="set_sub_id" property="set_sub_id" />
+            <result column="wrapping_title1" property="wrapping_title1" />
+            <result column="wrapping_name1" property="wrapping_name1" />
+            <result column="wrapping_price1" property="wrapping_price1" />
+            <result column="wrapping_tax1" property="wrapping_tax1" />
+            <result column="wrapping_type1" property="wrapping_type1" />
+            <result column="wrapping_title2" property="wrapping_title2" />
+            <result column="wrapping_name2" property="wrapping_name2" />
+            <result column="wrapping_price2" property="wrapping_price2" />
+            <result column="wrapping_tax2" property="wrapping_tax2" />
+            <result column="wrapping_type2" property="wrapping_type2" />
+            <result column="bundled_flg" property="bundled_flg" />
+            <result column="tax_flag" property="tax_flag" />
+            <result column="del_flg" property="del_flg" />
+            <result column="option_price" property="option_price" />
+        </collection>
+    </resultMap>
+
+    <!-- 最新受注番号を取得 -->
+    <select id="getOuterOrderNo" resultType="java.lang.Integer">
+        select count(*) as cnt from tc200_order
+        where
+        outer_order_no = #{outer_order_no}
+        <if test="client_id!='' and client_id!=null">
+            and client_id = #{client_id}
+        </if>
+        and del_flg = 0;
+    </select>
+
+    <!-- 最新受注番号を取得 -->
+    <select id="getLastPurchaseOrderNo" resultType="java.lang.String">
+        select
+            purchase_order_no
+        from
+            tc200_order
+        where
+            purchase_order_no = (select max(purchase_order_no) from tc200_order);
+    </select>
+
+    <!-- 获取店铺所有新规受付数量   -->
+    <select id="getOrderCount" resultType="java.lang.Integer">
+        select count(0) from tc200_order where client_id = #{client_id} and del_flg = 0 and outer_order_status = 0;
+    </select>
+
+    <select id="getOrderList" resultType="com.lemonico.common.bean.Tc200_order">
+        select
+         purchase_order_no,warehouse_cd,client_id,outer_order_no,history_id,outer_order_status,order_datetime,payment_method,
+         order_type,member_info,product_price_excluding_tax,tax_total,cash_on_delivery_fee,other_fee,delivery_total,
+         billing_total,order_zip_code1,order_zip_code2,order_todoufuken,order_address1,order_address2,order_family_name,
+         order_first_name,order_family_kana,order_first_kana,order_phone_number1,order_phone_number2,
+         order_phone_number3,order_mail,order_gender,receiver_zip_code1,receiver_zip_code2,receiver_todoufuken,receiver_address1,
+         receiver_address2,receiver_family_name,receiver_first_name,receiver_order_family_kana,receiver_order_first_kana,
+         receiver_phone_number1,receiver_phone_number2,receiver_phone_number3,receiver_mail,receiver_gender,receiver_company,receiver_division,deliveryman,
+         delivery_time_slot,delivery_date,shipment_plan_id,import_datetime,shipping_request_datetime,shipment_wish_date,
+         shipment_plan_date,delivery_type,delivery_method,delivery_company,gift_wish,detail_bundled,detail_price_print,
+         detail_message,bikou1,bikou2,bikou3,bikou4,bikou5,bikou6,bikou7,bikou8,bikou9,bikou10,ins_usr,ins_date,upd_usr,
+         upd_date,del_flg,order_flag,label_note,box_delivery,fragile_item,payment_id,buy_id,buy_cnt,next_delivery_date,memo,form
+        from
+         tc200_order
+        where
+         client_id = #{client_id} and del_flg = #{del_flg}
+        <if test="outer_order_status != null">
+            and outer_order_status = #{outer_order_status}
+        </if>
+        <if test="startDate != null and endDate != null">
+            and order_datetime between #{startDate} and #{endDate}
+        </if>
+        <if test="startDate != null and endDate == null">
+            and order_datetime &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and startDate == null">
+            and order_datetime &lt;= #{endDate}
+        </if>
+        <!-- 店舗区分 -->
+        <if test="orderType != null and orderType == 'RK%'">
+            and tw200.identifier like 'RK-%'
+        </if>
+        <if test="orderType != null and orderType == 'RT%'">
+            and (purchase_order_no like 'RT%' or purchase_order_no like 'RK%')
+            and purchase_order_no not like 'RK-%'
+        </if>
+        <if test="orderType != null and orderType != 'RT%' and orderType != 'RK%'">
+            and purchase_order_no like #{orderType}
+        </if>
+        <!-- 模糊查询检索 -->
+        <if test="search!=null and search!=''">
+            and (purchase_order_no in (
+            select purchase_order_no from tc201_order_detail where product_id in
+            (select product_id from mc100_product where name like #{search} or code like #{search} or barcode like #{search} and client_id=#{client_id} and del_flg=0)
+            )
+            or outer_order_no like #{search} or CONCAT(order_family_name, order_first_name) like #{search}
+            or CONCAT(order_phone_number1, order_phone_number2, order_phone_number3) like #{search})
+        </if>
+        <!-- 出庫依頼日検索 -->
+        <if test="request_date_start != null and request_date_start != ''">
+            and shipping_request_datetime &gt;= #{request_date_start}
+        </if>
+        <if test="request_date_end != null and request_date_end != ''">
+            and shipping_request_datetime &lt;= #{request_date_end}
+        </if>
+        <!-- 配達希望日検索 -->
+        <if test="delivery_date_start != null and delivery_date_start != ''">
+            and delivery_date &gt;= #{delivery_date_start}
+        </if>
+        <if test="delivery_date_end != null and delivery_date_end != ''">
+            and delivery_date &lt;= #{delivery_date_end}
+        </if>
+        <if test="form != null and form != ''">
+            and form = #{form}
+        </if>
+        <if test="identifier != null and identifier != ''">
+            and purchase_order_no like #{identifier}
+        </if>
+        <if test="column == null || sortType == null">
+            ORDER BY order_datetime DESC
+        </if>
+        <if test="column != null and column != '' and sortType != null and sortType !='' ">
+            ORDER BY #{column} ${sortType}
+        </if>
+    </select>
+
+    <!-- 新規受注登録 -->
+    <insert id="insertOrder" parameterType="com.lemonico.common.bean.Tc200_order">
+        insert into tc200_order
+        (purchase_order_no,warehouse_cd,client_id,outer_order_no,history_id,outer_order_status,order_datetime,payment_method,
+        order_type,member_info,product_price_excluding_tax,tax_total,cash_on_delivery_fee,other_fee,delivery_total,
+        billing_total,order_flag,order_company,order_division,order_zip_code1,order_zip_code2,order_todoufuken,order_address1,order_address2,order_family_name,
+        order_first_name,order_family_kana,order_first_kana,order_phone_number1,order_phone_number2,
+        order_phone_number3,order_mail,order_gender,receiver_company,receiver_division,receiver_zip_code1,receiver_zip_code2,receiver_todoufuken,receiver_address1,
+        receiver_address2,receiver_family_name,receiver_first_name,receiver_order_family_kana,receiver_order_first_kana,
+        receiver_phone_number1,receiver_phone_number2,receiver_phone_number3,receiver_mail,receiver_gender,deliveryman,
+        delivery_time_slot,delivery_date,shipment_plan_id,import_datetime,shipping_request_datetime,shipment_wish_date,
+        shipment_plan_date,delivery_type,delivery_method,delivery_company,gift_wish,detail_bundled,detail_price_print,
+        detail_message,bikou1,bikou2,bikou3,bikou4,bikou5,bikou6,bikou7,bikou8,bikou9,bikou10,ins_usr,ins_date,upd_usr,
+        upd_date,del_flg,handling_charge,sponsor_id,bikou_flg,label_note,box_delivery,fragile_item,delivery_id,
+        bill_barcode ,total_with_normal_tax,total_with_reduced_tax,payment_id,buy_id,buy_cnt,next_delivery_date,memo,form,invoice_special_notes,related_order_no)
+        values(
+        #{purchase_order_no},#{warehouse_cd},#{client_id},#{outer_order_no},#{history_id},#{outer_order_status},
+        #{order_datetime},#{payment_method},#{order_type},#{member_info},#{product_price_excluding_tax},#{tax_total},
+        #{cash_on_delivery_fee},#{other_fee},#{delivery_total},#{billing_total},#{order_flag},#{order_company},#{order_division},#{order_zip_code1},#{order_zip_code2},
+        #{order_todoufuken},#{order_address1},#{order_address2},#{order_family_name},#{order_first_name},#{order_family_kana},
+        #{order_first_kana},#{order_phone_number1},#{order_phone_number2},#{order_phone_number3},#{order_mail},
+        #{order_gender},#{receiver_company},#{receiver_division},#{receiver_zip_code1},#{receiver_zip_code2},#{receiver_todoufuken},#{receiver_address1},
+        #{receiver_address2},#{receiver_family_name},#{receiver_first_name},#{receiver_family_kana},#{receiver_first_kana},
+        #{receiver_phone_number1},#{receiver_phone_number2},#{receiver_phone_number3},#{receiver_mail},#{receiver_gender},
+        #{deliveryman},#{delivery_time_slot},#{delivery_date},#{shipment_plan_id},#{import_datetime},#{shipping_request_datetime},
+        #{shipment_wish_date},#{shipment_plan_date},#{delivery_type},#{delivery_method},#{delivery_company},#{gift_wish},
+        #{detail_bundled},#{detail_price_print},#{detail_message},#{bikou1},#{bikou2},#{bikou3},#{bikou4},#{bikou5},#{bikou6},
+        #{bikou7},#{bikou8},#{bikou9},#{bikou10},#{ins_usr},#{ins_date},#{upd_usr},#{upd_date},0,#{handling_charge},#{sponsor_id},
+        #{bikou_flg},#{label_note},#{box_delivery},#{fragile_item},#{delivery_id},
+        #{bill_barcode},#{total_with_normal_tax},#{total_with_reduced_tax},#{payment_id},
+        #{buy_id},#{buy_cnt},#{next_delivery_date},#{memo},#{form},#{invoice_special_notes}, #{related_order_no});
+    </insert>
+
+    <!--    根据店铺Id 获取仓库Id信息-->
+    <select id="getWarehouseIdListByClientId" resultType="java.lang.String">
+        select warehouse_cd from ms202_customer_wh where client_id = #{client_id} and del_flg = 0
+    </select>
+
+    <!--    根据仓库Id获取仓库名称-->
+    <select id="getWarehouseInfoByWarehouseId" resultType="com.lemonico.common.bean.Mw400_warehouse">
+        select warehouse_nm,warehouse_cd from mw400_warehouse where warehouse_cd in
+        <foreach collection="warehouseIdList" item="warehouseIdList" open="(" separator="," close=")">
+            #{warehouseIdList}
+        </foreach>
+    </select>
+
+    <select id="getOrderInfoByPurchaseOrderNo" resultMap="orderResultMap">
+        select
+         tc200.purchase_order_no, tc200.warehouse_cd, tc200.client_id, tc200.outer_order_no, tc200.history_id, tc200.form, tc200.outer_order_status,
+         tc200.order_datetime, tc200.payment_method, tc200.order_type, tc200.member_info, tc200.product_price_excluding_tax, tc200.tax_total,
+         tc200.cash_on_delivery_fee, tc200.other_fee, tc200.delivery_total, tc200.billing_total, tc200.order_zip_code1, tc200. order_zip_code2,
+         tc200.order_todoufuken, tc200.order_address1, tc200.order_address2, tc200.order_family_name, tc200.order_first_name, tc200.order_division,
+         tc200.order_family_kana, tc200.order_first_kana, tc200.order_phone_number1, tc200.order_phone_number2, tc200.order_phone_number3,
+         tc200.order_mail, tc200.order_gender, tc200.receiver_zip_code1, tc200.receiver_zip_code2, tc200.receiver_todoufuken, tc200.receiver_address1,
+         tc200.receiver_address2, tc200.receiver_family_name, tc200.receiver_first_name, tc200.receiver_order_family_kana as receiver_family_kana, tc200.receiver_order_first_kana as receiver_first_kana,
+         tc200.receiver_phone_number1, tc200.receiver_phone_number2, tc200.receiver_phone_number3, tc200.receiver_mail, tc200.receiver_gender, tc200.receiver_company,tc200.receiver_division,
+         tc200.deliveryman, tc200.delivery_time_slot, tc200.delivery_date, tc200.shipment_plan_id, tc200.import_datetime,
+         tc200.shipping_request_datetime, tc200.shipment_wish_date, tc200.shipment_plan_date, tc200.delivery_type, tc200.delivery_method,
+         tc200.delivery_company, tc200.gift_wish, tc200.detail_bundled, tc200.detail_price_print, tc200.detail_message, tc200.bikou1,
+         tc200.bikou2, tc200.bikou3, tc200.bikou4, tc200.bikou5, tc200.bikou6, tc200.bikou7, tc200.bikou8, tc200.bikou9, tc200.bikou10,
+         tc200.handling_charge, tc200.sponsor_id, tc200.bikou_flg, tc200.ins_usr, tc200.ins_date, tc200.upd_usr, tc200.upd_date, tc200.del_flg,
+         tc200.order_flag,tc200.label_note,tc200.box_delivery,tc200.fragile_item, tc200.order_company,
+         tc200.bill_barcode,tc200.total_with_normal_tax,tc200.total_with_reduced_tax,tc200.payment_id,
+         tc200.buy_id, tc200.buy_cnt, tc200.next_delivery_date, tc200.memo,tc200.invoice_special_notes,tc200.related_order_no,
+         tc201.order_detail_no, tc201.purchase_order_no, tc201.product_id, tc201.product_code, tc201.product_name, tc201.unit_price, tc201.number,
+         tc201.product_total_price, tc201.product_option, tc201.is_reduced_tax, tc201.wrapping_title1, tc201.wrapping_name1, tc201.wrapping_price1, tc201.wrapping_tax1,
+         tc201.wrapping_type1, tc201.wrapping_title2, tc201.wrapping_name2, tc201.wrapping_price2, tc201.wrapping_tax2,
+         tc201.wrapping_type2, tc201.bikou1, tc201.bikou2, tc201.bikou3, tc201.bikou4, tc201.bikou5, tc201.bikou6,
+         tc201.bikou7, tc201.bikou8, tc201.bikou9, tc201.bikou10, tc201.ins_usr, tc201.ins_date, tc201.upd_usr,
+         tc201.upd_date, tc201.del_flg, tc201.set_sub_id,tc201.bundled_flg,tc201.tax_flag, tc201.product_kubun, tc201.option_price
+        from
+         tc200_order tc200 left join tc201_order_detail tc201
+         on tc200.purchase_order_no = tc201.purchase_order_no and tc201.del_flg = 0
+        where tc200.purchase_order_no = #{purchase_order_no} and tc200.del_flg = 0
+    </select>
+
+    <!--    更改受注状态-->
+    <update id="updateOuterOrderStatus">
+        update tc200_order set outer_order_status = 1, shipment_plan_id = #{shipment_plan_id} where purchase_order_no = #{purchaseOrderNo} and del_flg = 0
+    </update>
+
+    <!--    根据受注取込履歴ID 获取受注信息-->
+    <select id="getOrderListByHistoryId" resultType="com.lemonico.common.bean.Tc200_order">
+        select purchase_order_no, outer_order_no, shipment_plan_id, bikou1, bikou2, bikou3, bikou4, bikou5, bikou6,
+        bikou7, bikou8, bikou9, bikou10 from tc200_order where client_id = #{jsonObject.client_id} and
+        history_id = #{jsonObject.history_id} and del_flg = 0
+    </select>
+
+    <!--    a更改店铺配送方法-->
+    <update id="changeDeliveryMethod">
+        update ms201_client
+           set delivery_method = #{jsonObject.delivery_method}
+         where client_id = #{jsonObject.client_id}
+    </update>
+
+    <!--  a获取各店铺受注csv模板信息-->
+    <select id="getClientTemplate" resultType="com.lemonico.common.bean.Tc204_order_template">
+        select template_cd,client_id,company_id,template_nm,encoding,delimiter,data,template,constant,identification from Tc204_order_template
+        where client_id =#{client_id} and del_flg = 0
+        <if test="company_id!='' and company_id!=null">
+            and company_id = #{company_id}
+        </if>
+        <if test="template_cd!='' and template_cd!=null">
+            and template_cd = #{template_cd}
+        </if>
+    </select>
+
+    <!--  a获取各大公司受注csv模板信息-->
+    <select id="getCompanyTemplate" resultType="com.lemonico.common.bean.Tc205_order_company">
+        select company_id,company_name,template from Tc205_order_company
+        where 1=1
+        <if test="company_id!='' and company_id!=null">
+            and company_id = #{company_id}
+        </if>
+    </select>
+
+    <!--  a新规店铺受注csv模板信息-->
+    <insert id="createClientTemplate">
+        insert into Tc204_order_template
+        (client_id,company_id,template_nm,encoding,delimiter,data,template,constant,del_flg,identification)
+        values
+        (#{client_id},#{company_id},#{template_nm},#{encoding},#{delimiter},#{data},#{template},#{constant},0,#{identification})
+    </insert>
+
+    <!--  a更新店铺受注csv模板信息-->
+    <update id="updateClientTemplate">
+        update Tc204_order_template set template_nm = #{template_nm}, encoding = #{encoding},
+        delimiter = #{delimiter}, data = #{data}, constant = #{constant}, identification = #{identification} where template_cd = #{template_cd}
+    </update>
+
+    <!--  a删除店铺受注csv模板信息-->
+    <update id="deleteClientTemplate">
+        update Tc204_order_template set del_flg = 1 where template_cd = #{template_cd}
+    </update>
+
+    <!-- 店舗の受注管理レコードを削除する -->
+    <update id="orderDelete">
+        update Tc200_order set del_flg = 1 where client_id = #{client_id} and purchase_order_no = #{purchase_order_no}
+    </update>
+
+    <update id="orderShipmentsDelete">
+        update Tc200_order set del_flg = 1, upd_date = #{upd_date}, upd_usr = #{upd_usr} where
+        <if test="purchase_order_no!=null and purchase_order_no.size>0">
+            purchase_order_no in
+            <foreach collection="purchase_order_no" item="purchase_order_no" open="(" separator="," close=")">
+                #{purchase_order_no}
+            </foreach>
+        </if>
+        <if test="shipment_plan_id!='' and shipment_plan_id!=null">
+            shipment_plan_id = #{shipment_plan_id}
+        </if>
+    </update>
+
+    <update id="orderDetailDelete">
+        update Tc201_order_detail set del_flg = 1, upd_date = #{upd_date}, upd_usr = #{upd_usr} where
+        <if test="purchase_order_no!=null and purchase_order_no.size>0">
+            purchase_order_no in
+            <foreach collection="purchase_order_no" item="purchase_order_no" open="(" separator="," close=")">
+                #{purchase_order_no}
+            </foreach>
+        </if>
+        <if test="order_no!='' and order_no!=null">
+            purchase_order_no = #{order_no}
+        </if>
+    </update>
+
+
+    <!-- 根据店铺测指定的配送业者id 获取配送便指定ID-->
+    <select id="getDeveliveyCdByDelivery_cd" resultType="com.lemonico.common.bean.Ms004_delivery">
+        select delivery_cd, delivery_method,delivery_nm,delivery_method_name,delivery_code,info from ms004_delivery
+        where delivery_cd = #{delivery_cd} and del_flg = 0
+    </select>
+
+    <!-- 获取所有的外部受注番号-->
+    <select id="getOuterorderNoList" resultType="java.lang.String">
+        select outer_order_no from tc200_order
+        where client_id = #{client_id}
+        and del_flg = 0
+    </select>
+
+	<!-- 获取外部受注番号-->
+    <select id="getOuterOrderNoListBySpecificNo" resultType="java.lang.String" >
+        select outer_order_no from tc200_order
+        where client_id = #{clientId}
+        and del_flg = 0
+        and outer_order_no in
+        <foreach collection="list" item="list" open="(" separator="," close=")">
+            #{list}
+        </foreach>
+    </select>
+
+    <select id="getApiTemplates" resultType="java.lang.String">
+        select template from ms013_api_template where del_flg=0
+    </select>
+
+    <select id="getApiIdentification" resultType="java.lang.String">
+        select Identification from ms013_api_template where template=#{template} and del_flg=0
+    </select>
+    <!-- 根据shipment_plan_id查询purchase_order_no-->
+    <select id="getPurchaseOrderNo" resultType="java.lang.String">
+        select purchase_order_no from Tc200_order where shipment_plan_id=#{shipment_plan_id}
+    </select>
+
+    <!-- a获取s3设定信息-->
+    <select id="getS3Setting" resultType="com.lemonico.common.bean.Tc207_order_s3">
+        select * from tc207_order_s3 where client_id = #{client_id}
+    </select>
+
+    <!-- a获取s3设定信息-->
+    <select id="getS3SettingAll" resultType="com.lemonico.common.bean.Tc207_order_s3">
+        select * from tc207_order_s3
+    </select>
+
+    <!-- a新规s3设定信息-->
+    <insert id="insertS3Setting">
+        insert into tc207_order_s3
+        (client_id,bucket,password1,password2,folder,ins_date,upd_date,upload_folder)
+        values
+        (#{client_id},#{bucket},#{password1},#{password2},#{folder},#{ins_date},#{upd_date},#{upload_folder})
+    </insert>
+
+    <!-- a更新s3设定信息-->
+    <insert id="updateS3Setting">
+        update tc207_order_s3 set client_id = #{client_id}, bucket = #{bucket}, password1 = #{password1},
+        password2 = #{password2}, folder = #{folder}, upd_date = #{upd_date}, upload_folder = #{upload_folder}
+        where client_id = #{client_id}
+    </insert>
+
+
+    <!-- 获取api连携平台信息-->
+    <select id="getApiStoreInfo" resultType="com.lemonico.common.bean.Ms013_api_template">
+        select id, template, identification from Ms013_api_template
+        <if test="template!='' and template!=null">
+            where template = #{template}
+        </if>
+    </select>
+
+    <!-- 根据识别子获取finishi_flg为0的出库信息-->
+    <select id="getShipmentInfoByIdentifier" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select tw200.shipment_plan_id, tw200.delivery_tracking_nm,tw200.order_no, tw201.product_id, tw200.client_id, tw200.identifier
+        from tw200_shipment tw200
+        left join tw201_shipment_detail tw201 on tw200.shipment_plan_id = tw201.shipment_plan_id and tw201.del_flg = 0
+        where tw200.identifier like '${identifier}%' and tw200.finish_flg = 0 and tw200.del_flg = 0 and tw200.shipment_status = 8
+        <if test="client_id!='' and client_id!=null">
+            and tw200.client_id = #{client_id}
+        </if>
+    </select>
+
+    <!-- 根据识别子 clientID 出库状态 finish_flg  的出库信息 传票番号为空的话就没必要返回了 需得指定传票番号不为空-->
+    <select id="getRkShipmentInfoByIdentifier" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select tw200.delivery_tracking_nm,tw200.order_no,tw200.delivery_carrier,tw200.delivery_method,tw200.shipment_plan_id,tw200.client_id,tw200.warehouse_cd,tw200.related_order_no
+        from tw200_shipment tw200
+        where tw200.identifier like '${identifier}%'
+          and tw200.client_id = #{client_id}
+          and tw200.finish_flg = 0
+          and tw200.del_flg = 0
+          and tw200.shipment_status = 8
+          and tw200.delivery_tracking_nm is not null
+          limit 100
+    </select>
+
+    <!-- 根据出荷id更新finish_flg-->
+    <update id="updateFinishFlag">
+        update tw200_shipment set finish_flg = 1
+        where shipment_plan_id = #{shipment_plan_id}  and del_flg = 0 and shipment_status = 8
+    </update>
+
+    <!-- 获取未读的错误信息 -->
+    <select id="getOrderErrorMes" resultType="com.lemonico.common.bean.Tc207_order_error">
+        select order_error_no, client_id, outer_order_no, history_id, status, error_msg, bikou1, bikou2, bikou3
+        from tc207_order_error
+        where client_id = #{client_id} and del_flg = 0
+        <if test="status==0 or status==1">
+            and status = #{status}
+        </if>
+        order by outer_order_no desc
+    </select>
+
+    <!-- 获取不同处理状态的受注取消信息-->
+    <select id="getOrderCancelMes" resultType="com.lemonico.common.bean.Tc208_order_cancel">
+        select
+         order_cancel_no, client_id, outer_order_no, shipment_plan_id, status,
+         bikou1, bikou2, bikou3
+        from
+         tc208_order_cancel
+        where
+         client_id = #{client_id} and del_flg = 0
+        <if test="status==0 or status==1">
+            and status = #{status}
+        </if>
+        <if test="sort != '' and sort != null">
+            order by outer_order_no ${sort}
+        </if>
+    </select>
+
+    <!-- 更新消息为已读状态 -->
+    <update id="updOrderErrorMes">
+        update tc207_order_error
+         set status = 1
+        where
+         client_id = #{client_id}
+         and order_error_no in
+        <foreach collection="order_error_no" item="order_error_no" open="(" separator="," close=")">
+            #{order_error_no}
+        </foreach>
+    </update>
+
+    <!--    更新受注取消为確認済-->
+    <update id="updOrderCancelMes">
+        update tc208_order_cancel
+         set status = 1
+        where
+         client_id = #{client_id}
+         and order_cancel_no in
+        <foreach collection="order_cancel_no" item="order_cancel_no" open="(" separator="," close=")">
+            #{order_cancel_no}
+        </foreach>
+    </update>
+
+
+    <!--    获取最大的识别code-->
+    <select id="getMaxIdentification" resultType="java.lang.String">
+        select
+         identification
+        from
+         tc203_order_client
+        where
+         identification like concat('%', '${identification}', '%') and del_flg = 0
+        order by
+         identification desc LIMIT 1
+    </select>
+
+    <!-- 批量插入受注信息 -->
+    <insert id="bulkInsertOrder">
+        insert into tc200_order
+        (purchase_order_no,warehouse_cd,client_id,outer_order_no,history_id,outer_order_status,order_datetime,payment_method,
+        order_type,member_info,product_price_excluding_tax,tax_total,cash_on_delivery_fee,other_fee,delivery_total,
+        billing_total,order_flag,order_company,order_division,order_zip_code1,order_zip_code2,order_todoufuken,order_address1,
+        order_address2,order_family_name,order_first_name,order_phone_number1,
+        order_phone_number2,
+        order_phone_number3,order_mail,order_gender,receiver_company,receiver_division,receiver_zip_code1,
+        receiver_zip_code2,receiver_todoufuken,receiver_address1,receiver_address2,receiver_family_name,receiver_first_name,
+        receiver_phone_number1,receiver_phone_number2,receiver_phone_number3,
+        receiver_mail,receiver_gender,deliveryman,delivery_time_slot,delivery_date,shipment_plan_id,import_datetime,
+        shipping_request_datetime,shipment_wish_date,
+        shipment_plan_date,delivery_type,delivery_method,delivery_company,gift_wish,
+        detail_bundled,detail_price_print,
+        detail_message,bikou1,bikou2,bikou3,bikou4,bikou5,bikou6,bikou7,bikou8,bikou9,bikou10,boxes,
+        ins_usr,ins_date,upd_usr,upd_date,del_flg,handling_charge,sponsor_id,bikou_flg,label_note,box_delivery,fragile_item,delivery_id,form)
+        values
+        <foreach collection="orders" item="order" separator=",">
+            (#{order.purchase_order_no},#{order.warehouse_cd},#{order.client_id},#{order.outer_order_no},#{order.history_id},
+            #{order.outer_order_status},#{order.order_datetime},#{order.payment_method},#{order.order_type},#{order.member_info},
+            #{order.product_price_excluding_tax},#{order.tax_total},#{order.cash_on_delivery_fee},#{order.other_fee},
+            #{order.delivery_total},#{order.billing_total},#{order.order_flag},#{order.order_company},#{order.order_division},
+            #{order.order_zip_code1},#{order.order_zip_code2},#{order.order_todoufuken},#{order.order_address1},#{order.order_address2},
+            #{order.order_family_name},#{order.order_first_name},
+            #{order.order_phone_number1},#{order.order_phone_number2},#{order.order_phone_number3},#{order.order_mail},#{order.order_gender},
+            #{order.receiver_company},#{order.receiver_division},#{order.receiver_zip_code1},#{order.receiver_zip_code2},
+            #{order.receiver_todoufuken},#{order.receiver_address1},
+            #{order.receiver_address2},#{order.receiver_family_name},
+            #{order.receiver_first_name}, #{order.receiver_phone_number1},
+            #{order.receiver_phone_number2},#{order.receiver_phone_number3},#{order.receiver_mail},#{order.receiver_gender},
+            #{order.deliveryman},#{order.delivery_time_slot},#{order.delivery_date},#{order.shipment_plan_id},#{order.import_datetime},
+            #{order.shipping_request_datetime},
+            #{order.shipment_wish_date},#{order.shipment_plan_date},#{order.delivery_type},
+            #{order.delivery_method},#{order.delivery_company},#{order.gift_wish},
+            #{order.detail_bundled},#{order.detail_price_print},
+            #{order.detail_message},#{order.bikou1},#{order.bikou2},#{order.bikou3},#{order.bikou4},#{order.bikou5},#{order.bikou6},
+            #{order.bikou7},#{order.bikou8},#{order.bikou9},#{order.bikou10},#{order.boxes},#{order.ins_usr},#{order.ins_date},#{order.upd_usr},
+            #{order.upd_date},#{order.del_flg},#{order.handling_charge},#{order.sponsor_id},#{order.bikou_flg},#{order.label_note},
+            #{order.box_delivery},#{order.fragile_item},#{order.delivery_id},#{order.form})
+        </foreach>
+    </insert>
+
+    <!-- 根据多个受注番号查询 返回多个受注信息-->
+    <select id="getOrderInfoByOrderNo" resultMap="orderResultMap">
+        select
+        tc200.purchase_order_no, tc200.warehouse_cd, tc200.client_id, tc200.outer_order_no, tc200.history_id, tc200.outer_order_status,
+        tc200.order_datetime, tc200.payment_method, tc200.order_type, tc200.member_info, tc200.product_price_excluding_tax, tc200.tax_total,
+        tc200.cash_on_delivery_fee, tc200.other_fee, tc200.delivery_total, tc200.billing_total, tc200.order_zip_code1, tc200. order_zip_code2,
+        tc200.order_todoufuken, tc200.order_address1, tc200.order_address2, tc200.order_family_name, tc200.order_first_name,
+        tc200.order_family_kana, tc200.order_first_kana, tc200.order_phone_number1, tc200.order_phone_number2,
+        tc200.order_phone_number3, tc200.order_mail, tc200.order_gender, tc200.receiver_zip_code1, tc200.receiver_zip_code2,
+        tc200.receiver_todoufuken, tc200.receiver_address1, tc200.receiver_address2, tc200.receiver_family_name, tc200.receiver_first_name,
+        tc200.receiver_order_family_kana, tc200.receiver_order_first_kana, tc200.receiver_phone_number1, tc200.receiver_phone_number2,
+        tc200.receiver_phone_number3, tc200.receiver_mail, tc200.receiver_gender, tc200.receiver_company,tc200.receiver_division,
+        tc200.deliveryman, tc200.delivery_time_slot, tc200.delivery_date, tc200.shipment_plan_id, tc200.import_datetime,
+        tc200.shipping_request_datetime, tc200.shipment_wish_date, tc200.shipment_plan_date, tc200.delivery_type, tc200.delivery_method,
+        tc200.delivery_company, tc200.gift_wish, tc200.detail_bundled, tc200.detail_price_print, tc200.detail_message, tc200.bikou1,
+        tc200.bikou2, tc200.bikou3, tc200.bikou4, tc200.bikou5, tc200.bikou6, tc200.bikou7, tc200.bikou8, tc200.bikou9, tc200.bikou10,
+        tc200.boxes, tc200.handling_charge, tc200.sponsor_id, tc200.bikou_flg, tc200.ins_usr, tc200.ins_date, tc200.upd_usr, tc200.upd_date,
+        tc200.del_flg,tc200.order_flag,tc200.label_note,tc200.box_delivery,tc200.fragile_item,tc200.form,
+        tc201.order_detail_no, tc201.purchase_order_no,
+        tc201.product_id, tc201.product_code, tc201.product_name, tc201.unit_price, tc201.number, tc201.product_total_price,
+        tc201.product_option, tc201.is_reduced_tax, tc201.wrapping_title1, tc201.wrapping_name1, tc201.wrapping_price1, tc201.wrapping_tax1,
+        tc201.wrapping_type1, tc201.wrapping_title2, tc201.wrapping_name2, tc201.wrapping_price2, tc201.wrapping_tax2,
+        tc201.wrapping_type2, tc201.bikou1, tc201.bikou2, tc201.bikou3, tc201.bikou4, tc201.bikou5, tc201.bikou6,
+        tc201.bikou7, tc201.bikou8, tc201.bikou9, tc201.bikou10, tc201.ins_usr, tc201.ins_date, tc201.upd_usr,
+        tc201.upd_date, tc201.del_flg, tc201.set_sub_id,tc201.bundled_flg
+        from
+        tc200_order tc200 left join tc201_order_detail tc201
+        on tc200.purchase_order_no = tc201.purchase_order_no and tc201.del_flg = 0
+        where tc200.del_flg = 0 and tc200.purchase_order_no in
+        <foreach collection="orderNo" item="orderNo" open="(" separator="," close=")">
+            #{orderNo}
+        </foreach>
+    </select>
+
+    <select id="getOrderType" resultType="com.lemonico.common.bean.Tc200_order" >
+        select
+         order_type,shipment_plan_id from tc200_order
+        where
+          outer_order_no = #{outer_order_no}
+          and client_id = #{client_id}
+          and del_flg = 0;
+    </select>
+
+    <update id="upOrderType">
+        update tc200_order set order_type = 1 where client_id=#{client_id} and outer_order_no=#{outer_order_no}
+    </update>
+
+    <select id="getOrderProductList" resultType="com.lemonico.common.bean.Tc201_order_detail">
+        select
+         product_id,number
+        from
+         tc201_order_detail tod
+         join tc200_order td using(purchase_order_no)
+         join tw200_shipment using(client_id,warehouse_cd,shipment_plan_id)
+        where
+         client_id=#{client_id} and outer_order_no=#{outer_order_no}
+    </select>
+
+	<!-- 入金待ちの受注データを取得する TODO 廃止予定-->
+    <select id="getOrderByStatus" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select
+         warehouse_cd, shipment_plan_id, shipment_status, order_no, delivery_time_slot
+        from
+         tw200_shipment tw200
+        where
+         client_id=#{client_id} and shipment_status=9 and del_flg=0
+    </select>
+
+    <!-- 入金待ちの受注データを取得する -->
+    <select id="getUnPaidOrder" resultType="com.lemonico.common.bean.Tw200_shipment">
+        SELECT
+            warehouse_cd, shipment_plan_id, shipment_status, order_no
+        FROM
+            tw200_shipment tw200
+        WHERE
+            client_id=#{client_id}
+            AND shipment_status=9
+            AND del_flg=0
+            <if test="identifier != null and identifier == 'colorme'">
+                AND identifier LIKE 'CM%'
+            </if>
+    </select>
+
+    <!-- 更新商品税抜金額 -->
+    <update id="setOrderProductTotalPrice">
+        update tc200_order set product_price_excluding_tax = #{product_price_excluding_tax}
+        where client_id = #{client_id} and purchase_order_no = #{purchase_order_no}
+    </update>
+
+    <!-- 外部受注idのリストから、Tc200_orderテーブル内に存在する外部受注idのデータをリストで取得 -->
+    <select id="getExistOrderId" resultType="java.lang.String">
+        SELECT outer_order_no
+        FROM Tc200_order
+        WHERE outer_order_no IN
+        <foreach collection="orderIdList" item="orderId" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </select>
+
+    <!-- 更改受注表的履历Id -->
+    <update id="updateHistoryId">
+        update tc200_order set history_id = #{history_id}
+        where client_id = #{client_id} and purchase_order_no in
+        <foreach collection="purchaseOrderNoList" item="purchaseOrderNoList" open="(" close=")" separator=",">
+            #{purchaseOrderNoList}
+        </foreach>
+    </update>
+</mapper>

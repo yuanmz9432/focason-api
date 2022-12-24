@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.batch.dao.ShipmentHistoryDao">
+    <!-- 查询出库3月或者删除3月以上的数据进行备份 -->
+    <select id="getShipmentHistory" resultType="com.lemonico.common.bean.Tw200_shipment">
+        select * from tw200_shipment where shipment_status in (8,888) and shipment_plan_date &lt;= (SELECT current_timestamp - interval '3 month')
+        union all
+        select * from tw200_shipment where shipment_status = 999 and del_flg = 1 and upd_date &lt;= (SELECT current_timestamp - interval '3 month')
+    </select>
+
+    <!-- 查询出库出库明细数据进行备份 -->
+    <select id="getShipmentDetailHistory" resultType="com.lemonico.common.bean.Tw201_shipment_detail">
+        select * from tw201_shipment_detail where shipment_plan_id in
+        <foreach collection="shipmentPlanIdList" item="shipment_plan_id" open="(" separator="," close=")">
+            #{shipment_plan_id}
+        </foreach>
+    </select>
+
+    <!-- 删除出库表旧数据 -->
+    <delete id="delShipment">
+        delete from tw200_shipment where shipment_plan_id in
+        <foreach collection="shipmentPlanIdList" item="shipment_plan_id" open="(" separator="," close=")">
+            #{shipment_plan_id}
+        </foreach>
+    </delete>
+
+    <!-- 删除出库明细表旧数据 -->
+    <delete id="delShipmentDetail">
+        delete from tw201_shipment_detail where shipment_plan_id in
+        <foreach collection="shipmentPlanIdList" item="shipment_plan_id" open="(" separator="," close=")">
+            #{shipment_plan_id}
+        </foreach>
+    </delete>
+
+    <!-- 插入出库履历表 -->
+    <insert id="insertShipmentsHistory" parameterType="java.util.List">
+        insert into tw202_shipment_history (
+            shipment_plan_id, client_id, warehouse_cd, request_date, shipment_plan_date, delivery_plan_date, form,
+            postcode, surname, phone, prefecture, address1, address2, company, division, email, shipment_status,
+            status_message, inspection_type, identifier, delivery_tracking_nm, order_no, product_kind_plan_cnt,
+            product_plan_total, total_price, subtotal_amount, delivery_charge, handling_charge, discount_amount,
+            total_amount, cushioning_unit, gift_wrapping_unit, gift_sender_name, bundled_items, shipping_email,
+            delivery_note_type, price_on_delivery_note, message, sponsor_id, label_note, shipping_date, tax,
+            total_with_normal_tax, total_with_reduced_tax, delivery_carrier, delivery_time_slot, delivery_date,
+            cash_on_delivery, total_for_cash_on_delivery, tax_for_cash_on_delivery, delivery_method, box_delivery,
+            fragile_item, invoice_special_notes, instructions_special_notes, international, delivery_service,
+            currency_code, size_cd, insurance, pdf_name, pdf_confirm_img, ins_usr, ins_date, upd_usr, upd_date,
+            del_flg, bikou2, bikou3, bikou4, bikou5, bikou6, bikou7, bikou8, bikou9, bikou10, bikou1, bikou_flg,
+            boxes, file, finish_flg, payment_method, photography_flg, file2, file3, file4, file5, bill_barcode,
+            order_company, order_division, order_zip_code1, order_zip_code2, order_todoufuken, order_address1,
+            order_address2, order_family_name, order_first_name, order_family_kana, order_first_kana,
+            order_phone_number1, order_phone_number2, order_phone_number3, order_mail, order_gender, payment_id,
+            order_datetime, buy_id, buy_cnt, next_delivery_date, memo, delivery_url, receipt_url,
+            surname_kana, related_order_no, freight, packing
+        ) values
+            <foreach item="item" index="key" collection="shipments" separator=",">
+               (
+                #{item.shipment_plan_id}, #{item.client_id}, #{item.warehouse_cd}, #{item.request_date},
+                #{item.shipment_plan_date}, #{item.delivery_plan_date}, #{item.form}, #{item.postcode},
+                #{item.surname}, #{item.phone}, #{item.prefecture}, #{item.address1}, #{item.address2},
+                #{item.company}, #{item.division}, #{item.email}, #{item.shipment_status}, #{item.status_message},
+                #{item.inspection_type}, #{item.identifier}, #{item.delivery_tracking_nm}, #{item.order_no},
+                #{item.product_kind_plan_cnt}, #{item.product_plan_total}, #{item.total_price}, #{item.subtotal_amount},
+                #{item.delivery_charge}, #{item.handling_charge}, #{item.discount_amount}, #{item.total_amount},
+                #{item.cushioning_unit}, #{item.gift_wrapping_unit}, #{item.gift_sender_name}, #{item.bundled_items},
+                #{item.shipping_email}, #{item.delivery_note_type}, #{item.price_on_delivery_note}, #{item.message},
+                #{item.sponsor_id}, #{item.label_note}, #{item.shipping_date}, #{item.tax}, #{item.total_with_normal_tax},
+                #{item.total_with_reduced_tax}, #{item.delivery_carrier}, #{item.delivery_time_slot}, #{item.delivery_date},
+                #{item.cash_on_delivery}, #{item.total_for_cash_on_delivery}, #{item.tax_for_cash_on_delivery},
+                #{item.delivery_method}, #{item.box_delivery}, #{item.fragile_item}, #{item.invoice_special_notes},
+                #{item.instructions_special_notes}, #{item.international}, #{item.delivery_service}, #{item.currency_code},
+                #{item.size_cd}, #{item.insurance}, #{item.pdf_name}, #{item.pdf_confirm_img}, #{item.ins_usr},
+                #{item.ins_date}, #{item.upd_usr}, #{item.upd_date}, #{item.del_flg}, #{item.bikou2}, #{item.bikou3},
+                #{item.bikou4}, #{item.bikou5}, #{item.bikou6}, #{item.bikou7}, #{item.bikou8}, #{item.bikou9},
+                #{item.bikou10}, #{item.bikou1}, #{item.bikou_flg}, #{item.boxes}, #{item.file}, #{item.finish_flg},
+                #{item.payment_method}, #{item.photography_flg}, #{item.file2}, #{item.file3}, #{item.file4},
+                #{item.file5}, #{item.bill_barcode}, #{item.order_company}, #{item.order_division}, #{item.order_zip_code1},
+                #{item.order_zip_code2}, #{item.order_todoufuken}, #{item.order_address1}, #{item.order_address2},
+                #{item.order_family_name}, #{item.order_first_name}, #{item.order_family_kana}, #{item.order_first_kana},
+                #{item.order_phone_number1}, #{item.order_phone_number2}, #{item.order_phone_number3}, #{item.order_mail},
+                #{item.order_gender}, #{item.payment_id}, #{item.order_datetime},
+                #{item.buy_id}, #{item.buy_cnt}, #{item.next_delivery_date}, #{item.memo}, #{item.delivery_url},
+                #{item.receipt_url}, #{item.surname_kana}, #{item.related_order_no}, #{item.freight}, #{item.packing}
+              )
+            </foreach>
+    </insert>
+
+    <!-- 插入出库履历明细表 -->
+    <insert id="insertShipmentDetailHistory" parameterType="java.util.List">
+        insert into tw203_shipment_detail_history (
+            id, warehouse_cd, client_id, shipment_plan_id, product_id, is_reduced_tax, cushioning_type,
+            gift_wrapping_type, product_plan_cnt, unit_price, price, set_sub_id, set_cnt, ins_usr, ins_date,
+            upd_usr, upd_date, del_flg, gift_wrapping_note, tax_flag, reserve_status, reserve_cnt, product_sub_id,
+            barcode, name, code, options, kubun, option_price, serial_no
+        ) values
+            <foreach item="item" index="key" collection="shipmentDetails" separator=",">
+               (
+                 #{item.id}, #{item.warehouse_cd}, #{item.client_id}, #{item.shipment_plan_id}, #{item.product_id},
+                 #{item.is_reduced_tax}, #{item.cushioning_type}, #{item.gift_wrapping_type}, #{item.product_plan_cnt},
+                 #{item.unit_price}, #{item.price}, #{item.set_sub_id}, #{item.set_cnt}, #{item.ins_usr},
+                 #{item.ins_date}, #{item.upd_usr}, #{item.upd_date}, #{item.del_flg}, #{item.gift_wrapping_note},
+                 #{item.tax_flag}, #{item.reserve_status}, #{item.reserve_cnt}, #{item.product_sub_id}, #{item.barcode},
+                 #{item.name}, #{item.code}, #{item.options}, #{item.kubun}, #{item.option_price}, #{item.serial_no}
+               )
+            </foreach>
+    </insert>
+</mapper>

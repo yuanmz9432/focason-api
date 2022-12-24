@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.common.dao.LoginDao">
+
+   <!-- ユーザーが存在するかどうかを調べる -->
+    <select id="getUserByName" resultType="com.lemonico.common.bean.Ms200_customer">
+        select *
+          from ms200_customer
+         where login_id = #{login_id} and del_flg = 0
+        <if test="usekb != null and usekb != ''">
+            and usekb = #{usekb}
+        </if>
+    </select>
+    
+    <select id="getUserByNameAndYoto" resultType="com.lemonico.common.bean.Ms200_customer">
+        select * from ms200_customer
+        where login_id = #{login_id} and del_flg = 0
+        <if test="usekb != null and usekb != ''">
+        and usekb = #{usekb}
+        </if>
+    </select>
+
+    <select id="getUserByUserId" resultType="com.lemonico.common.bean.Ms200_customer">
+        select *
+          from ms200_customer
+         where user_id = #{user_id} and del_flg = 0
+    </select>
+
+    <!--  ユーザー登録-->
+    <insert id="register" parameterType="com.lemonico.common.bean.Ms200_customer">
+        insert into ms200_customer
+        (user_id, login_id, login_pw, client_id, login_nm, usekb, yoto, notice, encode_key,
+        old_login_pw, old_login_id, biko1, biko2, biko3, biko4, biko5, ins_usr, ins_date, upd_date, upd_usr,
+        lst_date, del_flg)
+        values 
+        (#{user_id}, #{login_id}, #{login_pw}, #{client_id}, #{login_nm}, #{usekb}, #{yoto},
+        #{notice}, #{encode_key}, #{old_login_pw}, #{old_login_id}, #{biko1}, #{biko2}, #{biko3}, #{biko4},
+        #{biko5}, #{ins_usr}, #{ins_date}, #{upd_date}, #{upd_usr}, #{lst_date}, #{del_flg})
+    </insert>
+
+<!--    获取最大店铺Id-->
+    <select id="getLastClientId" resultType="String">
+        select client_id from ms201_client
+		 where client_id like concat('%', '${search}', '%')
+         order by client_id desc LIMIT 1
+    </select>
+
+    <select id="getMaxUserId" resultType="java.lang.String">
+        select max(to_number(user_id, '9999999999')) from ms200_customer
+    </select>
+
+<!--    初始化账户-->
+    <update id="updateUserInfo">
+        update ms200_customer
+           set login_pw = #{login_pw}, usekb = #{usekb}, yoto = #{yoto}, encode_key = #{encode_key}, login_nm = #{login_nm}
+         where user_id = #{user_id} and login_id = #{login_id}
+    </update>
+
+<!--    修改用户的所属店铺以及使用区分以及密码-->
+    <update id="updateUserClientByLoginId">
+        update ms200_customer
+           set usekb = #{usekb}, login_pw = #{login_pw}, encode_key = #{encode_key}
+        <if test="login_nm != null and login_nm != '' ">
+            ,login_nm = #{login_nm}
+        </if>
+         where login_id = #{login_id}
+    </update>
+
+<!--    给用户增加权限-->
+    <insert id="insertUserAuthority">
+        insert into ms203_customer_auth
+        (user_id, authority_cd, authority_kb, del_flg)
+        values
+        (#{user_id}, #{authority_cd}, #{authority_kb}, 0)
+    </insert>
+
+<!--    更改用户状态-->
+    <update id="updateUserStatusById">
+        update ms200_customer set usekb = #{usekb} where login_id = #{login_id}
+    </update>
+
+<!--    获取邮编番号信息-->
+    <select id="getZipInfo" resultType="com.lemonico.common.bean.Ms005_address">
+        select zip, todoufuken, todoufuken_kana, shikuchouson, shikuchouson_kana, city_area, city_area_kn
+          from ms005_address
+         where zip = #{zip} and del_flg = 0
+    </select>
+
+<!--    获取所有都道府県-->
+    <select id="getTodoufukenList" resultType="java.lang.String">
+        select distinct todoufuken from ms005_address where del_flg = 0
+    </select>
+    <!-- a仓库注册(临时用) -->
+    <insert id="registWarehouse">
+        insert into Mw400_warehouse (warehouse_cd,warehouse_nm,alias,tel,fax,zip,todoufuken,address1,address2,responsible,mail,del_flg)
+        values
+        (#{warehouse_cd},#{warehouse_nm},#{alias},#{tel},#{fax},#{zip},#{todoufuken},#{address1},#{address2},#{responsible},#{mail},0)
+    </insert>
+    
+    <!-- a仓库注册(临时用) -->
+    <update id="updateMs203">
+        update Ms203_customer_auth set authority_cd = '1', authority_kb = '1'
+        where user_id = (select user_id from ms203_customer_auth ORDER BY cast(user_id as INTEGER) desc limit 1)
+    </update>
+
+<!--    userId 查询 该店铺的信息-->
+    <select id="getClientInfoByUserId" resultType="com.lemonico.common.bean.Ms201_client">
+        select client_id, client_nm, shop_nm, ip_address from ms201_client where client_id in (
+            select client_id from ms206_client_customer where user_id = #{user_id} and del_flg = 0
+        ) order by client_id asc
+    </select>
+
+<!--    根据user_id 查询仓库的信息-->
+    <select id="getWarehouseInfoByUserId" resultType="com.lemonico.common.bean.Mw400_warehouse">
+        select warehouse_cd, warehouse_nm, ip_address from mw400_warehouse where warehouse_cd in (
+            select warehouse_cd from mw402_wh_client where user_id = #{user_id} and del_flg = 0
+        )
+    </select>
+
+    <!--    根据emailAddress 查询用户是否存在-->
+    <select id="checkEmailAddress" resultType="java.lang.String">
+        select login_id from ms200_customer where login_id = #{login_id}
+    </select>
+    
+    <!--    獲取首頁通知信息-->
+    <select id="getNewsInfo" resultType="com.lemonico.common.bean.Ms015_news">
+        select * from ms015_news where del_flg = 0 and date is not null order by date desc
+    </select>
+    
+    <!--    更新仓库侧默认店铺（ms200表）-->
+    <update id="updateDefaultClient">
+        update ms200_customer
+        set client_id = #{client_id}
+        where user_id = #{user_id} and del_flg = 0
+    </update>
+
+    <!--    根据用户Id 和仓库Id 查询该用户是否属于某个仓库-->
+    <select id="checkWarehouseUser" resultType="com.lemonico.common.bean.Mw402_wh_client">
+        select warehouse_cd from mw402_wh_client where user_id = #{user_id} and del_flg = 0 and warehouse_cd = #{warehouse_cd}
+    </select>
+</mapper>

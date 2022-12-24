@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.common.dao.ShipmentLocationDetailDao">
+    <resultMap type="com.lemonico.common.bean.Tw212_shipment_location_detail" id="selectShipmentLocationDetail">
+        <id column="warehouse_cd" property="warehouse_cd" />
+        <id column="client_id" property="client_id" />
+        <id column="shipment_plan_id" property="shipment_plan_id" />
+        <id column="product_id" property="product_id" />
+        <result column="location_id" property="location_id" />
+        <result column="product_plan_cnt" property="product_plan_cnt" />
+        <result column="inventory_cnt" property="inventory_cnt" />
+        <result column="reserve_cnt" property="reserve_cnt" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="del_flg" property="del_flg" />
+    </resultMap>
+
+    <insert id="insertShipmentLocationDetail">
+        insert into tw212_shipment_location_detail
+        (warehouse_cd, client_id, shipment_plan_id, product_id, location_id, status, product_plan_cnt, inventory_cnt, reserve_cnt, ins_usr, ins_date, upd_date, upd_usr, del_flg, total_picking_status, lot_no)
+        values
+        (#{jsonObject.warehouse_cd}, #{jsonObject.client_id}, #{jsonObject.shipment_plan_id}, #{jsonObject.product_id}, #{jsonObject.location_id}, #{jsonObject.status}, #{jsonObject.product_plan_cnt},
+         #{jsonObject.inventory_cnt}, #{jsonObject.reserve_cnt}, #{jsonObject.ins_usr}, #{jsonObject.ins_date}, #{jsonObject.upd_date}, #{jsonObject.upd_usr}, 0, 0, #{jsonObject.lot_no})
+    </insert>
+
+    <select id="getShipmentLocationDetail" resultType="com.lemonico.common.bean.Tw212_shipment_location_detail">
+        select warehouse_cd, client_id, shipment_plan_id, product_id, location_id, product_plan_cnt, inventory_cnt, reserve_cnt
+          from tw212_shipment_location_detail
+         where warehouse_cd = #{warehouse_cd} and shipment_plan_id = #{shipment_plan_id} and del_flg = 0
+    </select>
+
+    <delete id="delShipmentLocationDetail">
+        delete from tw212_shipment_location_detail
+         where warehouse_cd = #{warehouse_cd} and client_id = #{client_id}
+           and shipment_plan_id = #{shipment_plan_id} and product_id = #{product_id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.store.dao.OrderCancelDao">
+    <resultMap type="com.lemonico.common.bean.Tc208_order_cancel" id="orderCancelResultMap">
+        <id column="order_cancel_no" property="order_cancel_no" />
+        <id column="client_id" property="client_id" />
+        <result column="outer_order_no" property="outer_order_no" />
+        <result column="shipment_plan_id" property="shipment_plan_id" />
+        <result column="status" property="status" />
+        <result column="bikou1" property="bikou1" />
+        <result column="bikou2" property="bikou2" />
+        <result column="bikou3" property="bikou3" />
+        <result column="ins_usr" property="ins_usr"/>
+        <result column="ins_date" property="ins_date"/>
+        <result column="upd_usr" property="upd_usr"/>
+        <result column="upd_date" property="upd_date"/>
+        <result column="del_flg" property="del_flg"/>
+    </resultMap>
+
+    <select id="getOrderCancelList" resultType="com.lemonico.common.bean.Tc208_order_cancel">
+        SELECT
+            *
+        FROM
+            tc208_order_cancel
+        WHERE
+            client_id = #{client_id}
+            AND status = #{status}
+            AND del_flg = 0;
+    </select>
+
+    <select id="getShipmentList" resultType="com.lemonico.common.bean.Tw200_shipment">
+        SELECT
+            *
+        FROM
+            tw200_shipment
+        WHERE
+            client_id = #{client_id}
+            AND order_no = #{order_no}
+            AND del_flg = 0
+        ORDER BY ins_date limit 1;
+    </select>
+
+    <!--    根据店铺Id获取出库依赖Id-->
+    <select id="getShipmentIdList" resultType="java.lang.String">
+        select distinct shipment_plan_id from tc208_order_cancel where del_flg = 0
+        <if test="client_id != null and client_id != ''">
+            and client_id = #{client_id}
+        </if>
+    </select>
+
+    <!--    根据出库依赖Id获取出库取消信息-->
+    <select id="getCancelInfo" resultType="com.lemonico.common.bean.Tc208_order_cancel">
+        select client_id, shipment_plan_id from tc208_order_cancel where shipment_plan_id = #{shipment_plan_id} and del_flg = 0
+    </select>
+
+    <select id="getOrderCancel" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            tc208_order_cancel
+        WHERE
+            client_id = #{client_id}
+            AND outer_order_no = #{outer_order_no}
+            AND shipment_plan_id = #{shipment_plan_id}
+            AND del_flg = 0;
+    </select>
+    <!-- 受注キャンセルを登録 -->
+    <insert id="insertOrderCancel" parameterType="com.lemonico.common.bean.Tc208_order_cancel">
+        insert into tc208_order_cancel
+        (client_id,outer_order_no,shipment_plan_id,status,bikou1,bikou2,bikou3,ins_usr,ins_date,upd_usr,upd_date,del_flg)
+        values(#{client_id},#{outer_order_no},#{shipment_plan_id},#{status},#{bikou1},#{bikou2},#{bikou3},#{ins_usr},#{ins_date},#{upd_usr},#{upd_date},0);
+    </insert>
+    <!--受注キャンセルを更新 -->
+    <update id="updateOrderCancel" parameterType="com.lemonico.common.bean.Tc208_order_cancel">
+        update tc208_order_cancel
+        set
+           outer_order_no = #{outer_order_no},
+           shipment_plan_id= #{shipment_plan_id},
+           status = #{status},
+           bikou1 = #{bikou1},
+           bikou2 = #{bikou2},
+           bikou3 = #{bikou3},
+           upd_usr= #{upd_usr},
+           upd_date=#{upd_date}
+        where
+         client_id = #{client_id}
+         AND outer_order_no = #{outer_order_no}
+         AND del_flg= 0 ;
+    </update>
+</mapper>

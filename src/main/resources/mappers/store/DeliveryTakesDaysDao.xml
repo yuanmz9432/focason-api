@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.store.dao.DeliveryTakesDaysDao">
+
+	<select id="getDeliveryTakesDaysListBySender" resultType="com.lemonico.common.bean.Mw410_delivery_takes_days">
+		select * from mw410_delivery_takes_days
+		where del_flg = 0
+		<if test="list != null and list.size() > 0">
+			and sender in
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</select>
+</mapper>

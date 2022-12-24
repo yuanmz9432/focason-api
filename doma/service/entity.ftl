@@ -9,23 +9,25 @@
 package ${packageName};
 </#if>
 
-import static java.util.stream.Collectors.toList;
 
-import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcPagination;
-import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
-import api.lemonico.entity.${simpleName}Entity;
-import api.lemonico.repository.${simpleName}Repository;
-import api.lemonico.resource.${simpleName}Resource;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import attribute.core.com.lemonico.ID;
+import attribute.core.com.lemonico.PlPagination;
+import attribute.core.com.lemonico.PlResultSet;
+import exception.core.com.lemonico.PlResourceNotFoundException;
+import exception.core.com.lemonico.PlUnexpectedPhantomReadException;
+import jp.co.tfg.prologi.entity.${simpleName}Entity;
+import jp.co.tfg.prologi.temporary.repository.${simpleName}Repository;
+import jp.co.tfg.prologi.temporary.resource.${simpleName}Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -54,16 +56,16 @@ public class ${simpleName}${entitySuffix}
      * @return ${comment}リソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
-    public LcResultSet<${simpleName}Resource> getResourceList(
+    public PlResultSet<${simpleName}Resource> getResourceList(
         ${simpleName}Repository.Condition condition,
-        LcPagination pagination,
+        PlPagination pagination,
         ${simpleName}Repository.Sort sort) {
         // ${comment}の一覧と全体件数を取得します。
-        var resultSet = repository.findAll(condition, pagination, sort);
+        PlResultSet<${simpleName}Entity> resultSet = repository.findAll(condition, pagination, sort);
 
         // ${comment}エンティティのリストを${comment}リソースのリストに変換します。
-        var resources = convertEntitiesToResources(resultSet.getData());
-        return new LcResultSet<>(resources, resultSet.getCount());
+        List<${simpleName}Resource> resources = convertEntitiesToResources(resultSet.getData());
+        return new PlResultSet<>(resources, resultSet.getCount());
     }
 
     /**
@@ -87,10 +89,10 @@ public class ${simpleName}${entitySuffix}
     @Transactional
     public ${simpleName}Resource createResource(${simpleName}Resource resource) {
         // ${comment}を作成します。
-        var id = repository.create(resource.toEntity());
+        ID<${simpleName}Entity> id = repository.create(resource.toEntity());
 
         // ${comment}を取得します。
-        return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(PlUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -105,14 +107,14 @@ public class ${simpleName}${entitySuffix}
         // TODO Waiting for finalization of basic design according to Q&A
         // ${comment}IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(${simpleName}Entity.class, id);
+            throw new PlResourceNotFoundException(${simpleName}Entity.class, id);
         }
 
         // ${comment}を更新します。
         repository.update(id, resource.toEntity());
 
         // ${comment}を取得します。
-        return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(PlUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -125,7 +127,7 @@ public class ${simpleName}${entitySuffix}
         // TODO Waiting for finalization of basic design according to Q&A
         // ${comment}IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(${simpleName}Entity.class, id);
+            throw new PlResourceNotFoundException(${simpleName}Entity.class, id);
         }
 
         // ${comment}を削除します。

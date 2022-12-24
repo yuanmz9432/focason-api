@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.store.dao.OrderHistoryDao">
+    <resultMap type="com.lemonico.common.bean.Tc202_order_history" id="orderHistoryResultMap">
+        <id column="history_id" property="history_id" />
+
+        <result column="total_cnt" property="total_cnt" />
+        <result column="success_cnt" property="success_cnt" />
+        <result column="failure_cnt" property="failure_cnt" />
+        <result column="import_datetime" property="import_datetime" />
+        <result column="note" property="note" />
+        <result column="biko01" property="biko01" />
+        <result column="biko02" property="biko02" />
+        <result column="biko03" property="biko03" />
+        <result column="ins_usr" property="ins_usr" />
+        <result column="ins_date" property="ins_date" />
+        <result column="upd_usr" property="upd_usr" />
+        <result column="upd_date" property="upd_date" />
+        <result column="del_flg" property="del_flg" />
+    </resultMap>
+
+<!--    受注履歴取得-->
+    <select id="getOrderHistoryList" resultType="com.lemonico.common.bean.Tc202_order_history">
+        select history_id, client_id, total_cnt, success_cnt, failure_cnt, import_datetime, biko01, biko02, biko03
+        from tc202_order_history where client_id = #{client_id} and del_flg = 0
+        <if test="startDate != null and endDate != null">
+            and import_datetime between #{startDate} and #{endDate}
+        </if>
+        <if test="startDate != null and endDate == null">
+            and import_datetime &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and startDate == null">
+            and import_datetime &lt;= #{endDate}
+        </if>
+        <if test="column == null || sortType == null">
+            ORDER BY import_datetime DESC
+        </if>
+        <if test="column != null and column != '' and sortType != null and sortType !='' ">
+            ORDER BY #{column} ${sortType}
+        </if>
+    </select>
+
+    <select id="getOrderHistoryInfoByHistoryId" resultType="com.lemonico.common.bean.Tc202_order_history">
+        select history_id, client_id, total_cnt, success_cnt, failure_cnt, import_datetime, biko01, biko02, biko03
+        from tc202_order_history where history_id = #{history_id} and del_flg = 0
+    </select>
+
+
+    <!-- 最新受注取込履歴番号を取得 -->
+    <select id="getLastOrderHistoryNo" resultType="java.lang.String" >
+        select max(history_id) from tc202_order_history;
+    </select>
+
+    <!-- 受注履歴を追加 -->
+    <insert id="insertOrderHistory" parameterType="com.lemonico.common.bean.Tc202_order_history">
+        insert into tc202_order_history
+        (history_id,client_id,total_cnt,success_cnt,failure_cnt,import_datetime,note,biko01,biko02,biko03,ins_user,ins_date,upd_user,upd_date,del_flg)
+        values
+        (#{history_id},#{client_id},#{total_cnt},#{success_cnt},#{failure_cnt},#{import_datetime},#{note},#{biko01},#{biko02},#{biko03},#{ins_user},
+        #{ins_date},#{upd_user},#{upd_date},0);
+    </insert>
+
+    <!-- 受注履歴を更新 -->
+    <update id="updateOrderHistory" parameterType="com.lemonico.common.bean.Tc202_order_history">
+        update tc202_order_history set
+        total_cnt=#{total_cnt},success_cnt=#{success_cnt},failure_cnt=#{failure_cnt},
+        import_datetime=#{import_datetime},note=#{note},biko01=#{biko01},biko02=#{biko02},biko03=#{biko03},
+        upd_user=#{upd_user},upd_date=#{upd_date},del_flg=#{del_flg}
+        where
+        history_id = #{history_id};
+    </update>
+</mapper>

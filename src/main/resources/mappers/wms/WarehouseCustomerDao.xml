@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lemonico.wms.dao.WarehouseCustomerDao">
+
+<!--    根据仓库Id查询所有的全部用户Id-->
+    <select id="getClientIdListByWarehouseId" resultType="java.lang.Integer">
+        select user_id from mw402_wh_client where warehouse_cd = #{warehouse_cd}
+    </select>
+
+<!--    user_id warehouse_cd 查询所属仓库Id-->
+    <select id="getWarehouseId" resultType="java.lang.String">
+        select warehouse_cd from mw402_wh_client where user_id = #{user_id} and warehouse_cd = #{warehouse_cd} and del_flg = 0
+    </select>
+
+<!--    根据仓库Id查询所有的全部店铺Id-->
+    <select id="getClientIdList" resultType="java.lang.String">
+        select client_id from ms202_customer_wh where warehouse_cd = #{warehouse_cd} and kubun = '0'
+    </select>
+
+<!--    查询该仓库对应所有的店铺信息-->
+    <select id="getClientInfoListByClientId" resultType="com.lemonico.common.bean.Ms201_client">
+        select client_id, shop_nm, client_nm,corporation_flg,corporation_number, department,main_office_flg,birthday,
+        country_region,zip, tdfk, add1, add2, tnbs, contact_time ,url, permonth, logo, tnnm, mail, tel, color
+        from ms201_client where client_id in
+        <foreach collection="clientIdList" item="clientIdList" open="(" separator="," close=")">
+            #{clientIdList}
+        </foreach>
+    </select>
+
+<!--    获取该仓库下所有用户Id-->
+    <select id="getUserIdByWarehouseId" resultType="java.lang.String">
+        select user_id from mw402_wh_client  where warehouse_cd = #{warehouse_cd} and del_flg = 0
+    </select>
+
+<!--    根据userId，获取user信息-->
+    <select id="getUserInfoByUserId" resultType="com.lemonico.common.bean.Ms200_customer">
+        select ms200.user_id, ms200.login_id, ms200.client_id, ms200.login_nm, ms002.authority_nm
+          from ms200_customer ms200, ms203_customer_auth ms203, ms002_authority ms002
+         where ms200.user_id = ms203.user_id and ms203.authority_cd = ms002.authority_cd
+        and ms200.del_flg = 0 and ms200.user_id in
+        <foreach collection="userIdList" item="userIdList" open="(" separator="," close=")">
+            #{userIdList}
+        </foreach>
+    </select>
+
+<!--    根据店铺Id 查询店铺信息-->
+    <select id="getClientInfo" resultType="com.lemonico.common.bean.Ms201_client">
+        select client_id, client_nm, shop_nm, logo, validity_str_date, validity_end_date, corporation_flg,
+               corporation_number, department, main_office_flg, birthday, country_region,
+               tel, fax, zip, tdfk, add1, add2, tnnm, tnbs, mail, contact_time, url, permonth, color,
+               bill_customer_cd, fare_manage_cd,customer_code,delivery_code,sagawa_nisugata_code,yamato_manage_code,
+               seino_delivery_code
+        from ms201_client
+        where client_id = #{client_id}
+    </select>
+
+<!--    根据店铺Id修改店铺信息-->
+    <update id="updateClientInfo">
+        update ms201_client
+           set client_nm = #{jsonObject.client_nm}, shop_nm = #{jsonObject.shop_nm},
+               corporation_flg = #{jsonObject.corporation_flg}, corporation_number = #{jsonObject.corporation_number},
+               birthday = #{birthday}, country_region = #{jsonObject.country_region}, tel = #{jsonObject.tel},
+               fax = #{jsonObject.fax}, zip = #{jsonObject.zip}, tdfk = #{jsonObject.tdfk}, add1 = #{jsonObject.add1},
+               add2 = #{jsonObject.add2}, tnnm = #{jsonObject.tnnm}, mail = #{jsonObject.mail}, contact_time = #{jsonObject.contact_time},
+               url = #{jsonObject.url}, permonth = #{permonth}, color = #{jsonObject.color}, bill_customer_cd = #{jsonObject.bill_customer_cd},
+               fare_manage_cd = #{jsonObject.fare_manage_cd}, customer_code = #{jsonObject.customer_code}, delivery_code = #{jsonObject.delivery_code}
+         where client_id = #{jsonObject.client_id}
+    </update>
+
+<!--    根据仓库Id 获取仓库信息-->
+    <select id="getWarehouseInfo" resultType="com.lemonico.common.bean.Mw400_warehouse">
+        select warehouse_cd, warehouse_nm, alias, todoufuken, address1, address2, tel, fax, zip, mail
+        from mw400_warehouse where warehouse_cd = #{warehouseId} and del_flg = 0
+    </select>
+
+<!--    根据仓库Id更改仓库信息-->
+    <update id="updateWarehouseInfoByWarehouseId">
+        update mw400_warehouse set warehouse_nm = #{jsonObject.warehouse_nm}, alias = #{jsonObject.alias},
+        tel = #{jsonObject.tel}, fax = #{jsonObject.fax}, zip = #{jsonObject.zip}, todoufuken = #{jsonObject.todoufuken},
+        address1 = #{jsonObject.address1}, address2 = #{jsonObject.address2}, mail = #{jsonObject.mail},
+        responsible = #{jsonObject.responsible} where warehouse_cd = #{jsonObject.warehouse_cd}
+    </update>
+
+<!--    根据用户Id删除用户-->
+    <update id="deleteUserInfo">
+        update ms200_customer set del_flg = 1 where user_id = #{userId}
+    </update>
+
+<!--    根据用户和仓库的Id 删除用户和仓库的关系-->
+    <update id="deleteWharehouseCustomerByUserId">
+        delete from mw402_wh_client where warehouse_cd = #{warehouseId}
+        and user_id in
+        <foreach collection="userIdList" item="userIdList" open="(" separator="," close=")">
+            #{userIdList}
+        </foreach>
+    </update>
+
+<!--    新增该仓库的员工-->
+    <insert id="insertWarehouseCustomer">
+        insert into mw402_wh_client
+        (warehouse_cd, user_id, del_flg)
+        values
+        (#{jsonObject.warehouseId}, #{jsonObject.user_id}, 0)
+    </insert>
+
+<!--    给用户添加权限-->
+    <insert id="insertCustomerAuth">
+        insert into ms203_customer_auth
+        (user_id, authority_cd, authority_kb, del_flg)
+        values
+        (#{jsonObject.user_id}, #{jsonObject.authority_cd}, #{jsonObject.authority_kb}, 0)
+    </insert>
+
+    <update id="deleteCustomerAuthByUserId">
+        update ms203_customer_auth set del_flg = 1 where user_id = #{user_id}
+    </update>
+
+    <!-- スマートCatリスト -->
+    <select id="getSmartCatList" resultType="com.lemonico.common.bean.Mw406_wh_smartcat">
+        select id, warehouse_cd, cooperation, file_path, file_start, file_end
+          from mw406_wh_smartcat
+         where warehouse_cd = #{warehouse_cd} and del_flg = 0
+        <if test="id=='1'">
+            and id = 1
+        </if>
+    </select>
+
+    <!-- スマートCat更新 -->
+    <update id="updateSmartCatList">
+        update mw406_wh_smartcat
+           set file_path = #{jsonObject.file_path}, file_start = #{jsonObject.file_start}, file_end = #{jsonObject.file_end},
+               upd_usr = #{jsonObject.upd_usr}, upd_date = #{jsonObject.upd_date}
+         where warehouse_cd = #{warehouse_cd} and id = #{id}
+    </update>
+
+    <!-- スマートCATファイル -->
+    <select id="getSmartCatListWindow" resultType="com.lemonico.common.bean.Mw407_smart_file">
+        select id, shipment_plan_id, file_path, file_name, ip
+          from mw407_smart_file
+         where warehouse_cd = #{warehouse_cd} and flag = 0
+    </select>
+
+    <!-- スマートCATファイル 挿入 -->
+    <insert id="inSmartCatListWindow">
+        insert into mw407_smart_file
+        (warehouse_cd, shipment_plan_id, file_path, file_name, flag, ip, upd_date, upd_usr, ins_date, ins_usr)
+        values
+        (#{warehouse_cd}, #{shipment_plan_id}, #{file_path}, #{file_name}, 0, #{ip}, #{upd_date}, #{upd_usr}, #{ins_date}, #{ins_usr})
+    </insert>
+
+    <!-- スマートCATファイル 更新 -->
+    <update id="upSmartCatListWindow">
+        update mw407_smart_file
+           set flag = 1, ip = #{ip}, upd_date = #{upd_date}, upd_usr = #{upd_usr}
+         where warehouse_cd = #{warehouse_cd} and flag = 0 and shipment_plan_id = #{shipment_plan_id}
+    </update>
+
+    <!--    根据店铺Id修改配送信息-->
+    <update id="updateDeliveryClientInfo">
+        update ms201_client
+           set bill_customer_cd = #{jsonObject.bill_customer_cd},
+               fare_manage_cd = #{jsonObject.fare_manage_cd}, customer_code = #{jsonObject.customer_code} ,delivery_code=#{jsonObject.delivery_code},
+               sagawa_nisugata_code = #{jsonObject.sagawa_nisugata_code}, yamato_manage_code = #{jsonObject.yamato_manage_code},
+               seino_delivery_code = #{jsonObject.seino_delivery_code}
+         where client_id = #{jsonObject.client_id}
+    </update>
+</mapper>

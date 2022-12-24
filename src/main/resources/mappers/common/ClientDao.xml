@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemonico.common.dao.ClientDao">
+    <resultMap id="selectClient" type="com.lemonico.common.bean.Ms201_client">
+        <id column="client_id" property="client_id"/>
+        <result column="client_nm" property="client_nm"/>
+        <result column="shop_nm" property="shop_nm"/>
+        <result column="logo" property="logo"/>
+        <result column="validity_str_date" property="validity_str_date"/>
+        <result column="validity_end_date" property="validity_end_date"/>
+        <result column="corporation_flg" property="corporation_flg"/>
+        <result column="corporation_number" property="corporation_number"/>
+        <result column="department" property="department"/>
+        <result column="main_office_flg" property="main_office_flg"/>
+        <result column="birthday" property="birthday"/>
+        <result column="shop_nm" property="shop_nm"/>
+        <result column="country_region" property="country_region"/>
+        <result column="tel" property="tel"/>
+        <result column="fax" property="fax"/>
+        <result column="zip" property="zip"/>
+        <result column="tdfk" property="tdfk"/>
+        <result column="add1" property="add1"/>
+        <result column="add2" property="add2"/>
+        <result column="tnnm" property="tnnm"/>
+        <result column="tnbs" property="tnbs"/>
+        <result column="mail" property="mail"/>
+        <result column="contact_time" property="contact_time"/>
+        <result column="url" property="url"/>
+        <result column="permonth" property="permonth"/>
+        <result column="color" property="color"/>
+        <result column="delivery_method" property="delivery_method"/>
+        <result column="label_note" property="label_note"/>
+        <result column="biko" property="biko"/>
+        <result column="ins_usr" property="ins_usr"/>
+        <result column="ins_date" property="ins_date"/>
+        <result column="upd_usr" property="upd_usr"/>
+        <result column="upd_date" property="upd_date"/>
+        <result column="warehouse_cd" property="warehouse_cd"/>
+        <result column="price_on_delivery_note" property="price_on_delivery_note" />
+        <result column="sponsor_id" property="sponsor_id" />
+    </resultMap>
+
+    <!--	获取店铺信息-->
+    <select id="getClientInfo" resultType="com.lemonico.common.bean.Ms201_client">
+		select distinct ms201.*
+		  from ms201_client ms201
+         where ms201.client_id = #{client_id}
+	</select>
+
+    <!--	获取登录用户的信息-->
+    <select id="getLoginUserInfo" resultType="com.lemonico.common.bean.Ms201_client">
+        select distinct ms201.client_nm, ms201.shop_nm, ms201.color, ms201.delivery_method, ms201.label_note, ms201.description_setting
+          from ms201_client ms201
+          left join ms206_client_customer ms206 on ms206.client_id = ms201.client_id
+         where ms206.user_id = (select user_id from ms200_customer
+                                 where user_id = #{user_id} and del_flg = '0')
+           and ms206.client_id = #{client_id}
+	</select>
+
+    <!-- a获取所有店铺信息-->
+    <select id="getAllClientInfo" resultType="com.lemonico.common.bean.Ms201_client">
+        select client_id,client_nm,shop_nm,mail from ms201_client order by client_id asc
+    </select>
+
+    <!--  新增店铺信息-->
+    <insert id="insertClientInfo">
+		insert into ms201_client
+		(client_id, client_nm, corporation_flg, corporation_number, birthday, country_region, tel, zip,
+		 tdfk, add1, add2, tnnm, mail, contact_time, url, permonth, shop_nm, logo, color, bill_customer_cd, fare_manage_cd, customer_code)
+		values
+		 (#{jsonObject.client_id},#{jsonObject.client_nm}, #{jsonObject.corporation_flg}, #{jsonObject.corporation_number},
+		  #{birthday}, #{jsonObject.country_region}, #{jsonObject.tel}, #{jsonObject.zip}, #{jsonObject.tdfk},
+		  #{jsonObject.add1}, #{jsonObject.add2}, #{jsonObject.tnnm}, #{jsonObject.email}, #{jsonObject.contact_time},
+		  #{jsonObject.url}, #{permonth}, #{jsonObject.shop_nm}, #{jsonObject.logo}, #{jsonObject.color}, #{jsonObject.bill_customer_cd},
+		  #{jsonObject.fare_manage_cd},#{jsonObject.customer_code} )
+	</insert>
+
+    <!--  将店铺和该仓库绑定-->
+    <insert id="insertWarehouseAndClient">
+		insert into ms202_customer_wh
+		(client_id, warehouse_cd, kubun, del_flg)
+		values
+		(#{client_id}, #{warehouse_cd}, #{kubun}, 0)
+	</insert>
+
+    <!--  将店铺信息 存到 商品設定用表-->
+    <insert id="insertProductSetting">
+		insert into mc105_product_setting
+		(client_id, tax, accordion, price_on_delivery_note, del_flg)
+		values
+		(#{client_id}, 0, 0, 0, 0)
+	</insert>
+
+    <!--  更改店铺担当者邮箱-->
+    <update id="updateMailById">
+        update ms201_client set mail = #{mail} where client_id = #{client_id}
+    </update>
+
+    <!--  将店铺和用户信息存到店舗別顧客マスタ-->
+    <insert id="insertClientCustomer">
+        insert into ms206_client_customer(client_id, user_id, del_flg)
+        values (#{client_id}, #{user_id}, 0)
+    </insert>
+
+    <!--  删除店铺和用户的关联-->
+    <update id="deleteClientCustomer">
+        delete from ms206_client_customer where
+        client_id = #{client_id} and user_id in
+        <foreach collection="userIdList" item="userIdList" open="(" separator="," close=")">
+            #{userIdList}
+        </foreach>
+    </update>
+
+    <!--  获取登录店铺或仓库的機能-->
+    <select id="function_info" resultType="com.lemonico.common.bean.Ms001_function">
+       select ms001.function_cd, ms001.function_nm,ms207.client_id
+         from ms001_function ms001
+         left join ms207_all_func ms207 on ms207.function_cd = ms001.function_cd
+        where ms207.del_flg = 0 and ms207.function_cd in
+        <foreach collection="functionCdList" item="functionCdList" open="(" separator="," close=")">
+            #{functionCdList}
+        </foreach>
+        <if test="client_id != null and client_id != ''">
+            and ms207.client_id = #{client_id}
+        </if>
+        <if test="warehouse_cd!=null and warehouse_cd!='' ">
+            and ms207.warehouse_cd = #{warehouse_cd}
+        </if>
+    </select>
+
+    <!--  根据用户id 店铺Id 查询绑定信息-->
+    <select id="getClientListByUserId" resultType="com.lemonico.common.bean.Ms206_client_customer">
+        select client_id, user_id, yobi from ms206_client_customer where del_flg = 0 and user_id = #{user_id}
+        <if test="client_id != null and client_id != '' ">
+            and client_id = #{client_id}
+        </if>
+    </select>
+
+    <!--  根据 店铺Id 查询ms200表里的店铺绑定的client_id-->
+    <select id="getClientIdByUserId" resultType="java.lang.String">
+        select client_id from ms200_customer where del_flg = 0 and user_id = #{user_id}
+    </select>
+    
+    <!--  获取仓库所属所有的店铺id-->
+    <select id="getAllClientIdByWarehouseId" resultType="java.lang.String">
+        select client_id from ms202_customer_wh where del_flg = 0 and warehouse_cd = #{warehouse_cd}
+    </select>
+
+    <!--  获取店铺的详细信息-->
+    <select id="getClientDetailInfo" resultMap="selectClient">
+        select ms201.client_id, ms201.client_nm, ms201.shop_nm, ms201.tel, ms201.fax, ms201.zip, ms201.tdfk, ms201.tnnm,
+        ms201.tnbs, ms201.mail, ms201.delivery_method, ms202.warehouse_cd, mc105.price_on_delivery_note, ms012.sponsor_id
+        from ms201_client ms201
+        left join ms202_customer_wh ms202 on ms201.client_id = ms202.client_id and ms202.del_flg = 0
+        left join mc105_product_setting mc105 on ms201.client_id = mc105.client_id and mc105.del_flg = 0
+        left join ms012_sponsor_master ms012 on ms201.client_id = ms012.client_id and ms012.del_flg = 0 and ms012.sponsor_default = 1
+        where ms201.client_id = #{client_id}
+    </select>
+
+    <update id="updateLabelNote">
+        update ms201_client
+           set label_note = #{jsonObject.label_note}
+         where client_id = #{jsonObject.client_id}
+    </update>
+
+    <!-- 根据多个店铺ID 获取多个店铺信息-->
+    <select id="getManyClient" resultType="com.lemonico.common.bean.Ms201_client">
+        select client_id, client_nm, shop_nm, client_nm, tnnm,bill_customer_cd,yamato_manage_code,sagawa_nisugata_code,
+               fare_manage_cd, customer_code, delivery_code, seino_delivery_code
+        from ms201_client where 1 = 1
+        <if test="clientIdList != null and clientIdList.size != 0">
+            and client_id in
+            <foreach collection="clientIdList" item="clientIdList" open="(" separator="," close=")">
+                #{clientIdList}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 获取具有该功能的店铺Id-->
+    <select id="getClientIdByFunctionId" resultType="java.lang.String">
+        select ms207.client_id
+        from ms207_all_func ms207
+        right join ms001_function ms001 on ms001.function_cd = ms207.function_cd and ms001.del_flg = 0
+        where ms207.function_cd = #{function_cd} and ms207.del_flg = 0
+    </select>
+
+    <!-- 獲取多個店鋪信息-->
+    <select id="getClientInfoList" resultType="com.lemonico.common.bean.Ms201_client">
+        select client_id, client_nm from ms201_client
+        where client_id in
+        <foreach collection="clientIdList" item="clientIdList" open="(" separator="," close=")">
+            #{clientIdList}
+        </foreach>
+    </select>
+</mapper>
