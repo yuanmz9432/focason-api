@@ -9,9 +9,7 @@ import com.lemonico.common.bean.Tw200_shipment;
 import com.lemonico.common.dao.DeliveryDao;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlValidationErrorException;
-import com.lemonico.core.shiro.JwtToken;
-import com.lemonico.core.shiro.JwtUtils;
+import com.lemonico.core.exception.LcValidationErrorException;
 import com.lemonico.core.utils.constants.Constants;
 import info.monitorenter.cpdetector.io.*;
 import java.io.File;
@@ -233,7 +231,7 @@ public class CommonUtils
             }
             if (!StringTools.isNullOrEmpty(missCol.toString())) {
                 jsonObject.clear();
-                throw new PlValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
+                throw new LcValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
             }
         }
     }
@@ -293,13 +291,13 @@ public class CommonUtils
 
     // 获取token里面的信息
     public static String getToken(String param, HttpServletRequest httpServletRequest) {
-        String authorization = httpServletRequest.getHeader(JwtUtils.AUTH_HEADER);
-        String requestParam = "";
-        JwtToken token = new JwtToken(authorization);
-        if (!StringTools.isNullOrEmpty(token)) {
-            requestParam = JwtUtils.getClaimFiled((String) token.getCredentials(), param);
-        }
-        return requestParam;
+        // String authorization = httpServletRequest.getHeader(JwtUtils.AUTH_HEADER);
+        // String requestParam = "";
+        // JwtToken token = new JwtToken(authorization);
+        // if (!StringTools.isNullOrEmpty(token)) {
+        // requestParam = JwtUtils.getClaimFiled((String) token.getCredentials(), param);
+        // }
+        return "";
     }
 
     /**

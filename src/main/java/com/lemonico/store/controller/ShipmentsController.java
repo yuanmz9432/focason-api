@@ -9,8 +9,8 @@ import com.lemonico.common.bean.Ms009_definition;
 import com.lemonico.common.bean.Ms012_sponsor_master;
 import com.lemonico.common.bean.Tw200_shipment;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlResourceNotFoundException;
-import com.lemonico.core.exception.PlValidationErrorException;
+import com.lemonico.core.exception.LcResourceNotFoundException;
+import com.lemonico.core.exception.LcValidationErrorException;
 import com.lemonico.core.utils.CommonUtils;
 import com.lemonico.core.utils.StringTools;
 import com.lemonico.store.dao.ShipmentsDao;
@@ -315,7 +315,7 @@ public class ShipmentsController
         @PathVariable("shipment_plan_id") String shipment_plan_id, HttpServletRequest servletRequest) {
         int countShipments = shipmentsService.countShipments(client_id, shipment_plan_id);
         if (countShipments <= 0) {
-            throw new PlResourceNotFoundException("出荷依頼: " + shipment_plan_id);
+            throw new LcResourceNotFoundException("出荷依頼: " + shipment_plan_id);
         }
 
         List<Integer> statusList = Arrays.asList(4, 5, 7, 41, 42, 8);
@@ -401,7 +401,7 @@ public class ShipmentsController
     public JSONObject getDefinitionList(@PathVariable("warehouse_cd") String warehouse_cd, Integer[] sys_kind,
         String sys_cd) {
         if (sys_kind.length == 0) {
-            throw new PlValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
+            throw new LcValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
         }
         List<Ms009_definition> list = shipmentsService.getDefinitionList(warehouse_cd, sys_kind, sys_cd);
 

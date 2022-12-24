@@ -3,14 +3,14 @@ package com.lemonico.auth.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.lemonico.auth.config.LoginUser;
 import com.lemonico.auth.resource.LoginUserResource;
 import com.lemonico.common.bean.Ms200_customer;
 import com.lemonico.common.dao.LoginDao;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlResourceAlreadyExistsException;
-import com.lemonico.core.exception.PlResourceNotFoundException;
-import com.lemonico.core.exception.PlUnauthorizedException;
-import com.lemonico.core.shiro.JwtUtils;
+import com.lemonico.core.exception.LcResourceAlreadyExistsException;
+import com.lemonico.core.exception.LcResourceNotFoundException;
+import com.lemonico.core.exception.LcUnauthorizedException;
 import com.lemonico.core.utils.CommonUtils;
 import com.lemonico.core.utils.PasswordHelper;
 import javax.annotation.Resource;
@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.regex.Pattern;
 
 /**
  * 認証認可サービス
@@ -63,13 +66,14 @@ public class AuthorityService
         try {
             subject.login(usernamePasswordToken);
         } catch (IncorrectCredentialsException e) {
-            throw new PlUnauthorizedException();
+            throw new LcUnauthorizedException();
         } catch (AuthenticationException e) {
-            throw new PlResourceNotFoundException(String.format("ユーザー: %s", username));
+            throw new LcResourceNotFoundException(String.format("ユーザー: %s", username));
         }
 
         Ms200_customer ms200Customer = loginDao.getUserByName(username, "1");
-        return JwtUtils.sign(JwtUtils.SECRET, ms200Customer.getUser_id());
+        // return JwtUtils.sign(JwtUtils.SECRET, ms200Customer.getUser_id());
+        return "";
     }
 
     /**
@@ -83,7 +87,7 @@ public class AuthorityService
         final String username = jsonObject.getString("login_id");
         Ms200_customer existedCustomer = loginDao.getUserByName(username, null);
         if (existedCustomer != null) {
-            throw new PlResourceAlreadyExistsException("ユーザー: " + username);
+            throw new LcResourceAlreadyExistsException("ユーザー: " + username);
         }
         Ms200_customer ms200Customer = JSONObject.toJavaObject(jsonObject, Ms200_customer.class);
         ms200Customer.setUser_id(getMaxUserId());
@@ -92,6 +96,51 @@ public class AuthorityService
         PasswordHelper.encryptPassword(ms200Customer);
         return loginDao.register(ms200Customer) > 0 ? CommonUtils.success()
             : CommonUtils.failure(ErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * メールアドレスを指定して、LoginUserを取得する。
+     *
+     * @param subject JWTサブジェクト
+     * @return LoginUser
+     */
+    @Transactional(readOnly = true)
+    public LoginUser getLoginUserBySubject(String subject) {
+         Pattern uuidPattern =
+         Pattern.compile("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})");
+         Pattern mailPattern = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+//         UserRepository.Condition condition;
+//         if (uuidPattern.matcher(subject).matches()) {
+//         condition = UserRepository.Condition.builder().uuid(subject).build();
+//         } else if (mailPattern.matcher(subject).matches()) {
+//         condition = UserRepository.Condition.builder().email(subject).build();
+//         } else {
+//         condition = UserRepository.Condition.DEFAULT;
+//         }
+//         final var userResourceLcResultSet = getResourceList(
+//         condition,
+//         LcPagination.DEFAULT,
+//         UserRepository.Sort.DEFAULT);
+//         if (userResourceLcResultSet.getCount() < 1) {
+//         throw new LcResourceNotFoundException(LoginUser.class, subject);
+//         }
+//         var loginUser = userResourceLcResultSet.getData().get(0);
+//         // ユーザ権限取得
+//         var authorities = userAuthorityService.getResourceList(
+//         UserAuthorityRepository.Condition.builder().uuid(loginUser.getUuid()).build(),
+//         LcPagination.DEFAULT,
+//         UserAuthorityRepository.Sort.DEFAULT).stream()
+//         .map((item) -> new SimpleGrantedAuthority(item.getAuthorityCode()))
+//         .collect(Collectors.toList());
+        return LoginUser.builder()
+            .id(1)
+            .uuid("uuid")
+            .email("yuanmz9432@gmail.com")
+            .username("name")
+            .password("$2a$10$XMCCsnzvoaKDdonHR7GlKexDpFFkZo8gtc2.OihvlH8hr14qoPjJm")
+            .enabled(true)
+            .authorities(null)
+            .build();
     }
 
     /**

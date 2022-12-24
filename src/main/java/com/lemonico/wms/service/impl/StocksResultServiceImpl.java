@@ -14,8 +14,8 @@ import com.lemonico.common.dao.ClientDao;
 import com.lemonico.common.dao.CommonFunctionDao;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlBadRequestException;
-import com.lemonico.core.exception.PlResourceAlreadyExistsException;
+import com.lemonico.core.exception.LcBadRequestException;
+import com.lemonico.core.exception.LcResourceAlreadyExistsException;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.*;
 import com.lemonico.core.utils.constants.Constants;
@@ -674,7 +674,7 @@ public class StocksResultServiceImpl implements StocksResultService
             List<Integer> priorityList = mw404Locations.stream().filter(x -> x.getPriority() != beforePriority)
                 .map(Mw404_location::getPriority).distinct().collect(Collectors.toList());
             if (priorityList.contains(priority)) {
-                throw new PlResourceAlreadyExistsException("優先順位");
+                throw new LcResourceAlreadyExistsException("優先順位");
             }
             for (Mw404_location location : mw404Locations) {
                 if (!StringTools.isNullOrEmpty(location_id) && location_id.equals(location.getLocation_id())) {
@@ -683,7 +683,7 @@ public class StocksResultServiceImpl implements StocksResultService
                 // 防止错误数据 NULL
                 String lot_no = !StringTools.isNullOrEmpty(location.getLot_no()) ? location.getLot_no() : "";
                 if (lotNo.equals(lot_no)) {
-                    throw new PlResourceAlreadyExistsException("ロット番号");
+                    throw new LcResourceAlreadyExistsException("ロット番号");
                 }
             }
         }
@@ -726,7 +726,7 @@ public class StocksResultServiceImpl implements StocksResultService
             if (!CommonUtils.determineEncoding(destFile.toURI().toURL(), new String[] {
                 "SHIFT_JIS"
             })) {
-                throw new PlBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
+                throw new LcBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
             }
             // a错误信息list
             List<String> list = new ArrayList<>();
@@ -735,7 +735,7 @@ public class StocksResultServiceImpl implements StocksResultService
             CsvReader fileCheck = new CsvReader(emptyCheck);
             boolean b = fileCheck.readHeaders();
             if (!b) {
-                throw new PlBadRequestException("ロケーションCSVの中に、データが入っていないため、登録出来ません。");
+                throw new LcBadRequestException("ロケーションCSVの中に、データが入っていないため、登録出来ません。");
             }
             InputStreamReader isr = new InputStreamReader(new FileInputStream(destFile), "SJIS");
             // a读取csv中的header
@@ -757,14 +757,14 @@ public class StocksResultServiceImpl implements StocksResultService
                         String header = csvReader.getRawRecord();
                         String param = header.replaceAll("\"", "");
                         if (!"ロケーション名,ロット番号,メモ".equals(param)) {
-                            throw new PlBadRequestException("項目名称に不備があります。");
+                            throw new LcBadRequestException("項目名称に不備があります。");
                         }
                     }
                 }
             }
             if (num == 1) {
                 if (StringTools.isNullOrEmpty(csvReader.getRawRecord())) {
-                    throw new PlBadRequestException("ロケーションCSVの中に、データが入っていないため、登録出来ません。");
+                    throw new LcBadRequestException("ロケーションCSVの中に、データが入っていないため、登録出来ません。");
                 }
             }
             // a关闭csvReader
@@ -875,7 +875,7 @@ public class StocksResultServiceImpl implements StocksResultService
             // a如验证不通过则抛出异常
             if (!flag) {
                 String json = JSON.toJSONString(list);
-                throw new PlBadRequestException(json);
+                throw new LcBadRequestException(json);
             }
             // a验证通过后写入数据库
             csvReader2.close();

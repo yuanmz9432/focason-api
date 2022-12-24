@@ -103,7 +103,7 @@ public class SettingServiceImpl implements SettingService
             }
 
         } else {
-            throw new PlValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
+            throw new LcValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
         }
     }
 
@@ -146,7 +146,7 @@ public class SettingServiceImpl implements SettingService
             }
 
         } else {
-            throw new PlValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
+            throw new LcValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
         }
     }
 
@@ -168,7 +168,7 @@ public class SettingServiceImpl implements SettingService
             try {
                 subject.login(token);
             } catch (Exception e) {
-                throw new PlUnauthorizedException();
+                throw new LcUnauthorizedException();
             }
 
             ArrayList<String> userIdList = new ArrayList<>();
@@ -206,7 +206,7 @@ public class SettingServiceImpl implements SettingService
         try {
             subject.login(token);
         } catch (Exception e) {
-            throw new PlUnauthorizedException();
+            throw new LcUnauthorizedException();
         }
         // 初期化
         Ms200_customer ms200cus = new Ms200_customer();
@@ -1204,7 +1204,7 @@ public class SettingServiceImpl implements SettingService
             try {
                 subject.login(token);
             } catch (Exception e) {
-                throw new PlUnauthorizedException();
+                throw new LcUnauthorizedException();
             }
             String checkedFlg = jsonObject.getString("checkedFlg");
             userByName.setLogin_nm(jsonObject.getString("login_nm"));
@@ -1221,7 +1221,7 @@ public class SettingServiceImpl implements SettingService
             userId = userByName.getUser_id();
         } else {
             if (userByName != null) {
-                throw new PlResourceAlreadyExistsException("ユーザー: " + jsonObject.getString("login_nm"));
+                throw new LcResourceAlreadyExistsException("ユーザー: " + jsonObject.getString("login_nm"));
             }
             Ms200_customer ms200Customer = JSONObject.toJavaObject(jsonObject, Ms200_customer.class);
             userId = getMaxUserId();
@@ -1550,7 +1550,7 @@ public class SettingServiceImpl implements SettingService
             if (!CommonUtils.determineEncoding(destFile.toURI().toURL(), new String[] {
                 "SHIFT_JIS"
             })) {
-                throw new PlBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
+                throw new LcBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
             }
             // a错误信息list
             List<String> list = new ArrayList<String>();
@@ -1569,15 +1569,15 @@ public class SettingServiceImpl implements SettingService
                     String header = csvReader.getRawRecord().replaceAll("\"", "");
                     if (!header
                         .equals("事業形態(1:法人 2:個人),会社名(法人場合必須),部署,お名前(個人場合必須),郵便番号,都道府県,住所,マンション・ビル名,電話番号,メールアドレス")) {
-                        throw new PlBadRequestException("項目名称に不備があります。");
+                        throw new LcBadRequestException("項目名称に不備があります。");
                     }
                 }
                 if (num > 1000) {
-                    throw new PlBadRequestException("一度に登録できるデータは最大1000件です。");
+                    throw new LcBadRequestException("一度に登録できるデータは最大1000件です。");
                 }
             }
             if (num <= 1) {
-                throw new PlBadRequestException("CSVファイルにデータは空にしてはいけません。");
+                throw new LcBadRequestException("CSVファイルにデータは空にしてはいけません。");
             }
             csvReader.close();
             num = 0;
@@ -1673,7 +1673,7 @@ public class SettingServiceImpl implements SettingService
             // a如验证不通过则抛出异常
             if (!flag) {
                 String json = JSON.toJSONString(list);
-                throw new PlBadRequestException(json);
+                throw new LcBadRequestException(json);
             }
             num = 0;
             // 获取用户名

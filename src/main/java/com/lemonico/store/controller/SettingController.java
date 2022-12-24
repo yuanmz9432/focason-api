@@ -8,7 +8,7 @@ import com.lemonico.common.bean.Ms012_sponsor_master;
 import com.lemonico.common.bean.Tc209_setting_template;
 import com.lemonico.common.bean.Tc210_setting_yoto;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlValidationErrorException;
+import com.lemonico.core.exception.LcValidationErrorException;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.CommonUtils;
 import com.lemonico.core.utils.StringTools;
@@ -624,7 +624,7 @@ public class SettingController
     @GetMapping(value = "setting/deleteSponsor/{client_id}")
     public JSONObject deleteSponsor(@PathVariable String client_id, String sponsor_id) {
         if (StringTools.isNullOrEmpty(sponsor_id)) {
-            throw new PlValidationErrorException("依頼マスタIDを指定していません。");
+            throw new LcValidationErrorException("依頼マスタIDを指定していません。");
         }
         settingService.deleteSponsor(client_id, sponsor_id);
         return CommonUtils.success();

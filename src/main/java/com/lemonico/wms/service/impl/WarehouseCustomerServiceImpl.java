@@ -10,8 +10,8 @@ import com.lemonico.common.dao.LoginDao;
 import com.lemonico.common.service.CommonService;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlResourceAlreadyExistsException;
-import com.lemonico.core.exception.PlUnauthorizedException;
+import com.lemonico.core.exception.LcResourceAlreadyExistsException;
+import com.lemonico.core.exception.LcUnauthorizedException;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.*;
 import com.lemonico.store.service.SettingService;
@@ -335,7 +335,7 @@ public class WarehouseCustomerServiceImpl implements WarehouseCustomerService
             try {
                 subject.login(token);
             } catch (Exception e) {
-                throw new PlUnauthorizedException();
+                throw new LcUnauthorizedException();
             }
             String checkedFlg = jsonObject.getString("checkedFlg");
             userByName.setLogin_nm(jsonObject.getString("login_nm"));
@@ -352,7 +352,7 @@ public class WarehouseCustomerServiceImpl implements WarehouseCustomerService
             userId = userByName.getUser_id();
         } else {
             if (userByName != null) {
-                throw new PlResourceAlreadyExistsException("ユーザー: " + jsonObject.getString("login_nm"));
+                throw new LcResourceAlreadyExistsException("ユーザー: " + jsonObject.getString("login_nm"));
             }
             Ms200_customer ms200Customer = JSONObject.toJavaObject(jsonObject, Ms200_customer.class);
             userId = getMaxUserId();
@@ -423,7 +423,7 @@ public class WarehouseCustomerServiceImpl implements WarehouseCustomerService
             try {
                 subject.login(token);
             } catch (Exception e) {
-                throw new PlUnauthorizedException();
+                throw new LcUnauthorizedException();
             }
 
             customer.setLogin_nm(jsonObject.getString("login_nm"));

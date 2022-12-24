@@ -16,11 +16,10 @@ import com.lemonico.common.dao.CommonFunctionDao;
 import com.lemonico.common.dao.DeliveryDao;
 import com.lemonico.common.service.CustomerHistoryService;
 import com.lemonico.common.service.ProductSettingService;
-import com.lemonico.core.exception.*;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlBadRequestException;
-import com.lemonico.core.exception.PlValidationErrorException;
+import com.lemonico.core.exception.LcBadRequestException;
+import com.lemonico.core.exception.LcValidationErrorException;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.*;
 import com.lemonico.core.utils.constants.Constants;
@@ -1361,7 +1360,7 @@ public class ShipmentsImpl implements ShipmentsService
             if (!CommonUtils.determineEncoding(destFile.toURI().toURL(), new String[] {
                 "SHIFT_JIS"
             })) {
-                throw new PlBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
+                throw new LcBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
             }
             // a错误信息list
             List<String> list = new ArrayList<String>();
@@ -1388,12 +1387,12 @@ public class ShipmentsImpl implements ShipmentsService
                         && !"商品ID,商品名,商品コード,軽減税率適用商品,出庫依頼数,単価,出庫識別番号,配送料,手数料,割引額,配送先郵便番号,配送先都道府県,配送先住所,配送先マンション・ビル名,配送先氏名,配送先会社名,配送先電話番号,配送先連絡メール,配送便指定,配送会社指定,出荷希望日,お届け希望日,希望時間帯,緩衝材指定,緩衝材,ギフトラッピング単位,ラッピングタイプ,贈り主氏名,同梱指定,不在時宅配ボックス,割れ物注意,代引き指定,代金引換総計,代金引換消費税,品名,明細書メッセージ,発送通知メッセージ,明細書の同梱,明細書の金額印字,ご依頼主郵便番号,ご依頼主都道府県,ご依頼主住所,ご依頼主マンション・ビル名,ご依頼主氏名,ご依頼主会社名,ご依頼主部署名,お問い合わせ先,ご依頼主電話番号,出荷指示書 特記事項,送り状 特記事項"
                             .equals(
                                 csvReader.getRawRecord())) {
-                        throw new PlBadRequestException("項目名称に不備があります。");
+                        throw new LcBadRequestException("項目名称に不備があります。");
                     }
                 }
                 // a包含非数据的前两行为1002
                 if (num > 1002) {
-                    throw new PlBadRequestException("一度に登録できるデータは最大1000件です。");
+                    throw new LcBadRequestException("一度に登録できるデータは最大1000件です。");
                 }
             }
             // a关闭csvReader
@@ -1712,7 +1711,7 @@ public class ShipmentsImpl implements ShipmentsService
             // a如验证不通过则抛出异常
             if (!flag) {
                 String json = JSON.toJSONString(list);
-                throw new PlBadRequestException(json);
+                throw new LcBadRequestException(json);
             }
             // a创建一个长度和CSV数据量相等的数组
             JSONObject items[] = new JSONObject[count];
@@ -1839,7 +1838,7 @@ public class ShipmentsImpl implements ShipmentsService
                         Date d = formatter1.parse(params[k]);
                         jsonBig.put("shipping_date", formatter2.format(d));
                     } catch (ParseException e) {
-                        throw new PlValidationErrorException("%s: 期日の形式不正。例:12/25/2020。", "出荷希望日");
+                        throw new LcValidationErrorException("%s: 期日の形式不正。例:12/25/2020。", "出荷希望日");
                     }
                 }
                 k++;
@@ -1849,7 +1848,7 @@ public class ShipmentsImpl implements ShipmentsService
                         Date d = formatter1.parse(params[k]);
                         jsonBig.put("delivery_plan_date", formatter2.format(d));
                     } catch (ParseException e) {
-                        throw new PlValidationErrorException("%s: 期日の形式不正。例:12/25/2020。", "お届け希望日");
+                        throw new LcValidationErrorException("%s: 期日の形式不正。例:12/25/2020。", "お届け希望日");
                     }
                 }
                 k++;

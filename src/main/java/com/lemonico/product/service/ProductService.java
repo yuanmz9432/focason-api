@@ -14,14 +14,12 @@ import com.google.common.collect.Multimap;
 import com.lemonico.common.bean.*;
 import com.lemonico.common.dao.ClientDao;
 import com.lemonico.common.dao.ProductSettingDao;
-import com.lemonico.core.attribute.PlPagination;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlBadRequestException;
+import com.lemonico.core.exception.LcBadRequestException;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.*;
 import com.lemonico.core.utils.constants.Constants;
-import com.lemonico.product.repository.ProductRepository;
 import com.lemonico.store.bean.ProductRecord;
 import com.lemonico.store.dao.*;
 import com.lemonico.store.service.ShipmentDetailService;
@@ -1319,7 +1317,7 @@ public class ProductService
         Integer showFlg, Integer stockFlg, String column, String sort, String tagsId, String fakeLoginFlg) {
 
         if (StringTools.isNullOrEmpty(productDistinguish) || productDistinguish.length == 0) {
-            throw new PlBadRequestException("製品情報が空です。");
+            throw new LcBadRequestException("製品情報が空です。");
         }
 
         // 商品种类 0: 通常商品 1: 同捆商品 2: set商品 9:假登录
@@ -1337,7 +1335,7 @@ public class ProductService
         // 返回的商品信息
         JSONArray resultArray = new JSONArray();
         if (StringTools.isNullOrEmpty(stockFlg)) {
-            throw new PlBadRequestException("製品情報が空です。");
+            throw new LcBadRequestException("製品情報が空です。");
         }
 
         // 查出满足条件的商品信息
@@ -1348,7 +1346,7 @@ public class ProductService
         PageInfo<Mc100_product> pageInfo = new PageInfo<>(operatingList);
 
         if (operatingList.isEmpty()) {
-            throw new PlBadRequestException("製品情報が空です。");
+            throw new LcBadRequestException("製品情報が空です。");
         }
 
         // 获取到所有的setId
@@ -2043,7 +2041,7 @@ public class ProductService
             CsvReader fileCheck = new CsvReader(emptyCheck);
             boolean b = fileCheck.readHeaders();
             if (!b) {
-                throw new PlBadRequestException("商品情報を入力してください。");
+                throw new LcBadRequestException("商品情報を入力してください。");
             }
             InputStreamReader isr = new InputStreamReader(new FileInputStream(destFile), "SJIS");
             CsvReader csvReader = new CsvReader(isr);
@@ -2070,17 +2068,17 @@ public class ProductService
                     if (!StringTools.isNullOrEmpty(csvReader.getRawRecord())) {
                         if (!"商品コード,商品名,管理バーコード,商品区分,子商品コード,子商品個数,税区分,商品原価,商品価格,軽減税率適用商品,品名,重量,原産国,商品英語名,タグ,QRコード,備考,シリアルフラグ"
                             .equals(tmp)) {
-                            throw new PlBadRequestException("項目名称に不備があります。");
+                            throw new LcBadRequestException("項目名称に不備があります。");
                         }
                     }
                 }
                 if (num > 1001) {
-                    throw new PlBadRequestException("一度に登録できるデータは最大1000件です。");
+                    throw new LcBadRequestException("一度に登録できるデータは最大1000件です。");
                 }
             }
             if (num == 1) {
                 if (StringTools.isNullOrEmpty(csvReader.getRawRecord())) {
-                    throw new PlBadRequestException("商品情報を入力してください。");
+                    throw new LcBadRequestException("商品情報を入力してください。");
                 }
             }
             // a关闭csvReader
@@ -2376,7 +2374,7 @@ public class ProductService
             // 如验证不通过则抛出异常
             if (!flag) {
                 String json = JSON.toJSONString(list);
-                throw new PlBadRequestException(json);
+                throw new LcBadRequestException(json);
             }
 
             // 如果セット商品含有多个子商品，重写数据
@@ -2441,7 +2439,7 @@ public class ProductService
             // 如验证不通过则抛出异常
             if (!flag) {
                 String json = JSON.toJSONString(list);
-                throw new PlBadRequestException(json);
+                throw new LcBadRequestException(json);
             }
 
             // a验证通过后写入数据库
@@ -2634,7 +2632,7 @@ public class ProductService
                 productDao.insertProduct(product);
             }
         } catch (IOException e) {
-            throw new PlBadRequestException("セット商品CSVのアップロードに失敗しました。");
+            throw new LcBadRequestException("セット商品CSVのアップロードに失敗しました。");
         }
         CommonUtils.success();
     }
@@ -2671,7 +2669,7 @@ public class ProductService
             CsvReader fileCheck = new CsvReader(emptyCheck);
             boolean judgment = fileCheck.readHeaders();
             if (!judgment) {
-                throw new PlBadRequestException("商品情報を入力してください。");
+                throw new LcBadRequestException("商品情報を入力してください。");
             }
             InputStreamReader isr = new InputStreamReader(new FileInputStream(destFile), "SJIS");
             CsvReader csvReader = new CsvReader(isr);
@@ -2695,10 +2693,10 @@ public class ProductService
                     if (!StringTools.isNullOrEmpty(csvReader.getRawRecord())) {
                         if (!"(店舗)商品管理番号,(店舗)商品番号,(店舗)オプションコード,(サンロジ)商品コード,オプション名称1,オプション項目1,オプション名称2,オプション項目2"
                             .equals(tmp)) {
-                            throw new PlBadRequestException("タイトル行がご指定のCSVテンプレートと異なりますのでご確認ください。");
+                            throw new LcBadRequestException("タイトル行がご指定のCSVテンプレートと異なりますのでご確認ください。");
                         }
                     } else {
-                        throw new PlBadRequestException("商品情報を入力してください。");
+                        throw new LcBadRequestException("商品情報を入力してください。");
                     }
                 }
             }
@@ -2851,7 +2849,7 @@ public class ProductService
             // 如验证不通过则抛出异常
             if (flag == false) {
                 String json = JSON.toJSONString(errorlist);
-                throw new PlBadRequestException(json);
+                throw new LcBadRequestException(json);
             }
 
             // 写入数据
@@ -2910,7 +2908,7 @@ public class ProductService
                 productDao.setCorrespondingData(mc110);
             }
         } catch (IOException e) {
-            throw new PlBadRequestException("セット商品CSVのアップロードに失敗しました。");
+            throw new LcBadRequestException("セット商品CSVのアップロードに失敗しました。");
         }
         return CommonUtils.success();
     }
@@ -3137,7 +3135,7 @@ public class ProductService
             String p = file.getPath();
             // 将图像压缩包 解压到指定路径
             if (imgFile.isEmpty()) {
-                throw new PlBadRequestException("アップロードしたファイルは空です");
+                throw new LcBadRequestException("アップロードしたファイルは空です");
             }
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String nowTime = format.format(new Date());
@@ -3155,7 +3153,7 @@ public class ProductService
                 if ("JPG".equals(type) || "JPEG".equals(type) || "PNG".equals(type)) {
                     fileNameList.add(fileName);
                 } else {
-                    throw new PlBadRequestException("JPG/PNG形式のファイルのみアップロードできます");
+                    throw new LcBadRequestException("JPG/PNG形式のファイルのみアップロードできます");
                 }
             });
             if (!csvFile.isEmpty()) {
@@ -3168,7 +3166,7 @@ public class ProductService
                     "SHIFT-JIS"
                 })) {
                     bufferedInputStream.close();
-                    throw new PlBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
+                    throw new LcBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
                 }
 
                 reader = new InputStreamReader(bufferedInputStream, Charset.forName("SJIS"));
@@ -3667,12 +3665,4 @@ public class ProductService
         return CommonUtils.success(resultJson);
     }
 
-    private final ProductRepository productRepository;
-
-    public void getProductList(ProductRepository.Condition condition, PlPagination pagination,
-        ProductRepository.Sort sort) {
-
-        condition.getProductCode();
-        Object resultSet = productRepository.findAll(condition, pagination, sort);
-    }
 }

@@ -4,7 +4,7 @@ package com.lemonico.core.handler;
 
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlErrorResource;
+import com.lemonico.core.exception.LcErrorResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,11 +26,11 @@ public class GlobalExceptionHandler
      * {@link BaseException}ハンドラー
      *
      * @param exception 異常
-     * @return {@link PlErrorResource}
+     * @return {@link LcErrorResource}
      */
     @ExceptionHandler(value = BaseException.class)
     @ResponseBody
-    public ResponseEntity<PlErrorResource> lcExceptionHandler(Exception exception) {
+    public ResponseEntity<LcErrorResource> lcExceptionHandler(Exception exception) {
         BaseException lcException = (BaseException) exception;
         final String code = lcException.getCode().getValue();
         final String message = exception.getMessage();
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler
 
         return ResponseEntity
             .status(status)
-            .body(PlErrorResource.builder()
+            .body(LcErrorResource.builder()
                 .code(code)
                 .message(message).build());
     }
@@ -48,14 +48,14 @@ public class GlobalExceptionHandler
      * {@link Exception}ハンドラー
      *
      * @param exception 異常
-     * @return {@link PlErrorResource}
+     * @return {@link LcErrorResource}
      */
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResponseEntity<PlErrorResource> defaultExceptionHandler(Exception exception) {
+    public ResponseEntity<LcErrorResource> defaultExceptionHandler(Exception exception) {
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(PlErrorResource.builder()
+            .body(LcErrorResource.builder()
                 .code(ErrorCode.INTERNAL_SERVER_ERROR.getValue())
                 .message(exception.getMessage()).build());
     }

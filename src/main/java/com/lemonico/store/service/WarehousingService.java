@@ -13,7 +13,7 @@ import com.lemonico.common.service.ClientService;
 import com.lemonico.core.enums.WarehousingEnum;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlBadRequestException;
+import com.lemonico.core.exception.LcBadRequestException;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.*;
 import com.lemonico.core.utils.constants.Constants;
@@ -637,7 +637,7 @@ public class WarehousingService
             if (!CommonUtils.determineEncoding(destFile.toURI().toURL(), new String[] {
                 "SHIFT_JIS"
             })) {
-                throw new PlBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
+                throw new LcBadRequestException("ご指定のCSVファイルが、取り扱いできる形式（SHIFT-JIS）ではありません。");
             }
             // a错误信息list
             List<String> list = new ArrayList<String>();
@@ -662,12 +662,12 @@ public class WarehousingService
                     if (!StringTools.isNullOrEmpty(csvReader.getRawRecord())) {
                         String tmp = csvReader.getRawRecord().replaceAll("\"", "");
                         if (!"商品コード,商品名,入庫依頼数,ロット番号,賞味期限,出荷フラグ".equals(tmp)) {
-                            throw new PlBadRequestException("タイトル行がご指定のCSVテンプレートと異なりますのでご確認ください。");
+                            throw new LcBadRequestException("タイトル行がご指定のCSVテンプレートと異なりますのでご確認ください。");
                         }
                     }
                 }
                 if (num > 1001) {
-                    throw new PlBadRequestException("一度に登録できるデータは最大1000件です。");
+                    throw new LcBadRequestException("一度に登録できるデータは最大1000件です。");
                 }
             }
             // a关闭csvReader
@@ -807,7 +807,7 @@ public class WarehousingService
             // a如验证不通过则抛出异常
             if (!flag) {
                 String json = JSON.toJSONString(list);
-                throw new PlBadRequestException(json);
+                throw new LcBadRequestException(json);
             }
             // a创建一个长度和CSV长度一样的数组
 

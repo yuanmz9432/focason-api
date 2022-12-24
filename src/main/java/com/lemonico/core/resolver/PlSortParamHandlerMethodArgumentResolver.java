@@ -6,8 +6,8 @@ package com.lemonico.core.resolver;
 
 
 import com.lemonico.core.annotation.PlSortParam;
-import com.lemonico.core.attribute.PlSort;
-import com.lemonico.core.exception.PlValidationErrorException;
+import com.lemonico.core.attribute.LcSort;
+import com.lemonico.core.exception.LcValidationErrorException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -28,7 +28,7 @@ public class PlSortParamHandlerMethodArgumentResolver implements HandlerMethodAr
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(PlSort.class)
+        return parameter.getParameterType().isAssignableFrom(LcSort.class)
             && parameter.hasParameterAnnotation(PlSortParam.class);
     }
 
@@ -48,15 +48,15 @@ public class PlSortParamHandlerMethodArgumentResolver implements HandlerMethodAr
                 Objects.requireNonNull(sortValue);
                 boolean allowed = Arrays.stream(annotation.allowedValues()).anyMatch(sortValue::equalsIgnoreCase);
                 if (!allowed) {
-                    throw new PlValidationErrorException("The specified sort parameter is not allowed.");
+                    throw new LcValidationErrorException("The specified sort parameter is not allowed.");
                 }
             }
 
             Matcher m = SORT_PATTERN.matcher(sortValue);
             if (!m.find()) {
-                throw new PlValidationErrorException("Parameter '%s' must match the regexp '%s'", "sort", REGEX);
+                throw new LcValidationErrorException("Parameter '%s' must match the regexp '%s'", "sort", REGEX);
             } else {
-                return PlSort.builder().direction(PlSort.Direction.of(m.group("direction")))
+                return LcSort.builder().direction(LcSort.Direction.of(m.group("direction")))
                     .property(m.group("property")).build();
             }
         }

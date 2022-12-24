@@ -13,8 +13,8 @@ import com.lemonico.common.dao.DeliveryDao;
 import com.lemonico.common.dao.LoginDao;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlResourceAlreadyExistsException;
-import com.lemonico.core.exception.PlResourceNotFoundException;
+import com.lemonico.core.exception.LcResourceAlreadyExistsException;
+import com.lemonico.core.exception.LcResourceNotFoundException;
 import com.lemonico.core.utils.CommonUtils;
 import com.lemonico.core.utils.DateUtils;
 import com.lemonico.core.utils.ExcelUtils;
@@ -555,7 +555,7 @@ public class NtmOrderServiceImpl implements NtmOrderService
             productMap = productList.stream().filter(x -> !StringTools.isNullOrEmpty(x.getCode()))
                 .collect(Collectors.toMap(Mc100_product::getCode, o -> o));
         } else {
-            throw new PlResourceNotFoundException("製品");
+            throw new LcResourceNotFoundException("製品");
         }
         String loginNm = CommonUtils.getToken("login_nm", request);
 
@@ -649,7 +649,7 @@ public class NtmOrderServiceImpl implements NtmOrderService
             String outerOrderNo = entry.getKey();
             int resCnt = orderDao.getOuterOrderNo(outerOrderNo, client_id);
             if (resCnt > 0) {
-                throw new PlResourceAlreadyExistsException("受注番号");
+                throw new LcResourceAlreadyExistsException("受注番号");
             }
             Nt143_excel_order excelOrder = entry.getValue();
 
@@ -831,7 +831,7 @@ public class NtmOrderServiceImpl implements NtmOrderService
             if (collect.size() != 0) {
                 tc200Order.setDelivery_time_slot(collect.get(0).getDelivery_time_id() + "");
             } else {
-                throw new PlResourceNotFoundException("配送時間帯");
+                throw new LcResourceNotFoundException("配送時間帯");
             }
             // 配達指定日
             String specifiedDeliveryDate = excelOrder.getSpecifiedDeliveryDate();
@@ -882,14 +882,14 @@ public class NtmOrderServiceImpl implements NtmOrderService
             try {
                 setOrderDetailData(excelOrder, productMap, paramMap, orderNo, subNo, loginNm, tc201_order_details);
             } catch (Exception e) {
-                throw new PlResourceNotFoundException("製品");
+                throw new LcResourceNotFoundException("製品");
             }
             subNo++;
         }
         orderDao.bulkInsertOrder(tc200_orders);
         if (tc201_order_details.size() == 0) {
 
-            throw new PlResourceNotFoundException("製品");
+            throw new LcResourceNotFoundException("製品");
         }
         orderDetailDao.bulkInsertOrderDetail(tc201_order_details);
 
@@ -958,7 +958,7 @@ public class NtmOrderServiceImpl implements NtmOrderService
             String productCode = paramMap.get(key);
             Mc100_product product = productMap.get(productCode);
             if (StringTools.isNullOrEmpty(product)) {
-                throw new PlResourceNotFoundException("製品");
+                throw new LcResourceNotFoundException("製品");
             }
             if (!StringTools.isNullOrEmpty(product)) {
                 Tc201_order_detail orderDetail = new Tc201_order_detail();

@@ -3,7 +3,7 @@ package com.lemonico.core.utils;
 
 
 import com.google.common.base.Splitter;
-import com.lemonico.core.exception.PlBadRequestException;
+import com.lemonico.core.exception.LcBadRequestException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ZipUtil
             ZipEntry zipEntry = entries.nextElement();
             // 判断文件大小是否符合要求
             if (zipEntry.getSize() >= singleFileMaxSize) {
-                throw new PlBadRequestException("画像サイズが2MB以上にはアプロードできません。");
+                throw new LcBadRequestException("画像サイズが2MB以上にはアプロードできません。");
             }
             String zipEntryName = zipEntry.getName();
             List<String> list = Splitter.on("/").omitEmptyStrings().trimResults().splitToList(zipEntryName);

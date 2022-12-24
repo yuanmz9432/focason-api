@@ -6,8 +6,8 @@ package com.lemonico.core.resolver;
 
 
 import com.lemonico.core.annotation.PlPaginationParam;
-import com.lemonico.core.attribute.PlPagination;
-import com.lemonico.core.exception.PlValidationErrorException;
+import com.lemonico.core.attribute.LcPagination;
+import com.lemonico.core.exception.LcValidationErrorException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -19,7 +19,7 @@ public class PlPaginationParamHandlerMethodArgumentResolver implements HandlerMe
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(PlPagination.class)
+        return parameter.getParameterType().isAssignableFrom(LcPagination.class)
             && parameter.hasParameterAnnotation(PlPaginationParam.class);
     }
 
@@ -34,23 +34,23 @@ public class PlPaginationParamHandlerMethodArgumentResolver implements HandlerMe
             try {
                 limit = extractIntegerParameter(webRequest, "limit", annotation.defaultLimitValue());
                 if (limit > annotation.maxLimitValue()) {
-                    throw new PlValidationErrorException("Parameter '%s' must be less than or equal to '%s'.", "limit",
+                    throw new LcValidationErrorException("Parameter '%s' must be less than or equal to '%s'.", "limit",
                         annotation.maxLimitValue());
                 }
             } catch (NumberFormatException e) {
-                throw new PlValidationErrorException("Parameter '%s' must be in the correct number format", "limit");
+                throw new LcValidationErrorException("Parameter '%s' must be in the correct number format", "limit");
             }
 
             int page;
             try {
                 page = extractIntegerParameter(webRequest, "page", 1);
                 if (page <= 0) {
-                    throw new PlValidationErrorException("Parameter '%s' must be greater than or equal to 1.", "page");
+                    throw new LcValidationErrorException("Parameter '%s' must be greater than or equal to 1.", "page");
                 }
             } catch (NumberFormatException e) {
-                throw new PlValidationErrorException("Parameter '%s' must be in the correct number format", "page");
+                throw new LcValidationErrorException("Parameter '%s' must be in the correct number format", "page");
             }
-            return PlPagination.of(limit, page);
+            return LcPagination.of(limit, page);
         }
     }
 

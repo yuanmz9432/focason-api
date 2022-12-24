@@ -7,7 +7,7 @@ package com.lemonico.core.resolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lemonico.core.annotation.PlConditionParam;
-import com.lemonico.core.exception.PlValidationErrorException;
+import com.lemonico.core.exception.LcValidationErrorException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -42,13 +42,13 @@ public class PlConditionParamHandlerMethodArgumentResolver implements HandlerMet
             try {
                 json = new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
             } catch (IllegalArgumentException e) {
-                throw new PlValidationErrorException("Failed to decode 'condition'", e);
+                throw new LcValidationErrorException("Failed to decode 'condition'", e);
             }
 
             try {
                 return this.objectMapper().readValue(json, parameter.getParameterType());
             } catch (IOException e) {
-                throw new PlValidationErrorException("Failed to parse 'condition'", e);
+                throw new LcValidationErrorException("Failed to parse 'condition'", e);
             }
         }
     }

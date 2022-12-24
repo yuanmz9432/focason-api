@@ -9,15 +9,9 @@ import com.lemonico.common.bean.Mc101_product_tag;
 import com.lemonico.common.bean.Ms008_items;
 import com.lemonico.common.bean.Ms010_product_size;
 import com.lemonico.common.service.CommonService;
-import com.lemonico.core.annotation.PlConditionParam;
-import com.lemonico.core.annotation.PlPaginationParam;
-import com.lemonico.core.annotation.PlSortParam;
-import com.lemonico.core.attribute.PlPagination;
-import com.lemonico.core.attribute.PlSort;
 import com.lemonico.core.exception.ErrorCode;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.CommonUtils;
-import com.lemonico.product.repository.ProductRepository;
 import com.lemonico.product.service.ProductService;
 import com.lemonico.store.bean.ProductRecord;
 import io.swagger.annotations.ApiOperation;
@@ -60,19 +54,6 @@ public class ProductController
     private final ProductService productService;
     private final CommonService commonService;
     private final PathProps pathProps;
-
-    @RequestMapping(path = PRODUCT_COLLECTION_RESOURCE_URI, method = RequestMethod.GET)
-    public JSONObject getProductList(
-        @PlConditionParam ProductRepository.Condition condition,
-        @PlPaginationParam PlPagination pagination,
-        @PlSortParam(allowedValues = {}) PlSort plSort) {
-        if (condition == null) {
-            condition = ProductRepository.Condition.DEFAULT;
-        }
-        ProductRepository.Sort sort = ProductRepository.Sort.fromPlSort(plSort);
-        productService.getProductList(condition, pagination, sort);
-        return null;
-    }
 
     /**
      * 商品ラベルを印刷する

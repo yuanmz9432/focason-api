@@ -4,7 +4,7 @@ package com.lemonico.core.annotation;
 
 import com.alibaba.fastjson.JSON;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlBadRequestException;
+import com.lemonico.core.exception.LcBadRequestException;
 import com.lemonico.core.utils.CommonUtils;
 import com.lemonico.core.utils.apiLimit.GetIp;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class RequestLimitInterceptor implements HandlerInterceptor
                 // 有该注解，判断访问的次数
                 // このコメントがあり、アクセスの回数を判断する
                 if (isLimit(request, requestLimit)) {
-                    throw new PlBadRequestException("請求頻度は高いすぎて、後ほどアクセスしてください。");
+                    throw new LcBadRequestException("請求頻度は高いすぎて、後ほどアクセスしてください。");
                 }
             }
         }

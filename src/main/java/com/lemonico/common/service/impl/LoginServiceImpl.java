@@ -10,7 +10,6 @@ import com.lemonico.common.dao.LoginDao;
 import com.lemonico.common.service.LoginService;
 import com.lemonico.core.exception.*;
 import com.lemonico.core.props.PathProps;
-import com.lemonico.core.shiro.JwtUtils;
 import com.lemonico.core.utils.CommonUtils;
 import com.lemonico.core.utils.DateUtils;
 import com.lemonico.core.utils.PasswordHelper;
@@ -24,7 +23,6 @@ import javax.annotation.Resource;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.http.HttpHeaders;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -93,8 +91,10 @@ public class LoginServiceImpl implements LoginService
      */
     @Override
     public JSONObject checkUserId(String loginId, String usekb, String yoto, String flg, HttpServletRequest request) {
-        String client_id = CommonUtils.getToken("client_id", request);
-        String warehouse_cd = CommonUtils.getToken("warehouse_cd", request);
+        // String client_id = CommonUtils.getToken("client_id", request);
+        // String warehouse_cd = CommonUtils.getToken("warehouse_cd", request);
+        String client_id = "";
+        String warehouse_cd = "";
         Ms200_customer userByName = loginDao.getUserByNameAndYoto(loginId, usekb, yoto);
         if (!StringTools.isNullOrEmpty(userByName)) {
             // flg 0 店铺侧验证
@@ -102,7 +102,7 @@ public class LoginServiceImpl implements LoginService
                 List<Ms206_client_customer> clientListByUserId =
                     clientDao.getClientListByUserId(userByName.getUser_id(), client_id);
                 if (clientListByUserId.size() != 0) {
-                    throw new PlUnauthorizedException(PlErrorCode.USER_AUTHENTICATION_FAILURE,
+                    throw new LcUnauthorizedException(LcErrorCode.USER_AUTHENTICATION_FAILURE,
                         "ログインが失効したが、ご再登録してください。");
                 }
             }
@@ -110,7 +110,7 @@ public class LoginServiceImpl implements LoginService
             if (flg.equals("1")) {
                 Mw402_wh_client mw402_wh_client = loginDao.checkWarehouseUser(userByName.getUser_id(), warehouse_cd);
                 if (!StringTools.isNullOrEmpty(mw402_wh_client)) {
-                    throw new PlUnauthorizedException(PlErrorCode.AUTH_TOKEN_EXPIRED, "ログインが失効したが、ご再登録してください。");
+                    throw new LcUnauthorizedException(LcErrorCode.AUTH_TOKEN_EXPIRED, "ログインが失効したが、ご再登録してください。");
                 }
             }
         }
@@ -143,8 +143,8 @@ public class LoginServiceImpl implements LoginService
             passwordHelper.encryptPassword(ms200_customer);
             loginDao.register(ms200_customer);
         }
-        String jwtToken = JwtUtils.sign(JwtUtils.SECRET, jsonObject.getString("loginId"), 1);
-        ((HttpServletResponse) response).setHeader(JwtUtils.AUTH_HEADER, jwtToken);
+        // String jwtToken = JwtUtils.sign(JwtUtils.SECRET, jsonObject.getString("loginId"), 1);
+        // ((HttpServletResponse) response).setHeader(JwtUtils.AUTH_HEADER, jwtToken);
         return CommonUtils.success();
     }
 
@@ -183,7 +183,7 @@ public class LoginServiceImpl implements LoginService
                 subject.login(token);
             } catch (Exception e) {
                 // 密码验证失败
-                throw new PlUnauthorizedException();
+                throw new LcUnauthorizedException();
             }
         } else {
             // 新邮箱注册
@@ -264,7 +264,7 @@ public class LoginServiceImpl implements LoginService
         Ms200_customer userByName = loginDao.getUserByName(email, "2");
         Ms200_customer user = loginDao.getUserByName(email, "1");
         if (StringTools.isNullOrEmpty(userByName) && StringTools.isNullOrEmpty(user)) {
-            throw new PlResourceNotFoundException("ユーザー： " + email);
+            throw new LcResourceNotFoundException("ユーザー： " + email);
         } else {
             String usekb = "3";
             try {
@@ -290,7 +290,7 @@ public class LoginServiceImpl implements LoginService
         String email = jsonObject.getString("email");
         Ms200_customer ms200Customer = loginDao.getUserByName(email, "1");
         if (StringTools.isNullOrEmpty(ms200Customer)) {
-            throw new PlResourceNotFoundException("ユーザー： " + email);
+            throw new LcResourceNotFoundException("ユーザー： " + email);
         } else {
             ms200Customer.setEncode_key("");
             ms200Customer.setLogin_pw(jsonObject.getString("password"));
@@ -395,8 +395,8 @@ public class LoginServiceImpl implements LoginService
         jsonObject.put("warehouse", accordWarehouses);
         // 登录者本身没有店铺仓库 和 没有允许ip 的区分
         jsonObject.put("status", "102");
-        String jwtToken = JwtUtils.sign(JwtUtils.SECRET, userId);
-        ((HttpServletResponse) response).setHeader(JwtUtils.AUTH_HEADER, jwtToken);
+        // String jwtToken = JwtUtils.sign(JwtUtils.SECRET, userId);
+        // ((HttpServletResponse) response).setHeader(JwtUtils.AUTH_HEADER, jwtToken);
         return CommonUtils.success(jsonObject);
     }
 
@@ -412,9 +412,9 @@ public class LoginServiceImpl implements LoginService
         String userId = jsonObject.getString("user_id");
         Ms200_customer customer = loginDao.getUserByUserId(userId);
 
-        String jwtToken = JwtUtils.sign(jsonObject.getString("client_id"), customer.getLogin_nm(), JwtUtils.SECRET,
-            customer.getYoto(), customer.getUser_id(), customer.getLogin_id());
-        response.addHeader(HttpHeaders.AUTHORIZATION, jwtToken);
+        // String jwtToken = JwtUtils.sign(jsonObject.getString("client_id"), customer.getLogin_nm(), JwtUtils.SECRET,
+        // customer.getYoto(), customer.getUser_id(), customer.getLogin_id());
+        // response.addHeader(HttpHeaders.AUTHORIZATION, jwtToken);
         return CommonUtils.success();
     }
 
@@ -429,10 +429,11 @@ public class LoginServiceImpl implements LoginService
     public JSONObject getWarehouseToken(JSONObject jsonObject, HttpServletResponse response) {
         String userId = jsonObject.getString("user_id");
         Ms200_customer customer = loginDao.getUserByUserId(userId);
-        String jwtToken = JwtUtils.sign(jsonObject.getString("warehouse_id"), customer.getLogin_nm(), JwtUtils.SECRET,
-            1, customer.getYoto(),
-            customer.getUser_id(), customer.getUser_id());
-        ((HttpServletResponse) response).setHeader(JwtUtils.AUTH_HEADER, jwtToken);
+        // String jwtToken = JwtUtils.sign(jsonObject.getString("warehouse_id"), customer.getLogin_nm(),
+        // JwtUtils.SECRET,
+        // 1, customer.getYoto(),
+        // customer.getUser_id(), customer.getUser_id());
+        // ((HttpServletResponse) response).setHeader(JwtUtils.AUTH_HEADER, jwtToken);
         return CommonUtils.success();
     }
 

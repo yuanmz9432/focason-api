@@ -27,7 +27,7 @@ import com.lemonico.common.dao.DeliveryDao;
 import com.lemonico.common.service.*;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlBadRequestException;
+import com.lemonico.core.exception.LcBadRequestException;
 import com.lemonico.core.props.PathProps;
 import com.lemonico.core.utils.*;
 import com.lemonico.core.utils.constants.BizLogiPredefinedEnum;
@@ -4508,7 +4508,7 @@ public class ShipmentServiceImpl implements ShipmentService
             while (csvReader.readRecord()) {
                 num++;
                 if (num > 20000) {
-                    throw new PlBadRequestException("一度に登録できるデータは最大20000件です。");
+                    throw new LcBadRequestException("一度に登録できるデータは最大20000件です。");
                 }
             }
             // a关闭csvReader
@@ -4721,10 +4721,10 @@ public class ShipmentServiceImpl implements ShipmentService
                 }
 
                 if (templateFlg) {
-                    throw new PlBadRequestException("CSVファイルのフォーマットがご指定の配送業者のものと異なりますのでご確認ください。");
+                    throw new LcBadRequestException("CSVファイルのフォーマットがご指定の配送業者のものと異なりますのでご確認ください。");
                 }
                 if (deliveryCheck) {
-                    throw new PlBadRequestException(
+                    throw new LcBadRequestException(
                         "出庫依頼ID(" + shipment_plan_id + ")は、CSVファイルのフォーマットがご指定の配送業者のものと異なりますのでご確認ください。");
                 }
 

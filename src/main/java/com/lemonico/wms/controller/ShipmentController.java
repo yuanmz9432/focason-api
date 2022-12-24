@@ -14,7 +14,7 @@ import com.lemonico.common.service.CommonService;
 import com.lemonico.common.service.CustomerHistoryService;
 import com.lemonico.core.exception.BaseException;
 import com.lemonico.core.exception.ErrorCode;
-import com.lemonico.core.exception.PlValidationErrorException;
+import com.lemonico.core.exception.LcValidationErrorException;
 import com.lemonico.core.utils.CommonUtils;
 import com.lemonico.core.utils.StringTools;
 import com.lemonico.store.dao.SponsorDao;
@@ -1326,7 +1326,7 @@ public class ShipmentController
     public JSONObject bizlogiRetryPdf(@RequestBody JSONObject jsonParams) {
         String shipmentNumber = jsonParams.getString("shipmentNumber");
         if (Strings.isNullOrEmpty(shipmentNumber)) {
-            throw new PlValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
+            throw new LcValidationErrorException("必須パラメーターが存在するので、ご確認お願いします。");
         }
         JSONObject resBean = new JSONObject();
         resBean = shipmentService.bizLogiRetryPdf(shipmentNumber);
