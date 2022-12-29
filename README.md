@@ -35,7 +35,7 @@ Coming soon...
 #### 2. Docker
 * build docker image
     ```
-    docker build -t lemonico-container:latest .
+    docker build -t lemonico-api:latest .
     ```
 
 #### 3. JAVA

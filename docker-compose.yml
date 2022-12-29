@@ -5,33 +5,33 @@ version: "3.8"
 
 services:
 
-#  app:
-#    image: lemonico-api:latest
-#    container_name: lemonico-api_app_container
-#    environment:
-#      DB_HOST: dbserver
-#      DB_PORT: 3306
-#      DB_NAME: lemonico
-#      DB_USERNAME: root
-#      DB_PASSWORD: kawasemi
-#    ports:
-#      - 8080:8080
-#    depends_on:
-#      - dbserver
-#    restart: on-failure
+  api-server:
+    image: lemonico-api:latest
+    container_name: lemonico-api_container
+    environment:
+      DB_HOST: mysql-server
+      DB_PORT: 3306
+      DB_NAME: lemonico
+      DB_USERNAME: root
+      DB_PASSWORD: password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-server
+    restart: on-failure
 
-  dbserver:
+  mysql-server:
     image: mysql:5.7
-    container_name: lemonico-api_dbserver_container
+    container_name: lemonico-db_container
     environment:
       MYSQL_DATABASE: lemonico
-      MYSQL_USER: yuan
-      MYSQL_PASSWORD: kawasemi
-      MYSQL_ROOT_PASSWORD: kawasemi
-      MYSQL_SCHEMA: kawasemi
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_SCHEMA: lemonico
       TZ: 'Asia/Tokyo'
     ports:
-      - 3306:3306
+      - "33061:33061"
     healthcheck:
       test: [ 'CMD', 'mysqladmin', 'ping', '-h', 'localhost' ]
       start_period: 10s
