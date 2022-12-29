@@ -16,6 +16,8 @@ import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -30,6 +32,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.server.resource.BearerTokenError;
+import org.springframework.security.oauth2.server.resource.BearerTokenErrors;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
@@ -49,6 +54,8 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
      */
     private static final List<String> UN_AUTHORITY_PATHS =
         List.of("/api/heartbeat", "/api/auth/login", "/api/auth/register");
+    private static final Pattern AUTHORIZATION_PATTERN =
+        Pattern.compile("^Bearer (?<token>[a-zA-Z0-9-:._~+/]+=*)$", Pattern.CASE_INSENSITIVE);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
@@ -61,13 +68,19 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         // 下記URL以外であれば、ヘッダ取得処理を行わない。
         if (!UN_AUTHORITY_PATHS.contains(request.getRequestURI())) {
             // リクエストヘッダーからアクセストークンを取得する。
-            var requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            var authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            Matcher matcher = AUTHORIZATION_PATTERN.matcher(authorizationHeader);
+            if (!matcher.matches()) {
+                BearerTokenError error = BearerTokenErrors.invalidToken("Bearer token is malformed");
+                throw new OAuth2AuthenticationException(error);
+            }
+            var jwtToken = matcher.group("token");
             String subject = null;
-            if (Strings.isNotBlank(requestTokenHeader)) {
+            if (Strings.isNotBlank(jwtToken)) {
                 Claims accessTokenClaims;
                 try {
                     // リクエストヘッダから、アクセストークン情報を洗い出す。
-                    accessTokenClaims = this.jwtGenerator.getClaims(requestTokenHeader);
+                    accessTokenClaims = this.jwtGenerator.getClaims(jwtToken);
                 } catch (ExpiredJwtException e) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
