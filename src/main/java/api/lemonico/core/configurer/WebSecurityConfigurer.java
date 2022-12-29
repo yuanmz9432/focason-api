@@ -55,11 +55,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
             // OPTIONS请求全部放行
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 登录接口放行
-            .antMatchers("/heartbeat", "/auth/**", "/actuator/**").permitAll()
+            .antMatchers("/heartbeat", "/auth/**", "/actuator/**", "/swagger-ui/**").permitAll()
             // 権限設定
             .antMatchers("/users/**").hasAnyAuthority("AUTH_USER")
-            // .antMatchers("/stores/**").hasAnyAuthority("AUTH_GOLDEN", "AUTH_PREMIUM")
-            // .antMatchers("/warehouses/**").hasAnyAuthority("AUTH_GOLDEN", "AUTH_PREMIUM", "AUTH_SILVER")
             // 其他接口全部接受验证
             .anyRequest().authenticated()
             .and()
@@ -70,12 +68,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
             .and()
             .csrf().disable() // 禁用 Spring Security 自带的跨域处理
             .sessionManagement() // 定制我们自己的 session 策略
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 调整为让 Spring Security 不创建和使用 session
-        /*
-         * 本次 json web token 权限控制的核心配置部分
-         * 在 Spring Security 开始判断本次会话是否有权限时的前一瞬间
-         * 通过添加过滤器将 token 解析，将用户所有的权限写入本次会话
-         */
-        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)// 调整为让 Spring Security 不创建和使用 session
+            .and().addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -98,6 +98,10 @@ dependencies {
 
     // AWS JAVA SDK For Amazon Rekognition
     implementation 'software.amazon.awssdk:rekognition:2.17.271'
+
+    // Swagger OpenAPI 3.0
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
 }
 
 sourceSets {

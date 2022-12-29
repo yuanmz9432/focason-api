@@ -14,7 +14,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,11 +48,6 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    /**
-     * 認証必要ないURI
-     */
-    private static final List<String> UN_AUTHORITY_PATHS =
-        List.of("/api/heartbeat", "/api/auth/login", "/api/auth/register");
     private static final Pattern AUTHORIZATION_PATTERN =
         Pattern.compile("^Bearer (?<token>[a-zA-Z0-9-:._~+/]+=*)$", Pattern.CASE_INSENSITIVE);
 
@@ -65,10 +59,10 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         MDC.put("USERNAME", "ADMIN");
+        var authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         // 下記URL以外であれば、ヘッダ取得処理を行わない。
-        if (!UN_AUTHORITY_PATHS.contains(request.getRequestURI())) {
+        if (Strings.isNotBlank(authorizationHeader)) {
             // リクエストヘッダーからアクセストークンを取得する。
-            var authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             Matcher matcher = AUTHORIZATION_PATTERN.matcher(authorizationHeader);
             if (!matcher.matches()) {
                 BearerTokenError error = BearerTokenErrors.invalidToken("Bearer token is malformed");
