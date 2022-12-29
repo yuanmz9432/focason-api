@@ -49,27 +49,9 @@ public class UserEntity extends LcEntity
     /** ステータス（１：有効、０：無効） */
     @Column(name = "status")
     Integer status;
-    /** タイプ（１：本番、２：デモ、９：スーパーユーザ） */
+    /** タイプ（１：管理者、２：スタッフ、９：スーパーユーザ） */
     @Column(name = "type")
     Integer type;
-    /** 電話番号 */
-    @Column(name = "phone")
-    String phone;
-    /** 郵便番号 */
-    @Column(name = "zip")
-    String zip;
-    /** 都道府県 */
-    @Column(name = "prefecture")
-    Integer prefecture;
-    /** 市区町村 */
-    @Column(name = "municipality")
-    String municipality;
-    /** 字・町目 */
-    @Column(name = "address1")
-    String address1;
-    /** 部屋 */
-    @Column(name = "address2")
-    String address2;
     /** 作成者 */
     @Column(name = "created_by")
     String createdBy;

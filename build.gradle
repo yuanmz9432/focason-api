@@ -29,8 +29,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: "com.diffplug.spotless"
 
-//idea.module.inheritOutputDirs = true
-
 group 'lemoico.com'
 version '1.0-SNAPSHOT'
 
@@ -273,7 +271,7 @@ flyway {
     url = "${dbUrl}"
     user = "${dbUser}"
     password = "${dbPassword}"
-    locations = ["filesystem:$projectDir/db/ddl"]
+    locations = ["filesystem:$projectDir/database/ddl"]
 }
 
 spotless {

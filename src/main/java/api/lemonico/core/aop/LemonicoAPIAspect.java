@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,19 +42,14 @@ public class LemonicoAPIAspect
         }
 
         HttpServletRequest request = requestAttributes.getRequest();
-        MDC.put("STORE_CODE", request.getHeader("Store-Code"));
-        MDC.put("WAREHOUSE_CODE", request.getHeader("Warehouse-Code"));
-        logger.info("★ Store-Code : {}", request.getHeader("Store-Code"));
-        logger.info("★ URI : {}", request.getRequestURL().toString());
-        logger.info("★ HTTP Method : {}", request.getMethod());
-        logger.info("★ Request Body : {}", Arrays.toString(joinPoint.getArgs()));
+        logger.info("★★★ {} {} {} ★★★", request.getMethod(), request.getRequestURL().toString(),
+            Arrays.toString(joinPoint.getArgs()));
     }
 
     @AfterReturning(returning = "returnObject", pointcut = "pointCut()")
     public void doAfterReturning(Object returnObject) {
         if (!Objects.isNull(returnObject)) {
-            // 处理完请求，返回内容
-            logger.info("★ Response: {}", returnObject);
+            logger.info("★★★ {} ★★★", returnObject);
         }
     }
 
@@ -68,11 +62,11 @@ public class LemonicoAPIAspect
             res = pjp.proceed();
         } catch (Throwable e) {
             sw.stop();
-            logger.info("* Error Message : {}", e.getMessage());
+            logger.info("★★★ {} ★★★", e.getMessage());
             throw e;
         }
         sw.stop();
-        logger.info("* Processing Time: {}s", sw.getTotalTimeSeconds());
+        logger.info("★★★ {}s ★★★", sw.getTotalTimeSeconds());
         return res;
     }
 

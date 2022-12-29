@@ -9,30 +9,20 @@ import api.lemonico.auth.config.LoginUser;
 import api.lemonico.core.attribute.ID;
 import api.lemonico.core.attribute.LcPagination;
 import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.domain.Department;
 import api.lemonico.core.exception.LcResourceAlreadyExistsException;
 import api.lemonico.core.exception.LcResourceNotFoundException;
 import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
-import api.lemonico.core.exception.LcValidationErrorException;
 import api.lemonico.core.utils.BCryptEncoder;
-import api.lemonico.store.repository.StoreRepository;
-import api.lemonico.store.resource.StoreResource;
-import api.lemonico.store.service.StoreService;
-import api.lemonico.user.entity.UserDepartmentEntity;
 import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserAuthorityRepository;
-import api.lemonico.user.repository.UserDepartmentRepository;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
-import api.lemonico.warehouse.repository.WarehouseRepository;
-import api.lemonico.warehouse.resource.WarehouseResource;
-import api.lemonico.warehouse.service.WarehouseService;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -60,21 +50,6 @@ public class UserService
      * ユーザー権限リポジトリ
      */
     private final UserAuthorityRepository userAuthorityRepository;
-
-    /**
-     * ユーザー所属リポジトリ
-     */
-    private final UserDepartmentRepository userDepartmentRepository;
-
-    /**
-     * 倉庫サービス
-     */
-    private final WarehouseService warehouseService;
-
-    /**
-     * ストアサービス
-     */
-    private final StoreService storeService;
 
     /**
      * 権限サービス
@@ -117,27 +92,7 @@ public class UserService
         var uuid = userResource.map(UserResource::getUuid)
             .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
 
-        // ユーザ部署情報取得
-        var userDepartments =
-            userDepartmentRepository.findAll(
-                UserDepartmentRepository.Condition.builder().uuid(uuid).build(),
-                LcPagination.DEFAULT, UserDepartmentRepository.Sort.DEFAULT);
-
-        // 部署情報整理
-        Set<String> warehouseCodes = new HashSet<>();
-        userDepartments.getData().forEach((department) -> {
-            if (Objects.equals(Department.WAREHOUSE.getValue(), department.getDepartmentType())) {
-                warehouseCodes.add(department.getDepartmentCode());
-            }
-        });
-
-        // 倉庫情報取得
-        var warehouses = warehouseService.getResourceList(
-            WarehouseRepository.Condition.builder().warehouseCodes(warehouseCodes).build(), LcPagination.DEFAULT,
-            WarehouseRepository.Sort.DEFAULT);
-
         return Optional.of(userResource.get()
-            .withWarehouses(warehouses.getData())
             .withPassword(""));
     }
 
@@ -163,53 +118,6 @@ public class UserService
 
         // ユーザ権限付与
         userAuthorityRepository.grantAuthorization(resource.getUuid(), resource.getAuthorities());
-
-        if (resource.getUserDepartments() == null || resource.getUserDepartments().size() == 0) {
-            throw new LcValidationErrorException("UserDepartment can not be null or empty.");
-        }
-        // ユーザ部署登録
-        Optional.of(resource.getUserDepartments()).ifPresentOrElse(
-            (userDepartmentResources) -> {
-                var userDepartmentEntities = new ArrayList<UserDepartmentEntity>();
-                userDepartmentResources.forEach((item) -> {
-                    if (Objects.equals(item.getDepartmentType(), Department.WAREHOUSE.getValue())) {
-                        // 指定する倉庫コードが存在するかチェック
-                        var warehouses = warehouseService.getResourceList(
-                            WarehouseRepository.Condition.builder().warehouseCodes(Set.of(item.getDepartmentCode()))
-                                .build(),
-                            LcPagination.DEFAULT,
-                            WarehouseRepository.Sort.DEFAULT);
-                        if (warehouses == null || warehouses.isEmpty()) {
-                            throw new LcResourceNotFoundException(WarehouseResource.class, item.getDepartmentCode());
-                        }
-                    } else if (Objects.equals(item.getDepartmentType(), Department.STORE.getValue())) {
-                        // 指定する倉庫コードが存在するかチェック
-                        var stores = storeService.getResourceList(
-                            StoreRepository.Condition.builder().storeCodes(Set.of(item.getDepartmentCode()))
-                                .build(),
-                            LcPagination.DEFAULT,
-                            StoreRepository.Sort.DEFAULT);
-                        if (stores == null || stores.isEmpty()) {
-                            throw new LcResourceNotFoundException(StoreResource.class, item.getDepartmentCode());
-                        }
-                    }
-                    userDepartmentEntities.add(item
-                        .withId(null)
-                        .withUuid(resource.getUuid())
-                        .withDepartmentCode(item.getDepartmentCode())
-                        .withDepartmentType(item.getDepartmentType())
-                        .withRoleType(item.getRoleType())
-                        .withCreatedBy(MDC.get("USERNAME"))
-                        .withCreatedAt(LocalDateTime.now())
-                        .withModifiedBy(MDC.get("USERNAME"))
-                        .withModifiedAt(LocalDateTime.now())
-                        .withIsDeleted(0)
-                        .toEntity());
-                });
-                userDepartmentRepository.create(userDepartmentEntities);
-            }, () -> {
-                throw new LcValidationErrorException("UserDepartment can not be null or empty.");
-            });
 
         // ユーザを取得します。
         return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);

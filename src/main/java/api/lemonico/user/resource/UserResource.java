@@ -6,16 +6,13 @@ package api.lemonico.user.resource;
 
 
 import api.lemonico.core.attribute.ID;
-import api.lemonico.store.resource.StoreResource;
 import api.lemonico.user.entity.UserEntity;
-import api.lemonico.warehouse.resource.WarehouseResource;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -60,27 +57,6 @@ public class UserResource
     /** タイプ（１：本番、２：デモ、９：スーパーユーザ） */
     private final Integer type;
 
-    /** 電話番号 */
-    @NotNull(message = "Phone can not be null.")
-    @Length(min = 10, max = 11, message = "Phone number is too long.")
-    private final String phone;
-
-    @NotNull(message = "Zip can not be null.")
-    /** 郵便番号 */
-    private final String zip;
-
-    /** 都道府県 */
-    private final Integer prefecture;
-
-    /** 市区町村 */
-    private final String municipality;
-
-    /** 字・町目 */
-    private final String address1;
-
-    /** 部屋 */
-    private final String address2;
-
     /** 作成者 */
     private final String createdBy;
 
@@ -95,15 +71,6 @@ public class UserResource
 
     /** 削除フラグ（0: 未削除 1: 削除済） */
     private final Integer isDeleted;
-
-    /** ユーザー所属リスト */
-    private final List<UserDepartmentResource> userDepartments;
-
-    /** ユーザー所属のストアリスト */
-    private final List<StoreResource> stores;
-
-    /** ユーザー所属の倉庫リスト */
-    private final List<WarehouseResource> warehouses;
 
     /** ユーザーの権限リスト */
     private final List<String> authorities;
@@ -122,20 +89,11 @@ public class UserResource
         this.password = entity.getPassword();
         this.status = entity.getStatus();
         this.type = entity.getType();
-        this.phone = entity.getPhone();
-        this.zip = entity.getZip();
-        this.prefecture = entity.getPrefecture();
-        this.municipality = entity.getMunicipality();
-        this.address1 = entity.getAddress1();
-        this.address2 = entity.getAddress2();
         this.createdBy = entity.getCreatedBy();
         this.createdAt = entity.getCreatedAt();
         this.modifiedBy = entity.getModifiedBy();
         this.modifiedAt = entity.getModifiedAt();
         this.isDeleted = entity.getIsDeleted();
-        this.userDepartments = null;
-        this.stores = null;
-        this.warehouses = null;
         this.authorities = null;
     }
 
@@ -154,12 +112,6 @@ public class UserResource
             .password(password)
             .status(status)
             .type(type)
-            .phone(phone)
-            .zip(zip)
-            .prefecture(prefecture)
-            .municipality(municipality)
-            .address1(address1)
-            .address2(address2)
             .createdBy(createdBy)
             .createdAt(createdAt)
             .modifiedBy(modifiedBy)
