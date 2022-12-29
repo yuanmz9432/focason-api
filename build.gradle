@@ -10,7 +10,6 @@ buildscript {
 //        dbPassword = 'password'
     }
     dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.5.5"
         classpath "gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:6.0.6"
         classpath "com.diffplug.spotless:spotless-plugin-gradle:5.16.0"
     }
@@ -21,13 +20,14 @@ plugins {
     id 'eclipse'
     id 'idea'
     id "org.flywaydb.flyway" version "5.0.7"
+    id 'org.springframework.boot' version '2.7.6'
 }
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: "com.diffplug.spotless"
+apply plugin: 'io.spring.dependency-management'
 
 group 'lemoico.com'
 version '1.0-SNAPSHOT'
@@ -40,7 +40,11 @@ java {
 compileJava.options.encoding = "UTF-8"
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
 }
 
 configurations {
@@ -52,16 +56,23 @@ dependencies {
     annotationProcessor 'org.seasar.doma:doma-processor:2.53.0'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.7.3'
 
-    compileOnly 'org.projectlombok:lombok:1.18.24'
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.springframework:spring-mock:2.0.8'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.7.3'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.3'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:2.7.3'
-    implementation 'org.springframework.boot:spring-boot-starter-aop:2.7.3'
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.7.3'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.3'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.7.3'
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.24'
 
     // json web token
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
@@ -117,7 +128,7 @@ compileJava {
     options.encoding = 'UTF-8'
 }
 
-task genController {
+tasks.register('genController') {
     group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
@@ -137,7 +148,7 @@ task genController {
     }
 }
 
-task genService {
+tasks.register('genService') {
     group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
@@ -157,7 +168,7 @@ task genService {
     }
 }
 
-task genRepository {
+tasks.register('genRepository') {
     group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
@@ -177,7 +188,7 @@ task genRepository {
     }
 }
 
-task genResource {
+tasks.register('genResource') {
     group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
@@ -197,7 +208,7 @@ task genResource {
     }
 }
 
-task genEntity {
+tasks.register('genEntity') {
     group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
@@ -221,7 +232,7 @@ task genEntity {
     }
 }
 
-task genDao {
+tasks.register('genDao') {
     group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
@@ -247,7 +258,7 @@ task genDao {
     }
 }
 
-task genTestCases {
+tasks.register('genTestCases') {
     group = 'doma-gen'
     doLast {
         ant.taskdef(resource: 'domagentask.properties',
@@ -283,9 +294,11 @@ spotless {
 }
 
 //デプロイ用JARファイル作成してから、releaseフォルダにコピーする
-task copyJarToRelease(type: Copy, dependsOn: bootJar) {
-    group = 'build'
-    from 'build/libs'
-    into 'release'
-    include 'lemonico-api-1.0-SNAPSHOT.jar'
+tasks.register('copyJarToRelease') {
+    doLast {
+        group = 'build'
+        from 'build/libs'
+        into 'release'
+        include 'lemonico-api-1.0-SNAPSHOT.jar'
+    }
 }
