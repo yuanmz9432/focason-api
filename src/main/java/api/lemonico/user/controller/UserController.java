@@ -4,8 +4,6 @@
 package api.lemonico.user.controller;
 
 
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
 import api.lemonico.core.annotation.LcConditionParam;
 import api.lemonico.core.annotation.LcPaginationParam;
@@ -19,7 +17,6 @@ import api.lemonico.user.entity.UserEntity;
 import api.lemonico.user.repository.UserRepository;
 import api.lemonico.user.resource.UserResource;
 import api.lemonico.user.service.UserService;
-import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * ユーザーコントローラー
@@ -86,29 +82,6 @@ public class UserController
         return service.getResource(id)
             .map(ResponseEntity::ok)
             .orElseThrow(() -> new LcResourceNotFoundException(UserResource.class, id));
-    }
-
-    /**
-     * ユーザーリソース作成API
-     *
-     * @param resource ユーザーリソース
-     * @return ユーザーリソース作成APIレスポンス
-     */
-    @Validated({
-        Default.class
-    })
-    @PostMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<Void> createUser(
-        @Valid @RequestBody UserResource resource,
-        UriComponentsBuilder uriBuilder) {
-        var id = service.createResource(
-            resource.withUuid(UUID.randomUUID().toString())).getId();
-        var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).getUser(id))
-            .build()
-            .encode()
-            .toUri();
-        return ResponseEntity.created(uri).build();
     }
 
     /**
