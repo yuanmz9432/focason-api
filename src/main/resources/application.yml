@@ -11,7 +11,8 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jackson:
     time-zone: Asia/Tokyo
-
+  freemarker:
+    check-template-location: false
 # Doma
 doma:
   dialect: mysql

@@ -55,7 +55,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
             // OPTIONS请求全部放行
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 登录接口放行
-            .antMatchers("/heartbeat", "/auth/**").permitAll()
+            .antMatchers("/heartbeat", "/auth/**", "/actuator/**").permitAll()
             // 権限設定
             .antMatchers("/users/**").hasAnyAuthority("AUTH_USER")
             // .antMatchers("/stores/**").hasAnyAuthority("AUTH_GOLDEN", "AUTH_PREMIUM")
