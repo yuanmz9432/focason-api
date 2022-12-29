@@ -14,32 +14,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
+public class WebSecurityConfigurer
 {
-    /**
-     * 401
-     */
     private EntryPointUnauthorizedHandler unauthorizedHandler;
-
-    /**
-     * 403
-     */
     private DefaultAccessDeniedHandler accessDeniedHandler;
+    private AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public AuthenticationManager authenticationManager() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
@@ -49,13 +43,25 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
         return authenticationTokenFilter;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+    private static final String[] AUTH_WHITELIST = {
+        "/swagger-resources/**",
+        "/swagger-ui.html",
+        "/swagger-ui/**",
+        "/v2/api-docs",
+        "/v3/api-docs",
+        "/webjars/**",
+        "/heartbeat",
+        "/auth/**",
+        "/actuator/**"
+    };
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeRequests()
             // OPTIONS请求全部放行
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             // 登录接口放行
-            .antMatchers("/heartbeat", "/auth/**", "/actuator/**", "/swagger-ui/**").permitAll()
+            .antMatchers(AUTH_WHITELIST).permitAll()
             // 権限設定
             .antMatchers("/users/**").hasAnyAuthority("AUTH_USER")
             // 其他接口全部接受验证
@@ -70,5 +76,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter
             .sessionManagement() // 定制我们自己的 session 策略
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)// 调整为让 Spring Security 不创建和使用 session
             .and().addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
     }
 }

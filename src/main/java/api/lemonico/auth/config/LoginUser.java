@@ -7,6 +7,7 @@ package api.lemonico.auth.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,9 @@ public class LoginUser implements UserDetails
     private static final long serialVersionUID = 3993597711944310497L;
     private long id;
     private String uuid;
+    @NotNull(message = "username can not be null.")
     private String username;
+    @NotNull(message = "password can not be null.")
     private String password;
     private String email;
     private Collection<? extends GrantedAuthority> authorities;

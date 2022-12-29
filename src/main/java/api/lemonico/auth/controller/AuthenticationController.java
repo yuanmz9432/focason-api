@@ -66,7 +66,7 @@ public class AuthenticationController extends AbstractController
      */
     @PostMapping(LOGIN_URI)
     @CrossOrigin
-    public ResponseEntity<JWTResource> login(@RequestBody LoginUser loginUser) {
+    public ResponseEntity<JWTResource> login(@Valid @RequestBody LoginUser loginUser) {
         var userDetails = userDetailsService.loadUserByUsername(loginUser.getUsername());
         if (userDetails == null) {
             throw new LcEntityNotFoundException(UserEntity.class, loginUser.getUsername());
