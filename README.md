@@ -1,4 +1,4 @@
-# lemonico-api
+# Blaze Ash
 
 This is a practice project about automatic code generation. 
 
@@ -35,7 +35,7 @@ Coming soon...
 #### 2. Docker
 * build docker image
     ```
-    docker build -t lemonico-api:latest .
+    docker build -t blazeash-api:latest .
     ```
 
 #### 3. JAVA
@@ -53,7 +53,7 @@ Coming soon...
 
 ## Licence
 
-Copyright © 2021 Lemonico inc. All Rights Reserved.
+Copyright © 2021 Blazeash inc. All Rights Reserved.
 
 ## Author
 

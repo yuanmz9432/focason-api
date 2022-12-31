@@ -11,7 +11,7 @@ package ${packageName};
 
 
 
-import api.lemonico.core.attribute.ID;
+import attribute.core.com.blazeash.api.ID;
 import api.lemonico.entity.${entityDesc.simpleName}Entity;
 import api.lemonico.repository.${entityDesc.simpleName}Repository;
 import java.util.List;

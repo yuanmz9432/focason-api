@@ -1,0 +1,81 @@
+/*
+ * Copyright 2021 Blazeash Co.,Ltd. AllRights Reserved.
+ */
+package com.blazeash.api.core.handler;
+
+
+
+import com.blazeash.api.core.entity.BaEntityListenerManager;
+import com.blazeash.api.core.entity.LcEntity;
+import org.seasar.doma.jdbc.entity.EntityListener;
+import org.seasar.doma.jdbc.entity.PostDeleteContext;
+import org.seasar.doma.jdbc.entity.PostInsertContext;
+import org.seasar.doma.jdbc.entity.PostUpdateContext;
+import org.seasar.doma.jdbc.entity.PreDeleteContext;
+import org.seasar.doma.jdbc.entity.PreInsertContext;
+import org.seasar.doma.jdbc.entity.PreUpdateContext;
+
+public class BaEntityListenerHandler<E extends LcEntity> implements EntityListener<E>
+{
+    public BaEntityListenerHandler() {}
+
+    @Override
+    public void preInsert(E entity, PreInsertContext<E> context) {
+        BaEntityListenerManager.forEachListener((listener) -> {
+            try {
+                listener.preInsert(entity, context);
+            } catch (ClassCastException ignored) {
+            }
+        });
+    }
+
+    public void preUpdate(E entity, PreUpdateContext<E> context) {
+        BaEntityListenerManager.forEachListener((listener) -> {
+            try {
+                listener.preUpdate(entity, context);
+            } catch (ClassCastException ignored) {
+            }
+
+        });
+    }
+
+    public void preDelete(E entity, PreDeleteContext<E> context) {
+        BaEntityListenerManager.forEachListener((listener) -> {
+            try {
+                listener.preDelete(entity, context);
+            } catch (ClassCastException ignored) {
+            }
+
+        });
+    }
+
+    public void postInsert(E entity, PostInsertContext<E> context) {
+        BaEntityListenerManager.forEachListener((listener) -> {
+            try {
+                listener.postInsert(entity, context);
+            } catch (ClassCastException ignored) {
+            }
+
+        });
+    }
+
+    public void postUpdate(E entity, PostUpdateContext<E> context) {
+        BaEntityListenerManager.forEachListener((listener) -> {
+            try {
+                listener.postUpdate(entity, context);
+            } catch (ClassCastException ignored) {
+            }
+
+        });
+    }
+
+    public void postDelete(E entity, PostDeleteContext<E> context) {
+        BaEntityListenerManager.forEachListener((listener) -> {
+            try {
+                listener.postDelete(entity, context);
+            } catch (ClassCastException ignored) {
+            }
+
+        });
+    }
+}

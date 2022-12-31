@@ -11,11 +11,11 @@ package ${packageName};
 
 import static java.util.stream.Collectors.toList;
 
-import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcPagination;
-import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.attribute.LcSort;
-import api.lemonico.core.exception.LcEntityNotFoundException;
+import attribute.core.com.blazeash.api.ID;
+import attribute.core.com.blazeash.api.LcPagination;
+import attribute.core.com.blazeash.api.LcResultSet;
+import attribute.core.com.blazeash.api.LcSort;
+import exception.core.com.blazeash.api.LcEntityNotFoundException;
 import api.lemonico.dao.${simpleName}Dao;
 import api.lemonico.entity.${simpleName}Entity;
 import java.util.Arrays;

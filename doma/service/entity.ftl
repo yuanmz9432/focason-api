@@ -11,11 +11,11 @@ package ${packageName};
 
 import static java.util.stream.Collectors.toList;
 
-import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcPagination;
-import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.exception.LcResourceNotFoundException;
-import api.lemonico.core.exception.LcUnexpectedPhantomReadException;
+import attribute.core.com.blazeash.api.ID;
+import attribute.core.com.blazeash.api.LcPagination;
+import attribute.core.com.blazeash.api.LcResultSet;
+import exception.core.com.blazeash.api.LcResourceNotFoundException;
+import exception.core.com.blazeash.api.LcUnexpectedPhantomReadException;
 import api.lemonico.entity.${simpleName}Entity;
 import api.lemonico.repository.${simpleName}Repository;
 import api.lemonico.resource.${simpleName}Resource;

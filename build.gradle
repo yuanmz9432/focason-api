@@ -29,7 +29,7 @@ apply plugin: 'org.flywaydb.flyway'
 apply plugin: "com.diffplug.spotless"
 apply plugin: 'io.spring.dependency-management'
 
-group 'lemoico.com'
+group 'blazeash.com'
 version '1.0-SNAPSHOT'
 
 java {
@@ -141,7 +141,7 @@ tasks.register('genController') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico.controller",
+                            packageName: "com.blazeash.api.controller",
                             entitySuffix: "Controller",
                             destDir: 'src/generated/main/java')
                 }
@@ -161,7 +161,7 @@ tasks.register('genService') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico.service",
+                            packageName: "com.blazeash.api.service",
                             entitySuffix: "Service",
                             destDir: 'src/generated/main/java')
                 }
@@ -181,7 +181,7 @@ tasks.register('genRepository') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico.repository",
+                            packageName: "com.blazeash.api.repository",
                             entitySuffix: "Repository",
                             destDir: 'src/generated/main/java')
                 }
@@ -201,7 +201,7 @@ tasks.register('genResource') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "api.lemonico.resource",
+                            packageName: "com.blazeash.api.resource",
                             entitySuffix: "Resource",
                             destDir: 'src/generated/main/java')
                 }
@@ -223,8 +223,8 @@ tasks.register('genEntity') {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-//                            superclassName: 'api.lemonico.core.entity.LcEntity',
-                            packageName: "api.lemonico.entity",
+//                            superclassName: 'com.blazeash.api.core.entity.LcEntity',
+                            packageName: "com.blazeash.api.entity",
                             entitySuffix: "Entity",
                             destDir: 'src/generated/main/java'
                     )
@@ -246,7 +246,7 @@ tasks.register('genDao') {
                 {
                     daoConfig(
                             overwrite: true,
-                            packageName: "api.lemonico.dao",
+                            packageName: "com.blazeash.api.dao",
                             suffix: "Dao",
                             destDir: 'src/generated/main/java')
                     sqlConfig(
@@ -299,6 +299,6 @@ tasks.register('copyJarToRelease') {
         group = 'build'
         from 'build/libs'
         into 'release'
-        include 'lemonico-api-1.0-SNAPSHOT.jar'
+        include 'blazeash-api-1.0-SNAPSHOT.jar'
     }
 }

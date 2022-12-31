@@ -11,10 +11,10 @@ package ${packageName};
 
 
 
-import api.lemonico.core.attribute.ID;
+import attribute.core.com.blazeash.api.ID;
 import java.time.LocalDateTime;
 
-import api.lemonico.core.entity.LcEntity;
+import entity.core.com.blazeash.api.LcEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;

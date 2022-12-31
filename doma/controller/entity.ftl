@@ -13,14 +13,14 @@ package ${packageName};
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
-import api.lemonico.core.annotation.LcConditionParam;
-import api.lemonico.core.annotation.LcPaginationParam;
-import api.lemonico.core.annotation.LcSortParam;
-import api.lemonico.core.attribute.ID;
-import api.lemonico.core.attribute.LcPagination;
-import api.lemonico.core.attribute.LcResultSet;
-import api.lemonico.core.attribute.LcSort;
-import api.lemonico.core.exception.LcResourceNotFoundException;
+import annotation.core.com.blazeash.api.LcConditionParam;
+import annotation.core.com.blazeash.api.LcPaginationParam;
+import annotation.core.com.blazeash.api.LcSortParam;
+import attribute.core.com.blazeash.api.ID;
+import attribute.core.com.blazeash.api.LcPagination;
+import attribute.core.com.blazeash.api.LcResultSet;
+import attribute.core.com.blazeash.api.LcSort;
+import exception.core.com.blazeash.api.LcResourceNotFoundException;
 import api.lemonico.entity.${simpleName}Entity;
 import api.lemonico.repository.${simpleName}Repository;
 import api.lemonico.resource.${simpleName}Resource;
@@ -66,18 +66,18 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
-     * @param lcSort ソートパラメータ
+     * @param baSort ソートパラメータ
      * @return ${comment}リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
     public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
         @LcConditionParam ${simpleName}Repository.Condition condition,
         @LcPaginationParam LcPagination pagination,
-        @LcSortParam(allowedValues = {}) LcSort lcSort) {
+        @LcSortParam(allowedValues = {}) LcSort baSort) {
         if (condition == null) {
             condition = ${simpleName}Repository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(lcSort);
+        var sort = ${simpleName}Repository.Sort.fromLcSort(baSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 

@@ -1,17 +1,17 @@
 # =====================================================
-# Copyright 2021 Lemonico Co.,Ltd. AllRights Reserved.
+# Copyright 2021 Blazeash Co.,Ltd. AllRights Reserved.
 # =====================================================
 version: "3.8"
 
 services:
 
   api-server:
-    image: lemonico-api:latest
-    container_name: lemonico-api_container
+    image: blazeash-api:latest
+    container_name: blazeash-api_container
     environment:
       DB_HOST: mysql-server
       DB_PORT: 3306
-      DB_NAME: lemonico
+      DB_NAME: blazeash
       DB_USERNAME: root
       DB_PASSWORD: password
     ports:
@@ -22,13 +22,13 @@ services:
 
   mysql-server:
     image: mysql:5.7
-    container_name: lemonico-db_container
+    container_name: blazeash-db_container
     environment:
-      MYSQL_DATABASE: lemonico
+      MYSQL_DATABASE: blazeash
       MYSQL_USER: root
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_SCHEMA: lemonico
+      MYSQL_SCHEMA: blazeash
       TZ: 'Asia/Tokyo'
     ports:
       - "33061:33061"
