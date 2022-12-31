@@ -292,13 +292,3 @@ spotless {
         removeUnusedImports()
     }
 }
-
-//デプロイ用JARファイル作成してから、releaseフォルダにコピーする
-task copyJarToRelease {
-    doLast {
-        group = 'build'
-        from 'build/libs'
-        into 'release'
-        include 'blazeash-api-1.0-SNAPSHOT.jar'
-    }
-}

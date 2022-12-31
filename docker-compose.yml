@@ -9,33 +9,34 @@ services:
     image: blazeash-api:latest
     container_name: blazeash-api_container
     environment:
-      DB_HOST: mysql-server
+      APP_PORT: 80
+      DB_HOST: mysql.blazeash.com
       DB_PORT: 3306
       DB_NAME: blazeash
       DB_USERNAME: root
       DB_PASSWORD: password
     ports:
-      - "8080:8080"
-    depends_on:
-      - mysql-server
+      - "8080:80"
+#    depends_on:
+#      - mysql-server
     restart: on-failure
-
-  mysql-server:
-    image: mysql:5.7
-    container_name: blazeash-db_container
-    environment:
-      MYSQL_DATABASE: blazeash
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_SCHEMA: blazeash
-      TZ: 'Asia/Tokyo'
-    ports:
-      - "33061:33061"
-    healthcheck:
-      test: [ 'CMD', 'mysqladmin', 'ping', '-h', 'localhost' ]
-      start_period: 10s
-      interval: 1s
-      timeout: 1s
-      retries: 10
-    restart: on-failure
+#
+#  mysql-server:
+#    image: mysql:5.7
+#    container_name: blazeash-db_container
+#    environment:
+#      MYSQL_DATABASE: blazeash
+#      MYSQL_USER: root
+#      MYSQL_PASSWORD: password
+#      MYSQL_ROOT_PASSWORD: password
+#      MYSQL_SCHEMA: blazeash
+#      TZ: 'Asia/Tokyo'
+#    ports:
+#      - "33061:33061"
+#    healthcheck:
+#      test: [ 'CMD', 'mysqladmin', 'ping', '-h', 'localhost' ]
+#      start_period: 10s
+#      interval: 1s
+#      timeout: 1s
+#      retries: 10
+#    restart: on-failure
