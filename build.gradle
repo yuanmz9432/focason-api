@@ -1,7 +1,7 @@
 buildscript {
     ext {
         /************* 開発環境 *************/
-        dbUrl = 'jdbc:mysql://localhost:3306/lemonico?useSSL=false&useInformationSchema=true&characterEncoding=utf-8'
+        dbUrl = 'jdbc:mysql://localhost:3306/blazeash?useSSL=false&useInformationSchema=true&characterEncoding=utf-8'
         dbUser = 'root'
         dbPassword = 'password'
         /************* 本番環境 *************/
