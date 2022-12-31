@@ -294,7 +294,7 @@ spotless {
 }
 
 //デプロイ用JARファイル作成してから、releaseフォルダにコピーする
-tasks.register('copyJarToRelease') {
+task copyJarToRelease {
     doLast {
         group = 'build'
         from 'build/libs'
