@@ -30,5 +30,4 @@ db/
 /nbdist/
 /.nb-gradle/
 src/generated/
-src/test/
 css/
