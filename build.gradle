@@ -93,6 +93,7 @@ dependencies {
 
     domaGenRuntime 'mysql:mysql-connector-java:5.1.49'
     domaGenRuntime 'org.seasar.doma:doma-gen:2.28.0'
+    runtimeOnly 'mysql:mysql-connector-java:5.1.49'
 
 
     // AWS JAVA SDK For Amazon S3

@@ -13,12 +13,6 @@ spring:
     time-zone: Asia/Tokyo
   freemarker:
     check-template-location: false
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibenate:
-      ddl-auto: update
 
 # Doma
 doma:
