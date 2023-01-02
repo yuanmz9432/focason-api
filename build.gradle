@@ -110,9 +110,9 @@ dependencies {
 
 }
 
-//test {
-//    useJUnitPlatform()
-//}
+test {
+    useJUnitPlatform()
+}
 
 sourceSets {
     main {

@@ -13,6 +13,10 @@ spring:
     time-zone: Asia/Tokyo
   freemarker:
     check-template-location: false
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: LAZY
 
 # Doma
 doma:
