@@ -10,11 +10,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.http.MediaType;
 
-@EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY)
+// @EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY)
 class AuthenticationControllerTest extends ApplicationTest
 {
 
