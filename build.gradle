@@ -103,10 +103,11 @@ dependencies {
     implementation 'software.amazon.awssdk:rekognition:2.17.271'
 
     // Junit Test
-    implementation 'junit:junit:4.13.2'
     testImplementation 'org.springframework:spring-test:5.3.18'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
 }
 

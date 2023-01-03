@@ -65,7 +65,6 @@ public class AuthenticationController extends AbstractController
      * @return JWTトークン
      */
     @PostMapping(LOGIN_URI)
-    @CrossOrigin
     public ResponseEntity<JWTResource> login(@Valid @RequestBody LoginUser loginUser) {
         var userDetails = userDetailsService.loadUserByUsername(loginUser.getUsername());
         if (userDetails == null) {
