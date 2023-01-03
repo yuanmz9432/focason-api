@@ -5,7 +5,7 @@ spring:
       max-file-size: -1
       max-request-size: -1
   datasource:
-    url: jdbc:mysql://${DB_HOST:mysql.blazeash.com}:${DB_PORT:3306}/${DB_SCHEMA:blazeash}?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_SCHEMA:blazeash}?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
     driver-class-name: com.mysql.jdbc.Driver
