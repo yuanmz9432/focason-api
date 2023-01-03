@@ -9,6 +9,13 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  DB_HOST: mysql.blazeash.com
+  DB_PORT: 3306
+  DB_NAME: blazeash
+  DB_USERNAME: root
+  DB_PASSWORD: password
+
 jobs:
   build:
 
