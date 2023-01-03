@@ -5,6 +5,7 @@ package com.blazeash.api;
 
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,15 @@ public class ApplicationTest
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    public MockMvc mockMvc;
+    protected MockMvc mockMvc;
+
+    protected ObjectMapper objectMapper;
+
+
 
     @BeforeEach
     public void setup() {
+        objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
