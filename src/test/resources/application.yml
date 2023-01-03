@@ -17,6 +17,9 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: LAZY
+    jdbc:
+      repositories:
+        enabled: false
 
 # Doma
 doma:
