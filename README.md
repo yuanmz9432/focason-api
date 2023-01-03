@@ -1,4 +1,4 @@
-# Blaze Ash
+# Blaze Ash API
 
 This is a practice project about automatic code generation. 
 
@@ -17,6 +17,7 @@ Coming soon...
 - [AWS CLI 2](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/install-cliv2.html)
 - Docker 19.03.0+ ([Mac](https://docs.docker.com/docker-for-mac/) or [Windows](https://docs.docker.com/docker-for-windows/))
 - [Docker Compose](https://docs.docker.com/compose/install/)
+- [Junit5](https://junit.org/junit5/docs/current/user-guide/)
 
 ## Usage
 
