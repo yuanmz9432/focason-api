@@ -17,7 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 
 @SpringBootTest(classes = ApplicationServer.class)
-@EnableJpaRepositories(bootstrapMode = BootstrapMode.DEFAULT)
+@EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY)
 public class ApplicationTest
 {
     @Test
