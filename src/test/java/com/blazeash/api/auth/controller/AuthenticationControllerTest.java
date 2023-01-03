@@ -4,18 +4,38 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.blazeash.api.ApplicationTest;
+import com.blazeash.api.ApplicationServer;
 import com.blazeash.api.auth.config.LoginUser;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
-class AuthenticationControllerTest extends ApplicationTest
+@SpringBootTest(classes = ApplicationServer.class)
+@ExtendWith(SpringExtension.class)
+@AutoConfigureMockMvc
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+class AuthenticationControllerTest
 {
-    @BeforeEach
-    void setUp() {}
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationControllerTest.class);
+
+    private final MockMvc mockMvc;
+
+    private static ObjectMapper objectMapper;
+
+    @BeforeAll
+    static void setUpBeforeAll() {
+        logger.info("* AuthenticationControllerTest setUpBeforeAll()...");
+        objectMapper = new ObjectMapper();
+    }
 
     @AfterEach
     void tearDown() {}
