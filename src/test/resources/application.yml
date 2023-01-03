@@ -13,13 +13,17 @@ spring:
     time-zone: Asia/Tokyo
   freemarker:
     check-template-location: false
-  data:
-    jpa:
-      repositories:
-        bootstrap-mode: LAZY
-    jdbc:
-      repositories:
-        enabled: false
+  jpa:
+    database: mysql
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+#  data:
+#    jpa:
+#      repositories:
+#        bootstrap-mode: LAZY
+
 
 # Doma
 doma:
