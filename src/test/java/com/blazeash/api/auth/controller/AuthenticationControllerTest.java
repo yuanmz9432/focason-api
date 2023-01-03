@@ -1,3 +1,6 @@
+/*
+ * Copyright 2021 Blazeash Co.,Ltd. AllRights Reserved.
+ */
 package com.blazeash.api.auth.controller;
 
 import static org.junit.jupiter.api.Assertions.*;

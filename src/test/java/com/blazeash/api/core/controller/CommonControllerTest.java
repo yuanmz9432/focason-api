@@ -1,3 +1,6 @@
+/*
+ * Copyright 2021 Blazeash Co.,Ltd. AllRights Reserved.
+ */
 package com.blazeash.api.core.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,7 +30,7 @@ public class CommonControllerTest
 
     @BeforeAll
     static void setUpBeforeAll() {
-        logger.info("* CommonControllerTest setUpBeforeAll()...");
+
     }
 
     @AfterEach
@@ -36,6 +39,7 @@ public class CommonControllerTest
     @Test
     @DisplayName("ヘルスチェックテスト")
     public void testHeartbeat() throws Exception {
+        logger.info("* CommonControllerTest setUpBeforeAll()...");
         mockMvc.perform(get("/heartbeat")).andExpect(status().isNoContent());
     }
 }

@@ -22,9 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,9 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 1.0.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({
-    @Autowired, @Lazy
-}))
 public class UserService
 {
     /**
@@ -55,6 +50,14 @@ public class UserService
      * 権限サービス
      */
     private final UserAuthorityService userAuthorityService;
+
+    @Autowired
+    public UserService(UserRepository userRepository, UserAuthorityRepository userAuthorityRepository,
+        UserAuthorityService userAuthorityService) {
+        this.userRepository = userRepository;
+        this.userAuthorityRepository = userAuthorityRepository;
+        this.userAuthorityService = userAuthorityService;
+    }
 
     /**
      * 検索条件・ページングパラメータ・ソート条件を指定して、ユーザリソースの一覧を取得します。
