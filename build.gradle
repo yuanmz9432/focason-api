@@ -8,8 +8,8 @@ buildscript {
         dbUser = 'root'
         dbPassword = 'password'
         /************* 本番環境 *************/
-//        dbUrl = 'jdbc:mysql://lemonico.crwkn7mkbqkv.ap-northeast-1.rds.amazonaws.com:3306/lemonico?useSSL=false&useInformationSchema=true'
-//        dbUser = 'admin'
+//        dbUrl = 'jdbc:mysql://mysql.blazeash.com:3306/blazeash?useSSL=false&useInformationSchema=true'
+//        dbUser = 'root'
 //        dbPassword = 'password'
     }
     dependencies {

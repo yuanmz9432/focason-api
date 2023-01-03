@@ -19,7 +19,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(classes = ApplicationServer.class)
 @ExtendWith(SpringExtension.class)
-// @EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY)
 public class ApplicationTest
 {
     @Test
@@ -31,8 +30,6 @@ public class ApplicationTest
     protected MockMvc mockMvc;
 
     protected ObjectMapper objectMapper;
-
-
 
     @BeforeEach
     public void setup() {

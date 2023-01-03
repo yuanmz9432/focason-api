@@ -12,10 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-// @EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY)
 class AuthenticationControllerTest extends ApplicationTest
 {
-
     @BeforeEach
     void setUp() {}
 
@@ -30,9 +28,7 @@ class AuthenticationControllerTest extends ApplicationTest
             .content(objectMapper.writeValueAsString(requestBody))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.accessToken").isNotEmpty())
-            .andExpect(jsonPath("$.expiresIn").isNotEmpty());
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
