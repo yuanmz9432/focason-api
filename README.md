@@ -1,4 +1,4 @@
-# Blaze Ash API
+# Focason API
 
 This is a practice project about automatic code generation. 
 

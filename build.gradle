@@ -1,6 +1,6 @@
-/*
- * Copyright 2023 Focason Co.,Ltd. AllRights Reserved.
- */
+// =====================================================
+// Copyright 2023 Focason Co.,Ltd. AllRights Reserved.
+// =====================================================
 buildscript {
     ext {
         /************* 開発環境 *************/
