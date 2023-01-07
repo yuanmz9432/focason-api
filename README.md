@@ -54,7 +54,7 @@ Coming soon...
 
 ## Licence
 
-Copyright © 2021 Blazeash inc. All Rights Reserved.
+Copyright © 2023 Focason inc. All Rights Reserved.
 
 ## Author
 

@@ -1,5 +1,5 @@
 # =====================================================
-# Copyright 2021 Blazeash Co.,Ltd. AllRights Reserved.
+# Copyright 2023 Focason Co.,Ltd. AllRights Reserved.
 # =====================================================
 FROM amazoncorretto:11-alpine
 MAINTAINER Yuan

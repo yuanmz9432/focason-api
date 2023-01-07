@@ -1,14 +1,14 @@
 /*
- * Copyright 2021 Blazeash Co.,Ltd. AllRights Reserved.
+ * Copyright 2023 Focason Co.,Ltd. AllRights Reserved.
  */
 buildscript {
     ext {
         /************* 開発環境 *************/
-        dbUrl = 'jdbc:mysql://localhost:3306/blazeash?useSSL=false&useInformationSchema=true&characterEncoding=utf-8'
+        dbUrl = 'jdbc:mysql://localhost:3306/focason?useSSL=false&useInformationSchema=true&characterEncoding=utf-8'
         dbUser = 'root'
         dbPassword = 'password'
         /************* 本番環境 *************/
-//        dbUrl = 'jdbc:mysql://mysql.blazeash.com:3306/blazeash?useSSL=false&useInformationSchema=true'
+//        dbUrl = 'jdbc:mysql://mysql.focason.com:3306/focason?useSSL=false&useInformationSchema=true'
 //        dbUser = 'root'
 //        dbPassword = 'password'
     }
@@ -32,7 +32,7 @@ apply plugin: 'org.flywaydb.flyway'
 apply plugin: "com.diffplug.spotless"
 apply plugin: 'io.spring.dependency-management'
 
-group 'blazeash.com'
+group 'focason.com'
 version '1.0-SNAPSHOT'
 
 java {
@@ -158,7 +158,7 @@ tasks.register('genController') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "com.blazeash.api.controller",
+                            packageName: "com.focason.api.controller",
                             entitySuffix: "Controller",
                             destDir: 'src/generated/main/java')
                 }
@@ -178,7 +178,7 @@ tasks.register('genService') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "com.blazeash.api.service",
+                            packageName: "com.focason.api.service",
                             entitySuffix: "Service",
                             destDir: 'src/generated/main/java')
                 }
@@ -198,7 +198,7 @@ tasks.register('genRepository') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "com.blazeash.api.repository",
+                            packageName: "com.focason.api.repository",
                             entitySuffix: "Repository",
                             destDir: 'src/generated/main/java')
                 }
@@ -218,7 +218,7 @@ tasks.register('genResource') {
                 {
                     entityConfig(
                             overwrite: true, useListener: false,
-                            packageName: "com.blazeash.api.resource",
+                            packageName: "com.focason.api.resource",
                             entitySuffix: "Resource",
                             destDir: 'src/generated/main/java')
                 }
@@ -240,8 +240,8 @@ tasks.register('genEntity') {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-//                            superclassName: 'com.blazeash.api.core.entity.LcEntity',
-                            packageName: "com.blazeash.api.entity",
+//                            superclassName: 'com.focason.api.core.entity.LcEntity',
+                            packageName: "com.focason.api.entity",
                             entitySuffix: "Entity",
                             destDir: 'src/generated/main/java'
                     )
@@ -263,7 +263,7 @@ tasks.register('genDao') {
                 {
                     daoConfig(
                             overwrite: true,
-                            packageName: "com.blazeash.api.dao",
+                            packageName: "com.focason.api.dao",
                             suffix: "Dao",
                             destDir: 'src/generated/main/java')
                     sqlConfig(
