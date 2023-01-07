@@ -5,16 +5,16 @@ package com.focason.api.core.exception;
 
 
 
-import com.focason.api.core.attribute.BaErrorCode;
+import com.focason.api.core.attribute.FsErrorCode;
 
 public class BaIllegalUserException extends BaException
 {
     private static final long serialVersionUID = 1L;
-    private static final BaErrorCode ERROR_CODE;
+    private static final FsErrorCode ERROR_CODE;
     private static final String MESSAGE_TEMPLATE = "The User('%s') was enable.";
 
     static {
-        ERROR_CODE = BaErrorCode.ILLEGAL_STATE;
+        ERROR_CODE = FsErrorCode.ILLEGAL_STATE;
     }
 
     public BaIllegalUserException(String email) {

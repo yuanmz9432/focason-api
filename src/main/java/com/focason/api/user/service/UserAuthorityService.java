@@ -5,8 +5,8 @@ package com.focason.api.user.service;
 
 import static java.util.stream.Collectors.toList;
 
-import com.focason.api.core.attribute.BaPagination;
-import com.focason.api.core.attribute.BaResultSet;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.core.exception.BaResourceNotFoundException;
 import com.focason.api.core.exception.BaUnexpectedPhantomReadException;
@@ -47,16 +47,16 @@ public class UserAuthorityService
      * @return ユーザ権限リソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
-    public BaResultSet<UserAuthorityResource> getResourceList(
+    public FsResultSet<UserAuthorityResource> getResourceList(
         UserAuthorityRepository.Condition condition,
-        BaPagination pagination,
+        FsPagination pagination,
         UserAuthorityRepository.Sort sort) {
         // ユーザ権限の一覧と全体件数を取得します。
         var resultSet = repository.findAll(condition, pagination, sort);
 
         // ユーザ権限エンティティのリストをユーザ権限リソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
-        return new BaResultSet<>(resources, resultSet.getCount());
+        return new FsResultSet<>(resources, resultSet.getCount());
     }
 
     /**

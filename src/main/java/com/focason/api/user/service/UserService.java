@@ -6,8 +6,8 @@ package com.focason.api.user.service;
 import static java.util.stream.Collectors.toList;
 
 import com.focason.api.auth.config.LoginUser;
-import com.focason.api.core.attribute.BaPagination;
-import com.focason.api.core.attribute.BaResultSet;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.core.exception.BaResourceAlreadyExistsException;
 import com.focason.api.core.exception.BaResourceNotFoundException;
@@ -69,9 +69,9 @@ public class UserService
      * @return ユーザリソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
-    public BaResultSet<UserResource> getResourceList(
+    public FsResultSet<UserResource> getResourceList(
         UserRepository.Condition condition,
-        BaPagination pagination,
+        FsPagination pagination,
         UserRepository.Sort sort) {
         // ユーザの一覧と全体件数を取得します。
         var resultSet = userRepository.findAll(condition, pagination, sort);
@@ -79,7 +79,7 @@ public class UserService
         // ユーザエンティティのリストをユーザリソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
 
-        return new BaResultSet<>(resources, resultSet.getCount());
+        return new FsResultSet<>(resources, resultSet.getCount());
     }
 
     /**
@@ -138,7 +138,7 @@ public class UserService
             UserRepository.Condition.builder()
                 .email(resource.getEmail())
                 .build(),
-            BaPagination.DEFAULT,
+            FsPagination.DEFAULT,
             UserRepository.Sort.DEFAULT);
         if (client.getCount() > 0) {
             return true;
@@ -148,7 +148,7 @@ public class UserService
             UserRepository.Condition.builder()
                 .username(resource.getUsername())
                 .build(),
-            BaPagination.DEFAULT,
+            FsPagination.DEFAULT,
             UserRepository.Sort.DEFAULT);
         return client.getCount() > 0;
     }
@@ -211,7 +211,7 @@ public class UserService
         }
         final var userResourceLcResultSet = getResourceList(
             condition,
-            BaPagination.DEFAULT,
+            FsPagination.DEFAULT,
             UserRepository.Sort.DEFAULT);
         if (userResourceLcResultSet.getCount() < 1) {
             throw new BaResourceNotFoundException(LoginUser.class, subject);
@@ -220,7 +220,7 @@ public class UserService
         // ユーザ権限取得
         var authorities = userAuthorityService.getResourceList(
             UserAuthorityRepository.Condition.builder().uuid(loginUser.getUuid()).build(),
-            BaPagination.DEFAULT,
+            FsPagination.DEFAULT,
             UserAuthorityRepository.Sort.DEFAULT).stream()
             .map((item) -> new SimpleGrantedAuthority(item.getAuthorityCode()))
             .collect(Collectors.toList());

@@ -7,12 +7,12 @@ package com.focason.api.user.controller;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
-import com.focason.api.core.annotation.BaConditionParam;
-import com.focason.api.core.annotation.BaPaginationParam;
-import com.focason.api.core.annotation.BaSortParam;
-import com.focason.api.core.attribute.BaPagination;
-import com.focason.api.core.attribute.BaResultSet;
-import com.focason.api.core.attribute.BaSort;
+import com.focason.api.core.annotation.FsConditionParam;
+import com.focason.api.core.annotation.FsPaginationParam;
+import com.focason.api.core.annotation.FsSortParam;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
+import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.core.exception.BaResourceNotFoundException;
 import com.focason.api.user.entity.AuthorityEntity;
@@ -59,18 +59,18 @@ public class AuthorityController
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
-     * @param baSort ソートパラメータ
+     * @param fsSort ソートパラメータ
      * @return 権限マスタリソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<BaResultSet<AuthorityResource>> getAuthorityList(
-        @BaConditionParam AuthorityRepository.Condition condition,
-        @BaPaginationParam BaPagination pagination,
-        @BaSortParam(allowedValues = {}) BaSort baSort) {
+    public ResponseEntity<FsResultSet<AuthorityResource>> getAuthorityList(
+        @FsConditionParam AuthorityRepository.Condition condition,
+        @FsPaginationParam FsPagination pagination,
+        @FsSortParam(allowedValues = {}) FsSort fsSort) {
         if (condition == null) {
             condition = AuthorityRepository.Condition.DEFAULT;
         }
-        var sort = AuthorityRepository.Sort.fromLcSort(baSort);
+        var sort = AuthorityRepository.Sort.fromLcSort(fsSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 

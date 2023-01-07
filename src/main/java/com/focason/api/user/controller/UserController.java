@@ -5,12 +5,12 @@ package com.focason.api.user.controller;
 
 
 
-import com.focason.api.core.annotation.BaConditionParam;
-import com.focason.api.core.annotation.BaPaginationParam;
-import com.focason.api.core.annotation.BaSortParam;
-import com.focason.api.core.attribute.BaPagination;
-import com.focason.api.core.attribute.BaResultSet;
-import com.focason.api.core.attribute.BaSort;
+import com.focason.api.core.annotation.FsConditionParam;
+import com.focason.api.core.annotation.FsPaginationParam;
+import com.focason.api.core.annotation.FsSortParam;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
+import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.core.exception.BaResourceNotFoundException;
 import com.focason.api.user.entity.UserEntity;
@@ -56,18 +56,18 @@ public class UserController
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
-     * @param baSort ソートパラメータ
+     * @param fsSort ソートパラメータ
      * @return ユーザーリソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<BaResultSet<UserResource>> getUserList(
-        @BaConditionParam UserRepository.Condition condition,
-        @BaPaginationParam BaPagination pagination,
-        @BaSortParam(allowedValues = {}) BaSort baSort) {
+    public ResponseEntity<FsResultSet<UserResource>> getUserList(
+        @FsConditionParam UserRepository.Condition condition,
+        @FsPaginationParam FsPagination pagination,
+        @FsSortParam(allowedValues = {}) FsSort fsSort) {
         if (condition == null) {
             condition = UserRepository.Condition.DEFAULT;
         }
-        var sort = UserRepository.Sort.fromLcSort(baSort);
+        var sort = UserRepository.Sort.fromLcSort(fsSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 

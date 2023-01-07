@@ -5,15 +5,15 @@ package com.focason.api.core.exception;
 
 
 
-import com.focason.api.core.attribute.BaErrorCode;
+import com.focason.api.core.attribute.FsErrorCode;
 
 public class BaValidationErrorException extends BaException
 {
     private static final long serialVersionUID = 1L;
-    private static final BaErrorCode ERROR_CODE;
+    private static final FsErrorCode ERROR_CODE;
 
     static {
-        ERROR_CODE = BaErrorCode.VALIDATION_ERROR;
+        ERROR_CODE = FsErrorCode.VALIDATION_ERROR;
     }
 
     public BaValidationErrorException(String messageTemplate, Object... args) {

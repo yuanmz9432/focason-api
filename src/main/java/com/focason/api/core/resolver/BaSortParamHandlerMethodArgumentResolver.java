@@ -5,8 +5,8 @@ package com.focason.api.core.resolver;
 
 
 
-import com.focason.api.core.annotation.BaSortParam;
-import com.focason.api.core.attribute.BaSort;
+import com.focason.api.core.annotation.FsSortParam;
+import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.exception.BaValidationErrorException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,14 +28,14 @@ public class BaSortParamHandlerMethodArgumentResolver implements HandlerMethodAr
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(BaSort.class)
-            && parameter.hasParameterAnnotation(BaSortParam.class);
+        return parameter.getParameterType().isAssignableFrom(FsSort.class)
+            && parameter.hasParameterAnnotation(FsSortParam.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        BaSortParam annotation = parameter.getParameterAnnotation(BaSortParam.class);
+        FsSortParam annotation = parameter.getParameterAnnotation(FsSortParam.class);
         if (annotation == null) {
             return null;
         } else {
@@ -56,7 +56,7 @@ public class BaSortParamHandlerMethodArgumentResolver implements HandlerMethodAr
             if (!m.find()) {
                 throw new BaValidationErrorException("Parameter '%s' must match the regexp '%s'", "sort", REGEX);
             } else {
-                return BaSort.builder().direction(BaSort.Direction.of(m.group("direction")))
+                return FsSort.builder().direction(FsSort.Direction.of(m.group("direction")))
                     .property(m.group("property")).build();
             }
         }

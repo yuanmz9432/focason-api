@@ -5,8 +5,8 @@ package com.focason.api.core.handler;
 
 
 
-import com.focason.api.core.attribute.BaErrorCode;
-import com.focason.api.core.attribute.BaErrorResource;
+import com.focason.api.core.attribute.FsErrorCode;
+import com.focason.api.core.attribute.FsErrorResource;
 import com.focason.api.core.exception.BaException;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -23,23 +23,23 @@ public class GlobalExceptionHandler
 {
     @ExceptionHandler(value = BaException.class)
     @ResponseBody
-    public ResponseEntity<BaErrorResource> lcExceptionHandler(Exception e) {
+    public ResponseEntity<FsErrorResource> lcExceptionHandler(Exception e) {
         BaException lcException = (BaException) e;
         String code = lcException.getCode().getValue();
         return ResponseEntity
             .status(Integer.parseInt(code.substring(1, 4)))
-            .body(BaErrorResource.builder()
+            .body(FsErrorResource.builder()
                 .code(code)
                 .message(e.getMessage()).build());
     }
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResponseEntity<BaErrorResource> defaultExceptionHandler(Exception e) {
+    public ResponseEntity<FsErrorResource> defaultExceptionHandler(Exception e) {
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(BaErrorResource.builder()
-                .code(BaErrorCode.INTERNAL_SERVER_ERROR.getValue())
+            .body(FsErrorResource.builder()
+                .code(FsErrorCode.INTERNAL_SERVER_ERROR.getValue())
                 .message(e.getMessage()).build());
     }
 
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler
     @ExceptionHandler({
         MethodArgumentNotValidException.class
     })
-    public ResponseEntity<BaErrorResource> paramExceptionHandler(MethodArgumentNotValidException e) {
+    public ResponseEntity<FsErrorResource> paramExceptionHandler(MethodArgumentNotValidException e) {
         BindingResult exceptions = e.getBindingResult();
         if (exceptions.hasErrors()) {
             List<ObjectError> errors = exceptions.getAllErrors();
@@ -56,8 +56,8 @@ public class GlobalExceptionHandler
                 String message = fieldError.getDefaultMessage();
                 return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(BaErrorResource.builder()
-                        .code(BaErrorCode.VALIDATION_ERROR.getValue())
+                    .body(FsErrorResource.builder()
+                        .code(FsErrorCode.VALIDATION_ERROR.getValue())
                         .message(message).build());
             }
         }

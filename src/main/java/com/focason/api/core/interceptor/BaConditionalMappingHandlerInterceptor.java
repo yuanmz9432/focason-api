@@ -5,7 +5,7 @@ package com.focason.api.core.interceptor;
 
 
 
-import com.focason.api.core.annotation.BaConditionalMappingOnProperty;
+import com.focason.api.core.annotation.FsConditionalMappingOnProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +35,13 @@ public class BaConditionalMappingHandlerInterceptor implements HandlerIntercepto
             return true;
         } else {
             HandlerMethod method = (HandlerMethod) handler;
-            BaConditionalMappingOnProperty methodAnnotation =
-                method.getMethodAnnotation(BaConditionalMappingOnProperty.class);
+            FsConditionalMappingOnProperty methodAnnotation =
+                method.getMethodAnnotation(FsConditionalMappingOnProperty.class);
             if (!this.isMappingEnabled(methodAnnotation)) {
                 throw this.getNoHandlerFoundException(request);
             } else {
-                BaConditionalMappingOnProperty classAnnotation =
-                    method.getBeanType().getAnnotation(BaConditionalMappingOnProperty.class);
+                FsConditionalMappingOnProperty classAnnotation =
+                    method.getBeanType().getAnnotation(FsConditionalMappingOnProperty.class);
                 if (!this.isMappingEnabled(classAnnotation)) {
                     throw this.getNoHandlerFoundException(request);
                 } else {
@@ -51,7 +51,7 @@ public class BaConditionalMappingHandlerInterceptor implements HandlerIntercepto
         }
     }
 
-    private boolean isMappingEnabled(BaConditionalMappingOnProperty annotation) {
+    private boolean isMappingEnabled(FsConditionalMappingOnProperty annotation) {
         if (annotation != null) {
             String propValue = this.environment.getProperty(annotation.name());
             if (!StringUtils.hasText(propValue)) {

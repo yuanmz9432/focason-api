@@ -5,8 +5,8 @@ package com.focason.api.core.resolver;
 
 
 
-import com.focason.api.core.annotation.BaPaginationParam;
-import com.focason.api.core.attribute.BaPagination;
+import com.focason.api.core.annotation.FsPaginationParam;
+import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.exception.BaValidationErrorException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,14 +19,14 @@ public class BaPaginationParamHandlerMethodArgumentResolver implements HandlerMe
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(BaPagination.class)
-            && parameter.hasParameterAnnotation(BaPaginationParam.class);
+        return parameter.getParameterType().isAssignableFrom(FsPagination.class)
+            && parameter.hasParameterAnnotation(FsPaginationParam.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        BaPaginationParam annotation = parameter.getParameterAnnotation(BaPaginationParam.class);
+        FsPaginationParam annotation = parameter.getParameterAnnotation(FsPaginationParam.class);
         if (annotation == null) {
             return null;
         } else {
@@ -50,7 +50,7 @@ public class BaPaginationParamHandlerMethodArgumentResolver implements HandlerMe
             } catch (NumberFormatException e) {
                 throw new BaValidationErrorException("Parameter '%s' must be in the correct number format", "page");
             }
-            return BaPagination.of(limit, page);
+            return FsPagination.of(limit, page);
         }
     }
 

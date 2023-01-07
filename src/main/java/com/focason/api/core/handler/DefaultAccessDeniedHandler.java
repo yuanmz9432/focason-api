@@ -5,8 +5,8 @@ package com.focason.api.core.handler;
 
 
 
-import com.focason.api.core.attribute.BaErrorCode;
-import com.focason.api.core.attribute.BaErrorResource;
+import com.focason.api.core.attribute.FsErrorCode;
+import com.focason.api.core.attribute.FsErrorResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +26,9 @@ public class DefaultAccessDeniedHandler implements AccessDeniedHandler
         AccessDeniedException accessDeniedException) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
-            BaErrorResource.builder()
-                .code(BaErrorCode.FORBIDDEN.getValue())
-                .message(BaErrorCode.FORBIDDEN.name())
+            FsErrorResource.builder()
+                .code(FsErrorCode.FORBIDDEN.getValue())
+                .message(FsErrorCode.FORBIDDEN.name())
                 .build()));
     }
 }

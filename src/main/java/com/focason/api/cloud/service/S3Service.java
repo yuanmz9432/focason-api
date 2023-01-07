@@ -2,7 +2,7 @@ package com.focason.api.cloud.service;
 
 
 
-import com.focason.api.core.attribute.BaErrorCode;
+import com.focason.api.core.attribute.FsErrorCode;
 import com.focason.api.core.exception.BaException;
 import java.net.URL;
 import java.time.Duration;
@@ -91,7 +91,7 @@ public class S3Service
             // S3バケットにキーと一致するファイルが存在しない場合
             return false;
         } catch (S3Exception e) {
-            throw new BaException(BaErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new BaException(FsErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
         return true;
     }

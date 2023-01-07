@@ -5,8 +5,8 @@ package com.focason.api.auth.config;
 
 
 
-import com.focason.api.core.attribute.BaErrorCode;
-import com.focason.api.core.attribute.BaErrorResource;
+import com.focason.api.core.attribute.FsErrorCode;
+import com.focason.api.core.attribute.FsErrorResource;
 import com.focason.api.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -78,17 +78,17 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
                 } catch (ExpiredJwtException e) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
-                        BaErrorResource.builder()
-                            .code(BaErrorCode.AUTH_TOKEN_EXPIRED.getValue())
-                            .message(BaErrorCode.AUTH_TOKEN_EXPIRED.name())
+                        FsErrorResource.builder()
+                            .code(FsErrorCode.AUTH_TOKEN_EXPIRED.getValue())
+                            .message(FsErrorCode.AUTH_TOKEN_EXPIRED.name())
                             .build()));
                     return;
                 } catch (SignatureException | MalformedJwtException e) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
-                        BaErrorResource.builder()
-                            .code(BaErrorCode.AUTH_TOKEN_INVALID.getValue())
-                            .message(BaErrorCode.AUTH_TOKEN_INVALID.name())
+                        FsErrorResource.builder()
+                            .code(FsErrorCode.AUTH_TOKEN_INVALID.getValue())
+                            .message(FsErrorCode.AUTH_TOKEN_INVALID.name())
                             .build()));
                     return;
                 }

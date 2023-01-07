@@ -5,7 +5,7 @@ package com.focason.api.core.resolver;
 
 
 
-import com.focason.api.core.annotation.BaConditionParam;
+import com.focason.api.core.annotation.FsConditionParam;
 import com.focason.api.core.exception.BaValidationErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class BaConditionParamHandlerMethodArgumentResolver implements HandlerMet
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(BaConditionParam.class);
+        return parameter.hasParameterAnnotation(FsConditionParam.class);
     }
 
     @Override

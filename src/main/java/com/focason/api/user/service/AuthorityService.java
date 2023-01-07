@@ -5,8 +5,8 @@ package com.focason.api.user.service;
 
 import static java.util.stream.Collectors.toList;
 
-import com.focason.api.core.attribute.BaPagination;
-import com.focason.api.core.attribute.BaResultSet;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.core.exception.BaResourceNotFoundException;
 import com.focason.api.core.exception.BaUnexpectedPhantomReadException;
@@ -47,16 +47,16 @@ public class AuthorityService
      * @return 権限マスタリソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
-    public BaResultSet<AuthorityResource> getResourceList(
+    public FsResultSet<AuthorityResource> getResourceList(
         AuthorityRepository.Condition condition,
-        BaPagination pagination,
+        FsPagination pagination,
         AuthorityRepository.Sort sort) {
         // 権限マスタの一覧と全体件数を取得します。
         var resultSet = repository.findAll(condition, pagination, sort);
 
         // 権限マスタエンティティのリストを権限マスタリソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
-        return new BaResultSet<>(resources, resultSet.getCount());
+        return new FsResultSet<>(resources, resultSet.getCount());
     }
 
     /**
