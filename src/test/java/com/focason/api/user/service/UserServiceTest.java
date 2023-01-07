@@ -3,13 +3,15 @@
  */
 package com.focason.api.user.service;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.data.TestData;
 import com.focason.api.user.repository.UserAuthorityRepository;
 import com.focason.api.user.repository.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +46,10 @@ public class UserServiceTest
         userAuthorityService = mock(UserAuthorityService.class);
         userService = new UserService(userRepository, userAuthorityRepository, userAuthorityService);
 
-        when(userRepository.findById(ID.of(1L))).thenReturn(Optional.of(TestData.TEST_USER_1_ENTITY));
+        lenient().when(userRepository.findById(ID.of(1L))).thenReturn(Optional.of(TestData.TEST_USER_1_ENTITY));
+        lenient().when(userRepository.findAll(
+            UserRepository.Condition.builder().username("admin").build(), FsPagination.DEFAULT,
+            UserRepository.Sort.DEFAULT)).thenReturn(new FsResultSet<>(List.of(TestData.TEST_USER_1_ENTITY), 1));
     }
 
     @AfterEach
@@ -54,10 +59,21 @@ public class UserServiceTest
     @Transactional
     @Rollback(true)
     public void When_GetUserById_Expect_ReturnTestUser() {
-        logger.info("* getResourceTest() start...");
+        logger.info("* When_GetUserById_Expect_ReturnTestUser() start...");
         var user = userService.getResource(ID.of(1L));
         user.ifPresent((item) -> {
             Assertions.assertEquals(item.getUsername(), "Yuan");
         });
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void When_SearchUserByCondition_Expect_ReturnTestUserList() {
+        logger.info("* When_SearchUserByCondition_Expect_ReturnTestUserList() start...");
+        var users = userService.getResourceList(
+            UserRepository.Condition.builder().username("admin").build(), FsPagination.DEFAULT,
+            UserRepository.Sort.DEFAULT);
+        Assertions.assertFalse(users.getData().isEmpty());
     }
 }
