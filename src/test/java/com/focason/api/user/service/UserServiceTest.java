@@ -57,18 +57,16 @@ public class UserServiceTest
 
     @Test
     @Transactional
-    @Rollback(true)
+    @Rollback()
     public void When_GetUserById_Expect_ReturnTestUser() {
         logger.info("* When_GetUserById_Expect_ReturnTestUser() start...");
         var user = userService.getResource(ID.of(1L));
-        user.ifPresent((item) -> {
-            Assertions.assertEquals(item.getUsername(), "Yuan");
-        });
+        user.ifPresent((item) -> Assertions.assertEquals(item.getUsername(), "Yuan"));
     }
 
     @Test
     @Transactional
-    @Rollback(true)
+    @Rollback()
     public void When_SearchUserByCondition_Expect_ReturnTestUserList() {
         logger.info("* When_SearchUserByCondition_Expect_ReturnTestUserList() start...");
         var users = userService.getResourceList(
