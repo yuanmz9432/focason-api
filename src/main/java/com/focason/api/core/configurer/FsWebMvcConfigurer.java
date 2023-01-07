@@ -7,7 +7,6 @@ package com.focason.api.core.configurer;
 
 import com.focason.api.core.interceptor.FsCorsInterceptor;
 import javax.annotation.Resource;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

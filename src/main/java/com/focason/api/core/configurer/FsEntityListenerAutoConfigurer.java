@@ -8,7 +8,6 @@ package com.focason.api.core.configurer;
 import com.focason.api.core.entity.FsEntityListener;
 import com.focason.api.core.entity.FsEntityListenerManager;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

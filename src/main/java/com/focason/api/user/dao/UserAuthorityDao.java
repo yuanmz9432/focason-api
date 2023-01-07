@@ -11,7 +11,6 @@ import com.focason.api.user.repository.UserAuthorityRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
-
 import org.seasar.doma.*;
 import org.seasar.doma.boot.ConfigAutowireable;
 import org.seasar.doma.jdbc.BatchResult;

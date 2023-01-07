@@ -23,7 +23,6 @@ import com.focason.api.user.resource.UserResource;
 import com.focason.api.user.service.UserService;
 import java.util.UUID;
 import javax.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

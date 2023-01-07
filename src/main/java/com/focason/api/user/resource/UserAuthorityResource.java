@@ -8,7 +8,6 @@ package com.focason.api.user.resource;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.user.entity.UserAuthorityEntity;
 import java.time.LocalDateTime;
-
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 

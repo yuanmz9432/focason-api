@@ -5,8 +5,8 @@ package com.focason.api.core.handler;
 
 
 
+import com.focason.api.core.entity.FsEntity;
 import com.focason.api.core.entity.FsEntityListenerManager;
-import com.focason.api.core.entity.LcEntity;
 import org.seasar.doma.jdbc.entity.EntityListener;
 import org.seasar.doma.jdbc.entity.PostDeleteContext;
 import org.seasar.doma.jdbc.entity.PostInsertContext;
@@ -15,7 +15,7 @@ import org.seasar.doma.jdbc.entity.PreDeleteContext;
 import org.seasar.doma.jdbc.entity.PreInsertContext;
 import org.seasar.doma.jdbc.entity.PreUpdateContext;
 
-public class FsEntityListenerHandler<E extends LcEntity> implements EntityListener<E>
+public class FsEntityListenerHandler<E extends FsEntity> implements EntityListener<E>
 {
     public FsEntityListenerHandler() {}
 

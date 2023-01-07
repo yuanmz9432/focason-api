@@ -9,7 +9,7 @@ import com.focason.api.core.handler.FsEntityListenerHandler;
 import org.seasar.doma.Entity;
 
 @Entity(listener = FsEntityListenerHandler.class)
-public class LcEntity
+public class FsEntity
 {
-    public LcEntity() {}
+    public FsEntity() {}
 }

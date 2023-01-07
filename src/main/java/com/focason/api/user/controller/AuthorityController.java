@@ -21,7 +21,6 @@ import com.focason.api.user.resource.AuthorityResource;
 import com.focason.api.user.service.AuthorityService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -11,7 +11,6 @@ import com.focason.api.data.TestData;
 import com.focason.api.user.repository.UserAuthorityRepository;
 import com.focason.api.user.repository.UserRepository;
 import java.util.Optional;
-
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -6,7 +6,7 @@ package com.focason.api.user.entity;
 
 
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.entity.LcEntity;
+import com.focason.api.core.entity.FsEntity;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,7 +25,7 @@ import org.seasar.doma.*;
 @Builder(toBuilder = true)
 @With
 @Table(name = "user")
-public class UserEntity extends LcEntity
+public class UserEntity extends FsEntity
 {
     /** 自動採番ID */
     @Id

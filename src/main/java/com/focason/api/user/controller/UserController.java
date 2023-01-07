@@ -19,7 +19,6 @@ import com.focason.api.user.resource.UserResource;
 import com.focason.api.user.service.UserService;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

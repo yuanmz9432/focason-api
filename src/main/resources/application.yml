@@ -15,6 +15,7 @@ spring:
     check-template-location: false
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: off
 
 # Doma
 doma:

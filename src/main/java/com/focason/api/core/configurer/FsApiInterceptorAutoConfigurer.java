@@ -10,7 +10,6 @@ import com.focason.api.core.resolver.FsConditionParamHandlerMethodArgumentResolv
 import com.focason.api.core.resolver.FsPaginationParamHandlerMethodArgumentResolver;
 import com.focason.api.core.resolver.FsSortParamHandlerMethodArgumentResolver;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +40,7 @@ public class FsApiInterceptorAutoConfigurer implements WebMvcConfigurer
 
     @Autowired
     public FsApiInterceptorAutoConfigurer(final Environment environment,
-                                          final Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
+        final Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         this.environment = environment;
         this.jackson2ObjectMapperBuilder = jackson2ObjectMapperBuilder;
     }

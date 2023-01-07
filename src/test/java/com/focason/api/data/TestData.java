@@ -9,7 +9,6 @@ import com.focason.api.core.attribute.ID;
 import com.focason.api.core.domain.Gender;
 import com.focason.api.user.entity.UserEntity;
 import com.focason.api.user.resource.UserResource;
-
 import java.time.LocalDateTime;
 
 public class TestData

@@ -16,7 +16,6 @@ import com.focason.api.user.entity.UserAuthorityEntity;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import lombok.*;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
