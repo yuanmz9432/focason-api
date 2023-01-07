@@ -25,10 +25,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 @Component
 @Slf4j
-public class BaAopAspect
+public class FsAopAspect
 {
 
-    private static final Logger logger = LoggerFactory.getLogger(BaAopAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(FsAopAspect.class);
 
     @Pointcut("execution(* com.blazeash.api..controller..*(..))")
     public void pointCut() {}

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class BaSort
+public final class FsSort
 {
 
     private final String property;
@@ -20,7 +20,7 @@ public final class BaSort
         return this.property + " " + this.direction.getValue();
     }
 
-    public BaSort(final String property, final Direction direction) {
+    public FsSort(final String property, final Direction direction) {
         this.property = property;
         this.direction = direction;
     }
@@ -32,10 +32,10 @@ public final class BaSort
     public boolean equals(final Object o) {
         if (o == this) {
             return true;
-        } else if (!(o instanceof BaSort)) {
+        } else if (!(o instanceof FsSort)) {
             return false;
         } else {
-            BaSort other = (BaSort) o;
+            FsSort other = (FsSort) o;
             Object this$property = this.getProperty();
             Object other$property = other.getProperty();
             if (this$property == null) {
@@ -68,26 +68,26 @@ public final class BaSort
         return "BlazeashSort(property=" + var10000 + ", direction=" + this.getDirection() + ")";
     }
 
-    public BaSort withProperty(final String property) {
-        return Objects.equals(this.property, property) ? this : new BaSort(property, this.direction);
+    public FsSort withProperty(final String property) {
+        return Objects.equals(this.property, property) ? this : new FsSort(property, this.direction);
     }
 
-    public BaSort withDirection(final BaSort.Direction direction) {
-        return this.direction == direction ? this : new BaSort(this.property, direction);
+    public FsSort withDirection(final FsSort.Direction direction) {
+        return this.direction == direction ? this : new FsSort(this.property, direction);
     }
 
     public String getProperty() {
         return this.property;
     }
 
-    public BaSort.Direction getDirection() {
+    public FsSort.Direction getDirection() {
         return this.direction;
     }
 
     public static class BlazeashSortBuilder
     {
         private String property;
-        private BaSort.Direction direction;
+        private FsSort.Direction direction;
 
         BlazeashSortBuilder() {}
 
@@ -101,8 +101,8 @@ public final class BaSort
             return this;
         }
 
-        public BaSort build() {
-            return new BaSort(this.property, this.direction);
+        public FsSort build() {
+            return new FsSort(this.property, this.direction);
         }
 
         public String toString() {
@@ -117,7 +117,7 @@ public final class BaSort
         private final String value;
 
         @JsonCreator
-        public static BaSort.Direction of(String value) {
+        public static FsSort.Direction of(String value) {
             return Arrays.stream(values())
                 .filter((v) -> v.value.equalsIgnoreCase(value))
                 .findFirst()

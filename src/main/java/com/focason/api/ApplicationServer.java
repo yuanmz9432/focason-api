@@ -9,7 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Blazeash API アプリケーション
+ * Focason API アプリケーション
  */
 @SpringBootApplication
 public class ApplicationServer

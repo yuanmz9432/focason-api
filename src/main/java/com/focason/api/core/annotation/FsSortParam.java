@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface BaSortParam
+public @interface FsSortParam
 {
     String defaultValue() default "id:ASC";
 

@@ -12,6 +12,9 @@ import java.lang.annotation.*;
 })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface BaConditionParam
+public @interface FsPaginationParam
 {
+    int defaultLimitValue() default 20;
+
+    int maxLimitValue() default 200;
 }

@@ -5,8 +5,8 @@ package com.focason.api.core.handler;
 
 
 
-import com.focason.api.core.attribute.BaErrorCode;
-import com.focason.api.core.attribute.BaErrorResource;
+import com.focason.api.core.attribute.FsErrorCode;
+import com.focason.api.core.attribute.FsErrorResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +26,9 @@ public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint
         throws IOException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
-            BaErrorResource.builder()
-                .code(BaErrorCode.MISSING_AUTH_TOKEN.getValue())
-                .message(BaErrorCode.MISSING_AUTH_TOKEN.name())
+            FsErrorResource.builder()
+                .code(FsErrorCode.MISSING_AUTH_TOKEN.getValue())
+                .message(FsErrorCode.MISSING_AUTH_TOKEN.name())
                 .build()));
 
     }

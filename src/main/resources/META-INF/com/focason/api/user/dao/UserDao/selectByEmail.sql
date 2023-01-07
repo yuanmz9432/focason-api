@@ -3,6 +3,6 @@ select
 from
     user
 where
-    user.email = /* email */'admin@Blazeash.com'
+    user.email = /* email */'admin@Focason.com'
     and
     user.is_deleted = 0

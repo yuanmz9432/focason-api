@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class LcWebMvcConfigurer implements WebMvcConfigurer
+public class FsWebMvcConfigurer implements WebMvcConfigurer
 {
 
     @Resource

@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LcEntityListenerAutoConfigurer
+public class FsEntityListenerAutoConfigurer
 {
-    public LcEntityListenerAutoConfigurer() {}
+    public FsEntityListenerAutoConfigurer() {}
 
     @Bean
     public BaEntityListenerManager lcEntityListenerManager(@Autowired List<BaEntityListener> listeners) {

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 
-public enum BaErrorCode
+public enum FsErrorCode
 {
     BAD_REQUEST("E400000"), VALIDATION_ERROR("E400001"), DATA_INTEGRITY_VIOLATION("E400002"), DUPLICATE_ENTRY(
         "E400003"), ILLEGAL_STATE("E400004"), MISSING_AUTH_TOKEN(
@@ -23,12 +23,12 @@ public enum BaErrorCode
 
     private final String value;
 
-    BaErrorCode(final String value) {
+    FsErrorCode(final String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static BaErrorCode of(String value) {
+    public static FsErrorCode of(String value) {
         return Arrays.stream(values()).filter((v) -> v.value.equals(value)).findFirst()
             .orElseThrow(() -> new IllegalArgumentException("LcErrorCode = '" + value + "' is not supported."));
     }

@@ -5,9 +5,9 @@ package com.focason.api.user.repository;
 
 import static java.util.stream.Collectors.toList;
 
-import com.focason.api.core.attribute.BaPagination;
-import com.focason.api.core.attribute.BaResultSet;
-import com.focason.api.core.attribute.BaSort;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
+import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.attribute.ID;
 import com.focason.api.core.exception.BaEntityNotFoundException;
 import com.focason.api.user.dao.UserDao;
@@ -40,10 +40,10 @@ public class UserRepository
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public BaResultSet<UserEntity> findAll(Condition condition, BaPagination pagination, Sort sort) {
+    public FsResultSet<UserEntity> findAll(Condition condition, FsPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
-        return new BaResultSet<>(entities, options.getCount());
+        return new FsResultSet<>(entities, options.getCount());
     }
 
     /**
@@ -171,7 +171,7 @@ public class UserRepository
         /**
          * デフォルトの検索条件
          */
-        public static final Sort DEFAULT = new Sort(SortColumn.ID, BaSort.Direction.ASC);
+        public static final Sort DEFAULT = new Sort(SortColumn.ID, FsSort.Direction.ASC);
 
         /**
          * ソート列
@@ -181,7 +181,7 @@ public class UserRepository
         /**
          * ソート順序
          */
-        BaSort.Direction direction;
+        FsSort.Direction direction;
 
         /**
          * このソートパラメータをSQLステートメント形式に変換して返します。
@@ -193,12 +193,12 @@ public class UserRepository
         }
 
         /**
-         * {@link BaSort} から新規ソートパラメータを生成します。
+         * {@link FsSort} から新規ソートパラメータを生成します。
          *
-         * @param sort {@link BaSort}
+         * @param sort {@link FsSort}
          * @return ソートパラメータ
          */
-        public static Sort fromLcSort(BaSort sort) {
+        public static Sort fromLcSort(FsSort sort) {
             return new Sort(SortColumn.fromPropertyName(sort.getProperty()), sort.getDirection());
         }
     }

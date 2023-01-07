@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class WebSecurityConfigurer
+public class FsWebSecurityConfigurer
 {
     private EntryPointUnauthorizedHandler unauthorizedHandler;
     private DefaultAccessDeniedHandler accessDeniedHandler;

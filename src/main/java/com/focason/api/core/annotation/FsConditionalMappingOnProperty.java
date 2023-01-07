@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface BaConditionalMappingOnProperty
+public @interface FsConditionalMappingOnProperty
 {
     String name();
 

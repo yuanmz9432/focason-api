@@ -12,27 +12,27 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.data.domain.Page;
 
-public final class BaResultSet<T> implements Serializable
+public final class FsResultSet<T> implements Serializable
 {
     private final List<T> data;
     private final long count;
 
-    public BaResultSet(Page<T> page) {
+    public FsResultSet(Page<T> page) {
         this.data = page.getContent();
         this.count = page.getTotalElements();
     }
 
-    public BaResultSet(final List<T> data, final long count) {
+    public FsResultSet(final List<T> data, final long count) {
         this.data = data;
         this.count = count;
     }
 
-    public static <T> BaResultSet<T> emptyResultSet() {
-        return new BaResultSet<>(Collections.emptyList(), 0L);
+    public static <T> FsResultSet<T> emptyResultSet() {
+        return new FsResultSet<>(Collections.emptyList(), 0L);
     }
 
-    public static <T> BaResultSet.LcResultSetBuilder<T> builder() {
-        return new BaResultSet.LcResultSetBuilder();
+    public static <T> FsResultSet.LcResultSetBuilder<T> builder() {
+        return new FsResultSet.LcResultSetBuilder();
     }
 
     @JsonIgnore
@@ -56,10 +56,10 @@ public final class BaResultSet<T> implements Serializable
     public boolean equals(final Object o) {
         if (o == this) {
             return true;
-        } else if (!(o instanceof BaResultSet)) {
+        } else if (!(o instanceof FsResultSet)) {
             return false;
         } else {
-            BaResultSet<?> other = (BaResultSet) o;
+            FsResultSet<?> other = (FsResultSet) o;
             Object this$data = this.getData();
             Object other$data = other.getData();
             if (this$data == null) {
@@ -87,12 +87,12 @@ public final class BaResultSet<T> implements Serializable
         return "LcResultSet(data=" + var10000 + ", count=" + this.getCount() + ")";
     }
 
-    public BaResultSet<T> withData(final List<T> data) {
-        return this.data == data ? this : new BaResultSet(data, this.count);
+    public FsResultSet<T> withData(final List<T> data) {
+        return this.data == data ? this : new FsResultSet(data, this.count);
     }
 
-    public BaResultSet<T> withCount(final long count) {
-        return this.count == count ? this : new BaResultSet(this.data, count);
+    public FsResultSet<T> withCount(final long count) {
+        return this.count == count ? this : new FsResultSet(this.data, count);
     }
 
     public static class LcResultSetBuilder<T>
@@ -102,18 +102,18 @@ public final class BaResultSet<T> implements Serializable
 
         LcResultSetBuilder() {}
 
-        public BaResultSet.LcResultSetBuilder<T> data(final List<T> data) {
+        public FsResultSet.LcResultSetBuilder<T> data(final List<T> data) {
             this.data = data;
             return this;
         }
 
-        public BaResultSet.LcResultSetBuilder<T> count(final long count) {
+        public FsResultSet.LcResultSetBuilder<T> count(final long count) {
             this.count = count;
             return this;
         }
 
-        public BaResultSet<T> build() {
-            return new BaResultSet<>(this.data, this.count);
+        public FsResultSet<T> build() {
+            return new FsResultSet<>(this.data, this.count);
         }
 
         public String toString() {

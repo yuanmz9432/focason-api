@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class BaErrorResource
+public class FsErrorResource
 {
     private final String code;
     private final String message;

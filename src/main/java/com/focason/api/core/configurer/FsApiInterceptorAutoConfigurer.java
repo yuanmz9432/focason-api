@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ConditionalOnWebApplication(
     type = ConditionalOnWebApplication.Type.SERVLET)
 @Configuration
-public class LcApiInterceptorAutoConfigurer implements WebMvcConfigurer
+public class FsApiInterceptorAutoConfigurer implements WebMvcConfigurer
 {
 
     private final Environment environment;
@@ -40,8 +40,8 @@ public class LcApiInterceptorAutoConfigurer implements WebMvcConfigurer
     }
 
     @Autowired
-    public LcApiInterceptorAutoConfigurer(final Environment environment,
-        final Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
+    public FsApiInterceptorAutoConfigurer(final Environment environment,
+                                          final Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         this.environment = environment;
         this.jackson2ObjectMapperBuilder = jackson2ObjectMapperBuilder;
     }

@@ -66,18 +66,18 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      *
      * @param condition 検索条件パラメータ
      * @param pagination ページネーションパラメータ
-     * @param baSort ソートパラメータ
+     * @param fsSort ソートパラメータ
      * @return ${comment}リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
     public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
         @LcConditionParam ${simpleName}Repository.Condition condition,
         @LcPaginationParam LcPagination pagination,
-        @LcSortParam(allowedValues = {}) LcSort baSort) {
+        @LcSortParam(allowedValues = {}) LcSort fsSort) {
         if (condition == null) {
             condition = ${simpleName}Repository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(baSort);
+        var sort = ${simpleName}Repository.Sort.fromLcSort(fsSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
