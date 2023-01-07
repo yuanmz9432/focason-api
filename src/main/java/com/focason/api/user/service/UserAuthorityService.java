@@ -8,8 +8,8 @@ import static java.util.stream.Collectors.toList;
 import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.exception.BaResourceNotFoundException;
-import com.focason.api.core.exception.BaUnexpectedPhantomReadException;
+import com.focason.api.core.exception.FsResourceNotFoundException;
+import com.focason.api.core.exception.FsUnexpectedPhantomReadException;
 import com.focason.api.user.entity.UserAuthorityEntity;
 import com.focason.api.user.repository.UserAuthorityRepository;
 import com.focason.api.user.resource.UserAuthorityResource;
@@ -83,7 +83,7 @@ public class UserAuthorityService
         var id = repository.create(resource.toEntity());
 
         // ユーザ権限を取得します。
-        return getResource(id).orElseThrow(BaUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -98,14 +98,14 @@ public class UserAuthorityService
         // TODO Waiting for finalization of basic design according to Q&A
         // ユーザ権限IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new BaResourceNotFoundException(UserAuthorityEntity.class, id);
+            throw new FsResourceNotFoundException(UserAuthorityEntity.class, id);
         }
 
         // ユーザ権限を更新します。
         repository.update(id, resource.toEntity());
 
         // ユーザ権限を取得します。
-        return getResource(id).orElseThrow(BaUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -118,7 +118,7 @@ public class UserAuthorityService
         // TODO Waiting for finalization of basic design according to Q&A
         // ユーザ権限IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new BaResourceNotFoundException(UserAuthorityEntity.class, id);
+            throw new FsResourceNotFoundException(UserAuthorityEntity.class, id);
         }
 
         // ユーザ権限を削除します。

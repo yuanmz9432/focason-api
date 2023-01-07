@@ -7,7 +7,7 @@ package com.focason.api.core.handler;
 
 import com.focason.api.core.attribute.FsErrorCode;
 import com.focason.api.core.attribute.FsErrorResource;
-import com.focason.api.core.exception.BaException;
+import com.focason.api.core.exception.FsException;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @ControllerAdvice
-public class GlobalExceptionHandler
+public class FsGlobalExceptionHandler
 {
-    @ExceptionHandler(value = BaException.class)
+    @ExceptionHandler(value = FsException.class)
     @ResponseBody
     public ResponseEntity<FsErrorResource> lcExceptionHandler(Exception e) {
-        BaException lcException = (BaException) e;
+        FsException lcException = (FsException) e;
         String code = lcException.getCode().getValue();
         return ResponseEntity
             .status(Integer.parseInt(code.substring(1, 4)))

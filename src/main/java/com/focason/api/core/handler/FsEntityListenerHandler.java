@@ -5,7 +5,7 @@ package com.focason.api.core.handler;
 
 
 
-import com.focason.api.core.entity.BaEntityListenerManager;
+import com.focason.api.core.entity.FsEntityListenerManager;
 import com.focason.api.core.entity.LcEntity;
 import org.seasar.doma.jdbc.entity.EntityListener;
 import org.seasar.doma.jdbc.entity.PostDeleteContext;
@@ -15,13 +15,13 @@ import org.seasar.doma.jdbc.entity.PreDeleteContext;
 import org.seasar.doma.jdbc.entity.PreInsertContext;
 import org.seasar.doma.jdbc.entity.PreUpdateContext;
 
-public class BaEntityListenerHandler<E extends LcEntity> implements EntityListener<E>
+public class FsEntityListenerHandler<E extends LcEntity> implements EntityListener<E>
 {
-    public BaEntityListenerHandler() {}
+    public FsEntityListenerHandler() {}
 
     @Override
     public void preInsert(E entity, PreInsertContext<E> context) {
-        BaEntityListenerManager.forEachListener((listener) -> {
+        FsEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.preInsert(entity, context);
             } catch (ClassCastException ignored) {
@@ -30,7 +30,7 @@ public class BaEntityListenerHandler<E extends LcEntity> implements EntityListen
     }
 
     public void preUpdate(E entity, PreUpdateContext<E> context) {
-        BaEntityListenerManager.forEachListener((listener) -> {
+        FsEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.preUpdate(entity, context);
             } catch (ClassCastException ignored) {
@@ -40,7 +40,7 @@ public class BaEntityListenerHandler<E extends LcEntity> implements EntityListen
     }
 
     public void preDelete(E entity, PreDeleteContext<E> context) {
-        BaEntityListenerManager.forEachListener((listener) -> {
+        FsEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.preDelete(entity, context);
             } catch (ClassCastException ignored) {
@@ -50,7 +50,7 @@ public class BaEntityListenerHandler<E extends LcEntity> implements EntityListen
     }
 
     public void postInsert(E entity, PostInsertContext<E> context) {
-        BaEntityListenerManager.forEachListener((listener) -> {
+        FsEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.postInsert(entity, context);
             } catch (ClassCastException ignored) {
@@ -60,7 +60,7 @@ public class BaEntityListenerHandler<E extends LcEntity> implements EntityListen
     }
 
     public void postUpdate(E entity, PostUpdateContext<E> context) {
-        BaEntityListenerManager.forEachListener((listener) -> {
+        FsEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.postUpdate(entity, context);
             } catch (ClassCastException ignored) {
@@ -70,7 +70,7 @@ public class BaEntityListenerHandler<E extends LcEntity> implements EntityListen
     }
 
     public void postDelete(E entity, PostDeleteContext<E> context) {
-        BaEntityListenerManager.forEachListener((listener) -> {
+        FsEntityListenerManager.forEachListener((listener) -> {
             try {
                 listener.postDelete(entity, context);
             } catch (ClassCastException ignored) {

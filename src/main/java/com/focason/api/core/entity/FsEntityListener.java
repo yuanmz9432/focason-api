@@ -7,6 +7,6 @@ package com.focason.api.core.entity;
 
 import org.seasar.doma.jdbc.entity.EntityListener;
 
-public interface BaEntityListener<E extends LcEntity> extends EntityListener<E>
+public interface FsEntityListener<E extends LcEntity> extends EntityListener<E>
 {
 }

@@ -7,14 +7,14 @@ package com.focason.api.core.resolver;
 
 import com.focason.api.core.annotation.FsPaginationParam;
 import com.focason.api.core.attribute.FsPagination;
-import com.focason.api.core.exception.BaValidationErrorException;
+import com.focason.api.core.exception.FsValidationErrorException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class BaPaginationParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver
+public class FsPaginationParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver
 {
 
     @Override
@@ -34,21 +34,21 @@ public class BaPaginationParamHandlerMethodArgumentResolver implements HandlerMe
             try {
                 limit = extractIntegerParameter(webRequest, "limit", annotation.defaultLimitValue());
                 if (limit > annotation.maxLimitValue()) {
-                    throw new BaValidationErrorException("Parameter '%s' must be less than or equal to '%s'.", "limit",
+                    throw new FsValidationErrorException("Parameter '%s' must be less than or equal to '%s'.", "limit",
                         annotation.maxLimitValue());
                 }
             } catch (NumberFormatException e) {
-                throw new BaValidationErrorException("Parameter '%s' must be in the correct number format", "limit");
+                throw new FsValidationErrorException("Parameter '%s' must be in the correct number format", "limit");
             }
 
             int page;
             try {
                 page = extractIntegerParameter(webRequest, "page", 1);
                 if (page <= 0) {
-                    throw new BaValidationErrorException("Parameter '%s' must be greater than or equal to 1.", "page");
+                    throw new FsValidationErrorException("Parameter '%s' must be greater than or equal to 1.", "page");
                 }
             } catch (NumberFormatException e) {
-                throw new BaValidationErrorException("Parameter '%s' must be in the correct number format", "page");
+                throw new FsValidationErrorException("Parameter '%s' must be in the correct number format", "page");
             }
             return FsPagination.of(limit, page);
         }

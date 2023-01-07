@@ -12,11 +12,11 @@ import com.focason.api.auth.config.JWTGenerator;
 import com.focason.api.auth.config.LoginUser;
 import com.focason.api.auth.resource.JWTResource;
 import com.focason.api.core.controller.AbstractController;
-import com.focason.api.core.exception.BaEntityNotFoundException;
-import com.focason.api.core.exception.BaIllegalUserException;
-import com.focason.api.core.exception.BaResourceNotFoundException;
-import com.focason.api.core.exception.BaValidationErrorException;
-import com.focason.api.core.utils.BCryptEncoder;
+import com.focason.api.core.exception.FsEntityNotFoundException;
+import com.focason.api.core.exception.FsIllegalUserException;
+import com.focason.api.core.exception.FsResourceNotFoundException;
+import com.focason.api.core.exception.FsValidationErrorException;
+import com.focason.api.core.utils.FsBCryptEncoder;
 import com.focason.api.user.controller.UserController;
 import com.focason.api.user.entity.UserEntity;
 import com.focason.api.user.resource.UserResource;
@@ -69,7 +69,7 @@ public class AuthenticationController extends AbstractController
     public ResponseEntity<JWTResource> login(@Valid @RequestBody LoginUser loginUser) {
         var userDetails = userDetailsService.loadUserByUsername(loginUser.getUsername());
         if (userDetails == null) {
-            throw new BaEntityNotFoundException(UserEntity.class, loginUser.getUsername());
+            throw new FsEntityNotFoundException(UserEntity.class, loginUser.getUsername());
         }
         this.checkLoginUser(loginUser, userDetails);
         final var expirationTime = generator.generateExpirationTime();
@@ -109,17 +109,17 @@ public class AuthenticationController extends AbstractController
      */
     private void checkLoginUser(LoginUser loginUser, UserDetails userDetails) {
         if (loginUser == null || userDetails == null) {
-            throw new BaResourceNotFoundException(UserResource.class, null);
+            throw new FsResourceNotFoundException(UserResource.class, null);
         }
         if (userDetails.isEnabled()) {
             // パスワード一致性チェック
             var isMatched =
-                BCryptEncoder.getInstance().matches(loginUser.getPassword(), userDetails.getPassword());
+                FsBCryptEncoder.getInstance().matches(loginUser.getPassword(), userDetails.getPassword());
             if (!isMatched) {
-                throw new BaValidationErrorException("Password was not matched, please check again.");
+                throw new FsValidationErrorException("Password was not matched, please check again.");
             }
         } else {
-            throw new BaIllegalUserException(userDetails.getUsername());
+            throw new FsIllegalUserException(userDetails.getUsername());
         }
     }
 }

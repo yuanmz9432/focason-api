@@ -6,7 +6,7 @@ package com.focason.api.core.resolver;
 
 
 import com.focason.api.core.annotation.FsConditionParam;
-import com.focason.api.core.exception.BaValidationErrorException;
+import com.focason.api.core.exception.FsValidationErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -19,11 +19,11 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class BaConditionParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver
+public class FsConditionParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver
 {
     private final Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder;
 
-    public BaConditionParamHandlerMethodArgumentResolver(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
+    public FsConditionParamHandlerMethodArgumentResolver(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         this.jackson2ObjectMapperBuilder = jackson2ObjectMapperBuilder;
     }
 
@@ -43,13 +43,13 @@ public class BaConditionParamHandlerMethodArgumentResolver implements HandlerMet
             try {
                 json = new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
             } catch (IllegalArgumentException e) {
-                throw new BaValidationErrorException("Failed to decode 'condition'", e);
+                throw new FsValidationErrorException("Failed to decode 'condition'", e);
             }
 
             try {
                 return this.objectMapper().readValue(json, parameter.getParameterType());
             } catch (IOException e) {
-                throw new BaValidationErrorException("Failed to parse 'condition'", e);
+                throw new FsValidationErrorException("Failed to parse 'condition'", e);
             }
         }
     }

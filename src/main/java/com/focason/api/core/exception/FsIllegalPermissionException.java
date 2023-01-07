@@ -7,7 +7,7 @@ package com.focason.api.core.exception;
 
 import com.focason.api.core.attribute.FsErrorCode;
 
-public class BaIllegalPermissionException extends BaException
+public class FsIllegalPermissionException extends FsException
 {
     private static final long serialVersionUID = 1L;
     private static final FsErrorCode ERROR_CODE;
@@ -17,7 +17,7 @@ public class BaIllegalPermissionException extends BaException
         ERROR_CODE = FsErrorCode.RESOURCE_NOT_FOUND;
     }
 
-    public BaIllegalPermissionException(Class<?> entityClass, Object permission) {
+    public FsIllegalPermissionException(Class<?> entityClass, Object permission) {
         super(ERROR_CODE, MESSAGE_TEMPLATE, entityClass.getSimpleName(), permission);
     }
 }

@@ -9,12 +9,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BCryptEncoder extends BCryptPasswordEncoder
+public class FsBCryptEncoder extends BCryptPasswordEncoder
 {
 
     private static volatile BCryptPasswordEncoder INSTANCE = null;
 
-    private BCryptEncoder() {
+    private FsBCryptEncoder() {
 
     }
 

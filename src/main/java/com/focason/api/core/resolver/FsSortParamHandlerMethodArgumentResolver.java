@@ -7,7 +7,7 @@ package com.focason.api.core.resolver;
 
 import com.focason.api.core.annotation.FsSortParam;
 import com.focason.api.core.attribute.FsSort;
-import com.focason.api.core.exception.BaValidationErrorException;
+import com.focason.api.core.exception.FsValidationErrorException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -20,7 +20,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @NoArgsConstructor
-public class BaSortParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver
+public class FsSortParamHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver
 {
     private static final String REGEX =
         "^(?<property>[\\p{Alpha}_][\\p{Alnum}_]*?):(?<direction>[Aa][Ss][Cc]|[Dd][Ee][Ss][Cc]?)$";
@@ -48,13 +48,13 @@ public class BaSortParamHandlerMethodArgumentResolver implements HandlerMethodAr
                 Objects.requireNonNull(sortValue);
                 boolean allowed = Arrays.stream(annotation.allowedValues()).anyMatch(sortValue::equalsIgnoreCase);
                 if (!allowed) {
-                    throw new BaValidationErrorException("The specified sort parameter is not allowed.");
+                    throw new FsValidationErrorException("The specified sort parameter is not allowed.");
                 }
             }
 
             Matcher m = SORT_PATTERN.matcher(sortValue);
             if (!m.find()) {
-                throw new BaValidationErrorException("Parameter '%s' must match the regexp '%s'", "sort", REGEX);
+                throw new FsValidationErrorException("Parameter '%s' must match the regexp '%s'", "sort", REGEX);
             } else {
                 return FsSort.builder().direction(FsSort.Direction.of(m.group("direction")))
                     .property(m.group("property")).build();

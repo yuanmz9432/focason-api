@@ -9,7 +9,7 @@ import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.exception.BaEntityNotFoundException;
+import com.focason.api.core.exception.FsEntityNotFoundException;
 import com.focason.api.user.dao.AuthorityDao;
 import com.focason.api.user.entity.AuthorityEntity;
 import java.util.Arrays;
@@ -81,7 +81,7 @@ public class AuthorityRepository
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new BaEntityNotFoundException(AuthorityEntity.class, entity.getId());
+            throw new FsEntityNotFoundException(AuthorityEntity.class, entity.getId());
         }
     }
 
@@ -93,7 +93,7 @@ public class AuthorityRepository
     public void deleteById(ID<AuthorityEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new BaEntityNotFoundException(AuthorityEntity.class, id);
+            throw new FsEntityNotFoundException(AuthorityEntity.class, id);
         }
     }
 
@@ -105,7 +105,7 @@ public class AuthorityRepository
     public void deleteLogicById(ID<AuthorityEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new BaEntityNotFoundException(AuthorityEntity.class, id);
+            throw new FsEntityNotFoundException(AuthorityEntity.class, id);
         }
     }
 

@@ -7,7 +7,7 @@ package com.focason.api.core.exception;
 
 import com.focason.api.core.attribute.FsErrorCode;
 
-public class BaValidationErrorException extends BaException
+public class FsValidationErrorException extends FsException
 {
     private static final long serialVersionUID = 1L;
     private static final FsErrorCode ERROR_CODE;
@@ -16,11 +16,11 @@ public class BaValidationErrorException extends BaException
         ERROR_CODE = FsErrorCode.VALIDATION_ERROR;
     }
 
-    public BaValidationErrorException(String messageTemplate, Object... args) {
+    public FsValidationErrorException(String messageTemplate, Object... args) {
         super(ERROR_CODE, messageTemplate, args);
     }
 
-    public BaValidationErrorException(Throwable cause, String messageTemplate, Object... args) {
+    public FsValidationErrorException(Throwable cause, String messageTemplate, Object... args) {
         super(ERROR_CODE, cause, messageTemplate, args);
     }
 }

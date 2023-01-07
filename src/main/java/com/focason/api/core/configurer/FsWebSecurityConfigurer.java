@@ -6,8 +6,8 @@ package com.focason.api.core.configurer;
 
 
 import com.focason.api.auth.config.AuthenticationTokenFilter;
-import com.focason.api.core.handler.DefaultAccessDeniedHandler;
-import com.focason.api.core.handler.EntryPointUnauthorizedHandler;
+import com.focason.api.core.handler.FsDefaultAccessDeniedHandler;
+import com.focason.api.core.handler.FsEntryPointUnauthorizedHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +27,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class FsWebSecurityConfigurer
 {
-    private EntryPointUnauthorizedHandler unauthorizedHandler;
-    private DefaultAccessDeniedHandler accessDeniedHandler;
+    private FsEntryPointUnauthorizedHandler unauthorizedHandler;
+    private FsDefaultAccessDeniedHandler accessDeniedHandler;
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Bean

@@ -12,23 +12,24 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DefaultAccessDeniedHandler implements AccessDeniedHandler
+public class FsEntryPointUnauthorizedHandler implements AuthenticationEntryPoint
 {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response,
-        AccessDeniedException accessDeniedException) throws IOException {
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
+        throws IOException {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.getWriter().print(OBJECT_MAPPER.writeValueAsString(
             FsErrorResource.builder()
-                .code(FsErrorCode.FORBIDDEN.getValue())
-                .message(FsErrorCode.FORBIDDEN.name())
+                .code(FsErrorCode.MISSING_AUTH_TOKEN.getValue())
+                .message(FsErrorCode.MISSING_AUTH_TOKEN.name())
                 .build()));
+
     }
 }

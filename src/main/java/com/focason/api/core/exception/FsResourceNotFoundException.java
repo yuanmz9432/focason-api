@@ -4,7 +4,7 @@ package com.focason.api.core.exception;
 
 import com.focason.api.core.attribute.FsErrorCode;
 
-public class BaResourceNotFoundException extends BaException
+public class FsResourceNotFoundException extends FsException
 {
     private static final long serialVersionUID = 1L;
     private static final FsErrorCode ERROR_CODE;
@@ -14,7 +14,7 @@ public class BaResourceNotFoundException extends BaException
         ERROR_CODE = FsErrorCode.RESOURCE_NOT_FOUND;
     }
 
-    public BaResourceNotFoundException(Class<?> resourceClass, Object object) {
+    public FsResourceNotFoundException(Class<?> resourceClass, Object object) {
         super(ERROR_CODE, MESSAGE_TEMPLATE, resourceClass.getSimpleName(), object);
     }
 }

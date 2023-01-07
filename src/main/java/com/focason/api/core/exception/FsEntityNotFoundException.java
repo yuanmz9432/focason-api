@@ -8,7 +8,7 @@ package com.focason.api.core.exception;
 import com.focason.api.core.attribute.FsErrorCode;
 import com.focason.api.core.attribute.ID;
 
-public class BaEntityNotFoundException extends BaException
+public class FsEntityNotFoundException extends FsException
 {
     private static final long serialVersionUID = 1L;
     private static final FsErrorCode ERROR_CODE;
@@ -18,11 +18,11 @@ public class BaEntityNotFoundException extends BaException
         ERROR_CODE = FsErrorCode.RESOURCE_NOT_FOUND;
     }
 
-    public BaEntityNotFoundException(Class<?> entityClass, ID<?> id) {
+    public FsEntityNotFoundException(Class<?> entityClass, ID<?> id) {
         super(ERROR_CODE, MESSAGE_TEMPLATE, entityClass.getSimpleName(), "id", id);
     }
 
-    public BaEntityNotFoundException(Class<?> entityClass, String email) {
+    public FsEntityNotFoundException(Class<?> entityClass, String email) {
         super(ERROR_CODE, MESSAGE_TEMPLATE, entityClass.getSimpleName(), "email", email);
     }
 }

@@ -5,8 +5,8 @@ package com.focason.api.core.configurer;
 
 
 
-import com.focason.api.core.entity.BaEntityListener;
-import com.focason.api.core.entity.BaEntityListenerManager;
+import com.focason.api.core.entity.FsEntityListener;
+import com.focason.api.core.entity.FsEntityListenerManager;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ public class FsEntityListenerAutoConfigurer
     public FsEntityListenerAutoConfigurer() {}
 
     @Bean
-    public BaEntityListenerManager lcEntityListenerManager(@Autowired List<BaEntityListener> listeners) {
-        return new BaEntityListenerManager(listeners);
+    public FsEntityListenerManager lcEntityListenerManager(@Autowired List<FsEntityListener> listeners) {
+        return new FsEntityListenerManager(listeners);
     }
 
 

@@ -7,7 +7,7 @@ package com.focason.api.core.exception;
 
 import com.focason.api.core.attribute.FsErrorCode;
 
-public class BaResourceAlreadyExistsException extends BaException
+public class FsResourceAlreadyExistsException extends FsException
 {
     private static final long serialVersionUID = 1L;
     private static final FsErrorCode ERROR_CODE;
@@ -17,7 +17,7 @@ public class BaResourceAlreadyExistsException extends BaException
         ERROR_CODE = FsErrorCode.DUPLICATE_ENTRY;
     }
 
-    public BaResourceAlreadyExistsException(Class<?> resourceClass, String email) {
+    public FsResourceAlreadyExistsException(Class<?> resourceClass, String email) {
         super(ERROR_CODE, MESSAGE_TEMPLATE, resourceClass.getSimpleName(), email);
     }
 }

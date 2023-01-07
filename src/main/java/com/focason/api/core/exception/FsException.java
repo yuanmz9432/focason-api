@@ -7,16 +7,16 @@ package com.focason.api.core.exception;
 
 import com.focason.api.core.attribute.FsErrorCode;
 
-public class BaException extends RuntimeException
+public class FsException extends RuntimeException
 {
     private final FsErrorCode code;
 
-    public BaException(FsErrorCode code, String format, Object... args) {
+    public FsException(FsErrorCode code, String format, Object... args) {
         super(String.format(format, args));
         this.code = code;
     }
 
-    public BaException(FsErrorCode code, Throwable cause, String format, Object... args) {
+    public FsException(FsErrorCode code, Throwable cause, String format, Object... args) {
         super(String.format(format, args), cause);
         this.code = code;
     }

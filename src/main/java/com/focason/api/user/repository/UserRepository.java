@@ -9,7 +9,7 @@ import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.exception.BaEntityNotFoundException;
+import com.focason.api.core.exception.FsEntityNotFoundException;
 import com.focason.api.user.dao.UserDao;
 import com.focason.api.user.entity.UserEntity;
 import java.time.LocalDateTime;
@@ -85,7 +85,7 @@ public class UserRepository
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id).withModifiedBy(MDC.get("USERNAME")));
         if (result.getCount() != 1) {
-            throw new BaEntityNotFoundException(UserEntity.class, entity.getId());
+            throw new FsEntityNotFoundException(UserEntity.class, entity.getId());
         }
     }
 
@@ -97,7 +97,7 @@ public class UserRepository
     public void deleteById(ID<UserEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new BaEntityNotFoundException(UserEntity.class, id);
+            throw new FsEntityNotFoundException(UserEntity.class, id);
         }
     }
 
@@ -109,7 +109,7 @@ public class UserRepository
     public void deleteLogicById(ID<UserEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new BaEntityNotFoundException(UserEntity.class, id);
+            throw new FsEntityNotFoundException(UserEntity.class, id);
         }
     }
 

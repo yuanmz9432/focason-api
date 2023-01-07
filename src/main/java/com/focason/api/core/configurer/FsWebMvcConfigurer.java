@@ -5,7 +5,7 @@ package com.focason.api.core.configurer;
 
 
 
-import com.focason.api.core.interceptor.CorsInterceptor;
+import com.focason.api.core.interceptor.FsCorsInterceptor;
 import javax.annotation.Resource;
 
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ public class FsWebMvcConfigurer implements WebMvcConfigurer
 {
 
     @Resource
-    private CorsInterceptor corsInterceptor;
+    private FsCorsInterceptor fsCorsInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -37,6 +37,6 @@ public class FsWebMvcConfigurer implements WebMvcConfigurer
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 跨域拦截器需放在最上面
-        registry.addInterceptor(corsInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(fsCorsInterceptor).addPathPatterns("/**");
     }
 }

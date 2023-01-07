@@ -7,7 +7,7 @@ package com.focason.api.core.exception;
 
 import com.focason.api.core.attribute.FsErrorCode;
 
-public class BaUnexpectedPhantomReadException extends BaException
+public class FsUnexpectedPhantomReadException extends FsException
 {
     private static final long serialVersionUID = 1L;
     private static final FsErrorCode ERROR_CODE;
@@ -17,7 +17,7 @@ public class BaUnexpectedPhantomReadException extends BaException
         ERROR_CODE = FsErrorCode.INTERNAL_SERVER_ERROR;
     }
 
-    public BaUnexpectedPhantomReadException() {
+    public FsUnexpectedPhantomReadException() {
         super(ERROR_CODE, MESSAGE_TEMPLATE, new Object());
     }
 }

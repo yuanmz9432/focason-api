@@ -7,7 +7,7 @@ package com.focason.api.core.exception;
 
 import com.focason.api.core.attribute.FsErrorCode;
 
-public class BaIllegalUserException extends BaException
+public class FsIllegalUserException extends FsException
 {
     private static final long serialVersionUID = 1L;
     private static final FsErrorCode ERROR_CODE;
@@ -17,7 +17,7 @@ public class BaIllegalUserException extends BaException
         ERROR_CODE = FsErrorCode.ILLEGAL_STATE;
     }
 
-    public BaIllegalUserException(String email) {
+    public FsIllegalUserException(String email) {
         super(ERROR_CODE, MESSAGE_TEMPLATE, email);
     }
 }

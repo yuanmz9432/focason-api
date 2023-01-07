@@ -8,8 +8,8 @@ import static java.util.stream.Collectors.toList;
 import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.exception.BaResourceNotFoundException;
-import com.focason.api.core.exception.BaUnexpectedPhantomReadException;
+import com.focason.api.core.exception.FsResourceNotFoundException;
+import com.focason.api.core.exception.FsUnexpectedPhantomReadException;
 import com.focason.api.user.entity.AuthorityEntity;
 import com.focason.api.user.repository.AuthorityRepository;
 import com.focason.api.user.resource.AuthorityResource;
@@ -83,7 +83,7 @@ public class AuthorityService
         var id = repository.create(resource.toEntity());
 
         // 権限マスタを取得します。
-        return getResource(id).orElseThrow(BaUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -98,14 +98,14 @@ public class AuthorityService
         // TODO Waiting for finalization of basic design according to Q&A
         // 権限マスタIDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new BaResourceNotFoundException(AuthorityEntity.class, id);
+            throw new FsResourceNotFoundException(AuthorityEntity.class, id);
         }
 
         // 権限マスタを更新します。
         repository.update(id, resource.toEntity());
 
         // 権限マスタを取得します。
-        return getResource(id).orElseThrow(BaUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -118,7 +118,7 @@ public class AuthorityService
         // TODO Waiting for finalization of basic design according to Q&A
         // 権限マスタIDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new BaResourceNotFoundException(AuthorityEntity.class, id);
+            throw new FsResourceNotFoundException(AuthorityEntity.class, id);
         }
 
         // 権限マスタを削除します。

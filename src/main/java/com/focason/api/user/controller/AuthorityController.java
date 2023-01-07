@@ -14,7 +14,7 @@ import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.exception.BaResourceNotFoundException;
+import com.focason.api.core.exception.FsResourceNotFoundException;
 import com.focason.api.user.entity.AuthorityEntity;
 import com.focason.api.user.repository.AuthorityRepository;
 import com.focason.api.user.resource.AuthorityResource;
@@ -85,7 +85,7 @@ public class AuthorityController
         @PathVariable("id") ID<AuthorityEntity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new BaResourceNotFoundException(AuthorityResource.class, id));
+            .orElseThrow(() -> new FsResourceNotFoundException(AuthorityResource.class, id));
     }
 
     /**

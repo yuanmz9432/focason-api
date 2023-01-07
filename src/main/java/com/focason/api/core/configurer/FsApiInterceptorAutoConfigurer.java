@@ -5,10 +5,10 @@ package com.focason.api.core.configurer;
 
 
 
-import com.focason.api.core.interceptor.BaConditionalMappingHandlerInterceptor;
-import com.focason.api.core.resolver.BaConditionParamHandlerMethodArgumentResolver;
-import com.focason.api.core.resolver.BaPaginationParamHandlerMethodArgumentResolver;
-import com.focason.api.core.resolver.BaSortParamHandlerMethodArgumentResolver;
+import com.focason.api.core.interceptor.FsConditionalMappingHandlerInterceptor;
+import com.focason.api.core.resolver.FsConditionParamHandlerMethodArgumentResolver;
+import com.focason.api.core.resolver.FsPaginationParamHandlerMethodArgumentResolver;
+import com.focason.api.core.resolver.FsSortParamHandlerMethodArgumentResolver;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,13 @@ public class FsApiInterceptorAutoConfigurer implements WebMvcConfigurer
     private final Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder;
 
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new BaConditionalMappingHandlerInterceptor(this.environment));
+        registry.addInterceptor(new FsConditionalMappingHandlerInterceptor(this.environment));
     }
 
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new BaPaginationParamHandlerMethodArgumentResolver());
-        resolvers.add(new BaSortParamHandlerMethodArgumentResolver());
-        resolvers.add(new BaConditionParamHandlerMethodArgumentResolver(this.jackson2ObjectMapperBuilder));
+        resolvers.add(new FsPaginationParamHandlerMethodArgumentResolver());
+        resolvers.add(new FsSortParamHandlerMethodArgumentResolver());
+        resolvers.add(new FsConditionParamHandlerMethodArgumentResolver(this.jackson2ObjectMapperBuilder));
     }
 
     @Autowired

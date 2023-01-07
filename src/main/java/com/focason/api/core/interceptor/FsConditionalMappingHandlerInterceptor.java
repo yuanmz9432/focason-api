@@ -21,11 +21,11 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-public class BaConditionalMappingHandlerInterceptor implements HandlerInterceptor
+public class FsConditionalMappingHandlerInterceptor implements HandlerInterceptor
 {
     private final Environment environment;
 
-    public BaConditionalMappingHandlerInterceptor(final Environment environment) {
+    public FsConditionalMappingHandlerInterceptor(final Environment environment) {
         this.environment = environment;
     }
 

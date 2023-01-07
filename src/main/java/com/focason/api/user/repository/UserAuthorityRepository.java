@@ -9,8 +9,8 @@ import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.FsSort;
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.exception.BaEntityNotFoundException;
-import com.focason.api.core.exception.BaValidationErrorException;
+import com.focason.api.core.exception.FsEntityNotFoundException;
+import com.focason.api.core.exception.FsValidationErrorException;
 import com.focason.api.user.dao.UserAuthorityDao;
 import com.focason.api.user.entity.UserAuthorityEntity;
 import java.time.LocalDateTime;
@@ -84,7 +84,7 @@ public class UserAuthorityRepository
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new BaEntityNotFoundException(UserAuthorityEntity.class, entity.getId());
+            throw new FsEntityNotFoundException(UserAuthorityEntity.class, entity.getId());
         }
     }
 
@@ -96,7 +96,7 @@ public class UserAuthorityRepository
     public void deleteById(ID<UserAuthorityEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new BaEntityNotFoundException(UserAuthorityEntity.class, id);
+            throw new FsEntityNotFoundException(UserAuthorityEntity.class, id);
         }
     }
 
@@ -108,7 +108,7 @@ public class UserAuthorityRepository
     public void deleteLogicById(ID<UserAuthorityEntity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new BaEntityNotFoundException(UserAuthorityEntity.class, id);
+            throw new FsEntityNotFoundException(UserAuthorityEntity.class, id);
         }
     }
 
@@ -130,7 +130,7 @@ public class UserAuthorityRepository
      */
     public void grantAuthorization(@NonNull String uuid, List<String> authorities) {
         if (authorities == null || authorities.size() == 0) {
-            throw new BaValidationErrorException("ユーザ権限情報が存在しません。");
+            throw new FsValidationErrorException("ユーザ権限情報が存在しません。");
         }
         List<UserAuthorityEntity> entities = authorities.stream().map((authority) -> UserAuthorityEntity.builder()
             .authorityCode(authority)

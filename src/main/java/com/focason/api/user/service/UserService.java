@@ -9,10 +9,10 @@ import com.focason.api.auth.config.LoginUser;
 import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.core.attribute.ID;
-import com.focason.api.core.exception.BaResourceAlreadyExistsException;
-import com.focason.api.core.exception.BaResourceNotFoundException;
-import com.focason.api.core.exception.BaUnexpectedPhantomReadException;
-import com.focason.api.core.utils.BCryptEncoder;
+import com.focason.api.core.exception.FsResourceAlreadyExistsException;
+import com.focason.api.core.exception.FsResourceNotFoundException;
+import com.focason.api.core.exception.FsUnexpectedPhantomReadException;
+import com.focason.api.core.utils.FsBCryptEncoder;
 import com.focason.api.user.entity.UserEntity;
 import com.focason.api.user.repository.UserAuthorityRepository;
 import com.focason.api.user.repository.UserRepository;
@@ -94,7 +94,7 @@ public class UserService
         var userEntity = userRepository.findById(id);
         var userResource = userEntity.map(this::convertEntityToResource);
         var uuid = userResource.map(UserResource::getUuid)
-            .orElseThrow(() -> new BaResourceNotFoundException(UserResource.class, id));
+            .orElseThrow(() -> new FsResourceNotFoundException(UserResource.class, id));
 
         return Optional.of(userResource.get()
             .withPassword(""));
@@ -110,13 +110,13 @@ public class UserService
     public UserResource createResource(UserResource resource) {
         // ユーザ重複性チェック（username と email）
         if (isUserExisted(resource)) {
-            throw new BaResourceAlreadyExistsException(UserEntity.class,
+            throw new FsResourceAlreadyExistsException(UserEntity.class,
                 resource.getEmail() + " or " + resource.getUsername());
         }
 
         // ユーザ登録
         var id = userRepository.create(
-            resource.withPassword(BCryptEncoder.getInstance().encode(resource.getPassword()))
+            resource.withPassword(FsBCryptEncoder.getInstance().encode(resource.getPassword()))
                 // .withType(UserType.PREMIUM.getValue())
                 .toEntity());
 
@@ -124,7 +124,7 @@ public class UserService
         userAuthorityRepository.grantAuthorization(resource.getUuid(), resource.getAuthorities());
 
         // ユーザを取得します。
-        return getResource(id).orElseThrow(BaUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -164,14 +164,14 @@ public class UserService
     public UserResource updateResource(ID<UserEntity> id, UserResource resource) {
         // ユーザIDにおいて重複したデータが存在していることを示す。
         if (!userRepository.exists(id)) {
-            throw new BaResourceNotFoundException(UserEntity.class, id);
+            throw new FsResourceNotFoundException(UserEntity.class, id);
         }
 
         // ユーザを更新します。
         userRepository.update(id, resource.toEntity());
 
         // ユーザを取得します。
-        return getResource(id).orElseThrow(BaUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -184,7 +184,7 @@ public class UserService
         // TODO Waiting for finalization of basic design according to Q&A
         // ユーザIDにおいて重複したデータが存在していることを示す。
         if (!userRepository.exists(id)) {
-            throw new BaResourceNotFoundException(UserEntity.class, id);
+            throw new FsResourceNotFoundException(UserEntity.class, id);
         }
 
         // ユーザを削除します。
@@ -214,7 +214,7 @@ public class UserService
             FsPagination.DEFAULT,
             UserRepository.Sort.DEFAULT);
         if (userResourceLcResultSet.getCount() < 1) {
-            throw new BaResourceNotFoundException(LoginUser.class, subject);
+            throw new FsResourceNotFoundException(LoginUser.class, subject);
         }
         var loginUser = userResourceLcResultSet.getData().get(0);
         // ユーザ権限取得
