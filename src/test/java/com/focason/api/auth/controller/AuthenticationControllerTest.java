@@ -9,6 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.focason.api.ApplicationServer;
 import com.focason.api.auth.config.LoginUser;
+import com.focason.api.core.domain.Gender;
+import com.focason.api.core.domain.UserStatus;
+import com.focason.api.user.resource.UserResource;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = ApplicationServer.class)
 @ExtendWith(SpringExtension.class)
@@ -43,9 +49,12 @@ class AuthenticationControllerTest
     void tearDown() {}
 
     @Test
+    @Order(2)
     @DisplayName("テスト_ログイン")
     void login() throws Exception {
-        var requestBody = LoginUser.builder().username("yuanmz9432@gmail.com").password("123456").build();
+        var requestBody = LoginUser.builder()
+            .username("admin@focason.com")
+            .password("admin123456").build();
         mockMvc.perform(post("/auth/login")
             .content(objectMapper.writeValueAsString(requestBody))
             .contentType(MediaType.APPLICATION_JSON))
@@ -54,6 +63,24 @@ class AuthenticationControllerTest
     }
 
     @Test
+    @Order(1)
     @DisplayName("テスト_新規登録")
-    void register() {}
+    @Transactional
+    @Rollback()
+    void register() throws Exception {
+        var requestBody = UserResource.builder()
+            .username("tester")
+            .password("admin123456")
+            .gender(Gender.MALE.getValue())
+            .email("tester@focason.com")
+            .status(UserStatus.AVAILABLE.getValue())
+            .type(1)
+            .authorities(List.of("AUTH_USER"))
+            .build();
+        mockMvc.perform(post("/auth/register")
+            .content(objectMapper.writeValueAsString(requestBody))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
 }

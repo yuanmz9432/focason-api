@@ -36,7 +36,7 @@ Coming soon...
 #### 2. Docker
 * build docker image
     ```
-    docker build -t blazeash-api:latest .
+    docker build -t focason-api:latest .
     ```
 
 #### 3. JAVA

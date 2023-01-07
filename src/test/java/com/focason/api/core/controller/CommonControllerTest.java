@@ -37,6 +37,7 @@ public class CommonControllerTest
     void tearDown() {}
 
     @Test
+    @Order(0)
     @DisplayName("ヘルスチェックテスト")
     public void testHeartbeat() throws Exception {
         logger.info("* CommonControllerTest setUpBeforeAll()...");

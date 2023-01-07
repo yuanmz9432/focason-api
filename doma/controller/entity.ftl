@@ -13,18 +13,18 @@ package ${packageName};
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
-import annotation.core.com.blazeash.api.LcConditionParam;
-import annotation.core.com.blazeash.api.LcPaginationParam;
-import annotation.core.com.blazeash.api.LcSortParam;
-import attribute.core.com.blazeash.api.ID;
-import attribute.core.com.blazeash.api.LcPagination;
-import attribute.core.com.blazeash.api.LcResultSet;
-import attribute.core.com.blazeash.api.LcSort;
-import exception.core.com.blazeash.api.LcResourceNotFoundException;
-import api.lemonico.entity.${simpleName}Entity;
-import api.lemonico.repository.${simpleName}Repository;
-import api.lemonico.resource.${simpleName}Resource;
-import api.lemonico.service.${simpleName}Service;
+import com.focason.api.core.annotation.FsConditionParam;
+import com.focason.api.core.annotation.FsPaginationParam;
+import com.focason.api.core.annotation.FsSortParam;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
+import com.focason.api.core.attribute.FsSort;
+import com.focason.api.core.attribute.ID;
+import com.focason.api.core.exception.FsResourceNotFoundException;
+import com.focason.api.entity.${simpleName}Entity;
+import com.focason.api.repository.${simpleName}Repository;
+import com.focason.api.resource.${simpleName}Resource;
+import com.focason.api.service.${simpleName}Service;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -70,14 +70,14 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
      * @return ${comment}リソース一覧取得APIレスポンス
      */
     @GetMapping(COLLECTION_RESOURCE_URI)
-    public ResponseEntity<LcResultSet<${simpleName}Resource>> get${simpleName}List(
-        @LcConditionParam ${simpleName}Repository.Condition condition,
-        @LcPaginationParam LcPagination pagination,
-        @LcSortParam(allowedValues = {}) LcSort fsSort) {
+    public ResponseEntity<FsResultSet<${simpleName}Resource>> get${simpleName}List(
+        @FsConditionParam ${simpleName}Repository.Condition condition,
+        @FsPaginationParam FsPagination pagination,
+        @FsSortParam(allowedValues = {}) FsSort fsSort) {
         if (condition == null) {
             condition = ${simpleName}Repository.Condition.DEFAULT;
         }
-        var sort = ${simpleName}Repository.Sort.fromLcSort(fsSort);
+        var sort = ${simpleName}Repository.Sort.fromFsSort(fsSort);
         return ResponseEntity.ok(service.getResourceList(condition, pagination, sort));
     }
 
@@ -92,7 +92,7 @@ public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySu
         @PathVariable("id") ID<${simpleName}Entity> id) {
         return service.getResource(id)
             .map(ResponseEntity::ok)
-            .orElseThrow(() -> new LcResourceNotFoundException(${simpleName}Resource.class, id));
+            .orElseThrow(() -> new FsResourceNotFoundException(${simpleName}Resource.class, id));
     }
 
     /**

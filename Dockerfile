@@ -8,13 +8,13 @@ MAINTAINER Yuan
 RUN apk add --update;apk add ttf-dejavu;apk add fontconfig
 
 # application.yml env
-ENV DB_HOST="mysql.blazeash.com"
+ENV DB_HOST="mysql.focason.com"
 ENV DB_PORT="3306"
-ENV DB_SCHEMA="blazeash"
+ENV DB_SCHEMA="focason"
 ENV DB_USERNAME="root"
 ENV DB_PASSWORD="password"
 ENV APP_PORT=80
 
 EXPOSE 80 443
-ADD build/libs/blazeash-api-1.0-SNAPSHOT.jar app.jar
+ADD build/libs/focason-api-1.0-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]

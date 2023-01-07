@@ -36,7 +36,7 @@ public class UserServiceTest
     UserAuthorityService userAuthorityService;
 
     @BeforeEach
-    void setUpBeforeEach() {
+    void beforeEach() {
         logger.info("* AuthenticationControllerTest setUpBeforeEach()...");
         // ユーザサービス初期化
         userRepository = mock(UserRepository.class);

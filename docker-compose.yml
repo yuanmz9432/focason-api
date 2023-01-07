@@ -6,13 +6,13 @@ version: "3.8"
 services:
 
   api-server:
-    image: blazeash-api:latest
-    container_name: blazeash-api_container
+    image: focason-api:latest
+    container_name: focason-api_container
     environment:
       APP_PORT: 80
-      DB_HOST: mysql.blazeash.com
+      DB_HOST: mysql.focason.com
       DB_PORT: 3306
-      DB_NAME: blazeash
+      DB_NAME: focason
       DB_USERNAME: root
       DB_PASSWORD: password
     ports:
@@ -23,13 +23,13 @@ services:
 #
 #  mysql-server:
 #    image: mysql:5.7
-#    container_name: blazeash-db_container
+#    container_name: focason-db_container
 #    environment:
-#      MYSQL_DATABASE: blazeash
+#      MYSQL_DATABASE: focason
 #      MYSQL_USER: root
 #      MYSQL_PASSWORD: password
 #      MYSQL_ROOT_PASSWORD: password
-#      MYSQL_SCHEMA: blazeash
+#      MYSQL_SCHEMA: focason
 #      TZ: 'Asia/Tokyo'
 #    ports:
 #      - "33061:33061"
