@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CommonControllerTest
 {
     private static final Logger logger = LoggerFactory.getLogger(CommonControllerTest.class);
@@ -29,16 +30,14 @@ public class CommonControllerTest
     private final MockMvc mockMvc;
 
     @BeforeAll
-    static void setUpBeforeAll() {
-
-    }
+    static void beforeAll() {}
 
     @AfterEach
     void tearDown() {}
 
     @Test
     @Order(0)
-    @DisplayName("ヘルスチェックテスト")
+    @DisplayName("/heartbeat")
     public void testHeartbeat() throws Exception {
         logger.info("* CommonControllerTest setUpBeforeAll()...");
         mockMvc.perform(get("/heartbeat")).andExpect(status().isNoContent());

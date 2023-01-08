@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuthenticationControllerTest
 {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationControllerTest.class);
@@ -40,7 +41,7 @@ class AuthenticationControllerTest
     private static ObjectMapper objectMapper;
 
     @BeforeAll
-    static void setUpBeforeAll() {
+    static void beforeAll() {
         logger.info("* AuthenticationControllerTest setUpBeforeAll()...");
         objectMapper = new ObjectMapper();
     }
@@ -49,21 +50,7 @@ class AuthenticationControllerTest
     void tearDown() {}
 
     @Test
-    @Order(2)
-    @DisplayName("/auth/login")
-    void login() throws Exception {
-        var requestBody = LoginUser.builder()
-            .username("admin@focason.com")
-            .password("admin123456").build();
-        mockMvc.perform(post("/auth/login")
-            .content(objectMapper.writeValueAsString(requestBody))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    @Order(1)
+    @Order(0)
     @DisplayName("/auth/register")
     @Transactional
     @Rollback()
@@ -81,6 +68,20 @@ class AuthenticationControllerTest
             .content(objectMapper.writeValueAsString(requestBody))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @Order(1)
+    @DisplayName("/auth/login")
+    void login() throws Exception {
+        var requestBody = LoginUser.builder()
+            .username("admin@focason.com")
+            .password("admin123456").build();
+        mockMvc.perform(post("/auth/login")
+            .content(objectMapper.writeValueAsString(requestBody))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

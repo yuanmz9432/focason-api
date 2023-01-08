@@ -23,6 +23,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserServiceTest
 {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceTest.class);
@@ -49,17 +50,19 @@ public class UserServiceTest
     void tearDown() {}
 
     @Test
+    @Order(0)
     @Transactional
     @Rollback()
     public void When_GetUserById_Expect_ReturnTestUser() {
         logger.info("* When_GetUserById_Expect_ReturnTestUser() start...");
         when(userRepository.findById(TestData.TEST_USER_1_RESOURCE.getId()))
-            .thenReturn(Optional.of(TestData.TEST_USER_1_ENTITY));
+            .thenReturn(Optional.ofNullable(TestData.TEST_USER_1_ENTITY));
         var user = userService.getResource(TestData.TEST_USER_1_RESOURCE.getId());
         user.ifPresent((item) -> Assertions.assertEquals("admin", item.getUsername()));
     }
 
     @Test
+    @Order(1)
     @Transactional
     @Rollback()
     public void When_SearchUserByCondition_Expect_ReturnTestUserList() {
@@ -73,5 +76,19 @@ public class UserServiceTest
             FsPagination.DEFAULT,
             UserRepository.Sort.DEFAULT);
         Assertions.assertFalse(users.getData().isEmpty());
+    }
+
+    @Test
+    @Order(2)
+    @Transactional
+    @Rollback()
+    public void When_UpdateUserName_Expect_UsernameUpdated() {
+        logger.info("* When_UpdateUserName_Expect_UsernameUpdated() start...");
+        when(userRepository.exists(TestData.TEST_USER_1_RESOURCE.getId())).thenReturn(true);
+        when(userRepository.findById(TestData.TEST_USER_1_RESOURCE.getId()))
+            .thenReturn(Optional.ofNullable(TestData.TEST_USER_1_ENTITY.withUsername("updated_username")));
+        var user = userService.updateResource(TestData.TEST_USER_1_RESOURCE.getId(),
+            TestData.TEST_USER_1_RESOURCE.withUsername("updated_username"));
+        Assertions.assertEquals("updated_username", user.getUsername());
     }
 }
