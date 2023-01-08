@@ -1,1 +1,0 @@
-INSERT INTO `user` (`id`, `uuid`, `username`, `gender`, `email`, `password`, `status`, `type`, `created_by`, `created_at`, `modified_by`, `modified_at`, `is_deleted`) VALUES (1, 'bb18a80a-088b-4a99-aea6-fe25523ba2f9', 'admin', 1, 'admin@focason.com', '$2a$10$2SEXOlrr4HVQRq.qL9f07udqKBGZp/sjpaYFsFqWbAQLBiBSyBFQW', 1, 1, 'ADMIN', now(), 'ADMIN', now(), 0);
