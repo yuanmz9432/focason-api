@@ -1,7 +1,7 @@
 /*
  * Copyright 2023 Focason Co.,Ltd. AllRights Reserved.
  */
-package com.focason.api.user.service;
+package com.focason.api.service;
 
 import static org.mockito.Mockito.*;
 
@@ -10,6 +10,8 @@ import com.focason.api.core.attribute.FsResultSet;
 import com.focason.api.data.TestData;
 import com.focason.api.user.repository.UserAuthorityRepository;
 import com.focason.api.user.repository.UserRepository;
+import com.focason.api.user.service.UserAuthorityService;
+import com.focason.api.user.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.*;

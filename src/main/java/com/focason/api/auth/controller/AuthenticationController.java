@@ -10,6 +10,8 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 
 import com.focason.api.auth.config.JWTGenerator;
 import com.focason.api.auth.config.LoginUser;
+import com.focason.api.auth.request.LoginRequest;
+import com.focason.api.auth.request.RegisterRequest;
 import com.focason.api.auth.resource.JWTResource;
 import com.focason.api.core.controller.AbstractController;
 import com.focason.api.core.exception.FsEntityNotFoundException;
@@ -62,10 +64,13 @@ public class AuthenticationController extends AbstractController
     /**
      * ログイン
      *
+     * @param loginRequest ログインリクエスト
      * @return JWTトークン
      */
     @PostMapping(LOGIN_URI)
-    public ResponseEntity<JWTResource> login(@Valid @RequestBody LoginUser loginUser) {
+    public ResponseEntity<JWTResource> login(@Valid @RequestBody LoginRequest loginRequest) {
+        var loginUser =
+            LoginUser.builder().username(loginRequest.getUsername()).password(loginRequest.getPassword()).build();
         var userDetails = userDetailsService.loadUserByUsername(loginUser.getUsername());
         if (userDetails == null) {
             throw new FsEntityNotFoundException(UserEntity.class, loginUser.getUsername());
@@ -84,15 +89,24 @@ public class AuthenticationController extends AbstractController
     /**
      * 登録
      *
-     * @param resource クライアントリソース
-     * @return クライアントリソース作成APIレスポンス
+     * @param registerRequest 新規登録リクエスト
+     * @return 新規登録APIレスポンス
      */
     @PostMapping(REGISTER_URI)
     public ResponseEntity<Void> register(
-        @Valid @RequestBody UserResource resource,
+        @Valid @RequestBody RegisterRequest registerRequest,
         UriComponentsBuilder uriBuilder) {
-        var id = userService.createResource(
-            resource.withUuid(UUID.randomUUID().toString())).getId();
+        var resource = UserResource.builder()
+            .uuid(UUID.randomUUID().toString())
+            .username(registerRequest.getUsername())
+            .email(registerRequest.getEmail())
+            .password(registerRequest.getPassword())
+            .gender(registerRequest.getGender())
+            .type(registerRequest.getType())
+            .authorities(registerRequest.getAuthorities())
+            .status(registerRequest.getStatus())
+            .build();
+        var id = userService.createResource(resource).getId();
         var uri = relativeTo(uriBuilder).withMethodCall(on(UserController.class).getUser(id))
             .build()
             .encode()

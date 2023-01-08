@@ -1,7 +1,7 @@
 /*
  * Copyright 2023 Focason Co.,Ltd. AllRights Reserved.
  */
-package com.focason.api.auth.controller;
+package com.focason.api.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class AuthenticationControllerTest
+class AuthenticationControllerTest extends BaseControllerTest
 {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationControllerTest.class);
 
