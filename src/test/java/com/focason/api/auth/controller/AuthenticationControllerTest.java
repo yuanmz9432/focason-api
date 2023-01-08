@@ -50,7 +50,7 @@ class AuthenticationControllerTest
 
     @Test
     @Order(2)
-    @DisplayName("テスト_ログイン")
+    @DisplayName("/auth/login")
     void login() throws Exception {
         var requestBody = LoginUser.builder()
             .username("admin@focason.com")
@@ -64,7 +64,7 @@ class AuthenticationControllerTest
 
     @Test
     @Order(1)
-    @DisplayName("テスト_新規登録")
+    @DisplayName("/auth/register")
     @Transactional
     @Rollback()
     void register() throws Exception {

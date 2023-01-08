@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 
 import com.focason.api.core.attribute.FsPagination;
 import com.focason.api.core.attribute.FsResultSet;
-import com.focason.api.core.attribute.ID;
 import com.focason.api.data.TestData;
 import com.focason.api.user.repository.UserAuthorityRepository;
 import com.focason.api.user.repository.UserRepository;
@@ -39,17 +38,11 @@ public class UserServiceTest
 
     @BeforeEach
     void beforeEach() {
-        logger.info("* AuthenticationControllerTest setUpBeforeEach()...");
-        // ユーザサービス初期化
+        logger.info("* UserServiceTest beforeEach()...");
         userRepository = mock(UserRepository.class);
         userAuthorityRepository = mock(UserAuthorityRepository.class);
         userAuthorityService = mock(UserAuthorityService.class);
         userService = new UserService(userRepository, userAuthorityRepository, userAuthorityService);
-
-        lenient().when(userRepository.findById(ID.of(1L))).thenReturn(Optional.of(TestData.TEST_USER_1_ENTITY));
-        lenient().when(userRepository.findAll(
-            UserRepository.Condition.builder().username("admin").build(), FsPagination.DEFAULT,
-            UserRepository.Sort.DEFAULT)).thenReturn(new FsResultSet<>(List.of(TestData.TEST_USER_1_ENTITY), 1));
     }
 
     @AfterEach
@@ -60,8 +53,10 @@ public class UserServiceTest
     @Rollback()
     public void When_GetUserById_Expect_ReturnTestUser() {
         logger.info("* When_GetUserById_Expect_ReturnTestUser() start...");
-        var user = userService.getResource(ID.of(1L));
-        user.ifPresent((item) -> Assertions.assertEquals(item.getUsername(), "Yuan"));
+        when(userRepository.findById(TestData.TEST_USER_1_RESOURCE.getId()))
+            .thenReturn(Optional.of(TestData.TEST_USER_1_ENTITY));
+        var user = userService.getResource(TestData.TEST_USER_1_RESOURCE.getId());
+        user.ifPresent((item) -> Assertions.assertEquals("admin", item.getUsername()));
     }
 
     @Test
@@ -69,8 +64,13 @@ public class UserServiceTest
     @Rollback()
     public void When_SearchUserByCondition_Expect_ReturnTestUserList() {
         logger.info("* When_SearchUserByCondition_Expect_ReturnTestUserList() start...");
+        when(userRepository.findAll(
+            UserRepository.Condition.builder().username(TestData.TEST_USER_1_RESOURCE.getUsername()).build(),
+            FsPagination.DEFAULT,
+            UserRepository.Sort.DEFAULT)).thenReturn(new FsResultSet<>(List.of(TestData.TEST_USER_1_ENTITY), 1));
         var users = userService.getResourceList(
-            UserRepository.Condition.builder().username("admin").build(), FsPagination.DEFAULT,
+            UserRepository.Condition.builder().username(TestData.TEST_USER_1_RESOURCE.getUsername()).build(),
+            FsPagination.DEFAULT,
             UserRepository.Sort.DEFAULT);
         Assertions.assertFalse(users.getData().isEmpty());
     }
