@@ -9,12 +9,12 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  DB_HOST: mysql.focason.com
-  DB_PORT: 3306
-  DB_NAME: focason
-  DB_USERNAME: admin
-  DB_PASSWORD: password
+#env:
+#  DB_HOST: mysql.focason.com
+#  DB_PORT: 3306
+#  DB_NAME: focason
+#  DB_USERNAME: admin
+#  DB_PASSWORD: password
 
 jobs:
   build:
@@ -28,6 +28,13 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: Set the value
+        run: |
+          echo "DB_HOST=mysql.focason.com" >> $GITHUB_ENV
+          echo "DB_PORT=3306" >> $GITHUB_ENV
+          echo "DB_NAME=focason" >> $GITHUB_ENV
+          echo "DB_USERNAME=admin" >> $GITHUB_ENV
+          echo "DB_PASSWORD=password" >> $GITHUB_ENV
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Run the Gradle package task
