@@ -142,7 +142,7 @@ tasks.register('genController') {
         ant.gen(url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                tableNamePattern: ${GEN_TARGET_TABLE},
+                tableNamePattern: "${GEN_TARGET_TABLE}",
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/controller")
                 {
@@ -162,7 +162,7 @@ tasks.register('genService') {
         ant.gen(url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                tableNamePattern: ${GEN_TARGET_TABLE},
+                tableNamePattern: "${GEN_TARGET_TABLE}",
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/service")
                 {
@@ -182,7 +182,7 @@ tasks.register('genRepository') {
         ant.gen(url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                tableNamePattern: ${GEN_TARGET_TABLE},
+                tableNamePattern: "${GEN_TARGET_TABLE}",
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/repository")
                 {
@@ -202,7 +202,7 @@ tasks.register('genResource') {
         ant.gen(url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                tableNamePattern: ${GEN_TARGET_TABLE},
+                tableNamePattern: "${GEN_TARGET_TABLE}",
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/resource")
                 {
@@ -223,7 +223,7 @@ tasks.register('genEntity') {
                 url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                tableNamePattern: ${GEN_TARGET_TABLE},
+                tableNamePattern: "${GEN_TARGET_TABLE}",
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/entity")
                 {
@@ -247,7 +247,7 @@ tasks.register('genDao') {
                 url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                tableNamePattern: ${GEN_TARGET_TABLE},
+                tableNamePattern: "${GEN_TARGET_TABLE}",
                 ignoredTableNamePattern: "flyway_schema_history",
                 templatePrimaryDir: "doma/dao")
                 {

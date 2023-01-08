@@ -11,9 +11,9 @@ package ${packageName};
 
 
 
-import attribute.core.com.blazeash.api.ID;
-import api.lemonico.entity.${entityDesc.simpleName}Entity;
-import api.lemonico.repository.${entityDesc.simpleName}Repository;
+import com.focason.api.core.attribute.ID;
+import com.focason.api.entity.${entityDesc.simpleName}Entity;
+import com.focason.api.repository.${entityDesc.simpleName}Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;

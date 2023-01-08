@@ -11,10 +11,9 @@ package ${packageName};
 
 
 
-import attribute.core.com.blazeash.api.ID;
+import com.focason.api.core.attribute.ID;
+import com.focason.api.core.entity.FsEntity;
 import java.time.LocalDateTime;
-
-import entity.core.com.blazeash.api.LcEntity;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -34,7 +33,7 @@ import org.seasar.doma.*;
 @Builder(toBuilder = true)
 @With
 @Table(name = "${tableName}")
-public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends LcEntity
+public class <#if entityPrefix??>${entityPrefix}</#if>${simpleName}<#if entitySuffix??>${entitySuffix}</#if> extends FsEntity
 {
 <#list ownEntityPropertyDescs as property>
   <#if showDbComment && property.comment??>

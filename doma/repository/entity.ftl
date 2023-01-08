@@ -11,13 +11,13 @@ package ${packageName};
 
 import static java.util.stream.Collectors.toList;
 
-import attribute.core.com.blazeash.api.ID;
-import attribute.core.com.blazeash.api.LcPagination;
-import attribute.core.com.blazeash.api.LcResultSet;
-import attribute.core.com.blazeash.api.LcSort;
-import exception.core.com.blazeash.api.LcEntityNotFoundException;
-import api.lemonico.dao.${simpleName}Dao;
-import api.lemonico.entity.${simpleName}Entity;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
+import com.focason.api.core.attribute.FsSort;
+import com.focason.api.core.attribute.ID;
+import com.focason.api.core.exception.FsEntityNotFoundException;
+import com.focason.api.dao.${simpleName}Dao;
+import com.focason.api.entity.${simpleName}Entity;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,10 +48,10 @@ public class ${simpleName}${entitySuffix}
      * @param sort ソートパラメータ
      * @return エンティティの結果セットが返されます。
      */
-    public LcResultSet<${simpleName}Entity> findAll(Condition condition, LcPagination pagination, Sort sort) {
+    public FsResultSet<${simpleName}Entity> findAll(Condition condition, FsPagination pagination, Sort sort) {
         var options = pagination.toSelectOptions().count();
         var entities = dao.selectAll(condition, options, sort, toList());
-        return new LcResultSet<>(entities, options.getCount());
+        return new FsResultSet<>(entities, options.getCount());
     }
 
     /**
@@ -90,7 +90,7 @@ public class ${simpleName}${entitySuffix}
         Objects.requireNonNull(entity, "'entity' must not be NULL.");
         var result = dao.update(entity.withId(id));
         if (result.getCount() != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, entity.getId());
+            throw new FsEntityNotFoundException(${simpleName}Entity.class, entity.getId());
         }
     }
 
@@ -102,7 +102,7 @@ public class ${simpleName}${entitySuffix}
     public void deleteById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
         var deleted = dao.deleteById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
+            throw new FsEntityNotFoundException(${simpleName}Entity.class, id);
         }
     }
 
@@ -114,7 +114,7 @@ public class ${simpleName}${entitySuffix}
     public void deleteLogicById(ID<${simpleName}Entity> id) throws IllegalArgumentException {
         var deleted = dao.deleteLogicById(id);
         if (deleted != 1) {
-            throw new LcEntityNotFoundException(${simpleName}Entity.class, id);
+            throw new FsEntityNotFoundException(${simpleName}Entity.class, id);
         }
     }
 
@@ -161,7 +161,7 @@ public class ${simpleName}${entitySuffix}
         /**
          * デフォルトの検索条件
          */
-        public static final Sort DEFAULT = new Sort(SortColumn.ID, LcSort.Direction.ASC);
+        public static final Sort DEFAULT = new Sort(SortColumn.ID, FsSort.Direction.ASC);
 
         /**
          * ソート列
@@ -171,7 +171,7 @@ public class ${simpleName}${entitySuffix}
         /**
          * ソート順序
          */
-        LcSort.Direction direction;
+        FsSort.Direction direction;
 
         /**
          * このソートパラメータをSQLステートメント形式に変換して返します。
@@ -183,12 +183,12 @@ public class ${simpleName}${entitySuffix}
         }
 
         /**
-         * {@link LcSort} から新規ソートパラメータを生成します。
+         * {@link FsSort} から新規ソートパラメータを生成します。
          *
-         * @param sort {@link LcSort}
+         * @param sort {@link FsSort}
          * @return ソートパラメータ
          */
-        public static Sort fromLcSort(LcSort sort) {
+        public static Sort fromFsSort(FsSort sort) {
             return new Sort(SortColumn.fromPropertyName(sort.getProperty()), sort.getDirection());
         }
     }

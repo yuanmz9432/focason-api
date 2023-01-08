@@ -11,7 +11,7 @@ WHERE
     AND username = /* condition.getUsername() */'username'
     /*%end */
     /*%if condition.getEmail() != null */
-    AND email = /* condition.getEmail() */'admin@blazeash.com'
+    AND email = /* condition.getEmail() */'admin@focason.com'
     /*%end */
     /*%if condition.getUuid() != null */
     AND uuid = /* condition.getUuid() */'uuid'

@@ -11,14 +11,14 @@ package ${packageName};
 
 import static java.util.stream.Collectors.toList;
 
-import attribute.core.com.blazeash.api.ID;
-import attribute.core.com.blazeash.api.LcPagination;
-import attribute.core.com.blazeash.api.LcResultSet;
-import exception.core.com.blazeash.api.LcResourceNotFoundException;
-import exception.core.com.blazeash.api.LcUnexpectedPhantomReadException;
-import api.lemonico.entity.${simpleName}Entity;
-import api.lemonico.repository.${simpleName}Repository;
-import api.lemonico.resource.${simpleName}Resource;
+import com.focason.api.core.attribute.FsPagination;
+import com.focason.api.core.attribute.FsResultSet;
+import com.focason.api.core.attribute.ID;
+import com.focason.api.core.exception.FsResourceNotFoundException;
+import com.focason.api.core.exception.FsUnexpectedPhantomReadException;
+import com.focason.api.entity.${simpleName}Entity;
+import com.focason.api.repository.${simpleName}Repository;
+import com.focason.api.resource.${simpleName}Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -54,16 +54,16 @@ public class ${simpleName}${entitySuffix}
      * @return ${comment}リソースの結果セットが返されます。
      */
     @Transactional(readOnly = true)
-    public LcResultSet<${simpleName}Resource> getResourceList(
+    public FsResultSet<${simpleName}Resource> getResourceList(
         ${simpleName}Repository.Condition condition,
-        LcPagination pagination,
+        FsPagination pagination,
         ${simpleName}Repository.Sort sort) {
         // ${comment}の一覧と全体件数を取得します。
         var resultSet = repository.findAll(condition, pagination, sort);
 
         // ${comment}エンティティのリストを${comment}リソースのリストに変換します。
         var resources = convertEntitiesToResources(resultSet.getData());
-        return new LcResultSet<>(resources, resultSet.getCount());
+        return new FsResultSet<>(resources, resultSet.getCount());
     }
 
     /**
@@ -90,7 +90,7 @@ public class ${simpleName}${entitySuffix}
         var id = repository.create(resource.toEntity());
 
         // ${comment}を取得します。
-        return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -105,14 +105,14 @@ public class ${simpleName}${entitySuffix}
         // TODO Waiting for finalization of basic design according to Q&A
         // ${comment}IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(${simpleName}Entity.class, id);
+            throw new FsResourceNotFoundException(${simpleName}Entity.class, id);
         }
 
         // ${comment}を更新します。
         repository.update(id, resource.toEntity());
 
         // ${comment}を取得します。
-        return getResource(id).orElseThrow(LcUnexpectedPhantomReadException::new);
+        return getResource(id).orElseThrow(FsUnexpectedPhantomReadException::new);
     }
 
     /**
@@ -125,7 +125,7 @@ public class ${simpleName}${entitySuffix}
         // TODO Waiting for finalization of basic design according to Q&A
         // ${comment}IDにおいて重複したデータが存在していることを示す。
         if (!repository.exists(id)) {
-            throw new LcResourceNotFoundException(${simpleName}Entity.class, id);
+            throw new FsResourceNotFoundException(${simpleName}Entity.class, id);
         }
 
         // ${comment}を削除します。

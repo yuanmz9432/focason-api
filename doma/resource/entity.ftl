@@ -11,8 +11,8 @@ package ${packageName};
 
 
 
-import attribute.core.com.blazeash.api.ID;
-<#--import api.lemonico.entity.${simpleName}Entity;-->
+import com.focason.api.core.attribute.ID;
+import com.focason.api.entity.${simpleName}Entity;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
