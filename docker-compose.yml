@@ -13,7 +13,7 @@ services:
       DB_HOST: mysql.focason.com
       DB_PORT: 3306
       DB_NAME: focason
-      DB_USERNAME: root
+      DB_USERNAME: admin
       DB_PASSWORD: password
     ports:
       - "8080:80"

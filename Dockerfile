@@ -11,7 +11,7 @@ RUN apk add --update;apk add ttf-dejavu;apk add fontconfig
 ENV DB_HOST="mysql.focason.com"
 ENV DB_PORT="3306"
 ENV DB_SCHEMA="focason"
-ENV DB_USERNAME="root"
+ENV DB_USERNAME="admin"
 ENV DB_PASSWORD="password"
 ENV APP_PORT=80
 

@@ -30,7 +30,7 @@ public class FsAopAspect
 
     private static final Logger logger = LoggerFactory.getLogger(FsAopAspect.class);
 
-    @Pointcut("execution(* com.blazeash.api..controller..*(..))")
+    @Pointcut("execution(* com.focason.api..controller..*(..))")
     public void pointCut() {}
 
     @Before("pointCut()")
@@ -53,7 +53,7 @@ public class FsAopAspect
         }
     }
 
-    @Around("within(com.blazeash.api..controller.*)")
+    @Around("within(com.focason.api..controller.*)")
     public Object around(final ProceedingJoinPoint pjp) throws Throwable {
         final StopWatch sw = new StopWatch();
         sw.start();
