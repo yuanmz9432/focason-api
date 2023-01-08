@@ -18,7 +18,7 @@ public class FsEntityListenerManager
 
     public static void forEachListener(Consumer<FsEntityListener> action) {
         if (listeners == null) {
-            throw new IllegalStateException("BlazeashListenerManager has not been initialized yet");
+            throw new IllegalStateException("FocasonListenerManager has not been initialized yet");
         } else {
             listeners.forEach(action);
         }

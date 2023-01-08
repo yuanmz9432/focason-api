@@ -37,7 +37,7 @@ public class CommonControllerTest
 
     @Test
     @Order(0)
-    @DisplayName("/heartbeat")
+    @DisplayName("testHeartbeat GET /heartbeat")
     public void testHeartbeat() throws Exception {
         logger.info("* CommonControllerTest setUpBeforeAll()...");
         mockMvc.perform(get("/heartbeat")).andExpect(status().isNoContent());

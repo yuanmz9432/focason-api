@@ -17,7 +17,6 @@ import com.focason.api.user.entity.UserEntity;
 import com.focason.api.user.repository.UserRepository;
 import com.focason.api.user.resource.UserResource;
 import com.focason.api.user.service.UserService;
-import javax.validation.Valid;
 import javax.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +96,7 @@ public class UserController
     @PutMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<UserResource> updateUser(
         @PathVariable("id") ID<UserEntity> id,
-        @Valid @RequestBody UserResource resource) {
+        @RequestBody UserResource resource) {
         var updatedResource = service.updateResource(id, resource);
         return ResponseEntity.ok(updatedResource);
     }

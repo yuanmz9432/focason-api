@@ -51,10 +51,10 @@ class AuthenticationControllerTest
 
     @Test
     @Order(0)
-    @DisplayName("/auth/register")
+    @DisplayName("register POST /auth/register")
     @Transactional
     @Rollback()
-    void register() throws Exception {
+    void testRegister() throws Exception {
         var requestBody = UserResource.builder()
             .username("tester")
             .password("admin123456")
@@ -73,8 +73,8 @@ class AuthenticationControllerTest
 
     @Test
     @Order(1)
-    @DisplayName("/auth/login")
-    void login() throws Exception {
+    @DisplayName("login POST /auth/login")
+    void testLogin() throws Exception {
         var requestBody = LoginUser.builder()
             .username("admin@focason.com")
             .password("admin123456").build();

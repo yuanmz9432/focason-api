@@ -25,8 +25,8 @@ public final class FsSort
         this.direction = direction;
     }
 
-    public static BlazeashSortBuilder builder() {
-        return new BlazeashSortBuilder();
+    public static FocasonSortBuilder builder() {
+        return new FocasonSortBuilder();
     }
 
     public boolean equals(final Object o) {
@@ -65,7 +65,7 @@ public final class FsSort
 
     public String toString() {
         String var10000 = this.getProperty();
-        return "BlazeashSort(property=" + var10000 + ", direction=" + this.getDirection() + ")";
+        return "FocasonSort(property=" + var10000 + ", direction=" + this.getDirection() + ")";
     }
 
     public FsSort withProperty(final String property) {
@@ -84,19 +84,19 @@ public final class FsSort
         return this.direction;
     }
 
-    public static class BlazeashSortBuilder
+    public static class FocasonSortBuilder
     {
         private String property;
         private FsSort.Direction direction;
 
-        BlazeashSortBuilder() {}
+        FocasonSortBuilder() {}
 
-        public BlazeashSortBuilder property(final String property) {
+        public FocasonSortBuilder property(final String property) {
             this.property = property;
             return this;
         }
 
-        public BlazeashSortBuilder direction(final Direction direction) {
+        public FocasonSortBuilder direction(final Direction direction) {
             this.direction = direction;
             return this;
         }
@@ -106,7 +106,7 @@ public final class FsSort
         }
 
         public String toString() {
-            return "BlazeashSort.BlazeashSortBuilder(property=" + this.property + ", direction=" + this.direction + ")";
+            return "FocasonSort.FocasonSortBuilder(property=" + this.property + ", direction=" + this.direction + ")";
         }
     }
 
