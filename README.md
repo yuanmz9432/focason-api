@@ -1,6 +1,6 @@
 # Focason API
 
-This is a java project for practice. 
+Nothing to show...
 
 ## Description
 
