@@ -7,28 +7,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.focason.api.ApplicationServer;
-import com.focason.api.auth.config.LoginUser;
+import com.focason.api.auth.request.LoginRequest;
+import com.focason.api.auth.request.RegisterRequest;
 import com.focason.api.core.domain.Gender;
 import com.focason.api.core.domain.UserStatus;
-import com.focason.api.user.resource.UserResource;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = ApplicationServer.class)
-@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -51,11 +45,11 @@ class AuthenticationControllerTest extends BaseControllerTest
 
     @Test
     @Order(0)
-    @DisplayName("register POST /auth/register")
+    @DisplayName("POST /auth/register")
     @Transactional
     @Rollback()
     void testRegister() throws Exception {
-        var requestBody = UserResource.builder()
+        var requestBody = RegisterRequest.builder()
             .username("tester")
             .password("admin123456")
             .gender(Gender.MALE.getValue())
@@ -73,9 +67,9 @@ class AuthenticationControllerTest extends BaseControllerTest
 
     @Test
     @Order(1)
-    @DisplayName("login POST /auth/login")
+    @DisplayName("POST /auth/login")
     void testLogin() throws Exception {
-        var requestBody = LoginUser.builder()
+        var requestBody = LoginRequest.builder()
             .username("admin@focason.com")
             .password("admin123456").build();
         mockMvc.perform(post("/auth/login")

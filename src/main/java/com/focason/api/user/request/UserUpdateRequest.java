@@ -1,50 +1,48 @@
-package com.focason.api.auth.request;
+package com.focason.api.user.request;
 
 
 
+import com.focason.api.core.attribute.ID;
+import com.focason.api.user.entity.UserEntity;
 import java.util.List;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Getter
 @Builder(toBuilder = true)
 @With
 @ToString
-public class RegisterRequest
+public class UserUpdateRequest
 {
 
+    /** 自動採番ID */
+    private final ID<UserEntity> id;
+
+    /** UUID */
+    private final String uuid;
+
     /** ユーザ名 */
-    @NotNull(message = "Username can not be null.")
     private final String username;
 
     /** 性別（１：男性、２：女性、９：不明） */
-    @NotNull(message = "Gender can not be null.")
-    @Max(1)
     private final Integer gender;
 
     /** メールアドレス（ログインID） */
-    @NotNull(message = "Email can not be null.")
-    @Email(message = "Email is not right.")
     private final String email;
 
     /** パスワード */
-    @NotNull(message = "Password can not be null.")
     private final String password;
 
     /** ステータス（１：有効、０：無効） */
-    @NotNull(message = "Status can not be null.")
     private final Integer status;
 
     /** タイプ（１：本番、２：デモ、９：スーパーユーザ） */
-    @NotNull(message = "Type can not be null.")
     private final Integer type;
 
+    /** 削除フラグ（0: 未削除 1: 削除済） */
+    private final Integer isDeleted;
+
     /** ユーザーの権限リスト */
-    @NotNull(message = "Authorities can not be null.")
     private final List<String> authorities;
 }

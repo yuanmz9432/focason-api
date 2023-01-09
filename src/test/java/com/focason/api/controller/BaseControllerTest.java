@@ -23,7 +23,7 @@ public abstract class BaseControllerTest
     @BeforeEach
     void loadContext() {
         if (accessToken == null || accessToken.isEmpty()) {
-            accessToken = generator.generateAccessToken(TestData.TEST_USER_1_RESOURCE.getUuid(),
+            accessToken = generator.generateAccessToken(TestData.USER_RESOURCE_1.getUuid(),
                 new Date(System.currentTimeMillis() + 3600 * 1000));
         }
     }

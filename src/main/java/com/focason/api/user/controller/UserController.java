@@ -15,6 +15,7 @@ import com.focason.api.core.attribute.ID;
 import com.focason.api.core.exception.FsResourceNotFoundException;
 import com.focason.api.user.entity.UserEntity;
 import com.focason.api.user.repository.UserRepository;
+import com.focason.api.user.request.UserUpdateRequest;
 import com.focason.api.user.resource.UserResource;
 import com.focason.api.user.service.UserService;
 import javax.validation.groups.Default;
@@ -87,7 +88,7 @@ public class UserController
      * ユーザーIDを指定して、ユーザーリソース更新API
      *
      * @param id ユーザーID
-     * @param resource ユーザーリソース更新APIレスポンス
+     * @param userUpdateRequest ユーザーリソース更新APIリクエスト
      * @return ユーザーリソース更新APIレスポンス
      */
     @Validated({
@@ -96,8 +97,18 @@ public class UserController
     @PutMapping(MEMBER_RESOURCE_URI)
     public ResponseEntity<UserResource> updateUser(
         @PathVariable("id") ID<UserEntity> id,
-        @RequestBody UserResource resource) {
-        var updatedResource = service.updateResource(id, resource);
+        @RequestBody UserUpdateRequest userUpdateRequest) {
+        var updatedResource = service.updateResource(id, UserResource.builder()
+            .username(userUpdateRequest.getUsername())
+            .type(userUpdateRequest.getType())
+            .uuid(userUpdateRequest.getUuid())
+            .status(userUpdateRequest.getStatus())
+            .authorities(userUpdateRequest.getAuthorities())
+            .gender(userUpdateRequest.getGender())
+            .email(userUpdateRequest.getEmail())
+            .password(userUpdateRequest.getPassword())
+            .isDeleted(userUpdateRequest.getIsDeleted())
+            .build());
         return ResponseEntity.ok(updatedResource);
     }
 

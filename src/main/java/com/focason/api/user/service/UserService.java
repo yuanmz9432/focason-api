@@ -241,7 +241,7 @@ public class UserService
      * @return リソース
      */
     @Transactional(readOnly = true)
-    public UserResource convertEntityToResource(UserEntity entity) {
+    UserResource convertEntityToResource(UserEntity entity) {
         return convertEntitiesToResources(Collections.singletonList(entity)).get(0);
     }
 
@@ -252,7 +252,7 @@ public class UserService
      * @return リソースのリスト
      */
     @Transactional(readOnly = true)
-    public List<UserResource> convertEntitiesToResources(List<UserEntity> entities) {
+    List<UserResource> convertEntitiesToResources(List<UserEntity> entities) {
         return entities.stream()
             .map(UserResource::new)
             .collect(toList());

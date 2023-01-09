@@ -57,9 +57,9 @@ public class UserServiceTest
     @Rollback()
     public void When_GetUserById_Expect_ReturnTestUser() {
         logger.info("* When_GetUserById_Expect_ReturnTestUser() start...");
-        when(userRepository.findById(TestData.TEST_USER_1_RESOURCE.getId()))
-            .thenReturn(Optional.ofNullable(TestData.TEST_USER_1_ENTITY));
-        var user = userService.getResource(TestData.TEST_USER_1_RESOURCE.getId());
+        when(userRepository.findById(TestData.USER_RESOURCE_1.getId()))
+            .thenReturn(Optional.ofNullable(TestData.USER_ENTITY_1));
+        var user = userService.getResource(TestData.USER_RESOURCE_1.getId());
         user.ifPresent((item) -> Assertions.assertEquals("admin", item.getUsername()));
     }
 
@@ -70,11 +70,11 @@ public class UserServiceTest
     public void When_SearchUserByCondition_Expect_ReturnTestUserList() {
         logger.info("* When_SearchUserByCondition_Expect_ReturnTestUserList() start...");
         when(userRepository.findAll(
-            UserRepository.Condition.builder().username(TestData.TEST_USER_1_RESOURCE.getUsername()).build(),
+            UserRepository.Condition.builder().username(TestData.USER_RESOURCE_1.getUsername()).build(),
             FsPagination.DEFAULT,
-            UserRepository.Sort.DEFAULT)).thenReturn(new FsResultSet<>(List.of(TestData.TEST_USER_1_ENTITY), 1));
+            UserRepository.Sort.DEFAULT)).thenReturn(new FsResultSet<>(List.of(TestData.USER_ENTITY_1), 1));
         var users = userService.getResourceList(
-            UserRepository.Condition.builder().username(TestData.TEST_USER_1_RESOURCE.getUsername()).build(),
+            UserRepository.Condition.builder().username(TestData.USER_RESOURCE_1.getUsername()).build(),
             FsPagination.DEFAULT,
             UserRepository.Sort.DEFAULT);
         Assertions.assertFalse(users.getData().isEmpty());
@@ -86,11 +86,32 @@ public class UserServiceTest
     @Rollback()
     public void When_UpdateUserName_Expect_UsernameUpdated() {
         logger.info("* When_UpdateUserName_Expect_UsernameUpdated() start...");
-        when(userRepository.exists(TestData.TEST_USER_1_RESOURCE.getId())).thenReturn(true);
-        when(userRepository.findById(TestData.TEST_USER_1_RESOURCE.getId()))
-            .thenReturn(Optional.ofNullable(TestData.TEST_USER_1_ENTITY.withUsername("updated_username")));
-        var user = userService.updateResource(TestData.TEST_USER_1_RESOURCE.getId(),
-            TestData.TEST_USER_1_RESOURCE.withUsername("updated_username"));
+        when(userRepository.exists(TestData.USER_RESOURCE_1.getId())).thenReturn(true);
+        when(userRepository.findById(TestData.USER_RESOURCE_1.getId()))
+            .thenReturn(Optional.ofNullable(TestData.USER_ENTITY_1.withUsername("updated_username")));
+        var user = userService.updateResource(TestData.USER_RESOURCE_1.getId(),
+            TestData.USER_RESOURCE_1.withUsername("updated_username"));
         Assertions.assertEquals("updated_username", user.getUsername());
     }
+
+    @Test
+    @Order(2)
+    @Transactional
+    @Rollback()
+    public void When_GetLoginUserBySubject_Expect_ReturnLoginUser() {
+        logger.info("* When_GetLoginUserBySubject_Expect_ReturnLoginUser() start...");
+        when(userRepository.findAll(
+            UserRepository.Condition.builder().email(TestData.USER_RESOURCE_1.getEmail()).build(),
+            FsPagination.DEFAULT,
+            UserRepository.Sort.DEFAULT)).thenReturn(new FsResultSet<>(List.of(TestData.USER_ENTITY_1), 1));
+        when(userAuthorityService.getResourceList(
+            UserAuthorityRepository.Condition.builder().uuid(TestData.USER_RESOURCE_1.getUuid()).build(),
+            FsPagination.DEFAULT,
+            UserAuthorityRepository.Sort.DEFAULT))
+                .thenReturn(new FsResultSet<>(List.of(TestData.USER_AUTHORITY_RESOURCE), 1));
+        var user = userService.getLoginUserBySubject("admin@focason.com");
+        Assertions.assertEquals("admin", user.getUsername());
+    }
+
+
 }
