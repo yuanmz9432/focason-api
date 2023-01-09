@@ -9,7 +9,7 @@ Write descriptions here...
 ## Badge
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-v2.7.6-brightgreen)
 ![Gradle](https://img.shields.io/badge/Gradle-v6.9.1-lightgrey)
-![Java](https://img.shields.io/badge/Amazon%20Corretto-11-orange)
+![Java](https://img.shields.io/badge/Amazon%20Corretto%20Java-11-orange)
 ![MySQL](https://img.shields.io/badge/MySQL-v5.7.x-blue)
 
 ![Jupiter](https://img.shields.io/badge/Jupiter-v5.9.1-%230057b7)
@@ -30,6 +30,13 @@ Write descriptions here...
 ## Mock
 
 Coming soon...
+
+## Module
+
+- [x] 認証認可
+- [x] ユーザ管理
+- [ ] 画像アップロード
+- [ ] 画像識別
 
 ## Install
 
