@@ -16,7 +16,7 @@ services:
       DB_USERNAME: admin
       DB_PASSWORD: password
     ports:
-      - "8080:80"
+      - "80:80"
 #    depends_on:
 #      - mysql-server
     restart: on-failure
