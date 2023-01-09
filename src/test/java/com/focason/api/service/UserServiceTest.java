@@ -112,6 +112,4 @@ public class UserServiceTest
         var user = userService.getLoginUserBySubject("admin@focason.com");
         Assertions.assertEquals("admin", user.getUsername());
     }
-
-
 }
