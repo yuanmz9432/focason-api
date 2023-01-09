@@ -144,19 +144,39 @@ public class UserRepository
         private Set<ID<UserEntity>> ids;
 
         /**
-         * ユーザー名称（完全一致、複数指定不可）
+         * UUID（完全一致、複数指定不可）
+         */
+        private String uuid;
+
+        /**
+         * ユーザー名称（部分一致）
          */
         private String username;
 
         /**
-         * ユーザーメールアドレス（完全一致、複数指定不可）
+         * ユーザーメールアドレス（部分一致）
          */
         private String email;
 
         /**
-         * UUID（完全一致、複数指定不可）
+         * 性別（完全一致）
          */
-        private String uuid;
+        private Integer gender;
+
+        /**
+         * ステータス（完全一致）
+         */
+        private Integer status;
+
+        /**
+         * タイプ（完全一致）
+         */
+        private Integer type;
+
+        /**
+         * 削除フラグ（完全一致）
+         */
+        private Integer isDeleted;
     }
 
     /**

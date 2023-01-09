@@ -52,7 +52,8 @@ public class FsWebSecurityConfigurer
         "/webjars/**",
         "/heartbeat",
         "/auth/**",
-        "/actuator/**"
+        "/actuator/**",
+        "/base64/**"
     };
 
     @Bean
