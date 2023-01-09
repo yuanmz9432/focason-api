@@ -1,61 +1,162 @@
 # Focason API
 
-This is a practice project about automatic code generation. 
+This is a java project for practice. 
 
 ## Description
 
-You can use gradle tasks to generate a lot of CRUD code. For example Controller, Service, Entity, Dao and SQL file.
+Write descriptions here...
 
-## Demo
+## Badge
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-v2.7.6-brightgreen)
+![Gradle](https://img.shields.io/badge/Gradle-v6.9.1-lightgrey)
+![Java](https://img.shields.io/badge/Amazon%20Corretto-11-orange)
+![MySQL](https://img.shields.io/badge/MySQL-v5.7.x-blue)
+
+![Jupiter](https://img.shields.io/badge/Jupiter-v5.9.1-%230057b7)
+![jsonwebtoken](https://img.shields.io/badge/jsonwebtoken-v0.9.1-brightgreen)
+![Doma2](https://img.shields.io/badge/Doma2-v2.53.0-blue)
+![Doma2 Gen](https://img.shields.io/badge/Doma2%20Gen-v2.28.0-blue)
+![AWS CLI 2](https://img.shields.io/badge/AWS%20CLI%20-2-orange)
+![Lombok](https://img.shields.io/badge/Lombok-v1.18.24-red)
+![Spotless](https://img.shields.io/badge/spotless-v5.16.0-orange)
+
+![Postman](https://img.shields.io/badge/Postman-v10.6.7-orange)
+![Docker Desktop](https://img.shields.io/badge/Docker%20Desktop-v19.03.8-blue)
+![Navicat](https://img.shields.io/badge/Navicat-16-yellow)
+![Git](https://img.shields.io/badge/Git-v2.39.0-orange)
+![Github Desktop](https://img.shields.io/badge/Github%20Desktop-v3.1.3-purple)
+![Swagger OpenAPI](https://img.shields.io/badge/Swagger%20OpenAPI-v3.0.3-%2338b832)
+
+## Mock
 
 Coming soon...
 
-## VS. 
+## Install
 
-## Requirement
-- JDK 11+ ([Amazon Corretto 11](https://docs.aws.amazon.com/ja_jp/corretto/latest/corretto-11-ug/downloads-list.html) or [OpenJDK 11](https://www.oracle.com/technetwork/java/javase/downloads/index.html))
-- [AWS CLI 2](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/install-cliv2.html)
-- Docker 19.03.0+ ([Mac](https://docs.docker.com/docker-for-mac/) or [Windows](https://docs.docker.com/docker-for-windows/))
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- [Junit5](https://junit.org/junit5/docs/current/user-guide/)
+### 1. Flyway Setup
 
-## Usage
+Create Database.
+```shell
+# login into mysql
+$ mysql -u root -p
+```
+```sql
+# create database focason
+CREATE DATABASE focason;
+```
 
-## Command
+Update **./gradle.properties** file.
+```text
+DB_HOST=localhost
+DB_PORT=3306
+DB_SCHEMA=focason
+DB_USERNAME=root
+DB_PASSWORD=password
+```
 
-### 1. Doma Gen
-* Generate Code
-    ```
-    ./gradlew genEntity -P TABLE_NAME={TABLE_NAME}
-    ./gradlew genResource -P TABLE_NAME={TABLE_NAME}
-    ./gradlew genController -P TABLE_NAME={TABLE_NAME}
-    ./gradlew genService -P TABLE_NAME={TABLE_NAME}
-    ./gradlew genRepository -P TABLE_NAME={TABLE_NAME}
-    ./gradlew genDao -P TABLE_NAME={TABLE_NAME}
-    ```
-#### 2. Docker
-* build docker image
-    ```
-    docker build -t focason-api:latest .
-    ```
+Run flyway
+```shell
+# flyway clean
+$ ./gradlew flywayClean
+```
+```shell
+# flyway info
+$ ./gradlew flywayInfo
+```
+```shell
+# flyway migrate
+$ ./gradlew flywayMigrate
+```
 
-#### 3. JAVA
-* Code Format
-    ```
-    ./gradlew spotlessApply
-    ```
+### 2. Build Setup
+```shell
+# spotless apply
+$ ./gradlew spotlessApply
+```
+```shell
+# spotless check
+$ ./gradlew spotlessCheck
+```
+```shell
+# build
+$ ./gradlew build
+```
+```shell
+# package
+$ ./gradlew bootJar
+```
 
-* build project
-    ```
-    ./gradlew build
-    ```
+### 3. Doma2 Gen Setup
 
+Update **./gradle.properties** file.
+```text
+GEN_TARGET_TABLE={table_name}
+```
+
+Generate code
+```shell
+# controller
+$ ./gradlew genController
+```
+```shell
+# service
+$ ./gradlew genService
+```
+```shell
+# resource
+$ ./gradlew genResource
+```
+```shell
+# entity
+$ ./gradlew genEntity
+```
+```shell
+# dao
+$ ./gradlew genDao
+```
+```shell
+# repository
+$ ./gradlew genRepository
+```
+
+### 4. Docker Setup
+
+Update **./Dockerfile** file.
+```text
+ENV APP_PORT=80
+ENV DB_HOST=mysql.focason.com
+ENV DB_PORT=3306
+ENV DB_SCHEMA=focason
+ENV DB_USERNAME=admin
+ENV DB_PASSWORD=password
+```
+
+Build docker image
+```shell
+docker build -t focason-api:latest .
+```
+
+Update **./docker-compose** file.
+```text
+environment:
+  APP_PORT: 80
+  DB_HOST: mysql.focason.com
+  DB_PORT: 3306
+  DB_NAME: focason
+  DB_USERNAME: admin
+  DB_PASSWORD: password
+```
+
+Build docker container
+```shell
+docker-compose up
+```
+
+## Maintainers
+
+[yuanmz9432](https://github.com/yuanmz9432)
 ## Contribution
 
 ## Licence
 
 Copyright © 2023 Focason inc. All Rights Reserved.
-
-## Author
-
-[yuanmz9432](https://github.com/yuanmz9432)
