@@ -4,6 +4,15 @@ version: 2.1
 
 orbs:
   gradle: circleci/gradle@3.0.0
+jobs:
+  focason-jobs:
+    steps:
+      - run:
+        #...
+        # run tests and store XML files to a subdirectory, for example, test-results
+        #...
+      - store_test_results:
+        path: ./test-results
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
