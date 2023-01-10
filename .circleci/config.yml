@@ -2,9 +2,6 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-orbs:
-  gradle: circleci/gradle@3.0.0
-
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -13,8 +10,10 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - store_test_results:
-          path: test-results
+          path: "test-results"
 
+orbs:
+  gradle: circleci/gradle@3.0.0
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
